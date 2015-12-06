@@ -1237,7 +1237,7 @@ $.on('ircChannelMessage', function(event) {
     for (var i = 0; i < keyss.length; i++) {
         if (message.contains($.inidb.get("autopurgephrases", keyss[i]).toLowerCase()) && !$.isModv3(sender, event.getTags())) {
             $.logEvent("chatModerator.js", 1123, "Autopurge triggered by " + username + ". Message: " + omessage);
-            //timeoutUser(sender, 1);
+            timeoutUser(sender, 1);
             $.say($.getWhisperString(sender) + " -> " + autopurgemessage + i); 
         }
     }
