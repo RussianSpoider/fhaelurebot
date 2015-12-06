@@ -275,8 +275,8 @@ $.lang.data["net.phantombot.rafflesystem.start-success-price"] = "/me [Raffle St
 $.lang.data["net.phantombot.rafflesystem.start-success-default"] = "/me [Raffle Started] Enter now for a chance to win [$1]! Enter the raffle by typing \"$2\".";
 $.lang.data["net.phantombot.rafflesystem.start-usage-points"] = "Invalid format. Usage: \"!raffle start [-followers] <reward> [<price>] [<keyword>]\".";
 $.lang.data["net.phantombot.rafflesystem.start-usage-default"] = "Invalid format. Usage: \"!raffle start [-followers] <reward> [<keyword>]\".";
-$.lang.data["net.phantombot.rafflesystem.start-error-invalid-points"] = "The keyword can be either \"!raffle\" or a word without \"!\". Usage: \"!raffle start [-followers] <reward> [<price>] [<keyword>]\"."
-$.lang.data["net.phantombot.rafflesystem.start-error-invalid-default"] = "The keyword can be either \"!raffle\" or a word without \"!\". Usage: \"!raffle start [-followers] <reward> [<keyword>]\"."
+$.lang.data["net.phantombot.rafflesystem.start-error-invalid-points"] = "The keyword can be either \"!raffle\" or a word without \"!\". Usage: \"!raffle start [-followers] <reward> [<price>] [<keyword>] [ordinal:<time to enter>]\"."
+$.lang.data["net.phantombot.rafflesystem.start-error-invalid-default"] = "The keyword can be either \"!raffle\" or a word without \"!\". Usage: \"!raffle start [-followers] <reward> [<keyword>] [ordinal:<time to enter>]\"."
 $.lang.data["net.phantombot.rafflesystem.start-error-running"] = "You can not start a new raffle while another raffle is active.";
 $.lang.data["net.phantombot.rafflesystem.close-error-notrunning"] = "You can not close a raffle while no raffle is active.";
 $.lang.data["net.phantombot.rafflesystem.close-success-noentries"] = "/me [Raffle Ended] The raffle is now closed. Nobody entered, thus there is no winner.";
@@ -306,6 +306,8 @@ $.lang.data["net.phantombot.rafflesystem.toggle-disabled"] = "Users will no long
 $.lang.data["net.phantombot.rafflesystem.entries-error-noresults"] = "Could not find any raffle entries to display.";
 $.lang.data["net.phantombot.rafflesystem.entries-success"] = "[Raffle Entries] Page $1 of $2: $3.";
 $.lang.data["net.phantombot.rafflesystem.entries-usage"] = "Usage: \"!raffle entries <page>\"";
+$.lang.data["net.phantombot.rafflesystem.auto-close"] = "/me The raffle will auto close in $1 minute(s).";
+$.lang.data["net.phantombot.rafflesystem.auto-close2"] = "/me There is $1 minute(s) left to enter this raffle!";
 
 // bidSystem.js
 $.lang.data["net.phantombot.bidsystem.close-error-notrunning"] = "You can not close a auction while no auction is active.";
