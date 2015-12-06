@@ -1,14 +1,12 @@
 var ircPrefix = ".";
-var autoBanPhrases = new Array();
-var autoPurgePhrases = new Array();
 var permitList = new Array();
 var sinbin = new Array();
 var warningcountresettime = parseInt($.inidb.get("settings", "warningcountresettime")) * 1000;
-var autopurgemessage = $.inidb.get("settings", "autopurgemessage");
-var autobanmessage = $.inidb.get("settings", "autobanmessage");
 var capsallowed = $.inidb.get("settings", "capsallowed").equalsIgnoreCase("1");
 var capstriggerratio = parseFloat($.inidb.get("settings", "capstriggerratio"));
 var capstriggerlength = parseInt($.inidb.get("settings", "capstriggerlength"));
+var autopurgemessage = $.inidb.get("settings", "autopurgemessage");
+var autobanmessage = $.inidb.get("settings", "autobanmessage");
 var capsmessage = $.inidb.get("settings", "capsmessage");
 var linksallowed = $.inidb.get("settings", "linksallowed").equalsIgnoreCase("1");
 var permittime = parseInt($.inidb.get("settings", "permittime"));
@@ -203,29 +201,145 @@ $.on('command', function(event) {
     var username = $.username.resolve(sender, event.getTags());
     var command = event.getCommand();
     var argsString = event.getArguments().trim();
-    var args = event.getArgs ();
+    var args = event.getArgs();
     var i;
     var lines;
     var found;
-	
-    if (command.equalsIgnoreCase("whitelist")) {
-        if (!$.isModv3(sender, event.getTags())) {
-            $.say ($.getWhisperString(sender) + $.modmsg);
+    var phrase = argsString.substring(argsString.indexOf(" ") + 1, argsString.length());
+    
+    if (command.equalsIgnoreCase("chat") && username.equalsIgnoreCase($.botname)) {
+        $.say(argsString);
+    } else if (command.equalsIgnoreCase("autoban")) {
+        if (!$.isAdmin(sender)) {
+            $.say($.getWhisperString(sender) + $.adminmsg);
+            return;
+        } else if (args.length == 0) {
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-usage"));
+            return;
+        } else if (args[0].equalsIgnoreCase("add")) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-add-usage"));
+                return;
+            }
+            var num = $.inidb.get("autobanphrases", "num_phrases");
+            if ($.inidb.get("autobanphrases", "num_phrases") == null) {
+                var num = 0;
+            }
+            $.inidb.incr("autobanphrases", "num_phrases", 1);
+            $.inidb.set("autobanphrases", "phrase_" + num, phrase);
+            $.logEvent("chatModerator.js", 404, username + " added a phrase to the autoban list: " + phrase);
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-add-success"));
+            return;
+        } else if (args[0].equalsIgnoreCase("remove")) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-remove-usage"));
+                return;
+            } else if ($.inidb.get("autobanphrases", "phrase_" + parseInt(args[1])) == null) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                return;
+            }
+            $.inidb.decr("autobanphrases", "num_phrases", 1);
+            $.inidb.del("autobanphrases", "phrase_" + parseInt(args[1]));
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-remove-success"));
+            return;
+        } else if (args[0].equalsIgnoreCase("get")) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-get-usage", parseInt($.inidb.get("autobanphrases", "num_phrases"))));
+                return;
+            } else if ($.inidb.get("autobanphrases", "phrase_" + parseInt(args[1])) == null) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                return;
+            }
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-get", parseInt(args[1]), $.inidb.get("autobanphrases", "phrase_" + parseInt(args[1]))));
             return;
         }
-			
-        if (args.length > 0) {
-            $.inidb.set('whitelist', 'link', args[0]);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-add", args[0]));
-        } else {
+    } else if (command.equalsIgnoreCase("autopurge")) {
+        if (!$.isAdmin(sender)) {
+            $.say($.getWhisperString(sender) + $.adminmsg);
+            return;
+        } else if (args.length == 0) {
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-usage"));
+            return;
+        } else if (args[0].equalsIgnoreCase("add")) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-add-usage"));
+                return;
+            }
+            var num = $.inidb.get("autopurgephrases", "num_phrases");
+            if ($.inidb.get("autopurgephrases", "num_phrases") == null) {
+                var num = 0;
+            }
+            $.inidb.incr("autopurgephrases", "num_phrases", 1);
+            $.inidb.set("autopurgephrases", "phrase_" + num, phrase);
+            $.logEvent("chatModerator.js", 404, username + " added a phrase to the autopurge list: " + phrase);
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-add-success"));
+            return;
+        } else if (args[0].equalsIgnoreCase("remove")) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-remove-usage"));
+                return;
+            } else if ($.inidb.Exist("autopurgephrases", "phrase_" + parseInt(args[1])) == null) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                return;
+            }
+            $.inidb.decr("autopurgephrases", "num_phrases", 1);
+            $.inidb.del("autopurgephrases", "phrase_" + parseInt(args[1]));
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-remove-success"));
+            return;
+        } else if (args[0].equalsIgnoreCase("get")) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-get-usage", parseInt($.inidb.get("autopurgephrases", "num_phrases"))));
+                return;
+            } else if ($.inidb.get("autopurgephrases", "phrase_" + parseInt(args[1])) == null) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                return;
+            }
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-get", parseInt(args[1]), $.inidb.get("autopurgephrases", "phrase_" + parseInt(args[1]))));
+            return;
+        }
+    } else if (command.equalsIgnoreCase("whitelist")) {
+        if (!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modmsg);
+            return;
+        } else if (args.length == 0) {
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-usage"));
             return;
-        }
-			
-			
-    }
-    if (command.equalsIgnoreCase("chat") && username.equalsIgnoreCase($.botname)) {
-        $.say (argsString);
+        } else if (args[0].equalsIgnoreCase("add")) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-add-usage"));
+                return;
+            }
+            var num = $.inidb.get("whitelist", "num_links");
+            if ($.inidb.get("whitelist", "num_links") == null) {
+                var num = 0;
+            }
+            $.inidb.incr("whitelist", "num_links", 1);
+            $.inidb.set("whitelist", "link_" + num, phrase);
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-add-success"));
+            return;
+        } else if (args[0].equalsIgnoreCase("remove")) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-remove-usage"));
+                return;
+            } else if ($.inidb.get("whitelist", "link_" + parseInt(args[1])) == null) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error2"));
+                return;
+            }
+            $.inidb.decr("whitelist", "num_links", 1);
+            $.inidb.del("whitelist", "link_" + parseInt(args[1]));
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-remove-success"));
+            return;
+        } else if (args[0].equalsIgnoreCase("get")) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-get-usage", parseInt($.inidb.get("whitelist", "num_phrases"))));
+                return;
+            } else if ($.inidb.get("whitelist", "link_" + parseInt(args[1])) == null) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                return;
+            }
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-get", parseInt(args[1]), $.inidb.get("whitelist", "phrase_" + parseInt(args[1]))));
+            return;
+        } 
     } else if (command.equalsIgnoreCase("purge")) {
         if ($.isModv3(sender, event.getTags())) {
             if (args.length == 1) {
@@ -237,7 +351,7 @@ $.on('command', function(event) {
             }
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
-        }		
+        }       
     } else if (command.equalsIgnoreCase("forgive")) {
         if ($.isAdmin(sender)) {
             if (args.length == 1) {
@@ -342,7 +456,7 @@ $.on('command', function(event) {
             }
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
-        }	
+        }   
     } else if (command.equalsIgnoreCase("ban")) {
         if ($.isModv3(sender, event.getTags())) {
             if (args.length == 2) {
@@ -370,7 +484,7 @@ $.on('command', function(event) {
     } else if (command.equalsIgnoreCase("unban")) {
         if ($.isModv3(sender, event.getTags())) {
             $.logEvent("chatModerator.js", 381, username + " unbanned " + args[0]);
-			
+            
             unbanUser (args[0]);
             
             $.say ($.lang.get("net.phantombot.chatmoderator.unban", $.username.resolve(args[0])));
@@ -381,56 +495,14 @@ $.on('command', function(event) {
         if ($.isModv3(sender, event.getTags())) {
             $.logEvent("chatModerator.js", 391, username + " cleared chat");
             
-            clearChat();
+            $.say(".clear"); // made it like this so it does not clear chat 3 times. https://screenshots.zelakto.tv/s/utkUFPjEqjB2dbdMi2s0j6jAU.png
             
             setTimeout(function() {
                 $.say($.lang.get("net.phantombot.chatmoderator.clearchat", username));
             }, 1000);
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
-        }	
-    } else if (command.equalsIgnoreCase("autoban")) {
-        if ($.isModv3(sender, event.getTags())) {
-            if ($.strlen(argsString) > 0) {
-                $.logEvent("chatModerator.js", 404, username + " added a phrase to the autoban list: " + argsString);
-                
-                autoBanPhrases.push(argsString);
-            
-                var num_phrases = $.inidb.get("autobanphrases", "num_phrases");
-                
-                if (isNaN(num_phrases)) {
-                    num_phrases = 0;
-                }
-                
-                $.inidb.set("autobanphrases", "phrase_" + num_phrases, argsString);
-                $.inidb.incr("autobanphrases", "num_phrases", 1);
-            
-                $.say($.lang.get("net.phantombot.chatmoderator.autoban"));
-            }
-        } else {
-            $.say ($.getWhisperString(sender) + $.modmsg);
-        }	
-    } else if (command.equalsIgnoreCase("autopurge")) {
-        if ($.isModv3(sender, event.getTags())) {
-            if ($.strlen(argsString) > 0) {
-                $.logEvent("chatModerator.js", 404, username + " added a phrase to the autopurge list: " + argsString);
-                
-                autoPurgePhrases.push(argsString);
-            
-                var num_phrases = $.inidb.get("autopurgephrases", "num_phrases");
-                
-                if (isNaN(num_phrases)) {
-                    num_phrases = 0;
-                }
-                
-                $.inidb.set("autopurgephrases", "phrase_" + num_phrases, argsString);
-                $.inidb.incr("autopurgephrases", "num_phrases", 1);
-            
-                $.say($.lang.get("net.phantombot.chatmoderator.autopurge"));
-            }
-        } else {
-            $.say ($.getWhisperString(sender) + $.modmsg);
-        }	
+        }   
     } else if (command.equalsIgnoreCase("chatmod")) {
         if ($.isModv3(sender, event.getTags())) {
             if (args.length < 1 || args[0].equalsIgnoreCase("help")) {
@@ -1124,7 +1196,7 @@ $.on('command', function(event) {
             }
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
-        }	
+        }   
     }
 });
 
@@ -1132,7 +1204,7 @@ $.on('ircChannelMessage', function(event) {
     var sender = event.getSender().toLowerCase();
     var chatName = $.username.resolve(sender, event.getTags());
     var username = chatName.toLowerCase();
-    var message = event.getMessage();
+    var message = event.getMessage().toLowerCase();
     var omessage = message;
     
     var msglen = -1;
@@ -1149,37 +1221,27 @@ $.on('ircChannelMessage', function(event) {
     var numrepeat = $.getNumberOfRepeatSequences(event);
     var rptrepeat = $.getLongestRepeatedSequence(event);
     var grapheme = $.getLongestUnicodeGraphemeCluster(event);
-    
-    
-    if (message != null && message != undefined) {
-        message = message.toLowerCase();
-    }
 
-    for (i = 0; i < autoBanPhrases.length; i++) {
-        phlen = $.strlen(autoBanPhrases[i]);
+    var keys = $.inidb.GetKeyList("autobanphrases", "");
+    var keyss = $.inidb.GetKeyList("autopurgephrases", "");
+    var keysss = $.inidb.GetKeyList("whitelist", "");
 
-        if (autoBanPhrases[i] != null && autoBanPhrases[i] != undefined && message.indexOf(autoBanPhrases[i].toLowerCase()) != -1
-            && !$.isModv3(sender, event.getTags()) && phlen > 0) {
+    for (var i = 0; i < keys.length; i++) {
+        if (message.contains($.inidb.get("autobanphrases", keys[i]).toLowerCase()) && !$.isModv3(sender, event.getTags())) {
             $.logEvent("chatModerator.js", 1123, "Autoban triggered by " + username + ". Message: " + omessage);
-            
-            banUser(username); 
-            $.say($.getWhisperString(sender) + autobanmessage + i); 
-            return;
+            banUser(sender); 
+            $.say($.getWhisperString(sender) + " -> " + autobanmessage + i); 
+        }
+    }
+
+    for (var i = 0; i < keyss.length; i++) {
+        if (message.contains($.inidb.get("autopurgephrases", keyss[i]).toLowerCase()) && !$.isModv3(sender, event.getTags())) {
+            $.logEvent("chatModerator.js", 1123, "Autopurge triggered by " + username + ". Message: " + omessage);
+            //timeoutUser(sender, 1);
+            $.say($.getWhisperString(sender) + " -> " + autopurgemessage + i); 
         }
     }
     
-    for (i = 0; i < autoPurgePhrases.length; i++) {
-        phlen = $.strlen(autoPurgePhrases[i]);
-
-        if (autoPurgePhrases[i] != null && autoPurgePhrases[i] != undefined && message.indexOf(autoPurgePhrases[i].toLowerCase()) != -1
-            && !$.isModv3(sender, event.getTags()) && phlen > 0) {
-            $.logEvent("chatModerator.js", 1123, "Autopurge triggered by " + username + ". Message: " + omessage);
-            
-            autoPurgeUser(username, autopurgemessage + i);            
-            return;
-        }
-    }
-	
     //Change the second parameter to true to use aggressive link detection
     if (linksallowed == false && $.hasLinks(event, false) && !$.isModv3(sender, event.getTags()) && (!$.isSubv3(sender, event.getTags()) || !subsallowed) && (!$.isReg(sender) || !regsallowed)) {
         var permitted = false;
@@ -1196,11 +1258,13 @@ $.on('ircChannelMessage', function(event) {
                 }
             }
         }
-		
-        if ($.inidb.exists('whitelist', 'link') && message.contains($.inidb.get('whitelist', 'link')) ) {
-            permitted = true;
+
+        for (var i = 0; i < keysss.length; i++) {
+            if (message.contains($.inidb.get("whitelist", keysss[i]).toLowerCase())) {
+                permitted = true;
+            }
         }
-		
+        
         if (youtubeallowed == true && (message.indexOf("youtube.com") != -1 || message.indexOf("youtu.be") != -1)) {
             permitted = true;
         }
@@ -1240,7 +1304,7 @@ $.on('ircChannelMessage', function(event) {
         $.spamtracker[idx][2].push(System.currentTimeMillis() + (30 * 1000));
         
         if ($.spamtracker[idx][1] >= spamlimit) {
-	    autoPurgeUser(username, spammessage +  " Spam limit: " + $.inidb.get("settings", "spamlimit"));
+        autoPurgeUser(username, spammessage +  " Spam limit: " + $.inidb.get("settings", "spamlimit"));
         $.logEvent("chatModerator.js", 1223, "Automatic spam punishment triggered by " + username + ". Messages in the last 30 seconds: " + $.spamtracker[idx][1]);
         }
     }
@@ -1251,10 +1315,11 @@ $.registerChatCommand("./util/chatModerator.js", "timeout", "mod");
 $.registerChatCommand("./util/chatModerator.js", "ban", "mod");
 $.registerChatCommand("./util/chatModerator.js", "unban", "mod");
 $.registerChatCommand("./util/chatModerator.js", "clear", "mod");
-$.registerChatCommand("./util/chatModerator.js", "autopurge", "mod");
-$.registerChatCommand("./util/chatModerator.js", "autoban", "mod");
+$.registerChatCommand("./util/chatModerator.js", "autopurge", "admin");
+$.registerChatCommand("./util/chatModerator.js", "autoban", "admin");
 $.registerChatCommand("./util/chatModerator.js", "permit", "mod");
 $.registerChatCommand("./util/chatModerator.js", "chatmod", "mod");
+$.registerChatCommand("./util/chatModerator.js", "whitelist", "mod");
 
 $.timer.addTimer("./util/chatModerator.js", "maintainlists", true, function() {
     var i;
@@ -1286,16 +1351,3 @@ $.timer.addTimer("./util/chatModerator.js", "maintainlists", true, function() {
         }
     }
 }, 1000);
-
-var num_phrases = parseInt($.inidb.get("autopurgephrases", "num_phrases"));
-
-for (i = 0; i < num_phrases; i++) {
-    autoPurgePhrases.push($.inidb.get("autopurgephrases", "phrase_" + i));
-}
-
-
-var num_phrases = parseInt($.inidb.get("autobanphrases", "num_phrases"));
-
-for (i = 0; i < num_phrases; i++) {
-    autoBanPhrases.push($.inidb.get("autobanphrases", "phrase_" + i));
-}
