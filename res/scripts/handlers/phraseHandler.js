@@ -10,13 +10,19 @@ $.on('ircChannelMessage', function(event) {
     }
 
     for (i = 0; i < emoteKey.length; i++) {
-        if (message.equalsIgnoreCase(emoteKey[i].toLowerCase())) {
-            var messageKEY = $.inidb.get('phrases', emoteKey[i]);
+        if (message.indexOf(emoteKey[i].toLowerCase()) != -1) {
+            var msgcheck1 = message.substring(message.indexOf(emoteKey[i].toLowerCase()) - 1,message.indexOf(emoteKey[i].toLowerCase()));
+            var msgcheck2 = message.substring(message.indexOf(emoteKey[i].toLowerCase()) + emoteKey[i].toLowerCase().length(), emoteKey[i].toLowerCase().length() + 1);
+            if(msgcheck1==" " || msgcheck2==" " || message.equalsIgnoreCase(emoteKey[i].toLowerCase())) {
+
+                var messageKEY = $.inidb.get('phrases', emoteKey[i]);
             
-            messageKEY = $.replaceAll(messageKEY, "(sender)", username);
+                messageKEY = $.replaceAll(messageKEY, "(sender)", username);
 			
-            $.say(messageKEY);
-            return;
+                $.say(messageKEY);
+                return;
+            }
+
         }
     }    
 });
