@@ -128,6 +128,7 @@ $.on('command', function (event) {
                     $.raffleKeyword = "!raffle";
                     $.raffleReward = "";
                     $.raffleWinnings = "";
+                    $.raffleAutoCloseTimer = 0;
 
                     var i = 1;
 
@@ -159,6 +160,78 @@ $.on('command', function (event) {
                             $.raffleKeyword = args[i];
                             i++;
                         }
+                    }
+
+                    if (args[i] != null && args[i] != undefined && !isNaN(args[i])) {
+                        $.raffleAutoCloseTimer = parseInt(args[i]);
+                        i++;
+                    }
+
+                    if ($.raffleAutoCloseTimer > 0) {
+                        setTimeout(function(){
+                            $.say($.lang.get("net.phantombot.rafflesystem.auto-close", $.raffleAutoCloseTimer));
+                            return;
+                        }, 1000);
+                        $.timer.addTimer("./systems/raffleSystem.js", "rraffle", true, function() {
+                            $.timer.clearTimer("./systems/raffleSystem.js", "rraffle", true);
+                            $.say($.lang.get("net.phantombot.rafflesystem.auto-close2", ($.raffleAutoCloseTimer / 2)));
+                            return;
+                        }, ($.raffleAutoCloseTimer * 60 * 1000) / 2);
+
+                        $.timer.addTimer("./systems/raffleSystem.js", "raffle", true, function() {
+                            $.timer.clearTimer("./systems/raffleSystem.js", "raffle", true);
+                            $.raffleRunning = 0;
+
+                            if ($.raffleEntrants.length == 0) {
+                                $.say($.lang.get("net.phantombot.rafflesystem.close-success-noentries"));
+                                return;
+                            }
+                            
+                            var i = 0;
+                            
+                            do {
+                                if (i > ($.raffleEntrants.length * 2)) {
+                                    $.winnerUsername = null;
+                                    break;
+                                }
+                                
+                                $.winnerUsername = $.raffleEntrants[$.randRange(1, $.raffleEntrants.length) - 1];
+                                $.winnerFollows = $.inidb.get('followed', $.winnerUsername.toLowerCase());
+                                
+                                if ($.raffleFollowers && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows == "1")){
+                                    $.winnerFollowsCheck = $.twitch.GetUserFollowsChannel($.winnerUsername.toLowerCase(), $.channelName);
+                                    
+                                    if ($.winnerFollowsCheck.getInt("_http") == 200) {
+                                        $.winnerFollows = "1";
+                                    }
+                                }
+                                
+                                i++;
+                            } while ($.raffleFollowers == 1 && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows != "1"));
+                            
+                            if ($.winnerUsername == null) {
+                                $.say($.lang.get("net.phantombot.rafflesystem.close-success-nofollow"));
+                                return;
+                            }
+
+                            if ($.raffleMode == 0) {
+                                $.say($.lang.get("net.phantombot.rafflesystem.close-success-default", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
+                            } else {
+                                $.inidb.incr('points', $.winnerUsername.toLowerCase(), $.raffleReward);
+
+                                $.say($.lang.get("net.phantombot.rafflesystem.close-success-points", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
+                            }
+
+                            $.inidb.set('raffles', 'reward', $.raffleReward);
+                            $.inidb.set('raffles', 'winner', $.winnerUsername);
+                            $.inidb.set('raffles', 'price', $.rafflePrice);
+                            $.inidb.set('raffles', 'mode', $.raffleMode);
+                            $.inidb.set('raffles', 'follow', $.raffleFollowers);
+                            $.inidb.set('raffles', 'keyword', $.raffleKeyword);
+                            $.inidb.set('raffles', 'entries', $.raffleEntrants.length);
+                            $.inidb.set('raffles', 'players', $.raffleEntrants);
+                            $.inidb.set('raffles', 'date', $.raffleDateString);
+                        }, $.raffleAutoCloseTimer * 60 * 1000);
                     }
 
                     if ($.raffleReward == "") {
@@ -215,6 +288,12 @@ $.on('command', function (event) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.close-error-notrunning"));
                     return;
                 } else {
+
+                    if ($.raffleAutoCloseTimer > 0) {
+                        $.timer.clearTimer("./systems/raffleSystem.js", "rraffle", true);
+                        $.timer.clearTimer("./systems/raffleSystem.js", "raffle", true);
+                    }
+                    
                     $.raffleRunning = 0;
 
                     if ($.raffleEntrants.length == 0) {
