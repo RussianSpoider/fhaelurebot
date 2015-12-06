@@ -347,6 +347,19 @@ $.on('command', function (event) {
         if (messageCommand.contains('(touser)') && args.length > 0) {
             messageCommand = $.replaceAll(messageCommand, '(touser)', $.username.resolve(args[0]));
         } 
+        if (messageCommand.contains('(game)') && args.length > 0) {
+            messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve(args[0])));
+        } else {
+            messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve($.channelName)));
+        }
+        if (messageCommand.contains('(status)') && args.length > 0) {
+            messageCommand = $.replaceAll(messageCommand, '(status)', $.getStatus($.username.resolve(args[0])));
+        } else {
+            messageCommand = $.replaceAll(messageCommand, '(status)', $.getStatus($.username.resolve($.channelName)));
+        }
+        if (messageCommand.contains('(echo)') && args.length > 0) {
+            messageCommand = $.replaceAll(messageCommand, '(echo)', argsString);
+        }
         if (messageCommand.contains('(random)')) {
             messageCommand = $.replaceAll(messageCommand, '(random)', $.users[$.rand($.users.length)][0]);
         }
