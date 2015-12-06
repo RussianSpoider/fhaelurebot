@@ -1,8 +1,8 @@
-println("Start initialsettings...");
+$.println("Start initialsettings...");
 
-println("   Loading default settings...");
+$.println("Loading default settings...");
 
-println("      Setting default module statuses...");
+$.println("Setting default module statuses...");
 $.inidb.set("modules", "./commands/8ballCommand.js" + "_enabled", "0");
 $.inidb.set("modules", "./commands/killCommand.js" + "_enabled", "0");
 $.inidb.set("modules", "./commands/marathonCommand.js" + "_enabled", "0");
@@ -19,7 +19,7 @@ $.inidb.set("modules", "./systems/levelQueueSystem.js" + "_enabled", "0");
 $.inidb.set("modules", "./systems/pollSystem.js" + "_enabled", "0");
 $.inidb.set("modules", "./systems/queueSystem.js" + "_enabled", "0");
 
-println("      Setting default chatmod settings...");
+$.println("Setting default chatmod settings...");
 $.inidb.set("settings", "warningcountresettime", "600");
 $.inidb.set("settings", "autopurgemessage", "auto-purged for using banned phrase #");
 $.inidb.set("settings", "autobanmessage", "auto-banned for using banned phrase #");
@@ -52,8 +52,10 @@ $.inidb.set("settings", "graphemelimit", "6");
 $.inidb.set("settings", "graphememessage", "dont post grapheme clusters!");
 $.inidb.set("settings", "subsallowed", "0");
 $.inidb.set("settings", "regsallowed", "0");
+$.inidb.set("settings", "ipsallowed", "0");
+$.inidb.set("settings", "ipmessage", "don't post ip addresses");
 
-println("     Creating default command aliases...");
+$.println("Creating default command aliases...");
 $.inidb.set("aliases", "songrequest", "addsong");
 $.inidb.set("aliases", "deletesong", "delsong");
 $.inidb.set("aliases", "removesong", "delsong");
@@ -64,15 +66,15 @@ $.inidb.set("aliases", "settitle", "title");
 $.inidb.set("aliases", "topic", "title");
 $.inidb.set("aliases", "setgame", "game");
 
-println("     Creating logs folder");
+$.println("Creating logs folder...");
 $.mkDir("logs");
 
-println("     Creating blank currentsong.txt");
+$.println("Creating blank currentsong.txt");
 $.writeToFile("", "./addons/youtubePlayer/currentsong.txt", false);
 $.inidb.set("settings", "lastdonation", "");
 $.inidb.set("settings", "lastsong", "");
 
-println("   Loading initial settings text file...");
+$.println("Loading initial settings text file...");
 $.touchFile("./initialSettings.txt");
 
 var lines = $.readFile("./initialSettings.txt");
@@ -99,11 +101,10 @@ for (var i = 0; i < lines.length; i++) {
     Packages.com.gmt2001.Console.out.print("\r   " + i + "/" + lines.length);
 }
 
-println("\r   " + lines.length + "/" + lines.length);
+$.println("\r" + lines.length + "/" + lines.length);
 
-println("   Saving...");
-
+$.println("Saving...");
 $.inidb.SetBoolean("init", "initialsettings", "loaded", true);
 $.inidb.SaveAll(true);
 
-println("End initialsettings...");
+$.println("End initialsettings...");
