@@ -299,3 +299,15 @@ $.getLongestNonLetterSequence = function(event) {
 
     return ret;
 }
+
+$.getIP = function(event) {
+    var message = event.getMessage();
+
+    var m = Pattern.compile("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$").matcher(message);
+    var s;
+
+    while (m.find() == true) {
+       s = m.group();
+    }
+    return s;
+}
