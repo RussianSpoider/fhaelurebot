@@ -7,6 +7,8 @@ var capstriggerratio = parseFloat($.inidb.get("settings", "capstriggerratio"));
 var capstriggerlength = parseInt($.inidb.get("settings", "capstriggerlength"));
 var autopurgemessage = $.inidb.get("settings", "autopurgemessage");
 var autobanmessage = $.inidb.get("settings", "autobanmessage");
+var ipsallowed = $.inidb.get("settings", "ipsallowed").equalsIgnoreCase("1");
+var ipmessage = $.inidb.get("settings", "ipmessage");
 var capsmessage = $.inidb.get("settings", "capsmessage");
 var linksallowed = $.inidb.get("settings", "linksallowed").equalsIgnoreCase("1");
 var permittime = parseInt($.inidb.get("settings", "permittime"));
@@ -29,6 +31,9 @@ var graphemelimit = parseInt($.inidb.get("settings", "graphemelimit"));
 var graphememessage = $.inidb.get("settings", "graphememessage");
 var warningtypes = new Array($.inidb.get("settings", "warning1type"), $.inidb.get("settings", "warning2type"), $.inidb.get("settings", "warning3type"));
 var warningmessages = new Array($.inidb.get("settings", "warning1message"), $.inidb.get("settings", "warning2message"), $.inidb.get("settings", "warning3message"));
+var keys = $.inidb.GetKeyList("autobanphrases", "").length + 1;
+var keyss = $.inidb.GetKeyList("autopurgephrases", "").length + 1;
+var keysss = $.inidb.GetKeyList("whitelist", "").length + 1;
 
 if ($.spamtracker == null || $.spamtracker == undefined) {
     $.spamtracker = new Array();
@@ -221,12 +226,7 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-add-usage"));
                 return;
             }
-            var num = $.inidb.get("autobanphrases", "num_phrases");
-            if ($.inidb.get("autobanphrases", "num_phrases") == null) {
-                var num = 0;
-            }
-            $.inidb.incr("autobanphrases", "num_phrases", 1);
-            $.inidb.set("autobanphrases", "phrase_" + num, phrase);
+            $.inidb.set("autobanphrases", "phrase_" + keys++, phrase);
             $.logEvent("chatModerator.js", 404, username + " added a phrase to the autoban list: " + phrase);
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-add-success"));
             return;
@@ -238,13 +238,12 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
                 return;
             }
-            $.inidb.decr("autobanphrases", "num_phrases", 1);
             $.inidb.del("autobanphrases", "phrase_" + parseInt(args[1]));
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-remove-success"));
             return;
         } else if (args[0].equalsIgnoreCase("get")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-get-usage", parseInt($.inidb.get("autobanphrases", "num_phrases"))));
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-get-usage", $.inidb.GetKeyList("autobanphrases", "").length));
                 return;
             } else if ($.inidb.get("autobanphrases", "phrase_" + parseInt(args[1])) == null) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
@@ -265,12 +264,7 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-add-usage"));
                 return;
             }
-            var num = $.inidb.get("autopurgephrases", "num_phrases");
-            if ($.inidb.get("autopurgephrases", "num_phrases") == null) {
-                var num = 0;
-            }
-            $.inidb.incr("autopurgephrases", "num_phrases", 1);
-            $.inidb.set("autopurgephrases", "phrase_" + num, phrase);
+            $.inidb.set("autopurgephrases", "phrase_" + keyss++, phrase);
             $.logEvent("chatModerator.js", 404, username + " added a phrase to the autopurge list: " + phrase);
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-add-success"));
             return;
@@ -278,17 +272,16 @@ $.on('command', function(event) {
             if (args.length < 2) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-remove-usage"));
                 return;
-            } else if ($.inidb.Exist("autopurgephrases", "phrase_" + parseInt(args[1])) == null) {
+            } else if ($.inidb.get("autopurgephrases", "phrase_" + parseInt(args[1])) == null) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
                 return;
             }
-            $.inidb.decr("autopurgephrases", "num_phrases", 1);
             $.inidb.del("autopurgephrases", "phrase_" + parseInt(args[1]));
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-remove-success"));
             return;
         } else if (args[0].equalsIgnoreCase("get")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-get-usage", parseInt($.inidb.get("autopurgephrases", "num_phrases"))));
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-get-usage", $.inidb.GetKeyList("autopurgephrases", "").length));
                 return;
             } else if ($.inidb.get("autopurgephrases", "phrase_" + parseInt(args[1])) == null) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
@@ -309,12 +302,7 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-add-usage"));
                 return;
             }
-            var num = $.inidb.get("whitelist", "num_links");
-            if ($.inidb.get("whitelist", "num_links") == null) {
-                var num = 0;
-            }
-            $.inidb.incr("whitelist", "num_links", 1);
-            $.inidb.set("whitelist", "link_" + num, phrase);
+            $.inidb.set("whitelist", "link_" + keysss++, phrase);
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-add-success"));
             return;
         } else if (args[0].equalsIgnoreCase("remove")) {
@@ -325,13 +313,12 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error2"));
                 return;
             }
-            $.inidb.decr("whitelist", "num_links", 1);
             $.inidb.del("whitelist", "link_" + parseInt(args[1]));
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-remove-success"));
             return;
         } else if (args[0].equalsIgnoreCase("get")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-get-usage", parseInt($.inidb.get("whitelist", "num_phrases"))));
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-get-usage", $.inidb.GetKeyList("whitelist", "").length));
                 return;
             } else if ($.inidb.get("whitelist", "link_" + parseInt(args[1])) == null) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
@@ -507,8 +494,8 @@ $.on('command', function(event) {
         if ($.isModv3(sender, event.getTags())) {
             if (args.length < 1 || args[0].equalsIgnoreCase("help")) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.chatmod-help-1"));
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.chatmod-help-2") + "warningcountresettime, autopurgemessage, autobanmessage, capsallowed, capstriggerratio, capstriggerlength, "
-                    + "capsmessage, linksallowed, permittime, youtubeallowed, subsallowed, regsallowed, linksmessage, spamallowed, spamlimit, spammessage");
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.chatmod-help-2") + "warningcountresettime, autopurgemessage, ipsallowed, autobanmessage, capsallowed, capstriggerratio, capstriggerlength, "
+                    + "capsmessage, linksallowed, permittime, youtubeallowed, subsallowed, regsallowed, linksmessage, spamallowed, spamlimit, spammessage, ipmessage");
                 $.say($.getWhisperString(sender) + ">>symbolsallowed, symbolslimit, symbolsrepeatlimit, symbolsmessage, repeatallowed, repeatlimit, repeatmessage, graphemeallowed, "
                     + "graphemelimit, graphememessage, warning1type, warning2type, warning3type, warning1message, warning2message, warning3message, disable, enable");
             } else {
@@ -633,6 +620,47 @@ $.on('command', function(event) {
                         capstriggerlength = val;
                         
                         $.say($.getWhisperString(sender) + "Changed caps warning minimum message length to " + val + "!");
+                    }
+                } else if (args[0].equalsIgnoreCase("ipsallowed")) {
+                    val = argsString;
+                    
+                    if (args.length == 1 || (!val.equalsIgnoreCase("false") && !val.equalsIgnoreCase("true"))) {
+                        if (ipsallowed) {
+                            val = "allowed";
+                        } else {
+                            val = "moderated";
+                        }
+                        
+                        $.say($.getWhisperString(sender) + "IP's are currently " + val + ". To change it use: !chatmod ipsallowed <'true' or 'false'>");
+                    } else {
+                        if (val.equalsIgnoreCase("true")) {
+                            val = "1";
+                        } else {
+                            val = "0";
+                        }
+                        
+                        $.inidb.set("settings", "ipsallowed", val);
+                        
+                        ipsallowed = val.equalsIgnoreCase("1");
+                        
+                        if (ipsallowed) {
+                            $.say($.getWhisperString(sender) + "IP's are now allowed!");
+                        } else {
+                            $.say($.getWhisperString(sender) + "IP's are now moderated!");
+                        }
+                    }
+                } else if (args[0].equalsIgnoreCase("ipmessage")) {
+                    val = argsString;
+                    
+                    if (args.length == 1) {
+                        $.say($.getWhisperString(sender) + "The current ipmessage warning message is '" + ipmessage + "'. To change it use: !chatmod ipmessage <any text>");
+                    } else {
+                        
+                        $.inidb.set("settings", "ipmessage", val);
+                        
+                        ipmessage = val;
+                        
+                        $.say($.getWhisperString(sender) + "Changed ipmessage warning message to '" + val + "'!");
                     }
                 } else if (args[0].equalsIgnoreCase("capsmessage")) {
                     val = argsString;
@@ -1222,9 +1250,9 @@ $.on('ircChannelMessage', function(event) {
     var rptrepeat = $.getLongestRepeatedSequence(event);
     var grapheme = $.getLongestUnicodeGraphemeCluster(event);
 
-    var keys = $.inidb.GetKeyList("autobanphrases", "");
-    var keyss = $.inidb.GetKeyList("autopurgephrases", "");
-    var keysss = $.inidb.GetKeyList("whitelist", "");
+    keys = $.inidb.GetKeyList("autobanphrases", "");
+    keyss = $.inidb.GetKeyList("autopurgephrases", "");
+    keysss = $.inidb.GetKeyList("whitelist", "");
 
     for (var i = 0; i < keys.length; i++) {
         if (message.contains($.inidb.get("autobanphrases", keys[i]).toLowerCase()) && !$.isModv3(sender, event.getTags())) {
@@ -1277,6 +1305,9 @@ $.on('ircChannelMessage', function(event) {
     } else if (capsallowed == false && capsRatio > capstriggerratio && msglen > capstriggerlength && !$.isModv3(sender, event.getTags()) && (!$.isSubv3(sender, event.getTags()) || !subsallowed) && (!$.isReg(sender) || !regsallowed)) {
         autoPurgeUser(username, capsmessage + " Message Length: " + $.strlen(message) + "    Caps Limit: " + $.inidb.get("settings", "capstriggerratio"));
         $.logEvent("chatModerator.js", 1163, "Automatic caps punishment triggered by " + username + ". Message Length: " + $.strlen(message) + "    Caps Ratio: " + capsRatio + "    Message: " + omessage);
+    } else if (!ipsallowed && !$.isModv3(sender, event.getTags()) && (!$.isSubv3(sender, event.getTags()) || !subsallowed) && (!$.isReg(sender) || !regsallowed) && $.getIP(event)) {
+        autoPurgeUser(username, ipmessage);
+        $.logEvent("chatModerator.js", 1206, "Automatic ip address punishment triggered by " + username + ". Message: " + omessage);
     } else if (!symbolsallowed && !$.isModv3(sender, event.getTags()) && (!$.isSubv3(sender, event.getTags()) || !subsallowed) && (!$.isReg(sender) || !regsallowed) && (numsymbols > symbolslimit || rptsymbols > symbolsrepeatlimit)) {
         autoPurgeUser(username, symbolsmessage + " Symbol limit: " + $.inidb.get("settings", "symbolslimit") + ". Total symbols: " + numsymbols);
         $.logEvent("chatModerator.js", 1193, "Automatic symbols punishment triggered by " + username + ". Longest symbol sequence: " + rptsymbols + ". Total symbols: " + numsymbols + ". Message: " + omessage);
