@@ -45,6 +45,7 @@ for (var name in $api) {
 }
 
 $.connected = false;
+$.joinmsg = false;
 $.modeo = false;
 
 $api.on($script, 'ircJoinComplete', function (event) {
@@ -59,14 +60,16 @@ $api.on($script, 'ircChannelUserMode', function (event) {
                 if (event.getAdd() == true) {
                     if (!$.modeo) {
                         var connectedMessage = $.inidb.get('settings', 'connectedMessage');
-
-                        if (connectedMessage != null && !connectedMessage.isEmpty()) {
-                            $.say(connectedMessage);
-                        } else {
-                            println("ready");
-                        }
+                        if ($.joinmsg == false) {
+                            if (connectedMessage != null && !connectedMessage.isEmpty()) {
+                                $.say(connectedMessage);
+                                $.joinmsg = true;
+                            } else {
+                                $.println("Ready!");
+                                $.joinmsg = true;
+                            }
+                        }    
                     }
-
                     $.modeo = true;
                 } else {
                     $.modeo = false;
