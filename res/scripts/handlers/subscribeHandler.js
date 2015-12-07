@@ -14,9 +14,9 @@ if ($.sub_silentmode == null || $.sub_silentmode == undefined) {
 
 if ($.subscribeMessage == null || $.subscribeMessage == undefined || $.strlen($.subscribeMessage) == 0 || $.subscribeMessage == "") {
     if ($.moduleEnabled("./systems/pointSystem.js")) {
-        if ($.hostreward < 1) {
-            $.subscribeMessage = $.lang.get("net.phantombot.hosthandler.default-host-welcome-message");
-        } else if ($.hostreward > 0 && $.moduleEnabled('./systems/pointSystem.js')) {
+        if ($.subscribereward < 1) {
+            $.subscribeMessage = $.lang.get("net.phantombot.subscribeHandler.default-sub-welcome-message");
+        } else if ($.subscribereward > 0 && $.moduleEnabled('./systems/pointSystem.js')) {
             $.subscribeMessage = $.lang.get("net.phantombot.subscribeHandler.default-sub-message-with-points");
         }
     } else {
