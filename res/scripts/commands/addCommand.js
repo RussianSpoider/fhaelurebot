@@ -335,7 +335,7 @@ $.on('command', function (event) {
             messageCommand = $.replaceAll(messageCommand, '(' + (i + 1) + ')', args[i]);
         }
         if (messageCommand.contains('(sender)')) {
-            messageCommand = $.replaceAll(messageCommand, '(sender)', sender);
+            messageCommand = $.replaceAll(messageCommand, '(sender)', $.username.resolve(sender));
         } 
         if (messageCommand.contains('(count)')) {
             $.inidb.incr('commandcount', command.toLowerCase(), 1);
@@ -344,8 +344,15 @@ $.on('command', function (event) {
         if (messageCommand.contains('(points)')) {
             messageCommand = $.replaceAll(messageCommand, '(points)', $.getPointsString(parseInt($.inidb.get("points", sender))));
         } 
-        if (messageCommand.contains('(touser)') && args.length > 0) {
-            messageCommand = $.replaceAll(messageCommand, '(touser)', $.username.resolve(args[0]));
+        if (messageCommand.contains('(touser)')) {
+            if(args.length > 0) {
+                if(args[0].contains('@')) {
+                    args[0] = args[0].substring(args[0].indexOf('@') +1, args[0].length());
+                }
+                messageCommand = $.replaceAll(messageCommand, '(touser)', $.username.resolve(args[0]));
+            } else {
+                messageCommand = $.replaceAll(messageCommand, '(touser)', $.username.resolve(sender));
+            }
         } 
         if (messageCommand.contains('(game)') && args.length > 0) {
             messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve(args[0])));
