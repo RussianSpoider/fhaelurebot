@@ -115,7 +115,7 @@ $.on('command', function(event) {
 			else if (die1 == 6) { d1 = "6"; }
 			else { d1 = num1.toString(); }
 			
-			if (die2 == 1) { d2 = "\1";	}
+			if (die2 == 1) { d2 = "1";	}
 			else if (die2 == 2) { d2 = "2"; }
 			else if (die2 == 3) { d2 = "3"; }
 			else if (die2 == 4) { d2 = "4"; }
