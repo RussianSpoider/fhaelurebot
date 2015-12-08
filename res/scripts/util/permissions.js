@@ -31,15 +31,15 @@ $.isOwner = function (user) {
 }
 
 $.isCaster = function (user) {
-    return $.getUserGroupId(user) == 0 || $.isOwner(user) || $.isBot(user);
+    return $.isOwner(user);
 }
 
 $.isAdmin = function (user) {
-    return $.getUserGroupId(user) <= 1 || $.isCaster(user);
+    return $.getUserGroupId(user) <= 1 || $.isCaster(user) || $.isBot(user);
 }
 
 $.isMod = function (user) {
-    return $.getUserGroupId(user) <= 2 || $.hasModeO(user) || $.hasModList(user) || $.isAdmin(user);
+    return $.hasModeO(user) || $.hasModList(user) || $.isAdmin(user);
 }
 
 $.isModv3 = function (user, tags) {
@@ -69,11 +69,11 @@ $.isDonator = function (user) {
 }
 
 $.isHoster = function (user) {
-    return $.getUserGroupId(user) == 5 || $.isHostUser(user);
+    return $.isHostUser(user);
 }
 
 $.isReg = function (user) {
-    return $.getUserGroupId(user) <= 6 || $.isOwner(user) || $.isBot(user);
+    return $.getUserGroupId(user) <= 6 || $.isModv3(user) ||$.isDonator(user) || $.isHoster(user) || $.isSubv3(user);
 }
 
 $.hasModeO = function (user) {
@@ -103,7 +103,29 @@ $.getUserGroupId = function (user) {
 }
 
 $.getUserGroupName = function (user) {
-    return $.getGroupNameById($.getUserGroupId(user));
+    if($.isCaster(user)) {
+        return "Caster";
+    }
+    else if($.isAdmin(user)) {
+        return "Administrator";
+    }
+    else if($.isModv3(user)) {
+        return "Moderator";
+    }
+    else if($.isSubv3(user)) {
+        return "Subscriber";
+    }
+    else if($.isHoster(user)) {
+        return "Hoster";
+    }
+    else if($.isDonator(user)) {
+        return "Donator";
+    }
+    else if($.isReg(user)) {
+        return "Regular";
+    } else {
+        return $.getGroupNameById($.getUserGroupId(user));
+    }
 }
 
 $.setUserGroupById = function (user, id) {
@@ -610,6 +632,7 @@ $.on('ircChannelUserMode', function (event) {
         if (event.getAdd() == true) {
             if ($.array.contains($.modeOUsers, username) == false) {
                 $.modeOUsers.push(username);
+                println("+Moderator: " + username);
             }
         } else {
             for (i = 0; i < $.modeOUsers.length; i++) {
