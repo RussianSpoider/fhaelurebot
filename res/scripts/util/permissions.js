@@ -303,18 +303,12 @@ $.on('command', function (event) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.permissions.group-not-exists"));
                 }
                 else {
-                    if ((parseInt($.getUserGroupId(sender)) < $.parseInt($.getUserGroupId($.username.resolve(args[1])))) || sender.equalsIgnoreCase(args[1]))
+                    if (parseInt($.getGroupIdByName($.getUserGroupName(sender))) < parseInt($.getGroupIdByName($.getUserGroupName($.username.resolve(args[1])))))
                     {
-                        if ((parseInt($.getUserGroupId(sender)) < parseInt($.getGroupIdByName(name))) || sender.equalsIgnoreCase(args[1]))
-                        {
                             $.setUserGroupByName(args[1], name);
                             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.permissions.group-set", $.username.resolve(args[1]), $.getUserGroupName($.username.resolve(args[1]))));
                             $.logEvent("permissions.js", 200, username + " changed " + args[1] + "'s group to " + $.getUserGroupName($.username.resolve(args[1])));
                             return;
-                        } else {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.permissions.group-set-err-same"));
-                            return;
-                        }
                     }
                     else {
                         $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.permissions.group-set-err-above"));

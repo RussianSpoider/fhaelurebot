@@ -70,7 +70,6 @@ $.lang.data["net.phantombot.permissions.group-not-exists"] = "That group does no
 $.lang.data["net.phantombot.permissions.group-remove"] = "Group $1 has been successfully removed. All users in that group have been moved to the Viewers group.";
 $.lang.data["net.phantombot.permissions.group-create"] = "Group $1 created!";
 $.lang.data["net.phantombot.permissions.group-set"] = "Group for $1 changed to $2!";
-$.lang.data["net.phantombot.permissions.group-set-err-same"] = "You cannot promote others to the same rank as you.";
 $.lang.data["net.phantombot.permissions.group-set-err-above"] = "You must be a higher rank than the person you are trying to promote!";
 $.lang.data["net.phantombot.permissions.group-points-set"] = "$1 point gain set to $2!";
 $.lang.data["net.phantombot.permissions.group-points-err-less-than-zero"] = "Group point gain must be a number equal to, or greater than zero!";
