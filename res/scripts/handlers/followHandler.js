@@ -15,7 +15,7 @@ if ($.followMessage == null || $.followMessage == undefined || $.strlen($.follow
     }
 }
 
-if ($.followReward == null || $.followReward == undefined || $.followReward == "" || isNaN($.followReward) || $.followReward.isEmpty()) {
+if ($.followReward == null || $.followReward == undefined || $.followReward == "" || isNaN($.followReward)) {
     $.followReward = 100;
 }
 
