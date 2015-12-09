@@ -29,24 +29,39 @@ $.lang.load = function() {
 $.lang.load();
 
 $.lang.get = function(str_name) {
-    if ($.lang.data[str_name] == undefined || $.lang.data[str_name] == null) {
-        $.logError("./util/lang.js", 33, "Lang string missing: " + str_name);
-        Packages.com.gmt2001.Console.err.println("[lang.js] Lang string missing: " + str_name);
-        
-        if (str_name.equalsIgnoreCase("net.phantombot.lang.not-exists")) {
-            return "!!! Missing string in lang file !!!";
-        } else {
-            return $.lang.get("net.phantombot.lang.not-exists");
-        }
-    }
+	if ($.inidb.exists('lang', str_name)) {
+		var s = $.inidb.get('lang', str_name);
+	}
+	else {
+	    if ($.lang.data[str_name] == undefined || $.lang.data[str_name] == null) {
+	        $.logError("./util/lang.js", 33, "Lang string missing: " + str_name);
+	        Packages.com.gmt2001.Console.err.println("[lang.js] Lang string missing: " + str_name);
+	        
+	        if (str_name.equalsIgnoreCase("net.phantombot.lang.not-exists")) {
+	            return "!!! Missing string in lang file !!!";
+	        } else {
+	            return $.lang.get("net.phantombot.lang.not-exists");
+	        }
+	    }
+	    var s = $.lang.data[str_name];
+	}
     
-    var s = $.lang.data[str_name];
     var i;
     for (i = 1; i < arguments.length; i++) {
         s = $.replaceAll(s, "$" + i, arguments[i]);
     }
     
     return s;
+}
+
+$.lang.setstring = function(str_name, str_value) {
+	$.inidb.set('lang', str_name, str_value);
+}
+
+$.lang.resetstring = function(str_name) {
+	if ($.inidb.exists('lang', str_name)) {
+		$.inidb.del('lang', str_name);
+	}
 }
 
 $.on('command', function(event) {
