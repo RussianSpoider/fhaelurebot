@@ -27,18 +27,19 @@ $.on('command', function(event) {
             return;
         }
         if ($.Followers == true) {
-            if ($.inidb.get("followed", sender) == null) {
+            var CheckUser = $.twitch.GetUserFollowsChannel(sender, $.channelName);
+            if (CheckUser.getInt("_http") != 200) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.following"));
                 return;
             }
         } else if ($.Subscribers == true) {
-            if ($.inidb.get("subscribed", sender) == null) {
+            if ($.isSubv3(sender, event.getTags()) == true) { 
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.no-sub"));
                 return;
             }
         }
         var tickets = parseInt(args[0]);
-        if ($.inidb.get("subscribed", sender) == true) {
+        if ($.isSubv3(sender, event.getTags()) == true) { 
             for (var i = 0; i < tickets * $.SubscriberLuck; i++) {
                 $.TicketRaffleEntries.push(sender);
             }
@@ -67,7 +68,6 @@ $.on('command', function(event) {
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.cmd.adminonly"));
             return;
         }
-        
         if (args.length == 0) {
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketsystem.cost-usage"));
             return;
