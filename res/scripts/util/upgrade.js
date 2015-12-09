@@ -712,6 +712,14 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 17) {
     if (!$.inidb.exists("settings", "autobanmessage")) {
         $.inidb.set("settings", "autobanmessage", "auto-banned for using banned phrase #");
     }
+
+    if (!$.inidb.exists("settings", "ipsallowed")) {
+        $.inidb.set("settings", "ipsallowed", "0");
+    }
+    
+    if (!$.inidb.exists("settings", "ipmessage")) {
+        $.inidb.set("settings", "ipmessage", "don't post ip addresses");
+    }
     
     println("   End version 17 upgrades...");
 }
