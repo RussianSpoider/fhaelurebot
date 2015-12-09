@@ -62,17 +62,17 @@ public class out
 
     public static void println(Object o)
     {
+        SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss");
+        datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        String timestamp = datefmt.format(new Date());
+
         if (PhantomBot.enableDebugging)
         {
-            SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss");
-            datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-            String timestamp = datefmt.format(new Date());
-
             Logger.instance().log(Logger.LogType.Output, timestamp + "Z " + o.toString());
             Logger.instance().log(Logger.LogType.Blank, "");
         }
 
-        System.out.println(o);
+        System.out.println("[" + timestamp + "] " + o);
     }
 }

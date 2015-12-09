@@ -57,3 +57,6 @@ res/stacktrace.txt
 res/stdio.txt
 res/web/default.html
 res/web/default.txt
+
+# IntelliJ Project files
+/.idea

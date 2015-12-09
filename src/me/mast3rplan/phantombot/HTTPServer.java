@@ -162,7 +162,7 @@ public class HTTPServer extends Thread
 
                                     for (String section : sections)
                                     {
-                                        if (!section.equalsIgnoreCase(""))
+                                        if (section != null && !section.equalsIgnoreCase(""))
                                         {
                                             data += "\r\n\r\n[" + section + "]";
                                         }
