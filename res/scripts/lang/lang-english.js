@@ -848,7 +848,7 @@ $.lang.data["net.phantombot.ticketrafflesystem.no-sub"] = "you need to be subscr
 $.lang.data["net.phantombot.ticketrafflesystem.sub-luck-usage"] = "usage: !subscriberluck (1 to 10)";
 $.lang.data["net.phantombot.ticketrafflesystem.sub-luck-set"] = "Subscriber luck set to $1. Subscribers will now have $1 time(s) better chance to win.";
 $.lang.data["net.phantombot.ticketrafflesystem.subscribed"] = " subscribed ";
-$.lang.data["net.phantombot.ticketrafflesystem.following"] = " following ";
+$.lang.data["net.phantombot.ticketrafflesystem.following2"] = " following ";
 $.lang.data["net.phantombot.ticketrafflesystem.auto-close"] = "/me The raffle will auto close in $1 minute(s).";
 $.lang.data["net.phantombot.ticketrafflesystem.auto-close2"] = "/me There is $1 minute(s) left to enter this ticket raffle!";
 
