@@ -96,7 +96,7 @@ $.on('command', function(event) {
             }
             if (args[i] != null && args[i] != undefined && (args[i].equalsIgnoreCase("followers") || args[i].equalsIgnoreCase("(followers)"))) {
                 Followers = true;
-                key = $.lang.get("net.phantombot.ticketrafflesystem.following")
+                key = $.lang.get("net.phantombot.ticketrafflesystem.following2");
                 i++;
             }
             if (args[i] != null && args[i] != undefined && (args[i].equalsIgnoreCase("subscribers") || args[i].equalsIgnoreCase("(subscribers)"))) {
