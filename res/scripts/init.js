@@ -597,7 +597,7 @@ if ($.inidb.GetBoolean("init", "initialsettings", "loaded") == false) {
     $.loadScript('./util/initialsettings.js');
 }
 
-$.upgrade_version = 17;
+$.upgrade_version = 18;
 
 if ($.firstrun) {
     $.inidb.SetInteger("init", "upgrade", "version", parseInt($.upgrade_version));
