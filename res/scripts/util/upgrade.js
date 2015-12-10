@@ -727,6 +727,13 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 18) {
         $.inidb.set("settings", "ipmessage", "don't post ip addresses");
     }
     
+    if (!$.inidb.exists("autobanphrases", "num_phrases")) {
+        $.inidb.del("autobanphrases", "num_phrases");
+    }
+    
+    if (!$.inidb.exists("autopurgephrases", "num_phrases")) {
+        $.inidb.del("autopurgephrases", "num_phrases");
+    }
 
     println("End version 18 upgrades...");
 }
