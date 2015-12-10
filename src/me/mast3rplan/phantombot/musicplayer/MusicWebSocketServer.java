@@ -39,9 +39,6 @@ public class MusicWebSocketServer extends WebSocketServer
         super(new InetSocketAddress(port));
 
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
-
-        this.start();
-        com.gmt2001.Console.out.println("MusicSockServer accepting connections on port " + port);
     }
 
     @Override
