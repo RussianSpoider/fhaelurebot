@@ -682,6 +682,7 @@ $.lang.data["net.phantombot.bankheistsystem.heist-started"] = "has started a ban
 $.lang.data["net.phantombot.bankheistsystem.joined-heist"] = ", you have joined in on the bank heist!";
 $.lang.data["net.phantombot.bankheistsystem.bank-open"] = "The banks are now open for the taking! Use !bankheist (amount) to bet.";
 $.lang.data["net.phantombot.bankheistsystem.heist-canceled"] = "has cleared all previous bankheists. A new bankheist will start in ";
+$.lang.data["net.phantombot.bankheistsystem.heist-cleared"] = "All previous bankheists have been cleared.";
 $.lang.data["net.phantombot.bankheistsystem.max-allowed"] = "The maximum amount allowed is $1";
 $.lang.data["net.phantombot.bankheistsystem.bank-is-safe"] = "No one joined the bankheist! The banks are safe for now.";
 $.lang.data["net.phantombot.bankheistsystem.bankheist-enabled"] = "Bankheists are now enabled!";
