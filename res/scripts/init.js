@@ -6,11 +6,7 @@ var initscript = $script;
 
 $.tostring = Objects.toString;
 $.println = function (o) {
-    var cal = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone($.timeZone)).getTime();
-    var datefmt = new java.text.SimpleDateFormat("HH:mm:ss a");
-    var timestamp = datefmt.format(cal);
-
-    out.println("[" + timestamp + "] " +  tostring(o));
+    out.println(tostring(o));
 };
 function isNumeric(num) {
     return !isNaN(num);
