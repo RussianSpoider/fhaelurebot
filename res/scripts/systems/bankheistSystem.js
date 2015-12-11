@@ -9,7 +9,7 @@ $.winningPot = 0;
 
 $.bankheistToggle = $.inidb.get("settings", "bankheistToggle");
 if ($.bankheistToggle == null) {
-    $.bankheistToggle = false;
+    $.bankheistToggle = "false";
     $.inidb.set("settings", "bankheistToggle", "false");
 }
 
@@ -265,7 +265,7 @@ function processBankheist() {
             $.say(winnersList);
         }
     }
-};
+}
 
 function startHeist() {
 
@@ -289,7 +289,7 @@ function startHeist() {
         }, (parseInt($.signupMinutes) * 60) * 1000); //signup time
     }, (parseInt($.heistMinutes) * 60) * 1000); //bankheist run time
 
-};
+}
 
 $.on('command', function (event) {
     var sender = event.getSender().toLowerCase();
@@ -311,8 +311,8 @@ $.on('command', function (event) {
                 return;
             }
 
-            if ($.bankheistToggle == false ) {
-                $.bankheistToggle = true;
+            if ($.bankheistToggle == "false" ) {
+                $.bankheistToggle = "true";
                 $.inidb.set("settings", "bankheistToggle", "true");
 
                 startHeist();
@@ -321,7 +321,7 @@ $.on('command', function (event) {
                 return;
 
             } else {
-                $.bankheistToggle = false;
+                $.bankheistToggle = "false";
                 $.inidb.set("settings", "bankheistToggle", "false");
                 $.timer.clearTimer("./systems/bankheistSystem.js", "bankheist", true);
                 $.timer.clearTimer("./systems/bankheistSystem.js", "enterbankheist", true);
@@ -342,7 +342,6 @@ $.on('command', function (event) {
                 $.say($.getWhisperString(sender) + $.modmsg);
                 return;
             }
-            $.inidb.set("settings", "bankheistToggle", "false");
             $.timer.clearTimer("./systems/bankheistSystem.js", "bankheist", true);
             $.timer.clearTimer("./systems/bankheistSystem.js", "enterbankheist", true);
             $.inidb.RemoveFile("bankheist_roster");
@@ -363,8 +362,10 @@ $.on('command', function (event) {
                     $.say($.banksOpen);
                 } else {
                     $.processBankheist();
-                    startHeist();
                     $.timer.clearTimer("./systems/bankheistSystem.js", "enterbankheist", true);
+                    if ($.bankheistToggle == "true" ) {
+                        startHeist();
+                    }
                 }
                 return;
             }, (parseInt($.signupMinutes) * 60) * 1000); //60 second entry window
@@ -372,7 +373,6 @@ $.on('command', function (event) {
 
         } else if (args[0].equalsIgnoreCase("clear")) {
             
-                $.inidb.set("settings", "bankheistToggle", "false");
                 $.timer.clearTimer("./systems/bankheistSystem.js", "bankheist", true);
                 $.timer.clearTimer("./systems/bankheistSystem.js", "enterbankheist", true);
                 $.inidb.RemoveFile("bankheist_roster");
@@ -756,9 +756,9 @@ $.on('command', function (event) {
 
 setTimeout(function () {
     if ($.moduleEnabled('./systems/bankheistSystem.js')) {
-        $.registerChatCommand("./systems/bankheistSystem.js", "bankheist");
-        if ($.bankheistToggle == true ) {
+        if ($.bankheistToggle == "true" ) {
             startHeist();
         }
+        $.registerChatCommand("./systems/bankheistSystem.js", "bankheist");
     }
 }, 10 * 1000);
