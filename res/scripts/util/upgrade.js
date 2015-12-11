@@ -726,7 +726,13 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 18) {
     if (!$.inidb.exists("settings", "ipmessage")) {
         $.inidb.set("settings", "ipmessage", "don't post ip addresses");
     }
-    
+
+    println("End version 18 upgrades...");
+}
+
+if ($.inidb.GetInteger("init", "upgrade", "version") < 19) {
+    println("Starting version 19 upgrades...");
+        
     if (!$.inidb.exists("autobanphrases", "num_phrases")) {
         $.inidb.del("autobanphrases", "num_phrases");
     }
@@ -735,7 +741,7 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 18) {
         $.inidb.del("autopurgephrases", "num_phrases");
     }
 
-    println("End version 18 upgrades...");
+    println("End version 19 upgrades...");
 }
 
 
