@@ -311,7 +311,7 @@ $.on('command', function (event) {
                 return;
             }
 
-            if ($.bankheistToggle == false || $.bankheistToggle == "false" ) {
+            if ($.bankheistToggle == false ) {
                 $.bankheistToggle = true;
                 $.inidb.set("settings", "bankheistToggle", "true");
 
@@ -757,7 +757,7 @@ $.on('command', function (event) {
 setTimeout(function () {
     if ($.moduleEnabled('./systems/bankheistSystem.js')) {
         $.registerChatCommand("./systems/bankheistSystem.js", "bankheist");
-        if ($.bankheistToggle == true || $.bankheistToggle == "true" ) {
+        if ($.bankheistToggle == true ) {
             startHeist();
         }
     }
