@@ -548,18 +548,26 @@ $.lang.data["net.phantombot.8ballCommand.answer-32"] = "Signs point to yes.";
 $.lang.data["net.phantombot.8ballCommand.answer-33"] = "This is not the Bot you're looking for ༼ﾉ۞⌂۞༽ﾉ";
 
 //quoteCommand.js
-$.lang.data["net.phantombot.quotecommand.error-no-quotes"] = "There are no quotes at this time!";
+$.lang.data["net.phantombot.quotecommand.error-no-quotes"] = "There are no quotes at this time, or the specified quote does not exist.";
 $.lang.data["net.phantombot.quotecommand.quote-number"] = "There are only $1 quotes right now! Remember that quotes are numbered from 0 to $2!";
 $.lang.data["net.phantombot.quotecommand.random-quote"] = "#$1: $2";
 $.lang.data["net.phantombot.quotecommand.error-quote-usage"] = "Usage: !addquote (quote)";
 $.lang.data["net.phantombot.quotecommand.quote-add-success"] = "Quote added! There are now $1 quotes!";
 $.lang.data["net.phantombot.quotecommand.editquote-error"] = "There is no quote under that ID!";
 $.lang.data["net.phantombot.quotecommand.editquote-error-usage"] = "Usage: !editquote (ID) (quote)";
-$.lang.data["net.phantombot.quotecommand.editquote-success"] = "Quote #$1 changed to: $2";
+$.lang.data["net.phantombot.quotecommand.editquote-success"] = "Quote #$1 modified to: $2";
 $.lang.data["net.phantombot.quotecommand.delquote-error"] = "There are no quotes at this time!";
 $.lang.data["net.phantombot.quotecommand.delquote-error-usage"] = "Usage: !delquote (ID)";
 $.lang.data["net.phantombot.quotecommand.delquote-success"] = "Quote removed! There are now $1 quotes!";
 $.lang.data["net.phantombot.quotecommand.delquote-error-wrong-id"] = "That quote does not exist, Remember quotes are marked from 0 to $1";
+$.lang.data["net.phantombot.quotecommand.game-usage"] = "Usage: !quote game (enable/disable)";
+$.lang.data["net.phantombot.quotecommand.game-error"] = "$1 is not valid syntax, use enable/disable.";
+$.lang.data["net.phantombot.quotecommand.game-success-enable"] = "The game being played will now be added to quotes.";
+$.lang.data["net.phantombot.quotecommand.game-success-disable"] = "The game being played will no longer be added to quotes.";
+$.lang.data["net.phantombot.quotecommand.date-usage"] = "Usage: !quote date (enable/disable)";
+$.lang.data["net.phantombot.quotecommand.date-error"] = "$1 is not valid syntax, use enable/disable.";
+$.lang.data["net.phantombot.quotecommand.date-success-enable"] = "The current date will now be added to quotes.";
+$.lang.data["net.phantombot.quotecommand.date-success-disable"] = "The current date will no longer be added to quotes.";
 
 //highlightCommand.js 
 $.lang.data["net.phantombot.highlightcommand.usage"] = "Usage: !highlight (note)";
