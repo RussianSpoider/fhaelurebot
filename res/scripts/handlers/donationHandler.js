@@ -80,11 +80,7 @@ setTimeout(function(){
                 if ($var.currDonation.toString() != null || $var.currDonation.toString() != "") {
                     $.inidb.set("settings", "lastdonation", $.readFile($.checkerstorepath));
                     if ($.donation_toggle == 1) {
-                        $.say($.username.resolve($.ownerName) + $.lang.get("net.phantombot.donationhandler.new-donation", $.readFile($.checkerstorepath)));
-                        return;
-                    } else if ($.donation_toggle == 0) {
-                        $.say($.username.resolve($.ownerName) + $.lang.get("net.phantombot.donationhandler.new-donation", $.readFile($.checkerstorepath)));
-                        return;
+                        $.say($.lang.get("net.phantombot.donationhandler.new-donation", $.username.resolve($.ownerName), $.readFile($.checkerstorepath)));
                     }
                 }
             }
