@@ -733,11 +733,11 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 18) {
 if ($.inidb.GetInteger("init", "upgrade", "version") < 19) {
     println("Starting version 19 upgrades...");
         
-    if (!$.inidb.exists("autobanphrases", "num_phrases")) {
+    if (!$.inidb.get("autobanphrases", "num_phrases")) {
         $.inidb.del("autobanphrases", "num_phrases");
     }
     
-    if (!$.inidb.exists("autopurgephrases", "num_phrases")) {
+    if (!$.inidb.get("autopurgephrases", "num_phrases")) {
         $.inidb.del("autopurgephrases", "num_phrases");
     }
 
