@@ -128,8 +128,13 @@ public class HTTPServer extends Thread
                             {
                                 String password = URLDecoder.decode(args.get("password"), "UTF-8").replace("oauth:", "");
 
-                                if (password.equals(pass) && (request[1].toLowerCase().startsWith("addons")
-                                        || request[1].toLowerCase().startsWith("/addons")))
+                                if (password.equals(pass)
+                                        && (
+                                                request[1].toLowerCase().startsWith("addons")
+                                                || request[1].toLowerCase().startsWith("/addons")
+                                                || request[1].toLowerCase().startsWith("logs") ||
+                                                request[1].toLowerCase().startsWith("/logs"))
+                                        )
                                 {
                                     if (request[1].startsWith("/"))
                                     {
@@ -209,13 +214,29 @@ public class HTTPServer extends Thread
 
                                 if (data == null)
                                 {
-                                    FileInputStream fis = new FileInputStream(target);
-                                    length = fis.available();
+                                    if (target.isDirectory()) {
+                                        File[] files = target.listFiles();
+                                        String output = "";
 
-                                    b = new byte[length + 1];
-                                    fis.read(b);
+                                        java.util.Arrays.sort(files);
 
-                                    contentType = inferContentType(target.getPath());
+                                        for (File file : files) {
+                                            output += file.getName() + "\n";
+                                        }
+
+                                        b = output.getBytes();
+                                        length = output.length();
+                                        contentType = "text/text";
+
+                                    } else {
+                                        FileInputStream fis = new FileInputStream(target);
+                                        length = fis.available();
+
+                                        b = new byte[length + 1];
+                                        fis.read(b);
+
+                                        contentType = inferContentType(target.getPath());
+                                    }
                                 } else
                                 {
                                     length = data.length();
