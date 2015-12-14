@@ -154,7 +154,7 @@ $.on('command', function (event) {
 
         $.playerqueue.shift();
         if ($.playerqueue[0] != null) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.senders-trun-to-player"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.senders-trun-to-player", $.playerqueue[0].gametag));
             return;
         } else {
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.no-players-waiting"));
