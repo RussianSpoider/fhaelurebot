@@ -23,7 +23,10 @@ import com.gmt2001.TempStore;
 import com.gmt2001.TwitchAPIv3;
 import com.gmt2001.YouTubeAPIv3;
 import com.google.common.eventbus.Subscribe;
+import de.simeonf.EventWebSocketSecureServer;
 import de.simeonf.EventWebSocketServer;
+import de.simeonf.MusicWebSocketSecureServer;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -82,6 +85,10 @@ public class PhantomBot implements Listener
     private String youtubekey;
     private String webenable;
     private String musicenable;
+	private String usehttps;
+	private String keystorepath;
+	private String keystorepassword;
+	private String keypassword;
     private String channelStatus;
     private DataStore dataStoreObj;
     private SecureRandom rng;
@@ -117,7 +124,7 @@ public class PhantomBot implements Listener
 
     public PhantomBot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String webenable,
-            String musicenable)
+            String musicenable, String usehttps, String keystorepath, String keystorepassword, String keypassword)
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
@@ -147,6 +154,10 @@ public class PhantomBot implements Listener
 
         this.webenable = webenable;
         this.musicenable = musicenable;
+        this.usehttps = usehttps;
+        this.keystorepath = keystorepath;
+        this.keystorepassword = keystorepassword;
+        this.keypassword = keypassword;
 
         this.profile = new Profile(username.toLowerCase());
         this.connectionManager = new ConnectionManager(profile);
@@ -305,15 +316,37 @@ public class PhantomBot implements Listener
     {
         if (!webenable.equalsIgnoreCase("false"))
         {
+            if (!usehttps.equalsIgnoreCase("false"))
+            {
+                httpserver = new HTTPServer(baseport, oauth);
+                if (!musicenable.equalsIgnoreCase("false"))
+                {
+                	musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword);
+                }
+                eventsocketserver = new EventWebSocketSecureServer(baseport + 2, keystorepath, keystorepassword, keypassword);
+            }
+            else
+            {
+                httpserver = new HTTPServer(baseport, oauth);
+                if (!musicenable.equalsIgnoreCase("false"))
+                {
+                	musicsocketserver = new MusicWebSocketServer(baseport + 1);
+                }
+                eventsocketserver = new EventWebSocketServer(baseport + 2);
+            }
             webenabled = true;
-            httpserver = new HTTPServer(baseport, oauth);
             httpserver.start();
+            
             if (!musicenable.equalsIgnoreCase("false"))
             {
                 musicenabled = true;
-                musicsocketserver = new MusicWebSocketServer(baseport + 1);
+                musicsocketserver.start();
+                com.gmt2001.Console.out.println("MusicSockServer accepting connections on port " + baseport + 1);
             }
-            eventsocketserver = new EventWebSocketServer(baseport + 2);
+
+            
+            eventsocketserver.start();
+            com.gmt2001.Console.out.println("EventSocketServer accepting connections on port " + baseport + 2);
             EventBus.instance().register(eventsocketserver);
         }
 
@@ -681,7 +714,11 @@ public class PhantomBot implements Listener
                 data += "datastore=" + datastore + "\r\n";
                 data += "youtubekey=" + youtubekey + "\r\n";
                 data += "webenable=" + webenable + "\r\n";
-                data += "musicenable=" + musicenable;
+                data += "musicenable=" + musicenable + "\r\n";
+                data += "usehttps=" + usehttps + "\r\n";
+                data += "keystorepath=" + keystorepath + "\r\n";
+                data += "keystorepassword=" + keystorepassword + "\r\n";
+                data += "keypassword=" + keypassword;
 
                 Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
@@ -898,6 +935,10 @@ public class PhantomBot implements Listener
         String youtubekey = "";
         String webenable = "";
         String musicenable = "";
+        String usehttps = "";
+        String keystorepath = "";
+        String keystorepassword = "";
+        String keypassword = "";
 
         boolean changed = false;
 
@@ -968,6 +1009,22 @@ public class PhantomBot implements Listener
                     {
                         musicenable = line.substring(12);
                     }
+                    if (line.startsWith("usehttps=") && line.length() > 10)
+                    {
+                        usehttps = line.substring(9);
+                    }
+                    if (line.startsWith("keystorepath=") && line.length() > 14)
+                    {
+                    	keystorepath = line.substring(13);
+                    }
+                    if (line.startsWith("keystorepassword=") && line.length() > 18)
+                    {
+                        keystorepassword = line.substring(17);
+                    }
+                    if (line.startsWith("keypassword=") && line.length() > 13)
+                    {
+                        keypassword = line.substring(12);
+                    }
                 }
             }
         } catch (IOException ex)
@@ -1026,6 +1083,10 @@ public class PhantomBot implements Listener
                     com.gmt2001.Console.out.println("youtubekey='" + youtubekey + "'");
                     com.gmt2001.Console.out.println("webenable='" + webenable + "'");
                     com.gmt2001.Console.out.println("musicenable='" + musicenable + "'");
+                    com.gmt2001.Console.out.println("usehttps='" + usehttps + "'");
+                    com.gmt2001.Console.out.println("keystorepath='" + keystorepath + "'");
+                    com.gmt2001.Console.out.println("keystorepassword='" + keystorepassword + "'");
+                    com.gmt2001.Console.out.println("keypassword='" + keypassword + "'");
                 }
                 if (arg.equalsIgnoreCase("debugon"))
                 {
@@ -1171,6 +1232,46 @@ public class PhantomBot implements Listener
                         }
                     }
                 }
+                if (arg.toLowerCase().startsWith("usehttps=") && arg.length() > 10)
+                {
+                    if (!usehttps.equals(arg.substring(9)))
+                    {
+                    	usehttps = arg.substring(9);
+                        changed = true;
+
+                        if (usehttps.equalsIgnoreCase("1") || usehttps.equalsIgnoreCase("true"))
+                        {
+                        	usehttps = "true";
+                        } else
+                        {
+                        	usehttps = "false";
+                        }
+                    }
+                }
+                if (arg.toLowerCase().startsWith("keystorepath=") && arg.length() > 14)
+                {
+                    if (!keystorepath.equals(arg.substring(13)))
+                    {
+                    	keystorepath = arg.substring(13);
+                        changed = true;
+                    }
+                }
+                if (arg.toLowerCase().startsWith("keystorepassword=") && arg.length() > 18)
+                {
+                    if (!keystorepassword.equals(arg.substring(17)))
+                    {
+                    	keystorepassword = arg.substring(17);
+                        changed = true;
+                    }
+                }
+                if (arg.toLowerCase().startsWith("keypassword=") && arg.length() > 13)
+                {
+                    if (!keypassword.equals(arg.substring(12)))
+                    {
+                    	keypassword = arg.substring(12);
+                        changed = true;
+                    }
+                }
                 if (arg.equalsIgnoreCase("help") || arg.equalsIgnoreCase("--help") || arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("-?"))
                 {
                     com.gmt2001.Console.out.println("Usage: java -Dfile.encoding=UTF-8 -jar PhantomBot.jar [printlogin] [user=<bot username>] "
@@ -1208,12 +1309,16 @@ public class PhantomBot implements Listener
             data += "datastore=" + datastore + "\r\n";
             data += "youtubekey=" + youtubekey + "\r\n";
             data += "webenable=" + webenable + "\r\n";
-            data += "musicenable=" + musicenable;
+            data += "musicenable=" + musicenable + "\r\n";
+            data += "usehttps=" + usehttps + "\r\n";
+            data += "keystorepath=" + keystorepath + "\r\n";
+            data += "keystorepassword=" + keystorepassword + "\r\n";
+            data += "keypassword=" + keypassword;
 
             Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
 
-        PhantomBot.instance = new PhantomBot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, webenable, musicenable);
+        PhantomBot.instance = new PhantomBot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword);
     }
 }

@@ -45,10 +45,6 @@ public class EventWebSocketServer extends WebSocketServer implements Listener
 		super(new InetSocketAddress(port));
 
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
-
-        this.start();
-        com.gmt2001.Console.out.println("EventSocketServer accepting connections on port " + port);
-
     }
 
 	@Override
