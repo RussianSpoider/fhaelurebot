@@ -132,9 +132,9 @@ public class HTTPServer extends Thread
                                         && (
                                                 request[1].toLowerCase().startsWith("addons")
                                                 || request[1].toLowerCase().startsWith("/addons")
-                                                || request[1].toLowerCase().startsWith("logs") ||
-                                                request[1].toLowerCase().startsWith("/logs"))
-                                        )
+                                                || request[1].toLowerCase().startsWith("logs")
+                                                || request[1].toLowerCase().startsWith("/logs")
+                                        ))
                                 {
                                     if (request[1].startsWith("/"))
                                     {
