@@ -673,7 +673,7 @@ $.lang.data["net.phantombot.queueSystem.request-limit-set"] = "The player queue 
 $.lang.data["net.phantombot.queueSystem.request-limit-error-usage"] = "You must specify a limit number greater than 0";
 $.lang.data["net.phantombot.queueSystem.no-player-in-q"] = "There are currently no players in queue.";
 $.lang.data["net.phantombot.queueSystem.current-players"] = "Currently waiting to play: $1";
-$.lang.data["net.phantombot.queueSystem.senders-trun-to-player"] = "it's your turn!";
+$.lang.data["net.phantombot.queueSystem.senders-trun-to-player"] = "It's $1's turn!";
 $.lang.data["net.phantombot.queueSystem.no-players-waiting"] = "There are no more viewers waiting to play.";
 
 //bankheistSystem.js
