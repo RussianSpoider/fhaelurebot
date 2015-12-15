@@ -83,9 +83,9 @@ public class PhantomBot implements Listener
     private String datastore;
     private String datastoreconfig;
     private String youtubekey;
-    private String webenable;
-    private String musicenable;
-	private String usehttps;
+    private boolean webenable;
+    private boolean musicenable;
+	private boolean usehttps;
 	private String keystorepath;
 	private String keystorepassword;
 	private String keypassword;
@@ -123,8 +123,8 @@ public class PhantomBot implements Listener
     }
 
     public PhantomBot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
-            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String webenable,
-            String musicenable, String usehttps, String keystorepath, String keystorepassword, String keypassword)
+            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, boolean webenable,
+            boolean musicenable, boolean usehttps, String keystorepath, String keystorepassword, String keypassword)
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
@@ -314,12 +314,12 @@ public class PhantomBot implements Listener
 
     public final void init()
     {
-        if (!webenable.equalsIgnoreCase("false"))
+        if (webenable)
         {
-            if (!usehttps.equalsIgnoreCase("false"))
+            if (usehttps)
             {
                 httpserver = new HTTPServer(baseport, oauth);
-                if (!musicenable.equalsIgnoreCase("false"))
+                if (musicenable)
                 {
                 	musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword);
                 }
@@ -328,7 +328,7 @@ public class PhantomBot implements Listener
             else
             {
                 httpserver = new HTTPServer(baseport, oauth);
-                if (!musicenable.equalsIgnoreCase("false"))
+                if (musicenable)
                 {
                 	musicsocketserver = new MusicWebSocketServer(baseport + 1);
                 }
@@ -337,7 +337,7 @@ public class PhantomBot implements Listener
             webenabled = true;
             httpserver.start();
             
-            if (!musicenable.equalsIgnoreCase("false"))
+            if (musicenable)
             {
                 musicenabled = true;
                 musicsocketserver.start();
@@ -663,38 +663,35 @@ public class PhantomBot implements Listener
         {
             com.gmt2001.Console.out.print("Please note that the music server will also be disabled if the web server is disabled. The bot will require a restart for this to take effect. Type true or false to enable/disable web server: ");
             String newwebenable = System.console().readLine().trim();
-            webenable = newwebenable;
             changed = true;
 
-            if (webenable.equalsIgnoreCase("1") || webenable.equalsIgnoreCase("true"))
+            if (newwebenable.equalsIgnoreCase("1") || newwebenable.equalsIgnoreCase("true"))
             {
-                webenable = "true";
+                webenable = true;
             } else
             {
-                webenable = "false";
+                webenable = false;
             }
         }
 
         if (message.equals("musicenable"))
         {
-            if (webenable.equalsIgnoreCase("false"))
+            if (!webenable)
             {
                 com.gmt2001.Console.out.println("Web server must be enabled first. ");
-            }
-            if (webenable.equalsIgnoreCase("true"))
+            } else
             {
                 com.gmt2001.Console.out.print("The bot will require a restart for this to take effect. Please type true or false to enable/disable music server: ");
                 String newmusicenable = System.console().readLine().trim();
-                musicenable = newmusicenable;
                 changed = true;
-            }
-
-            if (musicenable.equalsIgnoreCase("1") || musicenable.equalsIgnoreCase("true"))
-            {
-                musicenable = "true";
-            } else
-            {
-                musicenable = "false";
+	
+	            if (newmusicenable.equalsIgnoreCase("1") || newmusicenable.equalsIgnoreCase("true"))
+	            {
+	                musicenable = true;
+	            } else
+	            {
+	                musicenable = false;
+	            }
             }
         }
 
@@ -935,9 +932,9 @@ public class PhantomBot implements Listener
         String datastore = "";
         String datastoreconfig = "";
         String youtubekey = "";
-        String webenable = "";
-        String musicenable = "";
-        String usehttps = "";
+        boolean webenable = true;
+        boolean musicenable = true;
+        boolean usehttps = false;
         String keystorepath = "";
         String keystorepassword = "";
         String keypassword = "";
@@ -1005,15 +1002,15 @@ public class PhantomBot implements Listener
                     }
                     if (line.startsWith("webenable=") && line.length() > 11)
                     {
-                        webenable = line.substring(10);
+                        webenable = Boolean.valueOf(line.substring(10));
                     }
                     if (line.startsWith("musicenable=") && line.length() > 13)
                     {
-                        musicenable = line.substring(12);
+                        musicenable = Boolean.valueOf(line.substring(12));
                     }
                     if (line.startsWith("usehttps=") && line.length() > 10)
                     {
-                        usehttps = line.substring(9);
+                        usehttps = Boolean.valueOf(line.substring(9));
                     }
                     if (line.startsWith("keystorepath=") && line.length() > 14)
                     {
@@ -1083,9 +1080,9 @@ public class PhantomBot implements Listener
                     com.gmt2001.Console.out.println("msglimit30='" + msglimit30 + "'");
                     com.gmt2001.Console.out.println("datastore='" + datastore + "'");
                     com.gmt2001.Console.out.println("youtubekey='" + youtubekey + "'");
-                    com.gmt2001.Console.out.println("webenable='" + webenable + "'");
-                    com.gmt2001.Console.out.println("musicenable='" + musicenable + "'");
-                    com.gmt2001.Console.out.println("usehttps='" + usehttps + "'");
+                    com.gmt2001.Console.out.println("webenable=" + webenable);
+                    com.gmt2001.Console.out.println("musicenable=" + musicenable);
+                    com.gmt2001.Console.out.println("usehttps=" + usehttps);
                     com.gmt2001.Console.out.println("keystorepath='" + keystorepath + "'");
                     com.gmt2001.Console.out.println("keystorepassword='" + keystorepassword + "'");
                     com.gmt2001.Console.out.println("keypassword='" + keypassword + "'");
@@ -1204,50 +1201,26 @@ public class PhantomBot implements Listener
                 }
                 if (arg.toLowerCase().startsWith("webenable=") && arg.length() > 11)
                 {
-                    if (!webenable.equals(arg.substring(10)))
+                    if (webenable != Boolean.valueOf(arg.substring(10)))
                     {
-                        webenable = arg.substring(10);
+                        webenable = Boolean.valueOf(arg.substring(10));
                         changed = true;
-
-                        if (webenable.equalsIgnoreCase("1") || webenable.equalsIgnoreCase("true"))
-                        {
-                            webenable = "true";
-                        } else
-                        {
-                            webenable = "false";
-                        }
                     }
                 }
                 if (arg.toLowerCase().startsWith("musicenable=") && arg.length() > 13)
                 {
-                    if (!musicenable.equals(arg.substring(12)))
+                    if (musicenable != Boolean.valueOf(arg.substring(12)))
                     {
-                        musicenable = arg.substring(12);
+                    	musicenable = Boolean.valueOf(arg.substring(12));
                         changed = true;
-
-                        if (musicenable.equalsIgnoreCase("1") || musicenable.equalsIgnoreCase("true"))
-                        {
-                            musicenable = "true";
-                        } else
-                        {
-                            musicenable = "false";
-                        }
                     }
                 }
                 if (arg.toLowerCase().startsWith("usehttps=") && arg.length() > 10)
                 {
-                    if (!usehttps.equals(arg.substring(9)))
+                    if (usehttps != Boolean.valueOf(arg.substring(9)))
                     {
-                    	usehttps = arg.substring(9);
+                    	usehttps = Boolean.valueOf(arg.substring(9));
                         changed = true;
-
-                        if (usehttps.equalsIgnoreCase("1") || usehttps.equalsIgnoreCase("true"))
-                        {
-                        	usehttps = "true";
-                        } else
-                        {
-                        	usehttps = "false";
-                        }
                     }
                 }
                 if (arg.toLowerCase().startsWith("keystorepath=") && arg.length() > 14)
