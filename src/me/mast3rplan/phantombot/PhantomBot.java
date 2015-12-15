@@ -341,12 +341,14 @@ public class PhantomBot implements Listener
             {
                 musicenabled = true;
                 musicsocketserver.start();
-                com.gmt2001.Console.out.println("MusicSockServer accepting connections on port " + baseport + 1);
+                int musicport = baseport+1;
+                com.gmt2001.Console.out.println("MusicSockServer accepting connections on port " + musicport);
             }
 
             
             eventsocketserver.start();
-            com.gmt2001.Console.out.println("EventSocketServer accepting connections on port " + baseport + 2);
+            int eventport = baseport+2;
+            com.gmt2001.Console.out.println("EventSocketServer accepting connections on port " + eventport);
             EventBus.instance().register(eventsocketserver);
         }
 
