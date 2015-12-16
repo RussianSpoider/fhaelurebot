@@ -497,6 +497,7 @@ $.lang.data["net.phantombot.donationhandler.new-donation"] = "$1 has received a 
 $.lang.data["net.phantombot.donationhandler.donationalert-usage"] = "!donationalert filepath | vieufilepath | toggle";
 
 //subscribeHandler.js 
+$.lan.data["net.phantombot.subscribeHandler.sub-message-usage"] = "To change it use '!subscribemessage <message>'. You can also add the string '(name)' to put the subscribers name";
 $.lang.data["net.phantombot.subscribeHandler.default-sub-message-with-points"] = "Thanks for the subscription (name)! +(pointname)!";
 $.lang.data["net.phantombot.subscribeHandler.default-sub-message"] = "Thanks for the subscription (name)!";
 $.lang.data["net.phantombot.subscribeHandler.sub-silent-mode-on"] = "Subscribe handler now set to silent mode";
