@@ -125,10 +125,68 @@ $.isDirectory = function(path) {
     return false;
 }
 
-
-
 $.findSize = function(file) {
     var file = new java.io.File(file); 
     return file.length();
 }
 
+var fileHooks = new Array();
+$.fileHook = new Array();
+
+$.fileHook.getHookIndex = function (scriptFile, file) {
+    for (var key in fileHooks) {
+        if (fileHooks[key][0].equalsIgnoreCase(scriptFile) && fileHooks[key][1].equalsIgnoreCase(file)) {
+            return key;
+        }
+    }
+    return -1;
+}
+
+$.fileHook.hasHook = function (scriptFile, file) {
+    return $.fileHook.getHookIndex(scriptFile, file) != -1;
+}
+
+$.fileHook.add = function (file, content, handler) {
+    var scriptFile = $script.getPath().replace("\\", "/").replace("./scripts/", "");
+    var i = $.fileHook.getHookIndex(scriptFile, file);
+
+    if (i == -1) {
+        fileHooks.push(new Array(scriptFile, file, null));
+        i = $.fileHook.getHookIndex(scriptFile, file);
+    }
+
+    fileHooks[i][2] = handler;
+    fileHooks[i][3] = $.findSize(file);
+    fileHooks[i][4] = content;
+}
+
+$.onFile = $.fileHook.add;
+
+$.fileHook.remove = function (file) {
+    var scriptFile = $script.getPath().replace("\\", "/").replace("./scripts/", "");
+    var i = $.fileHook.getHookIndex(scriptFile, file);
+
+    if (i != -1) {
+    	fileHooks.splice(i, 1);
+    }
+}
+
+$.fileHook.call = function (file, arg) {
+    for (var key in fileHooks) {
+        if (fileHooks[key][1].equalsIgnoreCase(file) && $.moduleEnabled(fileHooks[key][0]) && $.fileExists(fileHooks[key][1])) {
+			fileHooks[key][3] = $.findSize(fileHooks[key][1]);
+			fileHooks[key][4] = $.readFile(fileHooks[key][1]).toString();
+        	fileHooks[key][2](arg);
+        }
+    }
+}
+
+$.timer.addTimer("./util/fileSystem.js", "fileWatcher", true, function() {
+	for (var key in fileHooks) {
+		if ($.moduleEnabled(fileHooks[key][0]) && $.fileExists(fileHooks[key][1]) && (fileHooks[key][3] != $.findSize(fileHooks[key][1]) || fileHooks[key][4] != $.readFile(fileHooks[key][1]).toString())) {
+			fileHooks[key][3] = $.findSize(fileHooks[key][1]);
+			fileHooks[key][4] = $.readFile(fileHooks[key][1]).toString();
+			fileHooks[key][2](fileHooks[key][4]);
+		}
+	}
+}, 10 * 1000);
