@@ -129,7 +129,7 @@ $.on('command', function(event) {
 					$.say(username + " rolled double \u0002" +
 						d1 + "\u0002s! You won " +  
 						$.getPointsString(newpoints) + "!");
-					$.inidb.set("points", sender, points + newpoints);
+					$.inidb.incr('points', sender, newpoints);
 				} else {
 					$.say(username + " rolled double \u0002" +
 						d1 + "\u0002s!");
