@@ -307,7 +307,6 @@ setTimeout(function () {
         $.registerChatCommand("./handlers/followHandler.js", "followannounce", "mod");
         $.registerChatCommand("./handlers/followHandler.js", "followmessage", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followreward", "admin");
-        $.registerChatCommand("./handlers/followHandler.js", "followcount");
         $.registerChatCommand("./handlers/followHandler.js", "followage");
     }
 }, 10 * 1000);
