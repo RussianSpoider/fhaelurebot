@@ -22,45 +22,35 @@ if ($.followReward == null || $.followReward == undefined || $.followReward == "
 $.getFollowAge = function (user, channel) {
     var follow = $.twitch.GetUserFollowsChannel(user, channel);
     var Followed_At = follow.getString("created_at");
+    var FAT = new Date(Followed_At).getTime();
 
-    var date = new java.text.SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssz");
-    var s0 = Followed_At.substring(0, Followed_At.length() - 6);
-    var s1 = Followed_At.substring(Followed_At.length() - 6, Followed_At.length());
-    Followed_At = s0 + "GMT" + s1;
+    var followage = "";
+    
+    function dateDiff(timestamp){
+        var d = Math.abs(timestamp - new Date().getTime()) / 1000;
+        var v = '';
+        var r = {}; 
+        var s = {
+            year: 31536000,
+            month: 2592000,
+            day: 86400,
+            hour: 3600,
+            minute: 60,
+            second: 1
+        };
 
-    var datefmt = new java.text.SimpleDateFormat("MMMM d, YYYY");
-    var gtf = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-    datefmt.setTimeZone(java.util.TimeZone.getTimeZone($.timezone));
-    var now = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone($.timezone)).getTime();
-
-    var FollowTime = new java.util.Date(gtf.format(date.parse(Followed_At)));
-    var TotalFollowTime = new java.util.Date(gtf.format(now));
-
-    var diff = (TotalFollowTime.getTime() - FollowTime.getTime());
-    var diffSeconds = diff / 1000 % 60;
-    var diffMinutes = diff / (60 * 1000) % 60;
-    var diffHours = diff / (60 * 60 * 1000) % 24;
-    var diffDays = diff / (24 * 60 * 60 * 1000);
-    var diffWeek = diff / (7 * 24 * 60 * 60 * 1000);
-    var diffMonth = diff / (31 * 24 * 60 * 60 * 1000);
-    var diffYear = diff / (12 * 31 * 24 * 60 * 60 * 1000);
-
-    diffMinutes = diffMinutes.toString().substring(0, diffMinutes.toString().indexOf("."));
-    diffHours = diffHours.toString().substring(0, diffHours.toString().indexOf("."));
-    diffDays = diffDays.toString().substring(0, diffDays.toString().indexOf("."));
-    diffWeek = diffWeek.toString().substring(0, diffWeek.toString().indexOf("."));
-    diffMonth = diffMonth.toString().substring(0, diffMonth.toString().indexOf("."));
-    diffYear = diffYear.toString().substring(0, diffYear.toString().indexOf("."));
-
-    if (diffMonth > 12) {
-        return diffYear + " years, " + diffHours + " hrs, " + diffMinutes + " min and " + diffSeconds + " sec.";
-    } else if (diffWeek > 5) {
-        return diffMonth + " months, " + diffHours + " hrs, " + diffMinutes + " min and " + diffSeconds + " sec.";
-    } else if (diffDays > 15) {
-        return diffWeek + " weeks, " + diffHours + " hrs, " + diffMinutes + " min and " + diffSeconds + " sec.";
-    } else {
-        return diffDays + " days, " + diffHours + " hrs, " + diffMinutes + " min and " + diffSeconds + " sec.";
-    }
+        Object.keys(s).forEach(function(key){
+            v = Math.floor(d / s[key]);
+            if(v>0){
+                followage = followage + v + " " + key + (v > 1 ? "s":"") + ", ";
+                r[key] = Math.floor(d / s[key]);
+                d -= r[key] * s[key];
+            }
+        });
+        
+        return followage.slice(0,-2);
+    };
+    return dateDiff(FAT);
 }
 
 if ($.lastfollow == undefined || $.lastfollow == null) {
