@@ -8,7 +8,7 @@ $.getWhisperString = function (sender) {
     if ($.whispermode == "true") {
         return "/w " + sender + " ";
     } else {
-        return $.username.resolve(sender) + ": ";
+        return "@" + $.username.resolve(sender) + " ";
     }
 }
 
