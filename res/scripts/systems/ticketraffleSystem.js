@@ -5,7 +5,7 @@ if ($.SubscriberLuck == null || $.SubscriberLuck == undefined || isNaN($.Subscri
     $.SubscriberLuck = $.inidb.set("settings", "subscriber_luck", "1");
 }
 
-$.on('command', function(event) {
+$.on('command', function (event) {
     var sender = event.getSender();
     var username = $.username.resolve(sender, event.getTags());
     var command = event.getCommand();
@@ -25,7 +25,7 @@ $.on('command', function(event) {
         }
  
         if (subCommand.equalsIgnoreCase("close") || subCommand.equalsIgnoreCase("end")) {
-            if ($.TicketRaffleRunning == false) {
+            if (!$.TicketRaffleRunning) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.no-raffle-opened"));
                 return;
             }
@@ -41,19 +41,19 @@ $.on('command', function(event) {
      
             if (Winner == null) {
                 $.say($.lang.get("net.phantombot.ticketrafflesystem.no-winner"));
-                $.inidb.RemoveFile("traffleplayer");
+                $.inidb.RemoveFile('traffleplayer');
                 return;
             } else {
                 $.say($.lang.get("net.phantombot.ticketrafflesystem.winner", Winner));
-                $.inidb.set("traffle", "lastwinner", Winner);
-                $.inidb.RemoveFile("traffleplayer");
+                $.inidb.set('traffle', 'lastwinner', Winner);
+                $.inidb.RemoveFile('traffleplayer');
                 return;
             }
         }
      
         if (subCommand.equalsIgnoreCase("repick") || subCommand.equalsIgnoreCase("redraw")) {
             var NewWinner = $.TicketRaffleEntries[$.randRange(1, $.TicketRaffleEntries.length) - 1];
-            if (NewWinner.toLowerCase() == $.inidb.get("traffle", "lastwinner").toLowerCase()) {
+            if (NewWinner.toLowerCase() == $.inidb.get('traffle', 'lastwinner').toLowerCase()) {
                 NewWinner = $.TicketRaffleEntries[$.randRange(1, $.TicketRaffleEntries.length) - 1];
             }
      
@@ -62,7 +62,7 @@ $.on('command', function(event) {
                 return;
             } else {
                 $.say($.lang.get("net.phantombot.ticketrafflesystem.no-winner-repick", NewWinner));
-                $.inidb.set("traffle", "lastwinner", NewWinner);
+                $.inidb.set('traffle', 'lastwinner', NewWinner);
                 return;
             }
         }
@@ -72,50 +72,45 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.sub-luck-usage"));
                 return;
             }
-            $.inidb.set("settings", "subscriber_luck", parseInt(args[1]));
+            $.inidb.set('settings', 'subscriber_luck', parseInt(args[1]));
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.sub-luck-set", parseInt(args[1])));
             return;
         }
      
         if (subCommand.equalsIgnoreCase("open") || subCommand.equalsIgnoreCase("start")) {
-            if ($.TicketRaffleRunning == true) {
+            if ($.TicketRaffleRunning) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.raffle-already-opened"));
                 return;
             }
            
-            var MaxEntries;
-            var Followers = false;
-            var Subscribers = false;
-            var Timer = 0;
+            $.TicketRaffleMaxEntries = 0;
+            $.Followers = false;
+            $.Subscribers = false;
+            $.Time = 0;
+            $.TicketRaffleEntries = [];
             var i = 1;
             var key = "";
 
             if (args[i] != null && args[i] != undefined && !isNaN(args[i])) {
-                MaxEntries = args[i];
+                $.TicketRaffleMaxEntries = parseInt(args[i]);
                 i++;
-            }
-            if (args[i] != null && args[i] != undefined && (args[i].equalsIgnoreCase("followers") || args[i].equalsIgnoreCase("(followers)"))) {
-                Followers = true;
+            }  
+            if (args[i] != null && args[i] != undefined && (args[i].equalsIgnoreCase('followers') || args[i].equalsIgnoreCase('(followers)'))) {
+                $.Followers = true;
                 key = $.lang.get("net.phantombot.ticketrafflesystem.following2");
                 i++;
-            }
-            if (args[i] != null && args[i] != undefined && (args[i].equalsIgnoreCase("subscribers") || args[i].equalsIgnoreCase("(subscribers)"))) {
-                Subscribers = true;
+            } 
+            if (args[i] != null && args[i] != undefined && (args[i].equalsIgnoreCase('subscribers') || args[i].equalsIgnoreCase('(subscribers)'))) {
+                $.Subscribers = true;
                 key = $.lang.get("net.phantombot.ticketrafflesystem.subscribed");
                 i++;
-            }
+            } 
             if (args[i] != null && args[i] != undefined && !isNaN(args[i])) {
-                Timer = parseInt(args[i]);
+                $.Time = parseInt(args[i]);
                 i++;
             }
 
-            $.TicketRaffleMaxEntries = MaxEntries;
-            $.Followers = Followers;
-            $.Subscribers = Subscribers;
-            $.Time = Timer;
-            $.TicketRaffleEntries = [];
-
-            if (MaxEntries == null) {
+            if ($.TicketRaffleMaxEntries == 0) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.user-error"));
                 return;
             } else if ($.Time >= 1) {
@@ -133,12 +128,12 @@ $.on('command', function(event) {
              
                     if (Winner == null) {
                         $.say($.lang.get("net.phantombot.ticketrafflesystem.no-winner"));
-                        $.inidb.RemoveFile("traffleplayer");
+                        $.inidb.RemoveFile('traffleplayer');
                         return;
                     } else {
                         $.say($.lang.get("net.phantombot.ticketrafflesystem.winner", Winner));
-                        $.inidb.set("traffle", "lastwinner", Winner);
-                        $.inidb.RemoveFile("traffleplayer");
+                        $.inidb.set('traffle', 'lastwinner', Winner);
+                        $.inidb.RemoveFile('traffleplayer');
                         return;
                     }
                 }, $.Time * 60 * 1000);
