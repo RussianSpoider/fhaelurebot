@@ -1,6 +1,6 @@
 $.noticeinterval = parseInt($.inidb.get('notice', 'interval'));
 $.noticemessages = parseInt($.inidb.get('notice', 'reqmessages'));
-$.notices_toggle = $.inidb.get('notice', 'notices_toggle');
+$.Notices = $.inidb.GetKeyList('notices', '').length;
 
 if ($.noticeinterval == undefined || $.noticeinterval == null || isNaN($.noticeinterval) || $.noticeinterval < 2) {
     $.noticeinterval = 10;
@@ -8,10 +8,6 @@ if ($.noticeinterval == undefined || $.noticeinterval == null || isNaN($.noticei
 
 if ($.noticemessages == undefined || $.noticemessages == null || isNaN($.noticemessages)) {
     $.noticemessages = 25;
-}
-
-if ($.notices_toggle == undefined || $.notices_toggle == null) {
-    $.notices_toggle = true;
 }
 
 $.messageCount = 0;
@@ -42,7 +38,7 @@ $.on('command', function (event) {
         action = args[0];
         message = args[1];
 
-        if (action == null) {
+        if (args.length <= 0) {
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.noticehandler.notice-usage"));
             return;
         }
@@ -59,7 +55,7 @@ $.on('command', function (event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.noticehandler.notice-get-error", num_messages, (num_messages), args[1]));
                 return;
             } else {
-                $.say($.inidb.get('notices', 'message_' + message)); // no need for lang here because who set's the notice will have it in his lang.
+                $.say($.inidb.get('notices', 'message_' + message)); 
                 return;
             }
         }
@@ -104,15 +100,9 @@ $.on('command', function (event) {
                 }
             }
         }
-        
-        if ($.inidb.get('notice', 'notices_toggle') == "true") {
-            $.notices_toggle = true;
-        } else if ($.inidb.get('notice', 'notices_toggle') == "false") {
-            $.notices_toggle = false;
-        }
 
         if (action.equalsIgnoreCase("config")) {
-            if ($.notices_toggle == true) {
+            if ($.inidb.exists('settings', 'noticetoggle') && $.inidb.get('settings', 'noticetoggle').equalsIgnoreCase('true')) {
                 var notices = $.lang.get("net.phantombot.noticehandler.notice-enabled");
             } else {
                 notices = $.lang.get("net.phantombot.noticehandler.notice-disabled");
@@ -128,16 +118,12 @@ $.on('command', function (event) {
                 return;
             }
 
-            if ($.notices_toggle == false) {
-                $.notices_toggle = true;
-                $.inidb.set('notice', 'notices_toggle', "true");
+            if ($.inidb.exists('settings', 'noticetoggle') && $.inidb.get('settings', 'noticetoggle').equalsIgnoreCase('false')) {
+                $.inidb.set('settings', 'noticetoggle', 'true');
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.noticehandler.notice-toggle-on"));
-                return;
-                } else if ($.notices_toggle == true) {
-                $.notices_toggle = false;
-                $.inidb.set('notice', 'notices_toggle', "false");
+            } else {
+                $.inidb.set('settings', 'noticetoggle', 'false');
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.noticehandler.notice-toggle-off"));
-                return;
             }
         }
 
@@ -227,73 +213,29 @@ setTimeout(function(){
         $.registerChatCommand("./handlers/noticeHandler.js", "delnotice");
         $.registerChatCommand("./handlers/noticeHandler.js", "addnotice");
     }
-},10 * 1000);
+}, 10 * 1000);
 
-$.messageTime = 0;
-$.messageIndex = 0;
+$.SendNotice = function() {
+    var EventBus = Packages.me.mast3rplan.phantombot.event.EventBus;
+    var CommandEvent = Packages.me.mast3rplan.phantombot.event.command.CommandEvent;
+    var notice = $.inidb.get('notices', 'message_' + $.randRange(0, $.Notices));
 
-function sendMessage() {
-
-    var num_messages = $.inidb.get('notice', 'num_messages');
-
-    if (isNaN(parseInt(num_messages)) || parseInt(num_messages) == 0) {
+    if (notice.toLowerCase().startsWith('command:')) {
+        notice = notice.substring(8);
+        EventBus.instance().post(new CommandEvent($.botname, notice, ' '));
+        return;
+    } else {
+        $.say(notice);
         return;
     }
-	
-    if ($.inidb.get('notices', 'message_' + $.messageIndex) == null || $.inidb.get('notices', 'message_' + $.messageIndex) == " ") {
-        return;
-    }
+};
 
-    var message = $.inidb.get('notices', 'message_' + $.messageIndex);
-    var cmds = "";
-    
-    if (message.toLowerCase().startsWith("(runcommand:") && message.indexOf(")") > 12) {
-        message = message.substring(12);
-        cmds = message.substring(0, message.indexOf(")"));
-        message = message.substring(message.indexOf(")") + 1);
+$.timer.addTimer("./handlers/noticehandler.js", "Notices", true, function() {
+    if ($.Notices > 0 && $.inidb.get('settings', 'noticetoggle').equalsIgnoreCase('true')) {
+        if ($.messageCount >= $.noticemessages) {
+            $.SendNotice();
+            $.messageCount = 0;
+            return;
+        }
     }
-
-    $.messageIndex++;
-
-    if ($.messageIndex >= num_messages) {
-        $.messageIndex = 0;
-    }
-    
-    if ($.strlen(cmds) > 0) {
-       var cmd = cmds;
-       var prm = "";
-       
-       if (cmd.indexOf(" ") > 0) {
-           cmd = cmd.substring(0, cmd.indexOf(" "));
-           prm = cmd.substring(cmd.indexOf(" "));
-       }
-       
-       var EventBus = Packages.me.mast3rplan.phantombot.event.EventBus;
-       var CommandEvent = Packages.me.mast3rplan.phantombot.event.command.CommandEvent;
-       
-       EventBus.instance().post(new CommandEvent($.botname, cmd, prm));
-    }
-    
-    if ($.strlen(message) > 0) {
-       $.say(message);
-       return;
-    }
-}
-
-$.timer.addTimer("./handlers/noticeHandler.js", "notices", true, function() {
-    if (!$.moduleEnabled("./handlers/noticeHandler.js")) {
-        return;
-    }
-        
-    if (($.messageTime + ($.noticeinterval * 60 * 1000)) < System.currentTimeMillis()) {
-        if (($.messageCount >= $.noticemessages)) {
-
-            if ($.notices_toggle == true) {
-                sendMessage();
-                $.messageCount = 0;
-            }
-
-            $.messageTime = System.currentTimeMillis();   
-        }  
-    }
-}, 10000);
+}, $.noticeinterval * 60 * 1000);
