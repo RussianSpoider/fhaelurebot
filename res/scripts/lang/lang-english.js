@@ -496,21 +496,22 @@ $.lang.data["net.phantombot.donationhandler.donation-toggle-off"] = "Donation al
 $.lang.data["net.phantombot.donationhandler.new-donation"] = "$1 has received a donation from: $2";
 $.lang.data["net.phantombot.donationhandler.donationalert-usage"] = "!donationalert filepath | vieufilepath | toggle";
 
-//subscribeHandler.js 
-$.lang.data["net.phantombot.subscribeHandler.sub-message-usage"] = "To change it use '!subscribemessage <message>'. You can also add the string '(name)' to put the subscribers name";
-$.lang.data["net.phantombot.subscribeHandler.default-sub-message-with-points"] = "Thanks for the subscription (name)! +(pointname)!";
-$.lang.data["net.phantombot.subscribeHandler.default-sub-message"] = "Thanks for the subscription (name)!";
-$.lang.data["net.phantombot.subscribeHandler.sub-silent-mode-on"] = "Subscribe handler now set to silent mode";
-$.lang.data["net.phantombot.subscribeHandler.sub-silent-mode-off"] = "Subscribe handler now set to verbose mode";
-$.lang.data["net.phantombot.subscribeHandler.current.sub-message"] = "The current subscriber message is: $1";
-$.lang.data["net.phantombot.subscribeHandler.new-sub-message-set"] = "New subscriber message set!";
-$.lang.data["net.phantombot.subscribeHandler.new-sub-current-reward"] = "The current new subscriber reward is $1 points! To change it use '!subscribereward <reward>";
-$.lang.data["net.phantombot.subscribeHandler.sub-reward-error"] = "Please put a valid reward greater than or equal to 0!";
-$.lang.data["net.phantombot.subscribeHandler.new-sub-reward-set"] = "New subscriber reward set to $1 $2";
-$.lang.data["net.phantombot.subscribeHandler.current-subs"] = "There are currently $1 subscribers!";
-$.lang.data["net.phantombot.subscribeHandler.current-sub-mode"] = "Currently using $1 subscription detection. twitchnotify mode does not save to the database. To change it use '!subscribemode <auto or twitchnotify>";
-$.lang.data["net.phantombot.subscribeHandler.changed-sub-mode-twitchnotify"] = "Switched to twitchnotify subscription detection!";
-$.lang.data["net.phantombot.subscribeHandler.changed-sub-mode-auto"] = "Switched to auto subscription detection!";
+//subscribeHandler.js
+$.lang.data["net.phantombot.subscribeHandler.new-sub-toggle-off"] = "New Subscribers will no longer be welcomed upon subscribing.";
+$.lang.data["net.phantombot.subscribeHandler.new-sub-toggle-on"] = "New Subscribers will now be welcomed upon subscribing.";
+$.lang.data["net.phantombot.subscribeHandler.resub-toggle-off"] = "Resubscribers will no longer be welcomed upon resubscribing.";
+$.lang.data["net.phantombot.subscribeHandler.resub-toggle-on"] = "Resubscribers will now be welcomed upon resubscribing.";
+$.lang.data["net.phantombot.subscribeHandler.sub-msg-usage"] = "Usage: !submessage (message)";
+$.lang.data["net.phantombot.subscribeHandler.sub-msg-set"] = "New subscriber welcome message set!";
+$.lang.data["net.phantombot.subscribeHandler.resub-msg-usage"] = "Usage: !resubmessage (message)";
+$.lang.data["net.phantombot.subscribeHandler.resub-msg-set"] = "Resubscriber welcome message set!";
+$.lang.data["net.phantombot.subscribeHandler.reward-usage"] = "Usage: !subscribereward (amount)";
+$.lang.data["net.phantombot.subscribeHandler.reward-set"] = "Reward for subscribing set!";
+$.lang.data["net.phantombot.subscribeHandler.sub-count"] = "There are currently $1 subscribers!";
+$.lang.data["net.phantombot.subscribeHandler.auto-submode-timer-usage"] = "Usage: !autosubmodetimer (interval) - set the interval to 0 to disable.";
+$.lang.data["net.phantombot.subscribeHandler.auto-submode-timer-off"] = "Automated subs only mode enabled!";
+$.lang.data["net.phantombot.subscribeHandler.auto-submode-timer-404"] = "The minimum auto submode interval allowed is 30 minutes.";
+$.lang.data["net.phantombot.subscribeHandler.auto-sub-mode-imterval-set"] = "Auto submode interval set! This will only work while the stream is online.";
 
 //8ballCommand.js
 $.lang.data["net.phantombot.8ballCommand.proper-usage"] = "ask the magic-8ball a question with !8ball";
