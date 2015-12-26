@@ -443,27 +443,25 @@ $.lang.data["net.phantombot.followHandler.follow-message-usage"] = "To change it
 $.lang.data["net.phantombot.followHandler.follow-message-usage-points"] = ", '(reward)' to put the number of points received for following.";		
 $.lang.data["net.phantombot.followHandler.follow-message-set"] = "New follower message set!";
 
-
 // noticeHandler.js
-$.lang.data["net.phantombot.noticehandler.notice-get-usage"] = "There are $1 notices. Say '!notice get <id>' to get a messages content. Message IDs go from 0 to $2";
-$.lang.data["net.phantombot.noticehandler.notice-get-error"] = "There are $1 notices. Message IDs go from 0 to $2 and $3 isn't one of them";
-$.lang.data["net.phantombot.noticehandler.notice-insert-usage"] = "Insert an event into a specific slot, pushing the event currently in that slot and all others after it forward by one slot. !notice insert <id> <message>";
-$.lang.data["net.phantombot.noticehandler.notice-added-success"] = "Notice added! '$1' There are now $2 notices!";
-$.lang.data["net.phantombot.noticehandler.notice-current-interval"] = "The current interval is $1 minutes. Set it with !notice timer <minutes> (Minimum is 2 minutes)";
-$.lang.data["net.phantombot.noticehandler.notice-interval-set-success"] = "The interval between notices has been set to $1 minutes!";
 $.lang.data["net.phantombot.noticehandler.notice-config"] = "[Notice Settings] - [Notices: $1] - [Interval: $2 minutes] - [Msg Trigger: $3 messages] - [Amount: $4 notices]";
-$.lang.data["net.phantombot.noticehandler.notice-toggle-on"] = "Notices have been turned on!";
-$.lang.data["net.phantombot.noticehandler.notice-toggle-off"] = "Notices have been turned off!";
-$.lang.data["net.phantombot.noticehandler.notice-req-message-usage"] = "The current amount is $1 messages. Set it with !notice req <amount> (Minimum is 5 messages)";
-$.lang.data["net.phantombot.noticehandler.norice-req-message-set-success"] = "The minimum number messages to trigger a notice has been set to $1 messages!";
-$.lang.data["net.phantombot.noticehandler.notice-usage"] = "Usage: !addnotice <message>, !delnotice <id>, !notice insert <id> <message>, !notice get <id>, !notice timer <minutes>, !notice req <amount>, !notice config";
-$.lang.data["net.phantombot.noticehandler.notice-add-usage"] = "Insert an notice at the end of the rotation. !addnotice <message>";
-$.lang.data["net.phantombot.noticehandler.notice-remove-usage"] = "Delete the notice at the specified slot. !delnotice <id>";
-$.lang.data["net.phantombot.noticehandler.notice-remove-error"] = "There are no notices at this time";
-$.lang.data["net.phantombot.noticehandler.notice-remove-success"] = "Notice removed! There are now $1 notices!";
-$.lang.data["net.phantombot.noticehandler.notice-enabled"] = "Enabled";
-$.lang.data["net.phantombot.noticehandler.notice-disabled"] = "Disabled";
-$.lang.data["net.phantombot.noticehandler.notice-remove-error2"] = "That notice does not exist, get the notice id with the command !notice get (id)";
+$.lang.data["net.phantombot.noticehandler.notice-usage"] = "Usage: !notice add / remove / edit / config / interval / req / toggle";
+$.lang.data["net.phantombot.noticehandler.notice-get-usage"] = "Usage: !notice get (notice id) Notice id\'s go from 0 to $1";
+$.lang.data["net.phantombot.noticehandler.notice-error-notice-404"] = "That notice does not exists.";
+$.lang.data["net.phantombot.noticehandler.notice-edit-usage"] = "Usage: !notice edit (notice id) (message) Notice id\'s go from 0 to $1";
+$.lang.data["net.phantombot.noticehandler.notice-remove-usage"] = "Usage: !notice remove (notice id) Notice id\'s go from 0 to $1";
+$.lang.data["net.phantombot.noticehandler.notice-edit-success"] = "Notice edited!";
+$.lang.data["net.phantombot.noticehandler.notice-remove-success"] = "Notice removed!";
+$.lang.data["net.phantombot.noticehandler.notice-add-success"] = "Notice added!";
+$.lang.data["net.phantombot.noticehandler.notice-add-usage"] = "Usage: !notice add (message)";
+$.lang.data["net.phantombot.noticehandler.notice-interval-usage"] = "Usage: !notice interval (interval)";
+$.lang.data["net.phantombot.noticehandler.notice-interval-404"] = "Notice interval needs to be more then 2 minutes.";
+$.lang.data["net.phantombot.noticehandler.notice-inteval-success"] = "Notice interval set!";
+$.lang.data["net.phantombot.noticehandler.notice-req-success"] = "Notice req message set!";
+$.lang.data["net.phantombot.noticehandler.notice-req-usage"] = "Usage: !notice req (req messages)";
+$.lang.data["net.phantombot.noticehandler.notice-req-404"] = "Notice req messages needs to at lease 1.";
+$.lang.data["net.phantombot.noticehandler.notice-enabled"] = "Notices have been enabled!";
+$.lang.data["net.phantombot.noticehandler.notice-disabled"] = "Notices have been disabled.";
 
 //phraseHandler.js
 $.lang.data["net.phantombot.phrasehandler.trigger-error-add-usage"] = "Usage: !addphrase \"trigger\" \"message\" - (sender) can be used in the message to display the username.";
