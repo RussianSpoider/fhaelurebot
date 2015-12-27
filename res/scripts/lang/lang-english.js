@@ -135,7 +135,7 @@ $.lang.data["net.phantombot.chatmoderator.whitelist-get"] = "Whitelist #$1 -> \"
 
 
 //pointSystem.js
-$.lang.data["net.phantombot.pointsystem.config"] = "[Point Settings] - [Name (single): $1] - [Name (multiple): $2] - [Gain: $3] - [Gain (offline): $4] - [Interval: $5 minute(s)] - [Interval (offline): $6 minute(s)] - [Bonus: $7 per group level] - [Gifting Minimum: $8]";
+$.lang.data["net.phantombot.pointsystem.config"] = "[Point Settings] - [Name (single): $1] - [Name (multiple): $2] - [Gain: $3] - [Gain (offline): $4] - [Interval: $5 minute(s)] - [Interval (offline): $6 minute(s)] - [Gifting Minimum: $7]";
 $.lang.data["net.phantombot.pointsystem.gain-offline-error-negative"] = "You can not set the amount of $1 gained to a negative number.";
 $.lang.data["net.phantombot.pointsystem.gain-offline-success"] = "Set the $1 earnings to $2 every $3 minute(s) while the stream is offline, to set point gains for groups individually use !group points.";
 $.lang.data["net.phantombot.pointsystem.gain-offline-usage"] = "Usage: \"!points offlinegain <amount>\"";
