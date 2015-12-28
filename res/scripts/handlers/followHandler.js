@@ -1,22 +1,11 @@
-$.announceFollows = false;
-$.announceFollowsAllowed = false;
-$.followMessage = $.inidb.get('settings', 'followmessage');
-$.followReward = parseInt($.inidb.get('settings', 'followreward'));
-
-if ($.followMessage == null || $.followMessage == undefined || $.strlen($.followMessage) == 0 || $.followMessage == "") {
-    if ($.moduleEnabled("./systems/pointSystem.js")) {
-        if ($.followReward < 1) {
-            $.followMessage = $.lang.get("net.phantombot.followHandler.new-follow-message-no-reward");
-        } else if ($.followReward > 0 && $.moduleEnabled('./systems/pointSystem.js')) {
-            $.followMessage = $.lang.get("net.phantombot.followHandler.new-follow-message-and-reward");
-        }
-    } else {
-        $.followMessage = $.lang.get("net.phantombot.followHandler.new-follow-message-no-reward");
-    }
-}
-
-if ($.followReward == null || $.followReward == undefined || $.followReward == "" || isNaN($.followReward)) {
-    $.followReward = 100;
+$.FollowHandler = {
+    FollowMessage: $.inidb.get('settings', 'followmessage') ? $.inidb.get('settings', 'followmessage') : '(name) just followed!',
+    FollowToggle: $.inidb.get('settings', 'followtoggle') ? $.inidb.get('settings', 'followtoggle') : false,
+    FollowReward: parseInt($.inidb.get('settings', 'followreward')) ? parseInt($.inidb.get('settings', 'followreward')) : 0,
+    AnnounceFollowsAllowed: false,
+    FollowTrain: 0,
+    LastFollow: 0,
+    LastFollower: 0,
 }
 
 $.getFollowAge = function (user, channel) {
@@ -26,7 +15,7 @@ $.getFollowAge = function (user, channel) {
 
     var followage = "";
     
-    function dateDiff(timestamp){
+    function dateDiff (timestamp) {
         var d = Math.abs(timestamp - new Date().getTime()) / 1000;
         var v = '';
         var r = {}; 
@@ -41,261 +30,193 @@ $.getFollowAge = function (user, channel) {
 
         Object.keys(s).forEach(function(key){
             v = Math.floor(d / s[key]);
-            if(v>0){
+            if (v > 0) {
                 followage = followage + v + " " + key + (v > 1 ? "s":"") + ", ";
                 r[key] = Math.floor(d / s[key]);
                 d -= r[key] * s[key];
             }
         });
-        
-        return followage.slice(0,-2);
+        return followage.slice(0, -2);
     };
     return dateDiff(FAT);
-}
+};
 
-if ($.lastfollow == undefined || $.lastfollow == null) {
-    $.lastfollow = 0;
-    $.followtrain = 0;
-}
+$.getUserFollowed = function (user, channel) {
+    var follows = $.twitch.GetUserFollowsChannel(user, channel);
+
+    if (follows.getInt('_http') != 200) {
+        $.say($.lang.get("net.phantombot.followHandler.is-not-following", user, channel));
+        return;
+    } else {
+       $.say($.lang.get("net.phantombot.followHandler.is-following", user, channel)); 
+       return;
+    }
+};
+
+$.on('twitchFollowsInitialized', function (event) {
+    if (!$.FollowHandler.AnnounceFollowsAllowed) {
+        $.println(">>Enabling new follower announcements");
+        $.FollowHandler.AnnounceFollowsAllowed = true;
+    }
+});
 
 $.on('twitchFollow', function (event) {
-    var follower = event.getFollower().toLowerCase();
-    var username = $.username.resolve(follower);
-    var followed = $.inidb.get('followed', follower);
+    var follower = event.getFollower();
 
-    if (followed == null || followed == undefined || followed.isEmpty()) {
+    if (!$.inidb.exists('followed', follower)) {
         $.inidb.set('followed', follower, 1);
-        var p = $.followReward;
+        if ($.FollowHandler.FollowReward > 0 && $.moduleEnabled("./systems/pointsSystem.js")) {
+            $.inidb.incr('points', follower, $.FollowHandler.FollowReward);
+        }
 
-        if ($.announceFollows == true && $.announceFollowsAllowed == true && $.moduleEnabled("./handlers/followHandler.js")) {
-            var s = $.followMessage;
-
-            s = $.replaceAll(s, '(name)', username);
-
-            if ($.moduleEnabled("./systems/pointSystem.js")) {
-                s = $.replaceAll(s, '(pointname)', $.getPointsString(p));
-                s = $.replaceAll(s, '(reward)', p.toString());
-            }
-
-            $.writeToFile(username + " ", "./web/latestfollower.txt", false);
-
-            $.followtrain++;
-            $.lastfollow = System.currentTimeMillis();
-
-            if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
-                $.timer.addTimer("./handlers/followHandler.js", "followtrain", true, function () {
-                    $.checkFollowTrain();
-                }, 1000);
-            }
+        $.FollowHandler.FollowTrain++;
+        $.FollowHandler.LastFollow = System.currentTimeMillis();
+    
+        if ($.FollowHandler.FollowToggle && $.FollowHandler.AnnounceFollowsAllowed && $.moduleEnabled("./handlers/followHandler.js") && $.FollowHandler.LastFollower != follower) {
+            var s = $.FollowHandler.FollowMessage;
+            s = $.replaceAll(s, '(name)', $.username.resolve(follower));
+            s = $.replaceAll(s, '(reward)', $.FollowHandler.FollowReward);
             $.say(s);
+            $.FollowHandler.LastFollower = follower;
+        } 
+        if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
+            $.timer.addTimer("./handlers/followHandler.js", "followtrain", true, function () {
+                $.checkFollowTrain();
+            }, 1000);
         }
-
-        if ($.moduleEnabled("./systems/pointSystem.js") && p > 0) {
-            $.inidb.incr('points', follower, p);
-        }
-    } else if (followed == 0) {
-        $.inidb.set('followed', follower, 1);
     }
 });
 
 $.on('twitchUnfollow', function (event) {
-    var follower = event.getFollower().toLowerCase();
-    var username = $.username.resolve(follower);
+    var follower = event.getFollower();
 
-    var followed = $.inidb.get('followed', follower);
-
-    if (followed == null || followed == undefined || followed.isEmpty()) {
-        return;
-    }
-
-    if (followed == 1) {
-        $.inidb.set('followed', follower, 0);
-    }
-});
-
-$.on('twitchFollowsInitialized', function (event) {
-    println(">>Enabling new follower announcements");
-
-    $.announceFollowsAllowed = true;
-
-    if (!$.inidb.exists("settings", "announcefollows") || $.inidb.get("settings", "announcefollows").equalsIgnoreCase("true")) {
-        $.inidb.set("settings", "announcefollows", "true");
-        $.announceFollows = true;
+    if ($.inidb.exists('followed', follower)) {
+        $.inidb.del('followed', follower);
     }
 });
 
 $.on('command', function (event) {
     var sender = event.getSender();
-    var username = $.username.resolve(sender, event.getTags());
     var command = event.getCommand();
     var argsString = event.getArguments().trim();
     var args = event.getArgs();
-    var action = sender;
-    var action2 = $.channelName;
 
-    if (command.equalsIgnoreCase("followed")) {
-        if (args.length > 0) {
-            if (!$.isModv3(sender)) {
-                $.say($.getWhisperString(sender) + $.modmsg);
-                return;
-            }
-            if ($.inidb.get("followed", args[0].toLowerCase()) == 1) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.is-following", args[0]));
-                return;
-            } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.not-following", args[0]));
-                return;
-            }
-        } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.followed-command-usage"));
+    if (command.equalsIgnoreCase('followmessage')) {
+        if (!$.isAdmin(sender)) {
+            $.say($.getWhisperString(sender) + $.adminmsg);
+            return;
+        } else if (args.length == 0) {
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follows-message-usage"));
             return;
         }
-    }
-
-    if (command.equalsIgnoreCase("follow") || command.equalsIgnoreCase("shoutout") || command.equalsIgnoreCase("caster")) {
-        if (!$.isModv3(sender)) {
-            $.say($.getWhisperString(sender) + $.modmsg);
+        $.inidb.set('settings', 'followmessage', argsString);
+        $.FollowHandler.FollowMessage = argsString;
+        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follow-message-set"));
+        return;
+    } else if (command.equalsIgnoreCase('followreward')) {
+        if (!$.isAdmin(sender)) {
+            $.say($.getWhisperString(sender) + $.adminmsg);
+            return;
+        } else if (args.length == 0) {
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follows-reward-usage"));
             return;
         }
-
-        if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.shoutout-usage"));
-            return;
-        }
-        var user = $.username.resolve(args[0]);
-
-        if (!$.isOnline(user)) {
-            $.say($.lang.get("net.phantombot.followHandler.shoutout-offline", user.toLowerCase(), $.getGame(user.toLowerCase())));
-            return;
-        } else {
-            $.say($.lang.get("net.phantombot.followHandler.shoutout-online", user.toLowerCase(), $.getGame(user.toLowerCase())));
-            return;
-        }
-    }
-
-    if (command.equalsIgnoreCase("followannounce")) {
-        if (!$.isModv3(sender)) {
-            $.say($.getWhisperString(sender) + $.modmsg);
-            return;
-        }
-
-        if ($.announceFollows == true) {
-            $.inidb.set("settings", "announcefollows", "false");
-            $.announceFollows = false;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follow-ads-off"));
-            return;
-        } else {
-            $.inidb.set("settings", "announcefollows", "true");
-            $.announceFollows = true;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follow-ads-on"));
-            return;
-        }
-    }
-    
-    if (command.equalsIgnoreCase("followmessage")) {		
-        if (!$.isAdmin(sender)) {		
-            $.say($.getWhisperString(sender) + $.adminmsg);		
-            return;		
-        }		
-		
-        if ($.strlen(argsString) == 0) {		
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.current-follow-message", $.followMessage));		
-		
-            var s = $.lang.get("net.phantombot.followHandler.follow-message-usage");		
-		
-            if ($.moduleEnabled("./systems/pointSystem.js")) {		
-                s += $.lang.get("net.phantombot.followHandler.follow-message-usage-points");		
-            }		
-		
-            $.say($.getWhisperString(sender) + s);
-            
-        } else {		
-            $.logEvent("followHandler.js", 108, username + " changed the new follower message to: " + argsString);		
-		
-            $.inidb.set('settings', 'followmessage', argsString);
-            $.followMessage = $.inidb.get('settings', 'followmessage');
-		
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follow-message-set"));		
-        }		
-    }
-
-    if (command.equalsIgnoreCase("followreward")) {
+        $.inidb.set('settings', 'followreward', parseInt(args[0]));
+        $.FollowHandler.FollowReward = parseInt(args[0]);
+        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follow-reward-set"));
+        return;
+    } else if (command.equalsIgnoreCase('followannouncetoggle')) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
-
-        if ($.strlen(argsString) == 0) {
-            if ($.inidb.exists('settings', 'followreward')) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.current-follow-reward", $.inidb.get('settings', 'followreward')));
-            } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.current-follow-reward-usage"));
-            }
+        if ($.FollowHandler.FollowToggle) {
+            $.inidb.set('settings', 'followtoggle', false);
+            $.FollowHandler.FollowToggle = false;
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follows-toggle-off"));
+            return;
         } else {
-            if (!parseInt(argsString) < 0) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follow-reward-error"));
-                return;
-            }
-
-            $.logEvent("followHandler.js", 134, username + " changed the new follower points reward to: " + argsString);
-
-            $.inidb.set('settings', 'followreward', argsString);
-            $.followReward = parseInt(argsString);
-
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follow-reward-set"));
+            $.inidb.set('settings', 'followtoggle', true);
+            $.FollowHandler.FollowToggle = true;
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follows-toggle-on"));
         }
-    }
-
-    if (command.equalsIgnoreCase("followage") || command.equalsIgnoreCase("followtime") || command.equalsIgnoreCase("following")) {
-        if (args.length > 0) {
-        action = args[0];
+    } else if (command.equalsIgnoreCase('followed')) {
+        if (!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modmsg);
+            return;
+        } else if (args.length == 0) {
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.followed-usage"));
+            return;
         }
+        var channel = $.channelName;
         if (args.length > 1) {
-        action2 = args[1];
+            channel = $.username.resolve(args[1]);
         }
-        var check = $.twitch.GetUserFollowsChannel($.username.resolve(action.toLowerCase()), action2.toLowerCase());
-        if (action.equalsIgnoreCase("help")) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.followtime-usage"));
+        $.getUserFollowed($.username.resolve(args[0]), channel);
+        return;
+    } else if (command.equalsIgnoreCase('follow')) {
+        if (!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modmsg);
             return;
-        } else if (check.getInt("_http") != 200) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.error-not-following", action, action2));
+        } else if (args.length == 0) {
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.shoutout-usage"));
+            return;
+        }
+        var caster = $.username.resolve(args[0]);
+
+        if ($.isOnline(caster)) {
+            $.say($.lang.get("net.phantombot.followHandler.shoutout-online", caster, $.getGame(caster)));
             return;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.followtime", action, action2, $.getFollowAge(action, action2)));
+            $.say($.lang.get("net.phantombot.followHandler.shoutout-offline", caster, $.getGame(caster)));
             return;
+        }
+    } else if (command.equalsIgnoreCase('followage')) {
+        var user = $.username.resolve(sender);
+        var channel = $.channelName;
+
+        if (args.length > 0) {
+            user = args[0];
+        } 
+        if (args.length > 1) {
+            channel = args[1];
+        }
+        var follows = $.twitch.GetUserFollowsChannel(user, channel);
+        if (follows.getInt('_http') == 200) {
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.followage-is-follwing", user, channel, $.getFollowAge(user, channel)));
+            return;
+        } else {
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.followage-is-not-following", user, channel));
+            return
         }
     }
 });
 
 $.checkFollowTrain = function () {
-    if (System.currentTimeMillis() - $.lastfollow > 65 * 1000) {
+    if (System.currentTimeMillis() - $.Followhandler.LastFollow > 65 * 1000) {
         $.timer.clearTimer("./handlers/followHandler.js", "followtrain", true);
-        $.followtimer = null;
-
-        if ($.followtrain > 1) {
-            if ($.followtrain == 3) {
+        if ($.FollowHandler.FollowTrain > 1) {
+            if ($.FollowHandler.FollowTrain == 3) {
                 $.say($.lang.get("net.phantombot.followHandler.triple-follow-train"));
-            } else if ($.followtrain == 4) {
+            } else if ($.FollowHandler.FollowTrain == 4) {
                 $.say($.lang.get("net.phantombot.followHandler.Quadra-follow-train"));
-            } else if ($.followtrain == 5) {
+            } else if ($.FollowHandler.FollowTrain == 5) {
                 $.say($.lang.get("net.phantombot.followHandler.penta-follow-train"));
-            } else if ($.followtrain > 5 && $.followtrain <= 10) {
-                $.say($.lang.get("net.phantombot.followHandler.mega-follow-train", $.followtrain));
-            } else if ($.followtrain > 10 && $.followtrain <= 20) {
-                $.say($.lang.get("net.phantombot.followHandler.ultra-follow-train", $.followtrain));
-            } else if ($.followtrain > 20) {
-                $.say($.lang.get("net.phantombot.followHandler.massive-follow-train", $.followtrain));
+            } else if ($.FollowHandler.FollowTrain > 5 && $.FollowHandler.FollowTrain <= 10) {
+                $.say($.lang.get("net.phantombot.followHandler.mega-follow-train", $.Followhandler.FollowTrain));
+            } else if ($.FollowHandler.FollowTrain > 10 && $.FollowHandler.FollowTrain <= 20) {
+                $.say($.lang.get("net.phantombot.followHandler.ultra-follow-train", $.Followhandler.FollowTrain));
+            } else if ($.FollowHandler.FollowTrain > 20) {
+                $.say($.lang.get("net.phantombot.followHandler.massive-follow-train", $.Followhandler.FollowTrain));
             }
         }
-
-        $.followtrain = 0;
+        $.FollowHandler.FollowTrain = 0;
     }
 };
 
-var keys = $.inidb.GetKeyList("followed", "");
-
+var keys = $.inidb.GetKeyList('followed', '');
 for (var i = 0; i < keys.length; i++) {
-    if ($.inidb.get("followed", keys[i])==1) {
+    if ($.inidb.get('followed', keys[i]) == 1) {
         Packages.me.mast3rplan.phantombot.cache.FollowersCache.instance($.channelName).addFollower(keys[i]);
     }
 }
@@ -304,7 +225,7 @@ setTimeout(function () {
     if ($.moduleEnabled('./handlers/followHandler.js')) {
         $.registerChatCommand("./handlers/followHandler.js", "followed", "mod");
         $.registerChatCommand("./handlers/followHandler.js", "follow", "mod");
-        $.registerChatCommand("./handlers/followHandler.js", "followannounce", "mod");
+        $.registerChatCommand("./handlers/followHandler.js", "followannouncetoggle", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followmessage", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followreward", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followage");
