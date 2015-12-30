@@ -57,7 +57,7 @@ $.on('command', function (event) {
                 return;
             } else {
                 $.inidb.del('notices', 'message_' + args[1]);
-                $.Notice.NumberOfNotices
+                $.Notice.NumberOfNotices--;
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.noticehandler.notice-remove-success"));
                 return;
             }
