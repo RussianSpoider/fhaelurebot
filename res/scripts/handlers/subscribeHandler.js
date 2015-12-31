@@ -160,7 +160,7 @@ $.on('ircPrivateMessage', function (event) {
 
     if (message.contains('just subscribed!') && sender.equalsIgnoreCase('twitchnotify')) {
         if ($.SubscriberHanlder.SubWelcomeToggle) {
-            s = $.SubscriberHanlder.SubMessage = $.replaceAll($.SubscriberHanlder.SubMessage, '(name)', message.substring(0, message.indexOf(" ", 1)).toString());
+            s = $.SubscriberHanlder.SubMessage = $.replaceAll(s, '(name)', message.substring(0, message.indexOf(" ", 1)).toString());
             $.say(s);
             return;
         }
