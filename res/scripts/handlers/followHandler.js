@@ -1,6 +1,6 @@
 $.FollowHandler = {
     FollowMessage: ($.inidb.get('settings', 'followmessage') ? $.inidb.get('settings', 'followmessage') : '(name) just followed!'),
-    FollowToggle: ($.inidb.get('settings', 'followtoggle') ? $.inidb.get('settings', 'followtoggle') : false),
+    FollowToggle: ($.inidb.get('settings', 'announcefollows') ? $.inidb.get('settings', 'announcefollows') : false),
     FollowReward: (parseInt($.inidb.get('settings', 'followreward')) ? parseInt($.inidb.get('settings', 'followreward')) : 0),
     AnnounceFollowsAllowed: false,
     FollowTrain: 0,
@@ -121,18 +121,18 @@ $.on('command', function (event) {
         $.FollowHandler.FollowReward = parseInt(args[0]);
         $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follow-reward-set"));
         return;
-    } else if (command.equalsIgnoreCase('followannouncetoggle')) {
+    } else if (command.equalsIgnoreCase('followannounce')) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
         if ($.FollowHandler.FollowToggle) {
-            $.inidb.set('settings', 'followtoggle', false);
+            $.inidb.set('settings', 'announcefollows', false);
             $.FollowHandler.FollowToggle = false;
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follows-toggle-off"));
             return;
         } else {
-            $.inidb.set('settings', 'followtoggle', true);
+            $.inidb.set('settings', 'announcefollows', true);
             $.FollowHandler.FollowToggle = true;
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follows-toggle-on"));
         }
@@ -221,7 +221,7 @@ setTimeout(function () {
     if ($.moduleEnabled('./handlers/followHandler.js')) {
         $.registerChatCommand("./handlers/followHandler.js", "followed", "mod");
         $.registerChatCommand("./handlers/followHandler.js", "follow", "mod");
-        $.registerChatCommand("./handlers/followHandler.js", "followannouncetoggle", "admin");
+        $.registerChatCommand("./handlers/followHandler.js", "followannounce", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followmessage", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followreward", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followage");
