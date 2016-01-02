@@ -10,7 +10,7 @@ $.on('command', function (event) {
         }
         
         if (args.length >= 1) {
-            $.say ($.getWhisperString($.username.resolve(args[0])) + $.lang.get("net.phantombot.lastseencommand.say", lastTarget));
+            $.say ($.getWhisperString(sender) + $.lang.get("net.phantombot.lastseencommand.say", $.username.resolve(args[0]), lastTarget));
             return;
         } else {
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.lastseencommand.usage"));
