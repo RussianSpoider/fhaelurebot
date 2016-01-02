@@ -1,7 +1,7 @@
 $.FollowHandler = {
     FollowMessage: ($.inidb.get('settings', 'followmessage') ? $.inidb.get('settings', 'followmessage') : '(name) just followed!'),
     FollowToggle: ($.inidb.get('settings', 'announcefollows') ? $.inidb.get('settings', 'announcefollows') : false),
-    FollowReward: (parseInt($.inidb.get('settings', 'followreward')) ? parseInt($.inidb.get('settings', 'followreward')) : 0),
+    FollowReward: (parseInt($.inidb.get('settings', 'followreward')) ? parseInt($.inidb.get('settings', 'followreward')) : 100),
     AnnounceFollowsAllowed: false,
     FollowTrain: 0,
     LastFollow: 0,
@@ -71,11 +71,13 @@ $.on('twitchFollow', function (event) {
 
         if (r > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
             $.inidb.incr('points', follower, r);
-        } else if ($.FollowHandler.FollowToggle && $.FollowHandler.AnnounceFollowsAllowed && $.moduleEnabled("./handlers/followHandler.js")) {
+            s += " +" + $.getPointsString(r);
+        } 
+        if ($.FollowHandler.FollowToggle && $.FollowHandler.AnnounceFollowsAllowed && $.moduleEnabled("./handlers/followHandler.js")) {
             s = $.replaceAll(s, '(name)', $.username.resolve(follower));
-            s = $.replaceAll(s, '(reward)', r);
             $.say(s);
-        } else if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
+        }
+        if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
             $.timer.addTimer("./handlers/followHandler.js", "followtrain", true, function () {
                 $.checkFollowTrain();
             }, 1000);
