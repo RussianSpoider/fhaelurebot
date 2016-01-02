@@ -62,20 +62,20 @@ $.on('command', function(event) {
     var gameSep = "";
     var dateSep = "";
 
-    if ($.quoteGame == "disabled") {
+    if ($.quoteGame == "disable") {
         gameStr = "";
         gameSep = "";
-    } else if ($.quoteGame == "enabled") {
+    } else {
         gameStr = "[" + game + "]";
-        gameSep = " - ";
+        gameSep = " ";
     }
 
-    if ($.quoteDate == "disabled") {
+    if ($.quoteDate == "disable") {
         dateStr = "";
         dateSep = "";
-    } else if ($.quoteDate == "enabled") {
+    } else {
         dateStr = "[" + date + "]";
-        dateSep = " - ";
+        dateSep = " ";
     }
 
     var quoteInfo = gameSep + gameStr + dateSep + dateStr;
@@ -91,7 +91,7 @@ $.on('command', function(event) {
             }
             $.inidb.incr("quotes", "num_quotes", 1);
             $.inidb.set("quotes", "quote_" + quotes, message + quoteInfo);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.quote-add-success", message));
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.quote-add-success", quotes));
         } 
 
         if (args[0].equalsIgnoreCase("remove")) {
@@ -161,19 +161,19 @@ $.on('command', function(event) {
             if (args.length < 2) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.date-usage"));
                 return;
-            } else if (args[1] != "enabled" && args[1] != "disabled") {
+            } else if (args[1] != "enable" && args[1] != "disable") {
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.date-error", args[1]));
                 return;
             }
-            if (args[1] == "enabled") {
+            if (args[1] == "enable") {
                 $.inidb.set('settings','quotedate', args[1]);
                 updateSettings();
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.date-success-enable"));
                 return;
-            } else if (args[1] == "disabled") {
+            } else if (args[1] == "disable") {
                 $.inidb.set('settings','quotedate', args[1]);
                 updateSettings();
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.-success-disable"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.date-success-disable"));
                 return;
             }
         }
