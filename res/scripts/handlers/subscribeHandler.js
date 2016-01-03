@@ -146,7 +146,7 @@ $.on('ircPrivateMessage', function (event) {
         if ($.SubscribeHandler.SubWelcomeToggle) {
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
             s = $.replaceAll(s, '(name)', sub);
-            $.say(s);
+            $.say("/me " + s);
             return;
         }
     } else if (message.contains('months in a row!') && sender.equalsIgnoreCase('twitchnotify')) {
@@ -156,7 +156,7 @@ $.on('ircPrivateMessage', function (event) {
             r = $.replaceAll(r, '(name)', sub);
             r = $.replaceAll(r, '(months)', months);
             r = $.replaceAll(r, '(reward)', $.SubscribeHandler.SubReward); 
-            $.say(r);
+            $.say("/me " + r);
             return;
         }
     }

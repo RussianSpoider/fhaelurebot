@@ -75,7 +75,7 @@ $.on('twitchFollow', function (event) {
         } 
         if ($.FollowHandler.FollowToggle && $.FollowHandler.AnnounceFollowsAllowed && $.moduleEnabled("./handlers/followHandler.js")) {
             s = $.replaceAll(s, '(name)', $.username.resolve(follower));
-            $.say(s);
+            $.say("/me " + s);
         }
         if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
             $.timer.addTimer("./handlers/followHandler.js", "followtrain", true, function () {
