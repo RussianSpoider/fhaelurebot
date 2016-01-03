@@ -1,9 +1,8 @@
 $.SubscribeHandler = {
     SubMessage: ($.inidb.get('settings', 'subscribemessage') ? $.inidb.get('settings', 'subscribemessage') : '(name) just subscribed!'),
     ReSubMessage: ($.inidb.get('settings', 'resubscribemessage') ? $.inidb.get('settings', 'resubscribemessage') : '(name) just subscribed for (months) months in a row!'),
-    SubWelcomeToggle: ($.inidb.get('settings', 'subscriberwelcometoggle') ? $.inidb.get('settings', 'subscriberwelcometoggle') : false),
-    ReSubWelcomeToggle: ($.inidb.get('settings', 'resubscriberwelcometoggle') ? $.inidb.get('settings', 'resubscriberwelcometoggle') : false),
-    SubReward: (parseInt($.inidb.get('settings', 'subscriberreward')) ? parseInt($.inidb.get('settings', 'subscriberreward')) : 0),
+    SubWelcomeToggle: ($.inidb.get('settings', 'sub_silentmode') ? $.inidb.get('settings', 'sub_silentmode') : 0),
+    SubReward: (parseInt($.inidb.get('settings', 'subscribereward')) ? parseInt($.inidb.get('settings', 'subscribereward')) : 0),
     AutoSubModeTimer: (parseInt($.inidb.get('settings', 'submodeautotimer')) ? parseInt($.inidb.get('settings', 'submodeautotimer')) : 0),
 }
 
@@ -35,38 +34,23 @@ $.on('command', function (event) {
     var argsString = event.getArguments().trim();
     var args = event.getArgs();
 
-    if (command.equalsIgnoreCase('subwelcometoggle')) {
+    if (command.equalsIgnoreCase('subsilentmode')) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
-        if ($.SubscribeHandler.SubWelcomeToggle) {
-            $.inidb.set('settings', 'subscriberwelcometoggle', false);
-            $.SubscribeHandler.SubWelcomeToggle = false;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.new-sub-toggle-off"));
+        if ($.SubscribeHandler.SubWelcomeToggle > 0) {
+            $.inidb.set('settings', 'sub_silentmode', 0);
+            $.SubscribeHandler.SubWelcomeToggle = 0;
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.sub-toggle-off"));
             return;
         } else {
-            $.inidb.set('settings', 'subscriberwelcometoggle', true);
-            $.SubscribeHandler.SubWelcomeToggle = true;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.new-sub-toggle-on"));
+            $.inidb.set('settings', 'sub_silentmode', 1);
+            $.SubscribeHandler.SubWelcomeToggle = 1;
+            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.sub-toggle-on"));
             return;
         }
-    } else if (command.equalsIgnoreCase('resubwelcometoggle')) {
-        if (!$.isAdmin(sender)) {
-            $.say($.getWhisperString(sender) + $.adminmsg);
-            return;
-        }
-        if ($.SubscribeHandler.SubWelcomeToggle) {
-            $.inidb.set('settings', 'resubscriberwelcometoggle', false);
-            $.SubscribeHandler.SubWelcomeToggle = false;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.resub-toggle-off"));
-            return;
-        } else {
-            $.inidb.set('settings', 'resubscriberwelcometoggle', true);
-            $.SubscribeHandler.SubWelcomeToggle = true;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.resub-toggle-on"));
-            return;
-        }
+
     } else if (command.equalsIgnoreCase('submessage')) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
@@ -166,7 +150,7 @@ $.on('ircPrivateMessage', function (event) {
             return;
         }
     } else if (message.contains('months in a row!') && sender.equalsIgnoreCase('twitchnotify')) {
-        if ($.SubscribeHandler.ReSubWelcomeToggle) {
+        if ($.SubscribeHandler.SubWelcomeToggle) {
             var months = message.substring(message.substring(0, message.indexOf(" ", 1)).toString().length() + 20, message.indexOf("months", 1)).toString();
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
             r = $.replaceAll(r, '(name)', sub);
@@ -180,8 +164,7 @@ $.on('ircPrivateMessage', function (event) {
 
 setTimeout(function () { 
     if ($.moduleEnabled('./handlers/subscribeHandler.js')) {
-        $.registerChatCommand("./handlers/subscribeHandler.js", "subwelcometoggle", "admin");
-        $.registerChatCommand("./handlers/subscribeHandler.js", "resubwelcometoggle", "admin");
+        $.registerChatCommand("./handlers/subscribeHandler.js", "subsilentmode", "admin");
         $.registerChatCommand("./handlers/subscribeHandler.js", "subscribereward", "admin");
         $.registerChatCommand("./handlers/subscribeHandler.js", "subscribecount", "admin");
         $.registerChatCommand("./handlers/subscribeHandler.js", "submessage", "admin");

@@ -488,10 +488,8 @@ $.lang.data["net.phantombot.donationhandler.new-donation"] = "$1 has received a 
 $.lang.data["net.phantombot.donationhandler.donationalert-usage"] = "!donationalert filepath | vieufilepath | toggle";
 
 //subscribeHandler.js
-$.lang.data["net.phantombot.subscribeHandler.new-sub-toggle-off"] = "New Subscribers will no longer be welcomed upon subscribing.";
-$.lang.data["net.phantombot.subscribeHandler.new-sub-toggle-on"] = "New Subscribers will now be welcomed upon subscribing.";
-$.lang.data["net.phantombot.subscribeHandler.resub-toggle-off"] = "Resubscribers will no longer be welcomed upon resubscribing.";
-$.lang.data["net.phantombot.subscribeHandler.resub-toggle-on"] = "Resubscribers will now be welcomed upon resubscribing.";
+$.lang.data["net.phantombot.subscribeHandler.sub-toggle-off"] = "Subscribers will no longer be thanked upon subscribing.";
+$.lang.data["net.phantombot.subscribeHandler.sub-toggle-on"] = "Subscribers will now be thanked upon subscribing.";
 $.lang.data["net.phantombot.subscribeHandler.sub-msg-usage"] = "Usage: !submessage (message)";
 $.lang.data["net.phantombot.subscribeHandler.sub-msg-set"] = "New subscriber welcome message set!";
 $.lang.data["net.phantombot.subscribeHandler.resub-msg-usage"] = "Usage: !resubmessage (message)";
