@@ -1,6 +1,6 @@
 $.FollowHandler = {
     FollowMessage: ($.inidb.get('settings', 'followmessage') ? $.inidb.get('settings', 'followmessage') : '(name) just followed!'),
-    FollowToggle: ($.inidb.get('settings', 'announcefollows') ? $.inidb.get('settings', 'announcefollows') : false),
+    FollowToggle: ($.inidb.get('settings', 'announcefollows') ? $.inidb.get('settings', 'announcefollows') : "false"),
     FollowReward: (parseInt($.inidb.get('settings', 'followreward')) ? parseInt($.inidb.get('settings', 'followreward')) : 100),
     AnnounceFollowsAllowed: false,
     FollowTrain: 0,
@@ -73,15 +73,15 @@ $.on('twitchFollow', function (event) {
             $.inidb.incr('points', follower, r);
             s += " +" + $.getPointsString(r);
         } 
-        if ($.FollowHandler.FollowToggle && $.FollowHandler.AnnounceFollowsAllowed && $.moduleEnabled("./handlers/followHandler.js")) {
+        if ($.FollowHandler.FollowToggle=="true" && $.FollowHandler.AnnounceFollowsAllowed && $.moduleEnabled("./handlers/followHandler.js")) {
             s = $.replaceAll(s, '(name)', $.username.resolve(follower));
             $.say("/me " + s);
+            if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
+                $.timer.addTimer("./handlers/followHandler.js", "followtrain", true, function () {
+                    $.checkFollowTrain();
+                }, 1000);
+            } 
         }
-        if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
-            $.timer.addTimer("./handlers/followHandler.js", "followtrain", true, function () {
-                $.checkFollowTrain();
-            }, 1000);
-        } 
     }  
 });
 
@@ -128,14 +128,14 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
-        if ($.FollowHandler.FollowToggle) {
+        if ($.FollowHandler.FollowToggle=="true") {
             $.inidb.set('settings', 'announcefollows', false);
-            $.FollowHandler.FollowToggle = false;
+            $.FollowHandler.FollowToggle = "false";
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follows-toggle-off"));
             return;
         } else {
             $.inidb.set('settings', 'announcefollows', true);
-            $.FollowHandler.FollowToggle = true;
+            $.FollowHandler.FollowToggle = "true";
             $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.followHandler.follows-toggle-on"));
         }
     } else if (command.equalsIgnoreCase('followed')) {
