@@ -3,7 +3,7 @@ var regularsGroupID = 6;
 $.timeLevel = $.inidb.get('settings', 'timeLevel');
 $.timePromoteHours = $.inidb.get('settings', 'timePromoteHours');
 $.timeZone = $.inidb.get("timezone", "timezone");
-$.timeOffline = $.inidb.get("timezone", "timeOffline");
+$.timeOffline = $.inidb.get("settings", "timeOffline");
 $.permToggleTime = $.inidb.get("settings", "permToggleTime");
 
 if ($.timeLevel == undefined || $.timeLevel == null || $.timeLevel.isEmpty()) {
