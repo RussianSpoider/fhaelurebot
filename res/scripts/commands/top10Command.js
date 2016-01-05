@@ -66,7 +66,7 @@ $.on('command', function(event) {
         var topTenString = "";
 
         for (var i = keys.length - 1; i >= 0; i--) {
-            if (keys[i] != $.botowner && keys[i] != $.botname && keys[i] != "moobot"  && keys[i] != "wizebot" && keys[i] != "nightbot" && keys[i] != "xanbot") {
+            if (keys[i] != $.botowner && keys[i] != $.botname && keys[i] != "moobot"  && keys[i] != "wizebot" && keys[i] != "nightbot" && keys[i] != "xanbot" && keys[i] != "zeldobot") {
                 topComplete.push([keys[i], $.inidb.get("points", keys[i])]);
             }
         };
@@ -113,7 +113,7 @@ $.on('command', function(event) {
         var topTenString = "";
 
         for (var i = keys.length - 1; i >= 0; i--) {
-            if (keys[i] != $.botowner && keys[i] != $.botname && keys[i] != "moobot"  && keys[i] != "wizebot" && keys[i] != "nightbot" && keys[i] != "xanbot") {
+            if (keys[i] != $.botowner && keys[i] != $.botname && keys[i] != "moobot"  && keys[i] != "wizebot" && keys[i] != "nightbot" && keys[i] != "xanbot" && keys[i] != "zeldobot") {
                 topComplete.push([keys[i], $.inidb.get("time", keys[i])]);
             }
         };
