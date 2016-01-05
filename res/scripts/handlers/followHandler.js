@@ -63,18 +63,20 @@ $.on('twitchFollow', function (event) {
     var follower = event.getFollower();
     var s = $.FollowHandler.FollowMessage;
     var r = $.FollowHandler.FollowReward;
+    var username = $.username.resolve(follower);
 
     if (!$.inidb.exists('followed', follower)) {
         $.inidb.set('followed', follower, 1);
         $.FollowHandler.FollowTrain++;
         $.FollowHandler.LastFollow = System.currentTimeMillis();
+        $.writeToFile(username + " ", "./addons/latestfollower.txt", false);
 
         if (r > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
             $.inidb.incr('points', follower, r);
             s += " +" + $.getPointsString(r);
         } 
         if ($.FollowHandler.FollowToggle=="true" && $.FollowHandler.AnnounceFollowsAllowed && $.moduleEnabled("./handlers/followHandler.js")) {
-            s = $.replaceAll(s, '(name)', $.username.resolve(follower));
+            s = $.replaceAll(s, '(name)', username);
             $.say("/me " + s);
             if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
                 $.timer.addTimer("./handlers/followHandler.js", "followtrain", true, function () {
