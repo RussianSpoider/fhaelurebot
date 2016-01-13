@@ -6,6 +6,21 @@ $.Notice = {
     MessageCount: 0,
 }
 
+$.Notice.reloadNotices = function () {
+    var keys = $.inidb.GetKeyList('notices', '');
+    var count = 0;
+    for (var i = 0; i < keys.length; i++) {
+        $.inidb.set('tempnotices', keys[i], $.inidb.get('notices', keys[i]));
+    }
+    $.inidb.RemoveFile('notices');
+    keys = $.inidb.GetKeyList('tempnotices', '');
+    for (var i = 0; i < keys.length; i++) {
+        $.inidb.set('notices', 'message_' + count, $.inidb.get('tempnotices', keys[i]));
+        count++;
+    }
+    $.inidb.RemoveFile('tempnotices');
+};
+
 $.on('ircChannelMessage', function (event) {
     $.Notice.MessageCount++;
 });
@@ -58,6 +73,7 @@ $.on('command', function (event) {
             } else {
                 $.inidb.del('notices', 'message_' + args[1]);
                 $.Notice.NumberOfNotices--;
+                $.Notice.reloadNotices();
                 $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.noticehandler.notice-remove-success"));
                 return;
             }
