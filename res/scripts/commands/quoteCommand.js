@@ -21,7 +21,7 @@ $.QuoteCommand.getRandomQuote = function (event) {
         $.say('Quote #' + random + ' ' + $.inidb.get('quotes', 'quote_' + random));
         return;
     } else {
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.error-no-quotes");
+        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.error-no-quotes"));
         return;
     }
 };
@@ -33,7 +33,7 @@ $.QuoteCommand.getQuote = function (event, quote) {
         $.say('Quote #' + quote + ' ' + $.inidb.get('quotes', 'quote_' + quote));
         return;
     } else {
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.quote-number");
+        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.quote-number"));
         return;
     }
 };
