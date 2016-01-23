@@ -464,6 +464,8 @@ $.lang.data["net.phantombot.phrasehandler.trigger-remove-success"] = "Phrase tri
 $.lang.data["net.phantombot.phrasehandler.trigger-not-found"] = "That phrase trigger does not exist!";
 
 //hostHandler.js 
+$.lang.data["net.phantombot.hosthandler.default-host-welcome-message"] = "Thanks for the host (name)!";
+$.lang.data["net.phantombot.hosthandler.default-host-welcome-message-and-reward"] = "Thanks for the host (name)! you're rewarded $1!";
 $.lang.data["net.phantombot.hosthandler.host-reward-current-and-usage"] = "The current host reward is $1! To change it use '!hostreward <amount>";
 $.lang.data["net.phantombot.hosthandler.host-reward-error"] = "Please put a valid reward greater than or equal to 0!";
 $.lang.data["net.phantombot.hosthandler.host-reward-set-success"] = "New hoster reward set!";
@@ -474,10 +476,8 @@ $.lang.data["net.phantombot.hosthandler.host-timeout-time-set"] = "Host timeout 
 $.lang.data["net.phantombot.hosthandler.host-list"] = "This channel is currently being hosted by the hosting $1 channels: $2";
 $.lang.data["net.phantombot.hosthandler.host-list-error"] = "No one is currently hosting this channel.";
 $.lang.data["net.phantombot.hosthandler.current-host-message"] = "The current new hoster message is: $1";		
-$.lang.data["net.phantombot.hosthandler.host-message-usage"] = "To change it use '!hostmessage (message)'. Tags: (name) and (reward)";		
+$.lang.data["net.phantombot.hosthandler.host-message-usage"] = "To change it use '!hostmessage (message)'. You can also add the string '(name)' to put the hosters name";		
 $.lang.data["net.phantombot.hosthandler.host-message-set-success"] = "New host message set!";
-$.lang.data["net.phantombot.hosthandler.host-trigger-usage"] = "Usage: !hosttriggeramount (amount) - set how many viewers needed to trigger the host message."
-$.lang.data["net.phantombot.hosthandler.host-trigger-set"] = "Host trigger amount set to $1 viewers."
 
 //donationHandler.js 
 $.lang.data["net.phantombot.donationhandler.current-file-path"] = "Current donation alert file path is: $1";
