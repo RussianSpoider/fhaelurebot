@@ -65,6 +65,7 @@ public class SqliteStore extends DataStore
         Object o[] = LoadConfigReal("");
 
         dbname = (String) o[0];
+        dbprefix = dbname.substring(0, dbname.length() - 3);
         cache_size = (int) o[1];
         safe_write = (boolean) o[2];
         connection = (Connection) o[3];
@@ -76,6 +77,7 @@ public class SqliteStore extends DataStore
         Object o[] = LoadConfigReal(configStr);
 
         dbname = (String) o[0];
+        dbprefix = dbname.substring(0, dbname.length() - 3);
         cache_size = (int) o[1];
         safe_write = (boolean) o[2];
         connection = (Connection) o[3];
@@ -89,6 +91,7 @@ public class SqliteStore extends DataStore
         }
 
         String dbname = "quorrabot.db";
+        String dbprefix = dbname.substring(0, dbname.length() - 3);
         int cache_size = 2000;
         boolean safe_write = false;
         Connection connection = null;
@@ -107,6 +110,7 @@ public class SqliteStore extends DataStore
                     if (line.startsWith("dbname=") && line.length() > 8)
                     {
                         dbname = line.substring(7);
+                        dbprefix = dbname.substring(0, dbname.length() - 3);
                     }
                     if (line.startsWith("cachesize=") && line.length() > 11)
                     {
