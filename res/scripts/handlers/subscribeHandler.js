@@ -42,12 +42,12 @@ $.on('command', function (event) {
         if ($.SubscribeHandler.SubWelcomeToggle > 0) {
             $.inidb.set('settings', 'sub_silentmode', 0);
             $.SubscribeHandler.SubWelcomeToggle = 0;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.sub-toggle-off"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-toggle-off"));
             return;
         } else {
             $.inidb.set('settings', 'sub_silentmode', 1);
             $.SubscribeHandler.SubWelcomeToggle = 1;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.sub-toggle-on"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-toggle-on"));
             return;
         }
 
@@ -56,36 +56,36 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         } else if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.sub-msg-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-msg-usage"));
             return;
         }
         $.inidb.set('settings', 'subscribemessage', argsString);
         $.SubscribeHandler.SubMessage = argsString;
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.sub-msg-set"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-msg-set"));
         return;
     } else if (command.equalsIgnoreCase('resubmessage')) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         } else if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.resub-msg-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.resub-msg-usage"));
             return;
         } 
         $.inidb.set('settings', 'resubscribemessage', argsString);
         $.SubscribeHandler.ReSubMessage = argsString;
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.resub-msg-set"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.resub-msg-set"));
         return;
     } else if (command.equalsIgnoreCase('subscribereward')) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         } else if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.reward-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.reward-usage"));
             return;
         }
         $.inidb.set('settings', 'subscriberreward', parseInt(args[0]));
         $.SubscribeHandler.SubReward = parseInt(args[0]);
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.reward-set"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.reward-set"));
         return;
     } else if (command.equalsIgnoreCase('subscribercount')) {
         if (!$.isAdmin(sender)) {
@@ -97,26 +97,26 @@ $.on('command', function (event) {
         for (var i = 0; i < keys.length; i++) {
             subs++;
         }
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.sub-count", subs));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-count", subs));
         return;
     } else if (command.equalsIgnoreCase('autosubmodetimer')) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         } else if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.auto-submode-timer-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.auto-submode-timer-usage"));
             return;
         } else if (args[0] == 0) {
             $.timer.clearTimer("./handlers/subscribeHandler.js", "AutoSubModeTimer", true);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.auto-submode-timer-off"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.auto-submode-timer-off"));
             return;
         } else if (args[0] < 30) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.auto-submode-timer-404"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.auto-submode-timer-404"));
             return;
         }
         $.inidb.set('settings', 'submodeautotimer', parseInt(args[0]));
         $.SubscribeHandler.AutoSubModeTimer = parseInt(args[0]);
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.subscribeHandler.auto-sub-mode-imterval-set"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.auto-sub-mode-imterval-set"));
         if ($.SubscribeHandler.AutoSubModeTimer > 0) {
             $.submode = true;
             $.timer.addTimer("./handlers/subscribeHandler.js", "AutoSubModeTimer", true, function () {
@@ -176,6 +176,6 @@ setTimeout(function () {
 var keys = $.inidb.GetKeyList('subscribed', '');
 for (var i = 0; i < keys.length; i++) {
     if ($.inidb.get('subscribed', keys[i]).equalsIgnoreCase('1')) {
-        Packages.me.mast3rplan.phantombot.cache.SubscribersCache.instance($.channelName).addSubscriber(keys[i]);
+        Packages.me.gloriouseggroll.quorrabot.cache.SubscribersCache.instance($.channelName).addSubscriber(keys[i]);
     }
 }

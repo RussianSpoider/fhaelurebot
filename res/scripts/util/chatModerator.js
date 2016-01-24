@@ -119,19 +119,19 @@ function autoPurgeUser(user, warnmessage) {
             
             timeoutUser(user, 1);
             
-            warning += $.lang.get("net.phantombot.chatmoderator.purged");
+            warning += $.lang.get("net.quorrabot.chatmoderator.purged");
         } else if (warningtypes[0].equalsIgnoreCase("ban")) {
             $.logEvent("chatModerator.js", 130, ">> Strike 1 >> Banned");
             
             banUser(user);
             
-            warning += $.lang.get("net.phantombot.chatmoderator.banned");
+            warning += $.lang.get("net.quorrabot.chatmoderator.banned");
         } else {
             $.logEvent("chatModerator.js", 136, ">> Strike 1 >> Timed out (" + warningtypes[0] + ")");
             
             timeoutUserFor(user, parseInt(warningtypes[0]));
             
-            warning += $.lang.get("net.phantombot.chatmoderator.timedout", warningtypes[0]);
+            warning += $.lang.get("net.quorrabot.chatmoderator.timedout", warningtypes[0]);
         }
     } else if (count == 2) {
         if ($.strlen(warningmessages[1]) > 0) {
@@ -143,19 +143,19 @@ function autoPurgeUser(user, warnmessage) {
             
             timeoutUser(user, 1);
             
-            warning += $.lang.get("net.phantombot.chatmoderator.purged");
+            warning += $.lang.get("net.quorrabot.chatmoderator.purged");
         } else if (warningtypes[1].equalsIgnoreCase("ban")) {
             $.logEvent("chatModerator.js", 154, ">> Strike 2 >> Banned");
             
             banUser(user);
             
-            warning += $.lang.get("net.phantombot.chatmoderator.banned");
+            warning += $.lang.get("net.quorrabot.chatmoderator.banned");
         } else {
             $.logEvent("chatModerator.js", 160, ">> Strike 2 >> Timed out (" + warningtypes[1] + ")");
             
             timeoutUserFor(user, parseInt(warningtypes[1]));
             
-            warning += $.lang.get("net.phantombot.chatmoderator.timedout", warningtypes[1]);
+            warning += $.lang.get("net.quorrabot.chatmoderator.timedout", warningtypes[1]);
         }
     } else {
         if ($.strlen(warningmessages[2]) > 0) {
@@ -167,19 +167,19 @@ function autoPurgeUser(user, warnmessage) {
             
             timeoutUser(user, 1);
             
-            warning += $.lang.get("net.phantombot.chatmoderator.purged");
+            warning += $.lang.get("net.quorrabot.chatmoderator.purged");
         } else if (warningtypes[2].equalsIgnoreCase("ban")) {
             $.logEvent("chatModerator.js", 178, ">> Strike 3 >> Banned");
             
             banUser(user);
             
-            warning += $.lang.get("net.phantombot.chatmoderator.banned");
+            warning += $.lang.get("net.quorrabot.chatmoderator.banned");
         } else {
             $.logEvent("chatModerator.js", 184, ">> Strike 3 >> Timed out (" + warningtypes[2] + ")");
             
             timeoutUserFor(user, parseInt(warningtypes[2]));
             
-            warning += $.lang.get("net.phantombot.chatmoderator.timedout", warningtypes[2]);
+            warning += $.lang.get("net.quorrabot.chatmoderator.timedout", warningtypes[2]);
         }
     }
     
@@ -219,37 +219,37 @@ $.on('command', function(event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         } else if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-usage"));
             return;
         } else if (args[0].equalsIgnoreCase("add")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-add-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-add-usage"));
                 return;
             }
             $.inidb.set("autobanphrases", "phrase_" + keys++, phrase);
             $.logEvent("chatModerator.js", 404, username + " added a phrase to the autoban list: " + phrase);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-add-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-add-success"));
             return;
         } else if (args[0].equalsIgnoreCase("remove")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-remove-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-remove-usage"));
                 return;
             } else if ($.inidb.get("autobanphrases", "phrase_" + parseInt(args[1])) == null) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.error"));
                 return;
             }
             $.inidb.del("autobanphrases", "phrase_" + parseInt(args[1]));
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-remove-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-remove-success"));
             return;
         } else if (args[0].equalsIgnoreCase("get")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-get-usage", $.inidb.GetKeyList("autobanphrases", "").length));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-get-usage", $.inidb.GetKeyList("autobanphrases", "").length));
                 return;
             } else if ($.inidb.get("autobanphrases", "phrase_" + parseInt(args[1])) == null) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.error"));
                 return;
             }
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autoban-get", parseInt(args[1]), $.inidb.get("autobanphrases", "phrase_" + parseInt(args[1]))));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-get", parseInt(args[1]), $.inidb.get("autobanphrases", "phrase_" + parseInt(args[1]))));
             return;
         }
     } else if (command.equalsIgnoreCase("autopurge")) {
@@ -257,37 +257,37 @@ $.on('command', function(event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         } else if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-usage"));
             return;
         } else if (args[0].equalsIgnoreCase("add")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-add-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-add-usage"));
                 return;
             }
             $.inidb.set("autopurgephrases", "phrase_" + keyss++, phrase);
             $.logEvent("chatModerator.js", 404, username + " added a phrase to the autopurge list: " + phrase);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-add-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-add-success"));
             return;
         } else if (args[0].equalsIgnoreCase("remove")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-remove-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-remove-usage"));
                 return;
             } else if ($.inidb.get("autopurgephrases", "phrase_" + parseInt(args[1])) == null) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.error"));
                 return;
             }
             $.inidb.del("autopurgephrases", "phrase_" + parseInt(args[1]));
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-remove-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-remove-success"));
             return;
         } else if (args[0].equalsIgnoreCase("get")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-get-usage", $.inidb.GetKeyList("autopurgephrases", "").length));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-get-usage", $.inidb.GetKeyList("autopurgephrases", "").length));
                 return;
             } else if ($.inidb.get("autopurgephrases", "phrase_" + parseInt(args[1])) == null) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.error"));
                 return;
             }
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.autopurge-get", parseInt(args[1]), $.inidb.get("autopurgephrases", "phrase_" + parseInt(args[1]))));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-get", parseInt(args[1]), $.inidb.get("autopurgephrases", "phrase_" + parseInt(args[1]))));
             return;
         }
     } else if (command.equalsIgnoreCase("whitelist")) {
@@ -295,36 +295,36 @@ $.on('command', function(event) {
             $.say($.getWhisperString(sender) + $.modmsg);
             return;
         } else if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-usage"));
             return;
         } else if (args[0].equalsIgnoreCase("add")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-add-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-add-usage"));
                 return;
             }
             $.inidb.set("whitelist", "link_" + keysss++, phrase);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-add-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-add-success"));
             return;
         } else if (args[0].equalsIgnoreCase("remove")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-remove-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-remove-usage"));
                 return;
             } else if ($.inidb.get("whitelist", "link_" + parseInt(args[1])) == null) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error2"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.error2"));
                 return;
             }
             $.inidb.del("whitelist", "link_" + parseInt(args[1]));
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-remove-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-remove-success"));
             return;
         } else if (args[0].equalsIgnoreCase("get")) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-get-usage", $.inidb.GetKeyList("whitelist", "").length));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-get-usage", $.inidb.GetKeyList("whitelist", "").length));
                 return;
             } else if ($.inidb.get("whitelist", "link_" + parseInt(args[1])) == null) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.error"));
                 return;
             }
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.whitelist-get", parseInt(args[1]), $.inidb.get("whitelist", "phrase_" + parseInt(args[1]))));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-get", parseInt(args[1]), $.inidb.get("whitelist", "phrase_" + parseInt(args[1]))));
             return;
         } 
     } else if (command.equalsIgnoreCase("purge")) {
@@ -334,7 +334,7 @@ $.on('command', function(event) {
                 
                 timeoutUser (args[0], 1);
             } else {
-                $.say ($.lang.get("net.phantombot.common.err-user"));
+                $.say ($.lang.get("net.quorrabot.common.err-user"));
             }
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
@@ -349,7 +349,7 @@ $.on('command', function(event) {
                         
                         $.logEvent("chatModerator.js", 242, username + " forgave " + args[0] + ". Now at " + sinbin[i][1] + " strike(s)");
                         
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.forgive", $.username.resolve(args[0]), sinbin[i][1]));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.forgive", $.username.resolve(args[0]), sinbin[i][1]));
                     }
                 }
      
@@ -370,7 +370,7 @@ $.on('command', function(event) {
     
                 $.saveArray(lines, "sinbin", false);
             } else {
-                $.say ($.getWhisperString(sender) + $.lang.get("net.phantombot.common.err-user"));
+                $.say ($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.err-user"));
             }
         } else {
             $.say ($.getWhisperString(sender) + $.adminmsg);
@@ -387,7 +387,7 @@ $.on('command', function(event) {
                         
                         $.logEvent("chatModerator.js", 280, username + " gave a strike to " + args[0] + ". Now at " + sinbin[i][1] + " strike(s)");
                         
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.increase", $.username.resolve(args[0]), sinbin[i][1]));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.increase", $.username.resolve(args[0]), sinbin[i][1]));
                         
                         found = true;
                     }
@@ -398,7 +398,7 @@ $.on('command', function(event) {
                     
                     $.logEvent("chatModerator.js", 291, username + " gave a strike to " + args[0] + ". Now at 1 strike(s)");
                     
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.increase", $.username.resolve(args[0]), 1));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.increase", $.username.resolve(args[0]), 1));
                 }
      
                 lines = new Array();
@@ -411,7 +411,7 @@ $.on('command', function(event) {
     
                 $.saveArray(lines, "sinbin", false);
             } else {
-                $.say ($.getWhisperString(sender) + $.lang.get("net.phantombot.common.err-user"));
+                $.say ($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.err-user"));
             }
         } else {
             $.say ($.getWhisperString(sender) + $.adminmsg);
@@ -427,7 +427,7 @@ $.on('command', function(event) {
                 
                 timeoutUserFor (args[0], args[1]);
             } else {
-                $.say ($.getWhisperString(sender) + $.lang.get("net.phantombot.common.err-user"));
+                $.say ($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.err-user"));
             }
         } else {
             $.say ($.getWhisperString(sender) + $.adminmsg);
@@ -439,7 +439,7 @@ $.on('command', function(event) {
                 
                 $.logEvent("chatModerator.js", 344, username + " permitted " + argsString);
                 
-                $.say ($.lang.get("net.phantombot.chatmoderator.permit", $.username.resolve(argsString), permittime));
+                $.say ($.lang.get("net.quorrabot.chatmoderator.permit", $.username.resolve(argsString), permittime));
             }
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
@@ -450,20 +450,20 @@ $.on('command', function(event) {
                 var time = parseInt(args[1]);
                 
                 if (time <= 0) {
-                    $.say ($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.ban-err-time", time));
+                    $.say ($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.ban-err-time", time));
                 }
                 
                 $.logEvent("chatModerator.js", 360, username + " banned " + args[0] + " for " + time + " hour(s)");
                 
                 banUserFor (args[0], time * 60 * 60);
                 
-                $.say ($.lang.get("net.phantombot.chatmoderator.ban", $.username.resolve(args[0]), time));
+                $.say ($.lang.get("net.quorrabot.chatmoderator.ban", $.username.resolve(args[0]), time));
             } else {
                 $.logEvent("chatModerator.js", 370, username + " banned " + args[0] + " indefinitely");
                 
                 banUser (args[0]);
                 
-                $.say ($.lang.get("net.phantombot.chatmoderator.ban-indef", $.username.resolve(args[0])));
+                $.say ($.lang.get("net.quorrabot.chatmoderator.ban-indef", $.username.resolve(args[0])));
             }
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
@@ -474,7 +474,7 @@ $.on('command', function(event) {
             
             unbanUser (args[0]);
             
-            $.say ($.lang.get("net.phantombot.chatmoderator.unban", $.username.resolve(args[0])));
+            $.say ($.lang.get("net.quorrabot.chatmoderator.unban", $.username.resolve(args[0])));
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
         }
@@ -485,7 +485,7 @@ $.on('command', function(event) {
             $.say(".clear"); // made it like this so it does not clear chat 3 times. https://screenshots.zelakto.tv/s/utkUFPjEqjB2dbdMi2s0j6jAU.png
             
             setTimeout(function() {
-                $.say($.lang.get("net.phantombot.chatmoderator.clearchat", username));
+                $.say($.lang.get("net.quorrabot.chatmoderator.clearchat", username));
             }, 1000);
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
@@ -493,8 +493,8 @@ $.on('command', function(event) {
     } else if (command.equalsIgnoreCase("chatmod")) {
         if ($.isModv3(sender, event.getTags())) {
             if (args.length < 1 || args[0].equalsIgnoreCase("help")) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.chatmod-help-1"));
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.chatmod-help-2") + "warningcountresettime, autopurgemessage, ipsallowed, autobanmessage, capsallowed, capstriggerratio, capstriggerlength, "
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.chatmod-help-1"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.chatmod-help-2") + "warningcountresettime, autopurgemessage, ipsallowed, autobanmessage, capsallowed, capstriggerratio, capstriggerlength, "
                     + "capsmessage, linksallowed, permittime, youtubeallowed, subsallowed, regsallowed, linksmessage, spamallowed, spamlimit, spammessage, ipmessage");
                 $.say($.getWhisperString(sender) + ">>symbolsallowed, symbolslimit, symbolsrepeatlimit, symbolsmessage, repeatallowed, repeatlimit, repeatmessage, graphemeallowed, "
                     + "graphemelimit, graphememessage, warning1type, warning2type, warning3type, warning1message, warning2message, warning3message, disable, enable");
@@ -511,7 +511,7 @@ $.on('command', function(event) {
                     val = parseInt(argsString);
                     
                     if (args.length == 1 || isNaN(val)) {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.chatmoderator.chatmod-warn-reset-time", warningcountresettime));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.chatmod-warn-reset-time", warningcountresettime));
                     } else {
                         if (val < 0) {
                             val = -1;
@@ -522,9 +522,9 @@ $.on('command', function(event) {
                         warningcountresettime = val;
                         
                         if (val < 0) {
-                            $.say($.lang.get("net.phantombot.chatmoderator.chatmod-warn-reset-time-never"));
+                            $.say($.lang.get("net.quorrabot.chatmoderator.chatmod-warn-reset-time-never"));
                         } else {
-                            $.say($.lang.get("net.phantombot.chatmoderator.chatmod-warn-reset-time-set", val));
+                            $.say($.lang.get("net.quorrabot.chatmoderator.chatmod-warn-reset-time-set", val));
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("autopurgemessage")) {

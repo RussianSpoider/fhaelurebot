@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.ant.freeform</type>
     <configuration>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
-            <name>PhantomBot</name>
+            <name>QuorraBot</name>
         </general-data>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
             <!-- Do not use Project Properties customizer when editing this file manually. 
@@ -12,11 +12,11 @@ auxiliary.show.customizer=false
 property there. Adding 
 auxiliary.show.customizer.message=<message>
  will show your customized message when someone attempts to open the customizer.  -->
-            <name>PhantomBot</name>
+            <name>QuorraBot</name>
             <properties/>
             <folders>
                 <source-folder>
-                    <label>PhantomBot</label>
+                    <label>QuorraBot</label>
                     <location>.</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
@@ -57,7 +57,7 @@ auxiliary.show.customizer.message=<message>
             </ide-actions>
             <export>
                 <type>jar</type>
-                <location>dist/build/PhantomBot.jar</location>
+                <location>dist/build/QuorraBot.jar</location>
                 <build-target>dist</build-target>
             </export>
             <view>
@@ -89,7 +89,7 @@ auxiliary.show.customizer.message=<message>
             <compilation-unit>
                 <package-root>src</package-root>
                 <classpath mode="compile">lib/commons-io-2.4.jar;lib/rhino-1.7.7.jar;lib/sqlite-jdbc-3.8.11.2.jar;lib/joda-time-2.4.jar;lib/guava-18.0.jar;lib/commons-lang3-3.3.2.jar;lib/java_websocket.jar</classpath>
-                <built-to>dist/build/PhantomBot.jar</built-to>
+                <built-to>dist/build/QuorraBot.jar</built-to>
                 <source-level>1.7</source-level>
             </compilation-unit>
             <compilation-unit>

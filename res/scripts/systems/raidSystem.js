@@ -1,19 +1,19 @@
 var maxSpamCount = 10;
 
 $.getOrdinal = function (n) {
-    var p = $.lang.get("net.phantombot.common.ordinal-prefixes");
-    var s = $.lang.get("net.phantombot.common.ordinal-suffixes");
+    var p = $.lang.get("net.quorrabot.common.ordinal-prefixes");
+    var s = $.lang.get("net.quorrabot.common.ordinal-suffixes");
     var v = n % 100;
 
     if (p.length == 10 && s.length == 10) {
         return (p[(v - 20) % 10] || p[v] || p[0]) + n + (s[(v - 20) % 10] || s[v] || s[0]);
     } else if (p.length != 10) {
-        $.logError("./systems/raidSystem.js", 6, "The ordinal prefixes did not contain all numbers. String: net.phantombot.common.ordinal-prefixes");
-        println("[raidSystem.js] The ordinal prefixes did not contain all numbers. String: net.phantombot.common.ordinal-prefixes");
+        $.logError("./systems/raidSystem.js", 6, "The ordinal prefixes did not contain all numbers. String: net.quorrabot.common.ordinal-prefixes");
+        println("[raidSystem.js] The ordinal prefixes did not contain all numbers. String: net.quorrabot.common.ordinal-prefixes");
         return n;
     } else if (s.length != 10) {
-        $.logError("./systems/raidSystem.js", 7, "The ordinal suffixes did not contain all numbers. String: net.phantombot.common.ordinal-suffixes");
-        println("[raidSystem.js] The ordinal suffixes did not contain all numbers. String: net.phantombot.common.ordinal-suffixes");
+        $.logError("./systems/raidSystem.js", 7, "The ordinal suffixes did not contain all numbers. String: net.quorrabot.common.ordinal-suffixes");
+        println("[raidSystem.js] The ordinal suffixes did not contain all numbers. String: net.quorrabot.common.ordinal-suffixes");
         return n;
     }
 }
@@ -39,32 +39,32 @@ $.on('command', function(event) {
             }
             
             if (args[1] == null) {
-                $.say($.lang.get("net.phantombot.raidsystem.raid-success", args[0].toLowerCase(), ""));
+                $.say($.lang.get("net.quorrabot.raidsystem.raid-success", args[0].toLowerCase(), ""));
                 return;
             }
 
             if (args.length >= 2) {
                 if (!isNaN(parseInt(args[1]))) {
                     if (parseInt(args[1]) > maxSpamCount) {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.raidsystem.raid-error-toomuch", maxSpamCount));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.raidsystem.raid-error-toomuch", maxSpamCount));
                         return;
                     }
                     
                     for (var i = 0; i < parseInt(args[1]); i++) {
                         if(args[2] != null) {
-                            $.say($.lang.get("net.phantombot.raidsystem.raid-success", args[0].toLowerCase(), argsString.substring(argsString.indexOf(args[2].toString()), argsString.length())));
+                            $.say($.lang.get("net.quorrabot.raidsystem.raid-success", args[0].toLowerCase(), argsString.substring(argsString.indexOf(args[2].toString()), argsString.length())));
                         } else {
-                            $.say($.lang.get("net.phantombot.raidsystem.raid-success", args[0].toLowerCase(), ""));                                
+                            $.say($.lang.get("net.quorrabot.raidsystem.raid-success", args[0].toLowerCase(), ""));                                
                         }
                     }
                     return;
                 } else {
-                    $.say($.lang.get("net.phantombot.raidsystem.raid-success", args[0].toLowerCase(), argsString.substring(argsString.indexOf(args[1].toString()), argsString.length())));
+                    $.say($.lang.get("net.quorrabot.raidsystem.raid-success", args[0].toLowerCase(), argsString.substring(argsString.indexOf(args[1].toString()), argsString.length())));
                     return;
                 }
             }
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.raidsystem.raid-usage"));       
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.raidsystem.raid-usage"));       
             return;
         }
     }
@@ -78,10 +78,10 @@ $.on('command', function(event) {
 
             $.inidb.incr('raiders', args[0].toLowerCase() + "_count", 1);
 
-            $.say($.lang.get("net.phantombot.raidsystem.raider-success", $.username.resolve(args[0]), getOrdinal($.inidb.get('raiders', args[0].toLowerCase()  + "_count")), args[0].toLowerCase()));  
+            $.say($.lang.get("net.quorrabot.raidsystem.raider-success", $.username.resolve(args[0]), getOrdinal($.inidb.get('raiders', args[0].toLowerCase()  + "_count")), args[0].toLowerCase()));  
             return;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.raidsystem.raider-usage"));       
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.raidsystem.raider-usage"));       
             return;
         }
     }

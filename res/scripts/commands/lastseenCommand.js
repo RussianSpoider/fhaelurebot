@@ -6,14 +6,14 @@ $.on('command', function (event) {
     
     if (command.equalsIgnoreCase("lastseen")) {
         if (lastTarget == null) {
-            lastTarget = $.lang.get("net.phantombot.lastseencommand.error-no-data");
+            lastTarget = $.lang.get("net.quorrabot.lastseencommand.error-no-data");
         }
         
         if (args.length >= 1) {
-            $.say ($.getWhisperString(sender) + $.lang.get("net.phantombot.lastseencommand.say", $.username.resolve(args[0]), lastTarget));
+            $.say ($.getWhisperString(sender) + $.lang.get("net.quorrabot.lastseencommand.say", $.username.resolve(args[0]), lastTarget));
             return;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.lastseencommand.usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.lastseencommand.usage"));
             return;
         }
     }

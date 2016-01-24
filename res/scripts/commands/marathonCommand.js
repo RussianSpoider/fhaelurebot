@@ -88,18 +88,18 @@ var announceSchedule = function() {
         $.say($.inidb.get("marathon", "link"));
     }
     
-    $.say($.lang.get("net.phantombot.marathonCommand.current-caster-time", timestamp, $.timezone));
-    $.say($.lang.get("net.phantombot.marathonCommand.current-sched"));
+    $.say($.lang.get("net.quorrabot.marathonCommand.current-caster-time", timestamp, $.timezone));
+    $.say($.lang.get("net.quorrabot.marathonCommand.current-sched"));
     
     lines.sort();
     
     if (prev != null) {
-        $.say($.lang.get("net.phantombot.marathonCommand.prev", prevS));
+        $.say($.lang.get("net.quorrabot.marathonCommand.prev", prevS));
         return;
     }
     
     if (cur != null) {
-        $>say($.lang.get("net.phantombot.marathonCommand.live", curS));
+        $>say($.lang.get("net.quorrabot.marathonCommand.live", curS));
         return;
     }
     
@@ -112,7 +112,7 @@ var announceSchedule = function() {
         date = cal.getTime();
    
         if ((cur == null || date.after(cur)) && count < $.schedulelimit) {
-            $.say($.lang.get("net.phantombot.marathonCommand.next", datefmt.format(date), spl[1]));
+            $.say($.lang.get("net.quorrabot.marathonCommand.next", datefmt.format(date), spl[1]));
             
             count++;
         }
@@ -133,7 +133,7 @@ $.on('command', function(event) {
     if (command.equalsIgnoreCase("marathon")) {
         if (args.length == 0) {
             if (!$.inidb.FileExists("marathon") || $.inidb.GetKeyList("marathon", "").length == 0) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.error-no-marathon"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.error-no-marathon"));
                 return;
             } 
             announceSchedule();
@@ -151,45 +151,45 @@ $.on('command', function(event) {
             
             if (args[0].equalsIgnoreCase("clear")) {
                 $.inidb.RemoveFile("marathon");
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.marathon-cleared"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-cleared"));
             } else if (args[0].equalsIgnoreCase("name")) {
                 if (data.length == 0) {
                     if ($.inidb.exists("marathon", "name")) {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.current-marathon-name", $.inidb.get("marathon", "name")));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.current-marathon-name", $.inidb.get("marathon", "name")));
                     } else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.error-no-marathon"));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.error-no-marathon"));
                     }
                     return;
                 }
                 
                 $.inidb.set("marathon", "name", data); 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.marathon-name-set"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-name-set"));
             } else if (args[0].equalsIgnoreCase("nameclear")) {
                 $.inidb.del("marathon", "name");
                 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.marathon-name-cleared"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-name-cleared"));
             } else if (args[0].equalsIgnoreCase("link")) {
                 if (data.length == 0) {
                     if ($.inidb.exists("marathon", "link")) {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.marathon-link", $.inidb.get("marathon", "link")));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-link", $.inidb.get("marathon", "link")));
                         return;
                     } else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.marathon-link-error"));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-link-error"));
                         return;
                     }
                     return;
                 }
                 
                 $.inidb.set("marathon", "link", data);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.marathon-link-set"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-link-set"));
                 return;
             } else if (args[0].equalsIgnoreCase("linkclear")) {
                 $.inidb.del("marathon", "link"); 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.marathon-link-cleared"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-link-cleared"));
                 return;
             } else if (args[0].equalsIgnoreCase("schedule")) {
                 if (data.indexOf(" ") == -1 || $.strlen(data) < data.indexOf(" ") + 1) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.marathon-sched-usage"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-sched-usage"));
                     return;
                 } else {
                     var subcommand = data.substring(0, data.indexOf(" "));
@@ -231,7 +231,7 @@ $.on('command', function(event) {
                         }
                     
                         if (month == -1 || day == -1 || hour == -1 || minute == -1) {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.date-error-user-404"));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.date-error-user-404"));
                             return;
                         }
                         
@@ -253,13 +253,13 @@ $.on('command', function(event) {
                                 if (date2.equals(date)) {
                                     $.inidb.del("marathon", keys[i]);
                                     
-                                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.deleted-time-slot"));
+                                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.deleted-time-slot"));
                                     return;
                                 }
                             }
                         }
                         
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.time-slot-error-404"));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.time-slot-error-404"));
                         return;
                     } else if (subcommand.equalsIgnoreCase("add")) {
                         var first = true;
@@ -308,7 +308,7 @@ $.on('command', function(event) {
                             if (month == -1 || day == -1 || hour == -1 || minute == -1) {
                                 if (first) {
                                     first = false;
-                                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.date-error-user-404"));
+                                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.date-error-user-404"));
                                     return;
                                 }
                             } else {
@@ -321,15 +321,15 @@ $.on('command', function(event) {
                             }
                         } while ($.strlen(data) > 0);
                         
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.added-items", count));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.added-items", count));
                         return;
                     } else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.wrong-subcommand", subcommand));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.wrong-subcommand", subcommand));
                         return;
                     }
                 }
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.marathonCommand.marathon-command-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-command-usage"));
                 return;
             }
         }

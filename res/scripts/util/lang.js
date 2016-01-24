@@ -37,10 +37,10 @@ $.lang.get = function(str_name) {
 	        $.logError("./util/lang.js", 33, "Lang string missing: " + str_name);
 	        Packages.com.gmt2001.Console.err.println("[lang.js] Lang string missing: " + str_name);
 	        
-	        if (str_name.equalsIgnoreCase("net.phantombot.lang.not-exists")) {
+	        if (str_name.equalsIgnoreCase("net.quorrabot.lang.not-exists")) {
 	            return "!!! Missing string in lang file !!!";
 	        } else {
-	            return $.lang.get("net.phantombot.lang.not-exists");
+	            return $.lang.get("net.quorrabot.lang.not-exists");
 	        }
 	    }
 	    var s = $.lang.data[str_name];
@@ -78,17 +78,17 @@ $.on('command', function(event) {
         }
         
         if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.lang.curlang", $.lang.curlang));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.lang.curlang", $.lang.curlang));
         } else {
             if (!$.fileExists("./scripts/lang/lang-" + args[0].toLowerCase() + ".js")) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.lang.lang-not-exists"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.lang.lang-not-exists"));
                 return; 
             } else {
                 $.inidb.set("settings", "lang", args[0].toLowerCase());
                 $.lang.curlang = args[0].toLowerCase();
                 $.lang.load();
                 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.lang.lang-changed", args[0].toLowerCase()));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.lang.lang-changed", args[0].toLowerCase()));
             }
         }
     }

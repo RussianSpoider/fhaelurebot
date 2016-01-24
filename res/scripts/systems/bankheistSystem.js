@@ -33,91 +33,91 @@ if ($.heistMinutes == null) {
 
 $.stringNoJoin = $.inidb.get("bankheist_strings", "stringNoJoin");
 if ($.stringNoJoin == null) {
-    $.stringNoJoin = $.lang.get("net.phantombot.bankheistsystem.bank-is-safe");
+    $.stringNoJoin = $.lang.get("net.quorrabot.bankheistsystem.bank-is-safe");
     $.inidb.set("bankheist_strings", "stringNoJoin", $.stringNoJoin);
 }
 
 $.stringStarting = $.inidb.get("bankheist_strings", "stringStarting");
 if ($.stringStarting == null) {
-    $.stringStarting = $.lang.get("net.phantombot.bankheistsystem.starting");
+    $.stringStarting = $.lang.get("net.quorrabot.bankheistsystem.starting");
     $.inidb.set("bankheist_strings", "stringStarting", $.stringStarting);
 }
 
 $.stringFlawless = $.inidb.get("bankheist_strings", "stringFlawless");
 if ($.stringFlawless == null) {
-    $.stringFlawless = $.lang.get("net.phantombot.bankheistsystem.stringFlawless");
+    $.stringFlawless = $.lang.get("net.quorrabot.bankheistsystem.stringFlawless");
     $.inidb.set("bankheist_strings", "stringFlawless", $.stringFlawless);
 }
 
 $.stringCasualties = $.inidb.get("bankheist_strings", "stringCasualties");
 if ($.stringCasualties == null) {
-    $.stringCasualties = $.lang.get("net.phantombot.bankheistsystem.stringCasualties");
+    $.stringCasualties = $.lang.get("net.quorrabot.bankheistsystem.stringCasualties");
     $.inidb.set("bankheist_strings", "stringCasualties", $.stringCasualties);
 }
 
 $.stringPayouts = $.inidb.get("bankheist_strings", "stringPayouts");
 if ($.stringPayouts == null) {
-    $.stringPayouts = $.lang.get("net.phantombot.bankheistsystem.payouts");
+    $.stringPayouts = $.lang.get("net.quorrabot.bankheistsystem.payouts");
     $.inidb.set("bankheist_strings", "stringPayouts", $.stringPayouts);
 }
 
 $.stringAllDead = $.inidb.get("bankheist_strings", "stringAllDead");
 if ($.stringAllDead == null) {
-    $.stringAllDead = $.lang.get("net.phantombot.bankheistsystem.all-dead");
+    $.stringAllDead = $.lang.get("net.quorrabot.bankheistsystem.all-dead");
     $.inidb.set("bankheist_strings", "stringAllDead", $.stringAllDead);
 }
 
 $.banksClosed = $.inidb.get("bankheist_strings", "banksClosed");
 if ($.banksClosed == null) {
-    $.banksClosed = $.lang.get("net.phantombot.bankheistsystem.bank-closed");
+    $.banksClosed = $.lang.get("net.quorrabot.bankheistsystem.bank-closed");
     $.inidb.set("bankheist_strings", "banksClosed", $.banksClosed);
 }
 
 $.enterABet = $.inidb.get("bankheist_strings", "enterABet");
 if ($.enterABet == null) {
-    $.enterABet = $.lang.get("net.phantombot.bankheistsystem.enter-bet-usage");
+    $.enterABet = $.lang.get("net.quorrabot.bankheistsystem.enter-bet-usage");
     $.inidb.set("bankheist_strings", "enterABet", $.enterABet);
 }
 
 $.affordBet = $.inidb.get("bankheist_strings", "affordBet");
 if ($.affordBet == null) {
-    $.affordBet = $.lang.get("net.phantombot.bankheistsystem.afford-bet");
+    $.affordBet = $.lang.get("net.quorrabot.bankheistsystem.afford-bet");
     $.inidb.set("bankheist_strings", "affordBet", $.affordBet);
 }
 
 $.alreadyBet = $.inidb.get("bankheist_strings", "alreadyBet");
 if ($.alreadyBet == null) {
-    $.alreadyBet = $.lang.get("net.phantombot.bankheistsystem.already-beted");
+    $.alreadyBet = $.lang.get("net.quorrabot.bankheistsystem.already-beted");
     $.inidb.set("bankheist_strings", "alreadyBet", $.alreadyBet);
 }
 
 $.startedHeist = $.inidb.get("bankheist_strings", "startedHeist");
 if ($.startedHeist == null) {
-    $.startedHeist = $.lang.get("net.phantombot.bankheistsystem.heist-started");
+    $.startedHeist = $.lang.get("net.quorrabot.bankheistsystem.heist-started");
     $.inidb.set("bankheist_strings", "startedHeist", $.startedHeist);
 }
 
 $.joinedHeist = $.inidb.get("bankheist_strings", "joinedHeist");
 if ($.joinedHeist == null) {
-    $.joinedHeist = $.lang.get("net.phantombot.bankheistsystem.joined-heist");
+    $.joinedHeist = $.lang.get("net.quorrabot.bankheistsystem.joined-heist");
     $.inidb.set("bankheist_strings", "joinedHeist", $.joinedHeist);
 }
 
 $.banksOpen = $.inidb.get("bankheist_strings", "banksOpen");
 if ($.banksOpen == null) {
-    $.banksOpen = $.lang.get("net.phantombot.bankheistsystem.bank-open");
+    $.banksOpen = $.lang.get("net.quorrabot.bankheistsystem.bank-open");
     $.inidb.set("bankheist_strings", "banksOpen", $.banksOpen);
 }
 
 $.heistCancelled = $.inidb.get("bankheist_strings", "heistCancelled");
 if ($.heistCancelled == null) {
-    $.heistCancelled = $.lang.get("net.phantombot.bankheistsystem.heist-canceled");
+    $.heistCancelled = $.lang.get("net.quorrabot.bankheistsystem.heist-canceled");
     $.inidb.set("bankheist_strings", "heistCancelled", $.heistCancelled);
 }
 
 $.betTooLarge = $.inidb.get("bankheist_strings", "betTooLarge");
 if ($.betTooLarge == null) {
-    $.betTooLarge = $.lang.get("net.phantombot.bankheistsystem.max-allowed");
+    $.betTooLarge = $.lang.get("net.quorrabot.bankheistsystem.max-allowed");
     $.inidb.set("bankheist_strings", "betTooLarge", $.betTooLarge);
 }
 
@@ -280,7 +280,7 @@ function startHeist() {
                 $.inidb.RemoveFile("bankheist_roster");
                 $.inidb.RemoveFile("bankheist_bets");
 
-                $.say($.banksOpen + $.signupMinutes + $.lang.get("net.phantombot.bankheistsystem.min-to-join"));
+                $.say($.banksOpen + $.signupMinutes + $.lang.get("net.quorrabot.bankheistsystem.min-to-join"));
             } else {
                 $.processBankheist();
                 $.timer.clearTimer("./systems/bankheistSystem.js", "enterbankheist", true);
@@ -317,7 +317,7 @@ $.on('command', function (event) {
 
                 startHeist();
 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.bankheist-enabled"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.bankheist-enabled"));
                 return;
 
             } else {
@@ -334,7 +334,7 @@ $.on('command', function (event) {
 		$.entrySeconds = 0;
 		$.winningPot = 0;
 		$.pointsId = 0;
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.bankheist-disabled"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.bankheist-disabled"));
                 return;
             }
         } else if (args[0].equalsIgnoreCase("start")) {
@@ -384,7 +384,7 @@ $.on('command', function (event) {
 		$.entrySeconds = 0;
 		$.winningPot = 0;
 		$.pointsId = 0;
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.heist-cleared"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.heist-cleared"));
                 return;
                 
         } else if (!isNaN(betAmount) && parseInt(betAmount) > 0) {
@@ -444,7 +444,7 @@ $.on('command', function (event) {
                 }
                 $.signupMinutes = modValue;
                 $.inidb.set("bankheist_timers", "signupMinutes", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-signupMinutes", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-signupMinutes", modValue));
                 return;
             }
 
@@ -455,7 +455,7 @@ $.on('command', function (event) {
                 }
                 $.heistMinutes = modValue;
                 $.inidb.set("bankheist_timers", "heistMinutes", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-heistMinutes", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-heistMinutes", modValue));
                 return;
             }
 
@@ -466,7 +466,7 @@ $.on('command', function (event) {
                 }
                 $.heistCancelled = modValue;
                 $.inidb.set("bankheist_strings", "heistCancelled", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-heistCancelled", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-heistCancelled", modValue));
                 return;
             }
 
@@ -477,7 +477,7 @@ $.on('command', function (event) {
                 }
                 $.banksOpen = modValue;
                 $.inidb.set("bankheist_strings", "banksOpen", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-banksOpen", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-banksOpen", modValue));
                 return;
             }
 
@@ -488,7 +488,7 @@ $.on('command', function (event) {
                 }
                 $.startedHeist = modValue;
                 $.inidb.set("bankheist_strings", "startedHeist", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-startedHeist", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-startedHeist", modValue));
                 return;
             }
 
@@ -499,7 +499,7 @@ $.on('command', function (event) {
                 }
                 $.stringStarting = modValue;
                 $.inidb.set("bankheist_strings", "stringStarting", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-stringStarting", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-stringStarting", modValue));
                 return;
             }
 
@@ -510,7 +510,7 @@ $.on('command', function (event) {
                 }
                 $.stringNoJoin = modValue;
                 $.inidb.set("bankheist_strings", "stringNoJoin", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-stringNoJoin", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-stringNoJoin", modValue));
                 return;
             }
 
@@ -521,7 +521,7 @@ $.on('command', function (event) {
                 }
                 $.banksClosed = modValue;
                 $.inidb.set("bankheist_strings", "banksClosed", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-banksClosed", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-banksClosed", modValue));
                 return;
             }
 
@@ -532,7 +532,7 @@ $.on('command', function (event) {
                 }
                 $.stringAllDead = modValue;
                 $.inidb.set("bankheist_strings", "stringAllDead", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-stringAllDead", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-stringAllDead", modValue));
                 return;
             }
 
@@ -543,7 +543,7 @@ $.on('command', function (event) {
                 }
                 $.affordBet = modValue;
                 $.inidb.set("bankheist_strings", "affordBet", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-affordBet", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-affordBet", modValue));
                 return;
             }
 
@@ -554,7 +554,7 @@ $.on('command', function (event) {
                 }
                 $.alreadyBet = modValue;
                 $.inidb.set("bankheist_strings", "alreadyBet", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-alreadyBet", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-alreadyBet", modValue));
                 return;
             }
 
@@ -565,7 +565,7 @@ $.on('command', function (event) {
                 }
                 $.joinedHeist = modValue;
                 $.inidb.set("bankheist_strings", "joinedHeist", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-joinedHeist", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-joinedHeist", modValue));
                 return;
             }
 
@@ -576,7 +576,7 @@ $.on('command', function (event) {
                 }
                 $.enterABet = modValue;
                 $.inidb.set("bankheist_strings", "enterABet", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-enterABet", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-enterABet", modValue));
                 return;
             }
 
@@ -587,7 +587,7 @@ $.on('command', function (event) {
                 }
                 $.stringPayouts = modValue;
                 $.inidb.set("bankheist_strings", "stringPayouts", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-stringPayouts", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-stringPayouts", modValue));
                 return;
             }
             if (args[0].equalsIgnoreCase("stringFlawless")) {
@@ -597,7 +597,7 @@ $.on('command', function (event) {
                 }
                 $.stringFlawless = modValue;
                 $.inidb.set("bankheist_strings", "stringFlawless", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-stringFlawless", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-stringFlawless", modValue));
                 return;
             }
             if (args[0].equalsIgnoreCase("stringCasualties")) {
@@ -607,7 +607,7 @@ $.on('command', function (event) {
                 }
                 $.stringCasualties = modValue;
                 $.inidb.set("bankheist_strings", "stringCasualties", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-stringCasualties", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-stringCasualties", modValue));
                 return;
             }
             if (args[0].equalsIgnoreCase("betTooLarge")) {
@@ -617,7 +617,7 @@ $.on('command', function (event) {
                 }
                 $.betTooLarge = modValue;
                 $.inidb.set("bankheist_strings", "betTooLarge", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-betTooLarge", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-betTooLarge", modValue));
                 return;
             }
 
@@ -628,7 +628,7 @@ $.on('command', function (event) {
                 }
                 $.chances50 = modValue;
                 $.inidb.set("bankheist_chances", "chances50", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-chances50", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-chances50", modValue));
                 return;
             }
 
@@ -639,7 +639,7 @@ $.on('command', function (event) {
                 }
                 $.chances40 = modValue;
                 $.inidb.set("bankheist_chances", "chances40", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-chances40", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-chances40", modValue));
                 return;
             }
 
@@ -650,7 +650,7 @@ $.on('command', function (event) {
                 }
                 $.chances30 = modValue;
                 $.inidb.set("bankheist_chances", "chances30", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-chances30", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-chances30", modValue));
                 return;
             }
 
@@ -661,7 +661,7 @@ $.on('command', function (event) {
                 }
                 $.chances20 = modValue;
                 $.inidb.set("bankheist_chances", "chances20", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-chances20", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-chances20", modValue));
                 return;
             }
 
@@ -672,7 +672,7 @@ $.on('command', function (event) {
                 }
                 $.chances10 = modValue;
                 $.inidb.set("bankheist_chances", "chances10", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-chances10", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-chances10", modValue));
                 return;
             }
 
@@ -683,7 +683,7 @@ $.on('command', function (event) {
                 }
                 $.ratio50 = modValue;
                 $.inidb.set("bankheist_ratios", "ratio50", parseFloat(modValue));
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-ratio50", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-ratio50", modValue));
                 return;
             }
 
@@ -694,7 +694,7 @@ $.on('command', function (event) {
                 }
                 $.ratio40 = modValue;
                 $.inidb.set("bankheist_ratios", "ratio40", parseFloat(modValue));
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-ratio40", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-ratio40", modValue));
                 return;
             }
 
@@ -705,7 +705,7 @@ $.on('command', function (event) {
                 }
                 $.ratio30 = modValue;
                 $.inidb.set("bankheist_ratios", "ratio30", parseFloat(modValue));
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-ratio30", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-ratio30", modValue));
                 return;
             }
 
@@ -716,7 +716,7 @@ $.on('command', function (event) {
                 }
                 $.ratio20 = modValue;
                 $.inidb.set("bankheist_ratios", "ratio20", parseFloat(modValue));
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-ratio20", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-ratio20", modValue));
                 return;
             }
 
@@ -727,7 +727,7 @@ $.on('command', function (event) {
                 }
                 $.ratio10 = modValue;
                 $.inidb.set("bankheist_ratios", "ratio10", parseFloat(modValue));
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-ratio10", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-ratio10", modValue));
                 return;
             }
 
@@ -738,12 +738,12 @@ $.on('command', function (event) {
                 }
                 $.bankheistMaxBet = modValue;
                 $.inidb.set("settings", "bankheistmaxbet", modValue);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-maxbet", modValue));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-maxbet", modValue));
                 return;
             }
 
             if ($.isModv3(sender)) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.bankheistsystem.new-value-for-user-error-404"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.new-value-for-user-error-404"));
                 return;
             } else {
                 $.say($.getWhisperString(sender) + $.enterABet);

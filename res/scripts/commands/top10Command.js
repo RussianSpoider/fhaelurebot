@@ -6,16 +6,16 @@ $.getTimeString = function (time) {
 
     var timeString = "";
 
-    var p = $.lang.get("net.phantombot.common.time-prefixes");
-    var s = $.lang.get("net.phantombot.common.time-suffixes");
+    var p = $.lang.get("net.quorrabot.common.time-prefixes");
+    var s = $.lang.get("net.quorrabot.common.time-suffixes");
 
     if (p.length != 4) {
-        $.logError("./systems/top10Command.js", 9, "The time prefixes did not contain all numbers. String: net.phantombot.common.time-prefixes");
-        println("[raidSystem.js] The time prefixes did not contain all numbers. String: net.phantombot.common.time-prefixes");
+        $.logError("./systems/top10Command.js", 9, "The time prefixes did not contain all numbers. String: net.quorrabot.common.time-prefixes");
+        println("[raidSystem.js] The time prefixes did not contain all numbers. String: net.quorrabot.common.time-prefixes");
         return minutes;
     } else if (s.length != 4) {
-        $.logError("./systems/top10Command.js", 10, "The time suffixes did not contain all numbers. String: net.phantombot.common.time-suffixes");
-        println("[raidSystem.js] The time suffixes did not contain all numbers. String: net.phantombot.common.time-suffixes");
+        $.logError("./systems/top10Command.js", 10, "The time suffixes did not contain all numbers. String: net.quorrabot.common.time-suffixes");
+        println("[raidSystem.js] The time suffixes did not contain all numbers. String: net.quorrabot.common.time-suffixes");
         return minutes;
     }
 
@@ -56,7 +56,7 @@ $.on('command', function(event) {
     
     if (command.equalsIgnoreCase("top10")) {
         if (!$.moduleEnabled("./systems/pointSystem.js")) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.top10.points-disabled"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.top10.points-disabled"));
             return;
         }
         
@@ -88,22 +88,22 @@ $.on('command', function(event) {
         };
 
         if (topTenString.trim() == "") {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.top10.points-error-noresults", $.pointNameMultiple));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.top10.points-error-noresults", $.pointNameMultiple));
             return;
         } else {
             if (!$.isModv3(sender, event.getTags())) {
-                $.say($.getWhisperStringStatic(sender) + $.lang.get("net.phantombot.top10.points-success-whisper", $.pointNameMultiple, topTenString.trim()));
+                $.say($.getWhisperStringStatic(sender) + $.lang.get("net.quorrabot.top10.points-success-whisper", $.pointNameMultiple, topTenString.trim()));
                 return;
             }
 
-            $.say($.lang.get("net.phantombot.top10.points-success", $.pointNameMultiple, topTenString.trim()));
+            $.say($.lang.get("net.quorrabot.top10.points-success", $.pointNameMultiple, topTenString.trim()));
             return;
         }
     }
     
     if (command.equalsIgnoreCase("top10time")) {
         if (!$.moduleEnabled("./systems/timeSystem.js")) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.top10.time-disabled"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.top10.time-disabled"));
             return;
         }
         
@@ -135,15 +135,15 @@ $.on('command', function(event) {
         };
 
         if (topTenString.trim() == "") {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.top10.time-error-noresults"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.top10.time-error-noresults"));
             return;
         } else {
             if (!$.isModv3(sender, event.getTags())) {
-                $.say($.getWhisperStringStatic(sender) + $.lang.get("net.phantombot.top10.time-success-whisper", topTenString.trim()));
+                $.say($.getWhisperStringStatic(sender) + $.lang.get("net.quorrabot.top10.time-success-whisper", topTenString.trim()));
                 return;
             }
 
-            $.say($.lang.get("net.phantombot.top10.time-success", topTenString.trim()));
+            $.say($.lang.get("net.quorrabot.top10.time-success", topTenString.trim()));
             return;
         }
     }

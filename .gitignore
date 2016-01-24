@@ -52,7 +52,7 @@ build/
 # Files created by the bot inside res folder
 res/bannedUsers.bin
 res/botlogin.txt
-res/phantombot.db
+res/quorrabot.db
 res/stacktrace.txt
 res/stdio.txt
 res/web/default.html

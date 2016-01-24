@@ -203,13 +203,13 @@ $.on('command', function(event) {
             if (args.length > 0 && !isNaN(parseInt(args[0]))) {
                 start = commandsPerPage * (parseInt(args[0]) - 1);
                 
-                page = $.lang.get("net.phantombot.commandlist.page", args[0], numPages);
+                page = $.lang.get("net.quorrabot.commandlist.page", args[0], numPages);
             } else {
-                page = $.lang.get("net.phantombot.commandlist.page", 1, numPages);
+                page = $.lang.get("net.quorrabot.commandlist.page", 1, numPages);
             }
             
             num = Math.min(commandsPerPage, length - start);
-            more = $.lang.get("net.phantombot.commandlist.more");
+            more = $.lang.get("net.quorrabot.commandlist.more");
         } else {
             num = length;
         }
@@ -271,9 +271,9 @@ $.on('command', function(event) {
         }
         
         if (length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.commandlist.nocommands"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.commandlist.nocommands"));
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.commandlist.commands") + page + ": " + cmdList + more);
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.commandlist.commands") + page + ": " + cmdList + more);
         }
     }
     
@@ -284,11 +284,11 @@ $.on('command', function(event) {
             $.commandsPerPage = parseInt(args[0]);
             $.inidb.set("commands", "_commandsPerPage", args[0]);
             
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.commandlist.commands-per-page", args[0]));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.commandlist.commands-per-page", args[0]));
         } else if (!$.isAdmin(sender)) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.cmd.adminonly"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.cmd.adminonly"));
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.commandlist.commands-per-page-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.commandlist.commands-per-page-usage"));
         }
     }
 });

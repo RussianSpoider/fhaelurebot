@@ -51,16 +51,16 @@ $.getTimeString = function (time) {
 
     var timeString = "";
 
-    var p = $.lang.get("net.phantombot.common.time-prefixes");
-    var s = $.lang.get("net.phantombot.common.time-suffixes");
+    var p = $.lang.get("net.quorrabot.common.time-prefixes");
+    var s = $.lang.get("net.quorrabot.common.time-suffixes");
 
     if (p.length != 4) {
-        $.logError("./systems/timeSystem.js", 54, "The time prefixes did not contain all numbers. String: net.phantombot.common.time-prefixes");
-        println("[raidSystem.js] The time prefixes did not contain all numbers. String: net.phantombot.common.time-prefixes");
+        $.logError("./systems/timeSystem.js", 54, "The time prefixes did not contain all numbers. String: net.quorrabot.common.time-prefixes");
+        println("[raidSystem.js] The time prefixes did not contain all numbers. String: net.quorrabot.common.time-prefixes");
         return minutes;
     } else if (s.length != 4) {
-        $.logError("./systems/timeSystem.js", 55, "The time suffixes did not contain all numbers. String: net.phantombot.common.time-suffixes");
-        println("[raidSystem.js] The time suffixes did not contain all numbers. String: net.phantombot.common.time-suffixes");
+        $.logError("./systems/timeSystem.js", 55, "The time suffixes did not contain all numbers. String: net.quorrabot.common.time-suffixes");
+        println("[raidSystem.js] The time suffixes did not contain all numbers. String: net.quorrabot.common.time-suffixes");
         return minutes;
     }
 
@@ -146,7 +146,7 @@ $.on('command', function(event) {
                 }
 
                 if (args[1] == null || args[2] == null || isNaN(parseInt(args[2]))) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.give-usage"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.give-usage"));
                     return;
                 }
             
@@ -154,16 +154,16 @@ $.on('command', function(event) {
                 time = parseInt(args[2]);
             
                 if (time < 0) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.give-error-negative"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.give-error-negative"));
                     return;
                 } else {
                     if ($.inidb.get("visited", username.toLowerCase()) == "visited") {
                         $.inidb.incr('time', username.toLowerCase(), time);
 
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.give-success", $.getTimeString(time), $.username.resolve(username), $.getTimeString($.inidb.get('time', username.toLowerCase()))));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.give-success", $.getTimeString(time), $.username.resolve(username), $.getTimeString($.inidb.get('time', username.toLowerCase()))));
                         return;
                     } else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.common.user-404", $.username.resolve(username)));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.user-404", $.username.resolve(username)));
                         return;
                     }
                 }
@@ -181,7 +181,7 @@ $.on('command', function(event) {
                 }
 
                 if (args[1] == null || args[2] == null || isNaN(parseInt(args[2]))) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.take-usage"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.take-usage"));
                     return;
                 }
 
@@ -189,16 +189,16 @@ $.on('command', function(event) {
                 time = parseInt(args[2]);
 
                 if (time > $.inidb.get('time', username.toLowerCase())) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.take-error-toomuch", $.username.resolve(username)));       
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.take-error-toomuch", $.username.resolve(username)));       
                     return;
                 } else {
                     if ($.inidb.get("visited", username.toLowerCase()) == "visited")  {
                         $.inidb.decr('time', username.toLowerCase(), time);
 
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.take-success", $.getTimeString(time), $.username.resolve(username), $.getTimeString($.inidb.get('time', username.toLowerCase()))))
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.take-success", $.getTimeString(time), $.username.resolve(username), $.getTimeString($.inidb.get('time', username.toLowerCase()))))
                         return;
                     } else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.common.user-404", $.username.resolve(username)));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.user-404", $.username.resolve(username)));
                         return;
                     }
                 }
@@ -216,7 +216,7 @@ $.on('command', function(event) {
                 }
 
                 if (args[1] == null || args[2] == null || isNaN(parseInt(args[2]))) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.set-usage"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.set-usage"));
                     return;
                 }
             
@@ -224,16 +224,16 @@ $.on('command', function(event) {
                 time = parseInt(args[2]);
             
                 if (time < 0) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.set-error-negative"));  
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.set-error-negative"));  
                     return;
                 } else {
                     if ($.inidb.get("visited", username.toLowerCase()) == "visited")  {
                         $.inidb.set('time', username.toLowerCase(), time);
 
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.set-success", $.username.resolve(username), $.getTimeString($.inidb.get('time', username.toLowerCase()))));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.set-success", $.username.resolve(username), $.getTimeString($.inidb.get('time', username.toLowerCase()))));
                         return;
                     } else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.common.user-404", $.username.resolve(username)));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.user-404", $.username.resolve(username)));
                         return;
                     }
                 }
@@ -246,7 +246,7 @@ $.on('command', function(event) {
                 $.inidb.RemoveFile("time");
                 $.inidb.ReloadFile("time");
 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.reset-success", $.getTimeString(0)));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.reset-success", $.getTimeString(0)));
             } else if (action.equalsIgnoreCase("promotehours")) {
                 if (!$.isAdmin(sender)) {
                     $.say($.getWhisperString(sender) + $.adminmsg);
@@ -254,18 +254,18 @@ $.on('command', function(event) {
                 }
 
                 if (args[1] == null || isNaN(parseInt(args[1]))) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.promotehours-usage"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.promotehours-usage"));
                     return;
                 }
 
                 if (args[1] < 0) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.promotehours-error-negative", $.getGroupNameById(regularsGroupID).toLowerCase()));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.promotehours-error-negative", $.getGroupNameById(regularsGroupID).toLowerCase()));
                     return;
                 } else {
                     $.inidb.set('settings', 'timePromoteHours', args[1]);
                     $.timePromoteHours = parseInt($.inidb.get('settings', 'timePromoteHours'));
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.promotehours-success", $.getGroupNameById(regularsGroupID).toLowerCase(), $.timePromoteHours));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.promotehours-success", $.getGroupNameById(regularsGroupID).toLowerCase(), $.timePromoteHours));
                     return;
                 }
             } else if (action.equalsIgnoreCase("autolevel")) {
@@ -278,13 +278,13 @@ $.on('command', function(event) {
                     $.inidb.set('settings', 'timeLevel', "true");
                     $.timeLevel = $.inidb.get('settings', 'timeLevel');
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.autolevel-enabled", $.getGroupNameById(regularsGroupID).toLowerCase(), $.timePromoteHours));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.autolevel-enabled", $.getGroupNameById(regularsGroupID).toLowerCase(), $.timePromoteHours));
                     return;
                 } else {
                     $.inidb.set('settings', 'timeLevel', "false");
                     $.timeLevel = $.inidb.get('settings', 'timeLevel');
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.autolevel-disabled", $.getGroupNameById(regularsGroupID).toLowerCase(), $.timePromoteHours));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.autolevel-disabled", $.getGroupNameById(regularsGroupID).toLowerCase(), $.timePromoteHours));
                     return;
                 }
             } else if (action.equalsIgnoreCase("offline") || action.equalsIgnoreCase("offlinetime")) {
@@ -297,13 +297,13 @@ $.on('command', function(event) {
                     $.inidb.set('settings', 'timeOffline', "true");
                     $.timeOffline = $.inidb.get('settings', 'timeOffline');
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.offlinetime-enabled"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.offlinetime-enabled"));
                     return;
                 } else {
                     $.inidb.set('settings', 'timeOffline', "false");
                     $.timeOffline = $.inidb.get('settings', 'timeOffline');
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.offlinetime-disabled"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.offlinetime-disabled"));
                     return;
                 }
             } else if (action.equalsIgnoreCase("toggle")) {
@@ -316,15 +316,15 @@ $.on('command', function(event) {
                     $.inidb.set('settings', 'permToggleTime', "true");
                     $.permToggleTime = $.inidb.get('settings', 'permToggleTime');
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.toggle-success", "Moderator"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.toggle-success", "Moderator"));
                 } else if ($.permToggleTime == "true") {
                     $.inidb.set('settings', 'permToggleTime', "false");
                     $.permToggleTime = $.inidb.get('settings', 'permToggleTime');
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.toggle-success", "Administrator"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.toggle-success", "Administrator"));
                 }
             } else if (action.equalsIgnoreCase("help")) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.help"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.help"));
                 return;
             } else {
                 var othername = "";
@@ -333,15 +333,15 @@ $.on('command', function(event) {
                 }
                 
                 if ($.inidb.get("visited", othername.toLowerCase()) == "visited")  {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.get-other", $.username.resolve(othername), $.getTimeString($.getUserTime(othername))));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.get-other", $.username.resolve(othername), $.getTimeString($.getUserTime(othername))));
                             return;
                 } else {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.common.user-404", $.username.resolve(othername)));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.user-404", $.username.resolve(othername)));
                     return;
                 }
             }
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timesystem.get-self", $.getTimeString($.getUserTime(sender))));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timesystem.get-self", $.getTimeString($.getUserTime(sender))));
             return;
         }
     }
@@ -351,7 +351,7 @@ $.on('command', function(event) {
             var action = args[0];
 
             if (action.equalsIgnoreCase("help") || action.equalsIgnoreCase("usage")) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timezone.usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timezone.usage"));
                 return;
             } else {
                 if (!$.isAdmin(sender)) {
@@ -360,16 +360,16 @@ $.on('command', function(event) {
                 }
 
                 if (setTimezone(action)) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timezone.success", action));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timezone.success", action));
                     return;
                 } else {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timezone.error-invalid", action));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timezone.error-invalid", action));
                     return;
                 }
                 return;
             }
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.timezone.get", $.timeZone));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timezone.get", $.timeZone));
             return;
         }
     }
@@ -381,20 +381,20 @@ $.on('command', function(event) {
         datefmt.setTimeZone(java.util.TimeZone.getTimeZone($.timeZone));
         var timestamp = datefmt.format(now);
             
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamertime", timestamp, $.username.resolve($.channelName)));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamertime", timestamp, $.username.resolve($.channelName)));
     }
 
     if (command.equalsIgnoreCase("botuptime")) {
-        $.say($.lang.get("net.phantombot.botuptime.success", $.username.resolve($.botname), $.getTimeString($.botUptime * 60)));
+        $.say($.lang.get("net.quorrabot.botuptime.success", $.username.resolve($.botname), $.getTimeString($.botUptime * 60)));
         return;
     }
     
     if (command.equalsIgnoreCase("uptime")) {
         if ($.isOnline($.channelName)) {
-            $.say($.lang.get("net.phantombot.uptime.success-online", $.username.resolve($.channelName), $.getUptime($.channelName)));
+            $.say($.lang.get("net.quorrabot.uptime.success-online", $.username.resolve($.channelName), $.getUptime($.channelName)));
             return;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.uptime.success-offline", $.username.resolve($.channelName)));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.uptime.success-offline", $.username.resolve($.channelName)));
             return;
         }
     }
@@ -433,7 +433,7 @@ $.timer.addTimer("./systems/timeSystem.js", "timesystem", true, function() {
                         var levelup = parseInt($.getUserGroupId(nick)) - 1;
 
                         $.setUserGroupById(nick, levelup);
-                        $.say($.getWhisperString(nick) + $.lang.get("net.phantombot.timesystem.autolevel-promote", $.username.resolve(nick), $.getGroupNameById(levelup).toLowerCase(), $.timePromoteHours));
+                        $.say($.getWhisperString(nick) + $.lang.get("net.quorrabot.timesystem.autolevel-promote", $.username.resolve(nick), $.getGroupNameById(levelup).toLowerCase(), $.timePromoteHours));
                     }
                 }
             }

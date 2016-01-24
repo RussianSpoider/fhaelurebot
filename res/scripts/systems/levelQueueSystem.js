@@ -13,7 +13,7 @@ function LevelRequest(user, levelId) {
 
     this.request = function () {
         if (!this.canRequest()) {
-            $.say($.getWhisperString(user) + $.lang.get("net.phantombot.levelQueueSystem.error-wrong-level-to-request", $.request_limit));
+            $.say($.getWhisperString(user) + $.lang.get("net.quorrabot.levelQueueSystem.error-wrong-level-to-request", $.request_limit));
             return;
         }
         if ($.levelrequestusers[user] != null) {
@@ -56,20 +56,20 @@ $.on('command', function (event) {
             var levelId = args[0];
             $.levelrequest = new LevelRequest(username, levelId);
             $.levelrequest.request();
-            $.say($.lang.get("net.phantombot.levelQueueSystem.level-q-success", levelqueue, username));
+            $.say($.lang.get("net.quorrabot.levelQueueSystem.level-q-success", levelqueue, username));
             return;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.level-q-error"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.level-q-error"));
             return;
         }
     }
     
     if (command.equalsIgnoreCase("currentlevel")) {
         if ($.levelqueue[0] == null){
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.current-level-error"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.current-level-error"));
             return;
         }
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.current-level", $.levelqueue[0].levelId, $.levelqueue[0].user));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.current-level", $.levelqueue[0].levelId, $.levelqueue[0].user));
         return;
     }
     
@@ -84,10 +84,10 @@ $.on('command', function (event) {
                 if (args[1] != null) {
                     $.request_limit = args[1];
                     $.inidb.set("settings","request_limit", $.request_limit);
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.request-limit", $.request_limit));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.request-limit", $.request_limit));
                     return;
                 } else {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.request-limit-error"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.request-limit-error"));
                     return;
                 }
             }
@@ -97,7 +97,7 @@ $.on('command', function (event) {
         $.queuelist = "";
         
         if (list == null) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.no-levels-in-q"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.no-levels-in-q"));
             return;
         }
         
@@ -108,7 +108,7 @@ $.on('command', function (event) {
         }
         
         if ($.queuelist == "" || $.queuelist == null) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.no-levels-in-q"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.no-levels-in-q"));
             return;
         }
         
@@ -116,7 +116,7 @@ $.on('command', function (event) {
             $.queuelist = $.queuelist.substring(0, $.queuelist.length - 1);
         }
         
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.next-level", $.queuelist));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.next-level", $.queuelist));
         return;
     }
     
@@ -132,10 +132,10 @@ $.on('command', function (event) {
 
         $.levelqueue.shift();
         if ($.levelqueue[0]!=null){
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.level-coming", $.levelqueue[0].levelId));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.level-coming", $.levelqueue[0].levelId));
             return;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.levelQueueSystem.level-error"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.levelQueueSystem.level-error"));
             return;
         }
     }

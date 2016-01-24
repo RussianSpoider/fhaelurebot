@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 www.phantombot.net
+ * Copyright (C) 2015 www.quorrabot.net
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import com.gmt2001.Logger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import me.mast3rplan.phantombot.PhantomBot;
+import me.gloriouseggroll.quorrabot.Quorrabot;
 
 /**
  *
@@ -42,7 +42,7 @@ public class out
 
     public static void print(Object o)
     {
-        if (PhantomBot.enableDebugging)
+        if (Quorrabot.enableDebugging)
         {
             SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss");
             datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -67,7 +67,7 @@ public class out
 
         String timestamp = datefmt.format(new Date());
 
-        if (PhantomBot.enableDebugging)
+        if (Quorrabot.enableDebugging)
         {
             Logger.instance().log(Logger.LogType.Output, timestamp + "Z " + o.toString());
             Logger.instance().log(Logger.LogType.Blank, "");

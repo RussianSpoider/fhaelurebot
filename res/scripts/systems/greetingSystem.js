@@ -38,12 +38,12 @@ $.on("command", function (event) {
                             $.inidb.set("greeting", "autogreet", "true");
                             $.greetToggleGlobal = $.inidb.get("greeting", "autogreet");
 
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.toggle-enabled-global"));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.toggle-enabled-global"));
                         } else {
                             $.inidb.set("greeting", "autogreet", "false");
                             $.greetToggleGlobal = $.inidb.get("greeting", "autogreet");
 
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.toggle-disabled-global"));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.toggle-disabled-global"));
                         }
                     } else if ($.isModv3(sender, event.getTags()) && (!args[1].isEmpty())) {
                         if (args[1].equalsIgnoreCase("user") && args[2] != undefined) {
@@ -59,15 +59,15 @@ $.on("command", function (event) {
                                 $.inidb.set("greeting", greetuser + "_enabled", "true");
                                 greetToggle = $.inidb.get("greeting", greetuser + "_enabled");
 
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.toggle-enabled-other", $.username.resolve(greetuser)));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.toggle-enabled-other", $.username.resolve(greetuser)));
                             } else {
                                 $.inidb.set("greeting", greetuser + "_enabled", "false");
                                 greetToggle = $.inidb.get("greeting", greetuser + "_enabled");
 
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.toggle-disabled-other", $.username.resolve(greetuser)));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.toggle-disabled-other", $.username.resolve(greetuser)));
                             }
                         } else {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.common.user-404", $.username.resolve(greetuser)));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.user-404", $.username.resolve(greetuser)));
                         }
                     }
                 } else {
@@ -77,12 +77,12 @@ $.on("command", function (event) {
                         $.inidb.set("greeting", sender + "_enabled", "true");
                         greetToggle = $.inidb.get("greeting", sender + "_enabled");
 
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.toggle-enabled"));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.toggle-enabled"));
                     } else {
                         $.inidb.set("greeting", sender + "_enabled", "false");
                         greetToggle = $.inidb.get("greeting", sender + "_enabled");
 
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.toggle-disabled"));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.toggle-disabled"));
                     }
                 }
             } else if (action.equalsIgnoreCase("set")) {
@@ -94,17 +94,17 @@ $.on("command", function (event) {
                             $.inidb.set("greeting", "_default", $.greetGlobalDefault);
                             $.greetGlobal = $.inidb.get("greeting", "_default");
 
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-cleared-global"));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-cleared-global"));
                         } else if ($.strlen(message) > $.greetMaxChars) {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-error-toolong-global", $.greetMaxChars, $.strlen(message)));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-error-toolong-global", $.greetMaxChars, $.strlen(message)));
                         } else {
                             if (message.indexOf("(name)") != -1) {
                                 $.inidb.set("greeting", "_default", message.trim());
                                 $.greetGlobal = $.inidb.get("greeting", "_default");
 
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-success-global", $.greetGlobal));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-success-global", $.greetGlobal));
                             } else {
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-error-noname-global"));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-error-noname-global"));
                             }
                         }
                     } else if ($.isModv3(sender, event.getTags()) && (args[1].equalsIgnoreCase("user") && args[2] != undefined)) {
@@ -118,21 +118,21 @@ $.on("command", function (event) {
                                 $.inidb.set("greeting", greetuser, "");
                                 greet = $.inidb.get("greeting", greetuser);
 
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-cleared-other", $.username.resolve(greetuser)));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-cleared-other", $.username.resolve(greetuser)));
                             } else if ($.strlen(message) > $.greetMaxChars) {
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-error-toolong-other", $.username.resolve(greetuser), $.greetMaxChars, $.strlen(message)));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-error-toolong-other", $.username.resolve(greetuser), $.greetMaxChars, $.strlen(message)));
                             } else {
                                 if (message.indexOf("(name)") != -1) {
                                     $.inidb.set("greeting", greetuser, message.trim());
                                     greet = $.inidb.get("greeting", greetuser);
 
-                                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-success-other", $.username.resolve(greetuser), greet.replace("(name)", $.username.resolve(greetuser))));
+                                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-success-other", $.username.resolve(greetuser), greet.replace("(name)", $.username.resolve(greetuser))));
                                 } else {
-                                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-error-noname-other", $.username.resolve(greetuser)));
+                                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-error-noname-other", $.username.resolve(greetuser)));
                                 }
                             }
                         } else {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.common.user-404", $.username.resolve(greetuser)));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.user-404", $.username.resolve(greetuser)));
                         }
                     } else {
                         var greet = $.inidb.get("greeting", sender);
@@ -142,22 +142,22 @@ $.on("command", function (event) {
                             $.inidb.set("greeting", sender, "");
                             greet = $.inidb.get("greeting", sender);
 
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-cleared"));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-cleared"));
                         } else if ($.strlen(message) > $.greetMaxChars) {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-error-toolong", $.greetMaxChars, $.strlen(message)));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-error-toolong", $.greetMaxChars, $.strlen(message)));
                         } else {
                             if (message.indexOf("(name)") != -1) {
                                 $.inidb.set("greeting", sender, message.trim());
                                 greet = $.inidb.get("greeting", sender);
 
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-success", greet.replace("(name)", username)));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-success", greet.replace("(name)", username)));
                             } else {
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.set-error-noname"));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.set-error-noname"));
                             }
                         }
                     }
                 } else {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.usage"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.usage"));
                 }
             } else if (action.equalsIgnoreCase("max") || action.equalsIgnoreCase("setmax") || action.equalsIgnoreCase("maxchars")) {
                 if (!$.isAdmin(sender)) {
@@ -166,22 +166,22 @@ $.on("command", function (event) {
                 }
 
                 if (args[1] == null || isNaN(parseInt(args[1]))) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.maxchars-usage"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.maxchars-usage"));
                     return;
                 }
 
                 if (args[1] < 0) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.maxchars-error-negative"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.maxchars-error-negative"));
                     return;
                 } else {
                     $.inidb.set("settings", "greeting_max_chars", args[1]);
                     $.greetMaxChars = parseInt($.inidb.get("settings", "greeting_max_chars"));
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.maxchars-success", $.greetMaxChars));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.maxchars-success", $.greetMaxChars));
                     return;
                 }
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.greetingsystem.usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.greetingsystem.usage"));
             }
         } else {
             var greet = $.inidb.get("greeting", sender);

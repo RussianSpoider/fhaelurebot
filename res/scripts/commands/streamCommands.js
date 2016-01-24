@@ -126,10 +126,10 @@ $.on('command', function(event) {
 
     if (command.equalsIgnoreCase("online")) {
         if (!$.isOnline($.channelName)) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.stream-offline"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.stream-offline"));
             return;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.stream-online"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.stream-online"));
             return;
         }
     }
@@ -142,13 +142,13 @@ $.on('command', function(event) {
     }
 	
     if (command.equalsIgnoreCase("viewers")) {
-        $.say($.lang.get("net.phantombot.streamcommand.total-viewers", $.getViewers($.channelName)));
+        $.say($.lang.get("net.quorrabot.streamcommand.total-viewers", $.getViewers($.channelName)));
         return;
     }
 
     if (command.equalsIgnoreCase("game")) {
         if ($.strlen(argsString) == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.current-game", $.getGame($.channelName)));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.current-game", $.getGame($.channelName)));
             return;
         } else if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
@@ -159,17 +159,17 @@ $.on('command', function(event) {
         
         if (res.getBoolean("_success")) {
             if (res.getInt("_http") == 200) {
-                $.say($.lang.get("net.phantombot.streamcommand.game-changed-success", res.getString("game")));
+                $.say($.lang.get("net.quorrabot.streamcommand.game-changed-success", res.getString("game")));
                 $.logEvent("streamCommands.js", 25, username + " changed the current game to " + res.getString("game"));
                 return;
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.game-change-error-api"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.game-change-error-api"));
                 println(res.getString("message"));
                 $.logError("streamCommands.js", 29, res.getString("message"));
                 return;
             }
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.game-change-error-api"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.game-change-error-api"));
             println(res.getString("_exception") + " " + res.getString("_exceptionMessage"));
             $.logError("streamCommands.js", 34, res.getString("_exception") + " " + res.getString("_exceptionMessage"));
             return;
@@ -178,7 +178,7 @@ $.on('command', function(event) {
     
     if (command.equalsIgnoreCase("title")) {
         if ($.strlen(argsString) == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.current-title", $.getStatus($.channelName)));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.current-title", $.getStatus($.channelName)));
             return;
         } else if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
@@ -189,15 +189,15 @@ $.on('command', function(event) {
         
         if (res.getBoolean("_success")) {
             if (res.getInt("_http") == 200) {
-                $.say($.lang.get("net.phantombot.streamcommand.title-changed-success", res.getString("status")));
+                $.say($.lang.get("net.quorrabot.streamcommand.title-changed-success", res.getString("status")));
                 $.logEvent("streamCommands.js", 54, username + " changed the current status to " + res.getString("status"));
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.title-change-error-api"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.title-change-error-api"));
                 println(res.getString("message"));
                 $.logError("streamCommands.js", 58, res.getString("message"));
             }
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.title-change-error-api"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.title-change-error-api"));
             println(res.getString("_exception") + " " + res.getString("_exceptionMessage"));
             $.logError("streamCommands.js", 63, res.getString("_exception") + " " + res.getString("_exceptionMessage"));
         }
@@ -220,7 +220,7 @@ $.on('command', function(event) {
             
                 $.inidb.set("settings", "commercialcommandenabled", "0");
                 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.disable-commercial"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.disable-commercial"));
                 return;
             }
         
@@ -234,7 +234,7 @@ $.on('command', function(event) {
             
                 $.inidb.set("settings", "commercialcommandenabled", "1");
                 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.enable-commercial"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.enable-commercial"));
                 return;
             }
         
@@ -249,7 +249,7 @@ $.on('command', function(event) {
                     
                     $.inidb.set("settings", "commercialtimer", args[1]);
                     
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.auto-commercial-disable"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.auto-commercial-disable"));
                     return;
                 }
                 
@@ -258,20 +258,20 @@ $.on('command', function(event) {
                         && !args[2].equalsIgnoreCase("120") && !args[2].equalsIgnoreCase("150") && !args[2].equalsIgnoreCase("180"))) {
                     if (args.length == 1) {
                         if (!$.inidb.exists("settings", "commercialtimer") || $.inidb.get("settings", "commercialtimer").equalsIgnoreCase("0")) {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.auto-commercial-info"));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.auto-commercial-info"));
                         } else {
                             var a = $.inidb.get("settings", "commercialtimer");
                             var b = $.inidb.get("settings", "commercialtimerlength");
                             var c = $.inidb.get("settings", "commercialtimermessage");
                             
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.auto-commercial-enabled", a, b));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.auto-commercial-enabled", a, b));
                             
                             if (!c.isEmpty()) {
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.auto-commercial-message-op", c));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.auto-commercial-message-op", c));
                             }
                         }
                     } else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.auto-commercial-usage"));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.auto-commercial-usage"));
                     } 
                     return;
                 }
@@ -296,14 +296,14 @@ $.on('command', function(event) {
             }
             
             if (args[0].equalsIgnoreCase("help")) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.auto-commercial-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.auto-commercial-usage"));
                 return;
             }
         }
         
         if ($.inidb.exists("settings", "commercialcommandenabled")
             && $.inidb.get("settings", "commercialcommandenabled").equalsIgnoreCase("0") && !isAdmin(sender)) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.manual-commercial-disabled"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.manual-commercial-disabled"));
             return;
         }
         
@@ -315,21 +315,21 @@ $.on('command', function(event) {
         
         if (res.getBoolean("_success")) {
             if (res.getInt("_http") == 204) {
-                $.say($.lang.get("net.phantombot.streamcommand.running-commercial", argsString));
+                $.say($.lang.get("net.quorrabot.streamcommand.running-commercial", argsString));
                 $.logEvent("streamCommands.js", 181, username + " ran a " + argsString + " second commercial");
             } else if (res.getInt("_http") == 422) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.commercial-user-error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.commercial-user-error"));
                 
                 if (!res.getString("message").equalsIgnoreCase("Commercials breaks are allowed every 8 min and only when you are online.")) {
                     $.logError("streamCommands.js", 186, res.getString("message"));
                 }
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.commercial-api-error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.commercial-api-error"));
                 println(res.getString("_content"));
                 $.logError("streamCommands.js", 191, res.getString("_content"));
             }
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.commercial-api-error"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.commercial-api-error"));
             println(res.getString("_exception") + " " + res.getString("_exceptionMessage"));
             $.logError("streamCommands.js", 196, res.getString("_exception") + " " + res.getString("_exceptionMessage"));
         }
@@ -384,11 +384,11 @@ $.timer.addTimer("./commands/streamCommands.js", "autocommercial", true, functio
                 }
             } else {
                 println(res.getString("_content"));
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.commercial-api-error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.commercial-api-error"));
                 $.logError("streamCommands.js", 239, res.getString("message"));
             }
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.streamcommand.commercial-api-error"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.commercial-api-error"));
             println(res.getString("_exception") + " " + res.getString("_exceptionMessage"));
             $.logError("streamCommands.js", 244, res.getString("_exception") + " " + res.getString("_exceptionMessage"));
         }

@@ -20,13 +20,13 @@ $.on('command', function (event) {
         if (!$.isModv3(sender, event.getTags())) {
             $.say($.getWhisperString(sender) + $.modmsg);
         } else if (argsString.isEmpty()) { 
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.highlightcommand.usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.highlightcommand.usage"));
         } else if (!$.isOnline($.channelName)) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.highlightcommand.error-stream-offline"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.highlightcommand.error-stream-offline"));
         } else {
             var timestamp = $.getHighlight($.channelName);
             $.inidb.set("highlights", timestamp, argsString);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.highlightcommand.highlight-saved", argsString, timestamp));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.highlightcommand.highlight-saved", argsString, timestamp));
             return;
         }
     }
@@ -39,7 +39,7 @@ $.on('command', function (event) {
 		
         $.inidb.RemoveFile("highlights");
         $.inidb.ReloadFile("highlights");
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.highlightcommand.highlight-cleared"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.highlightcommand.highlight-cleared"));
         return;
     }
 });

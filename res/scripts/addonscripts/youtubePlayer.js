@@ -48,11 +48,11 @@ notSearchable = function(songid,songname, user, tags) {
                     this.id = songid;
                     this.name = songname;
                     this.length = 0;
-                    $.say($.getWhisperString(user) + $.lang.get("net.phantombot.musicplayer.song-request-error", songid));
+                    $.say($.getWhisperString(user) + $.lang.get("net.quorrabot.musicplayer.song-request-error", songid));
                     if ($.inidb.exists("pricecom", "addsong") && parseInt($.inidb.get("pricecom", "addsong"))> 0 ){
                         if(!$.isModv3(user, tags)){
                             var cost = $.inidb.get("pricecom", "addsong");
-                            $.say($.getWhisperString(user) + $.lang.get("net.phantombot.musicplayer.command-cost", $.getPointsString(cost), $.username.resolve(user, tags), songid));
+                            $.say($.getWhisperString(user) + $.lang.get("net.quorrabot.musicplayer.command-cost", $.getPointsString(cost), $.username.resolve(user, tags), songid));
                             $.inidb.incr("points", user.toLowerCase(), cost);
                             $.inidb.SaveAll();
                         }
@@ -273,7 +273,7 @@ function nextDefault() {
         } else {
            playlistpos = $var.defaultplaylistpos;
         }
-        var s = new RequestedSong(new Song($var.defaultplaylist[playlistpos]), $.lang.get("net.phantombot.musicplayer.dj") + $.username.resolve($.botname));
+        var s = new RequestedSong(new Song($var.defaultplaylist[playlistpos]), $.lang.get("net.quorrabot.musicplayer.dj") + $.username.resolve($.botname));
         
         $var.defaultplaylistpos++;
 
@@ -297,12 +297,12 @@ function nextDefault() {
     }
     
     if ($.song_toggle == 1) {
-        $.say($.lang.get("net.phantombot.musicplayer.now-playing", name, user));
+        $.say($.lang.get("net.quorrabot.musicplayer.now-playing", name, user));
     } else {
-        $.println($.lang.get("net.phantombot.musicplayer.now-playing", name, user));
+        $.println($.lang.get("net.quorrabot.musicplayer.now-playing", name, user));
     }
     
-    $.writeToFile($.lang.get("net.phantombot.musicplayer.now-playing", name, user), "./addons/youtubePlayer/currentsong.txt", false);
+    $.writeToFile($.lang.get("net.quorrabot.musicplayer.now-playing", name, user), "./addons/youtubePlayer/currentsong.txt", false);
 }
 
 function next() {
@@ -330,20 +330,20 @@ function next() {
     }
 
     if ($.song_toggle == 1) {
-        $.say($.lang.get("net.phantombot.musicplayer.now-playing", name, user));
+        $.say($.lang.get("net.quorrabot.musicplayer.now-playing", name, user));
     } else {
-        $.println($.lang.get("net.phantombot.musicplayer.now-playing", name, user));
+        $.println($.lang.get("net.quorrabot.musicplayer.now-playing", name, user));
     }
         
     if ($var.songqueue.length < 1) {
         if($.song_toggle==1) {
-            $.say($.lang.get("net.phantombot.musicplayer.queue-is-empty"));
+            $.say($.lang.get("net.quorrabot.musicplayer.queue-is-empty"));
         } else {
-            $.println($.lang.get("net.phantombot.musicplayer.queue-is-empty"));
+            $.println($.lang.get("net.quorrabot.musicplayer.queue-is-empty"));
         }
     }
     
-    $.writeToFile($.lang.get("net.phantombot.musicplayer.now-playing", name, user), "./addons/youtubePlayer/currentsong.txt", false);
+    $.writeToFile($.lang.get("net.quorrabot.musicplayer.now-playing", name, user), "./addons/youtubePlayer/currentsong.txt", false);
 }
 
 $.on('musicPlayerState', function (event) {
@@ -369,11 +369,11 @@ var musicPlayerConnected = false;
 $.on('musicPlayerConnect', function (event) {
 
     if($.song_toggle==1) {
-        $.say($.lang.get("net.phantombot.musicplayer.songrequest-enabled"));
-        $.say($.lang.get("net.phantombot.musicplayer.queue-is-empty"));
+        $.say($.lang.get("net.quorrabot.musicplayer.songrequest-enabled"));
+        $.say($.lang.get("net.quorrabot.musicplayer.queue-is-empty"));
     } else {
-        $.println($.lang.get("net.phantombot.musicplayer.songrequest-enabled"));
-        $.println($.lang.get("net.phantombot.musicplayer.queue-is-empty"));
+        $.println($.lang.get("net.quorrabot.musicplayer.songrequest-enabled"));
+        $.println($.lang.get("net.quorrabot.musicplayer.queue-is-empty"));
     }
     
     musicPlayerConnected = true;
@@ -382,9 +382,9 @@ $.on('musicPlayerConnect', function (event) {
 $.on('musicPlayerDisconnect', function (event) {
     if($.song_toggle==1)
     {
-        $.say($.lang.get("net.phantombot.musicplayer.songrequest-disabled"));
+        $.say($.lang.get("net.quorrabot.musicplayer.songrequest-disabled"));
     } else {
-        $.println($.lang.get("net.phantombot.musicplayer.songrequest-disabled"));
+        $.println($.lang.get("net.quorrabot.musicplayer.songrequest-disabled"));
     }
     musicPlayerConnected = false;
 });
@@ -418,12 +418,12 @@ $.on('command', function (event) {
             if ($.song_toggle == 2) {
                 $.song_toggle = 1;
                 $.inidb.set('settings', 'song_toggle', $.song_toggle.toString());
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-msg-enabled"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-msg-enabled"));
                 return;
             } else {
                 $.song_toggle = 2;
                 $.inidb.set('settings', 'song_toggle', $.song_toggle.toString());
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-msg-disabled"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-msg-disabled"));
                 return;
             }
         }
@@ -434,7 +434,7 @@ $.on('command', function (event) {
                 return;
             }
             $.inidb.set('blacklist', args[1].toLowerCase(), "true");
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-blacklist-user", args[1].toLowerCase()));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-blacklist-user", args[1].toLowerCase()));
             return;
         }  
             
@@ -444,7 +444,7 @@ $.on('command', function (event) {
                 return;
             }
             $.inidb.del('blacklist', args[1].toLowerCase());
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-un-blacklist-user", args[1].toLowerCase()));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-un-blacklist-user", args[1].toLowerCase()));
             return;   
         }
 
@@ -461,7 +461,7 @@ $.on('command', function (event) {
 
             $.inidb.set('settings', 'song_limit', args[1]);
             $.song_limit = parseInt(args[1]);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.new-song-request-limit", args[1]));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.new-song-request-limit", args[1]));
             return;
         }
 
@@ -475,12 +475,12 @@ $.on('command', function (event) {
                 $.storing = 1;
                 $.inidb.set('settings', 'song_storing', $.storing.toString());
                 $.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-storing"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-storing"));
                 return;
             } else {
                 $.storing = 2;
                 $.inidb.set('settings', 'song_storing', $.storing.toString());
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-storing-disabled"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-storing-disabled"));
                 return;
             }
         }
@@ -494,12 +494,12 @@ $.on('command', function (event) {
             if ($.song_shuffle == 0) {
                 $.song_shuffle = true;
                 $.inidb.set('settings', 'song_shuffle', "1");
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-shuffle-enabled"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-shuffle-enabled"));
                 return;
             } else {
                 $.song_shuffle = 0;
                 $.inidb.set('settings', 'song_shuffle', "0");
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-shuffle-disabled"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-shuffle-disabled"));
                 return;
             }
         }
@@ -511,7 +511,7 @@ $.on('command', function (event) {
             }
             
             if (args[1].equalsIgnoreCase('viewstorepath')) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.current-store-path", $.storepath));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.current-store-path", $.storepath));
                 return;
             }
             
@@ -525,7 +525,7 @@ $.on('command', function (event) {
             
             $.inidb.set('settings','song_storepath', args[1]);
             $.storepath = args[1];
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.new-store-path", args[1]));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.new-store-path", args[1]));
             return;
         }
         
@@ -538,14 +538,14 @@ $.on('command', function (event) {
             if ($.titles == 2) {
                 $.titles = 1;
                 $.inidb.set('settings', 'song_titles', $.titles.toString());
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.titles-html"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.titles-html"));
                 $.parseDefault();
                 $.parseSongQueue();
                 return;
             } else {
                 $.titles = 2;
                 $.inidb.set('settings', 'song_titles', $.titles.toString());
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.titles-text"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.titles-text"));
                 $.parseDefault();
                 $.parseSongQueue();
                 return;
@@ -564,18 +564,18 @@ $.on('command', function (event) {
 
         if (action.equalsIgnoreCase("config")) {
             if ($.song_toggle == 1) {
-                $.song_t = $.lang.get("net.phantombot.common.enabled");
+                $.song_t = $.lang.get("net.quorrabot.common.enabled");
             } else {
-                $.song_t = $.lang.get("net.phantombot.common.disabled");
+                $.song_t = $.lang.get("net.quorrabot.common.disabled");
             }
 
             if (!musicPlayerConnected == true) {
-                $.song_status = $.lang.get("net.phantombot.common.enabled");
+                $.song_status = $.lang.get("net.quorrabot.common.enabled");
             } else {
-                $.song_status = $.lang.get("net.phantombot.common.disabled");
+                $.song_status = $.lang.get("net.quorrabot.common.disabled");
             }
             
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.musicplayer-config", $.song_limit, $.song_t, $.song_status));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.musicplayer-config", $.song_limit, $.song_t, $.song_status));
             return;
         }
 
@@ -588,7 +588,7 @@ $.on('command', function (event) {
                 var songurl = "https://www.youtube.com/watch?v=" + $var.currSong.song.getId();
                 $.musicplayer.stealSong(songurl);
                 $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
-                $.say($.lang.get("net.phantombot.musicplayer.steal-song", $var.currSong.song.getName(), $var.currSong.user));
+                $.say($.lang.get("net.quorrabot.musicplayer.steal-song", $var.currSong.song.getName(), $var.currSong.user));
                 $.parseDefault();
                 return;
             }
@@ -599,12 +599,12 @@ $.on('command', function (event) {
 
         if ($.inidb.get('blacklist', sender) == "true") {
             //blacklisted, deny
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.user-blacklisted"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.user-blacklisted"));
             return;
         }
         //start arguments check
         if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-request-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-request-usage"));
             return;
         }
 
@@ -614,25 +614,25 @@ $.on('command', function (event) {
                     if(!$.isModv3(sender, event.getTags())){
 
                         var cost = $.inidb.get("pricecom", "addsong");
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.command-cost", $.getPointsString(cost), $.username.resolve(sender, event.getTags())));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.command-cost", $.getPointsString(cost), $.username.resolve(sender, event.getTags())));
                         $.inidb.incr("points", sender.toLowerCase(), cost);
                         $.inidb.SaveAll(true);
                     }
                 }
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.error-songrequest-off"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.error-songrequest-off"));
                 return;
             }
 
             var video = new Song(argsString, sender, event.getTags());
 
             if (video.id == null) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-request-error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-request-error"));
                 return;
             }
             
             var vlength = parseInt(video.getLength());
             if ( (vlength > 480.0)) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-is-too-long"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-is-too-long"));
                 return;
             }
 
@@ -640,16 +640,16 @@ $.on('command', function (event) {
             
             if (!$.isModv3(sender, event.getTags())) {
                 if (!song.canRequest()) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.songrequest-limit-hit", $.song_limit));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.songrequest-limit-hit", $.song_limit));
                     return;
                 }
 
                 if (!song.canRequest2()) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-already-in-q"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-already-in-q"));
                     return;
                 }
             }
-            $.say($.lang.get("net.phantombot.musicplayer.song-requested-success", video.name, sender));
+            $.say($.lang.get("net.quorrabot.musicplayer.song-requested-success", video.name, sender));
             song.request();
 
             if ($var.currSong == null) {
@@ -659,20 +659,20 @@ $.on('command', function (event) {
     }
     if (command.equalsIgnoreCase("delsong")) {
         if (!musicPlayerConnected) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.error-songrequest-off2"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.error-songrequest-off2"));
             return;
         }
         var name = argsString;
                 
         if (name == null) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.del-song-error"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.del-song-error"));
             return;
         }
 
         for (i in $var.songqueue) {
             if (name == $var.songqueue[i].song.getId() || $var.songqueue[i].song.getName().toLowerCase().contains(name.toLowerCase())) {
                 if ($var.songqueue[i].user == username || $.isModv3(sender, event.getTags())) {
-                    $.say($.lang.get("net.phantombot.musicplayer.del-song-success", $var.songqueue[i].song.getName(), username.toLowerCase()));
+                    $.say($.lang.get("net.quorrabot.musicplayer.del-song-success", $var.songqueue[i].song.getName(), username.toLowerCase()));
                     $var.songqueue.splice(i, 1);
                     $.parseSongQueue();
                     return;
@@ -683,7 +683,7 @@ $.on('command', function (event) {
             }
         }
 
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.del-song-error"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.del-song-error"));
     }
     
     if (command.equalsIgnoreCase("defaultaddsong")) {
@@ -693,24 +693,24 @@ $.on('command', function (event) {
         }
 
         if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-request-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-request-usage"));
             return;
         }
 
         if (args.length >= 1) {
             if (!musicPlayerConnected) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.error-songrequest-off"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.error-songrequest-off"));
                 return;
             }
 
             var video = new Song(argsString, sender, event.getTags());
 
             if (video.id == null) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.song-request-error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-request-error"));
                 return;
             }
                         
-            $.say($.lang.get("net.phantombot.musicplayer.song-requested-success", video.name, sender));
+            $.say($.lang.get("net.quorrabot.musicplayer.song-requested-success", video.name, sender));
             //playlist add and parse code here:
             $.writeToFile("https://www.youtube.com/watch?v=" + video.id,"./addons/youtubePlayer/playlist.txt", true);
             reloadPlaylist();
@@ -720,13 +720,13 @@ $.on('command', function (event) {
     
     if (command.equalsIgnoreCase("defaultdelsong")) {
         if (!musicPlayerConnected) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.error-songrequest-off2"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.error-songrequest-off2"));
             return;
         }
         var name = argsString;
                 
         if (name == null) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.del-song-error"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.del-song-error"));
             return;
         }
         
@@ -737,7 +737,7 @@ $.on('command', function (event) {
                         
             if (name == dfsongid || dfsongname.toLowerCase().contains(name.toLowerCase())) {
                 if ($.isModv3(sender, event.getTags())) {
-                    $.say($.lang.get("net.phantombot.musicplayer.del-song-success", dfsongname, username.toLowerCase()));
+                    $.say($.lang.get("net.quorrabot.musicplayer.del-song-success", dfsongname, username.toLowerCase()));
                     $var.defaultplaylist.splice(i, 1);
                     for (var n=0;n < $var.defaultplaylist.length; n++) {
                         if(n<1) {
@@ -755,7 +755,7 @@ $.on('command', function (event) {
             }
         }
 
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.del-song-error"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.del-song-error"));
     }
 
     if (command.equalsIgnoreCase("volume")) {
@@ -767,7 +767,7 @@ $.on('command', function (event) {
 
         if (args.length > 0) {
             $.musicplayer.setVolume(parseInt(args[0]));
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.volume-set", parseInt(args[0])));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.volume-set", parseInt(args[0])));
         } else {
             $.musicplayer.currentVolume();
         }
@@ -784,7 +784,7 @@ $.on('command', function (event) {
 
         if ($var.skipSong) {
             if ($.pollVoters.contains(sender)) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.poll-already-voted"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.poll-already-voted"));
             } else if (makeVote('yes')) {
                 $.pollVoters.add(sender);
             }
@@ -796,21 +796,21 @@ $.on('command', function (event) {
             $.pollResults.get('yes').intValue();
 
             if (song != $.musicplayer.currentId()) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.poll-fail"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.poll-fail"));
                 return;
             }
 
             if ($.pollResults.get('yes').intValue() == 1) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.poll-success"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.poll-success"));
                 next();
                 return;
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.poll-fail"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.poll-fail"));
                 return;
             }
 
         }, ['yes', 'nope'], 20 * 3000, $.botname)) {
-            $.say($.lang.get("net.phantombot.musicplayer.2-vores-to-skip"));
+            $.say($.lang.get("net.quorrabot.musicplayer.2-vores-to-skip"));
             return;
 
             if (makeVote('yes')) {
@@ -818,34 +818,34 @@ $.on('command', function (event) {
             }
             $var.skipSong = true;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.error-poll-opened"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.error-poll-opened"));
             return;
         }
     }
     
     
     if (command.equalsIgnoreCase("vetosong")) {
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.veto-song"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.veto-song"));
 
         next();
     }
 
     if (command.equalsIgnoreCase("currentsong")) {
         if ($.readFile("./addons/youtubePlayer/currentsong.txt") == "") {
-            $.say($.lang.get("net.phantombot.musicplayer.queue-is-empty"));
+            $.say($.lang.get("net.quorrabot.musicplayer.queue-is-empty"));
             return;
         }
 
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.current-song", $.readFile("./addons/youtubePlayer/currentsong.txt")));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.current-song", $.readFile("./addons/youtubePlayer/currentsong.txt")));
         return;
     }
 
     if (command.equalsIgnoreCase("nextsong")) {
         if ($var.songqueue.length > 0) {
-            $.say($.lang.get("net.phantombot.musicplayer.next-song-up", $var.songqueue[0].song.getName(), $var.songqueue[0].user));
+            $.say($.lang.get("net.quorrabot.musicplayer.next-song-up", $var.songqueue[0].song.getName(), $var.songqueue[0].user));
             return;
         } else {
-            $.say($.lang.get("net.phantombot.musicplayer.queue-is-empty"));
+            $.say($.lang.get("net.quorrabot.musicplayer.queue-is-empty"));
             return;
         }
     }
@@ -860,7 +860,7 @@ $.on('command', function (event) {
             var currsongurl = "https://www.youtube.com/watch?v=" + $var.currSong.song.getId();
             $.musicplayer.stealSong(currsongurl);
             $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
-            $.say($.lang.get("net.phantombot.musicplayer.steal-song", $var.currSong.song.getName(), $var.currSong.user));
+            $.say($.lang.get("net.quorrabot.musicplayer.steal-song", $var.currSong.song.getName(), $var.currSong.user));
             $.parseDefault();
             return;
         }
@@ -872,12 +872,12 @@ $.on('command', function (event) {
             return;
         }
 
-        $.say($.lang.get("net.phantombot.musicplayer.start-search"));
+        $.say($.lang.get("net.quorrabot.musicplayer.start-search"));
         var data = $.youtube.SearchForVideo(argsString);
         while (data[0].length()<11){
             data = $.youtube.SearchForVideo(argsString);
         }
-        $.say($.lang.get("net.phantombot.musicplayer.search-end"));
+        $.say($.lang.get("net.quorrabot.musicplayer.search-end"));
         this.id = data[0];
         this.name = data[1];
         $.say(data[0]);
@@ -912,7 +912,7 @@ $.on('command', function (event) {
                 return;
             }
         }
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.404-error"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.404-error"));
         return;
     }
 });
@@ -946,7 +946,7 @@ if($.storing==1) {
 }
 
 $.on('musicPlayerCurrentVolume', function (event) {
-    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.musicplayer.current-volume", parseInt(event.getVolume())));
+    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.current-volume", parseInt(event.getVolume())));
     return;
 });
 

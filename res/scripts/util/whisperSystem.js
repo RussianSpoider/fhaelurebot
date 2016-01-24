@@ -26,19 +26,19 @@ $.on('command', function (event) {
 
     if (command.equalsIgnoreCase("whispermode")) { // enable / disable whisper mode
         if (!$.isAdmin(sender)) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.cmd.adminonly"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.cmd.adminonly"));
             return;
         }
 
         if ($.whispermode == "true") {
             $.inidb.set('settings', 'whisper_mode', "false");
             $.whispermode = "false";
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.common.whisper-disabled"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.whisper-disabled"));
             return;
         } else {
             $.inidb.set('settings', 'whisper_mode', "true");
             $.whispermode = "true";
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.common.whisper-enabled"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.common.whisper-enabled"));
             return;
         }
     }

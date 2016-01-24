@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 www.phantombot.net
+ * Copyright (C) 2015 www.quorrabot.net
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ import org.java_websocket.server.WebSocketServer;
 
 import com.google.common.eventbus.Subscribe;
 
-import me.mast3rplan.phantombot.event.Event;
-import me.mast3rplan.phantombot.event.Listener;
+import me.gloriouseggroll.quorrabot.event.Event;
+import me.gloriouseggroll.quorrabot.event.Listener;
 
 
 public class EventWebSocketServer extends WebSocketServer implements Listener

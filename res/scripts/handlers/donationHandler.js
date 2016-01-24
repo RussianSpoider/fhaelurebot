@@ -29,7 +29,7 @@ $.on('command', function (event) {
         var action = args[0];
 
         if (args.length == 0) { // added usage
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.donationhandler.donationalert-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.donationhandler.donationalert-usage"));
             return;
         }
         
@@ -40,7 +40,7 @@ $.on('command', function (event) {
             }
             
             if (args[1].equalsIgnoreCase('viewfilepath')) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.donationhandler.current-file-path", $.checkerstorepath));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.donationhandler.current-file-path", $.checkerstorepath));
                 return;
             }
             
@@ -50,7 +50,7 @@ $.on('command', function (event) {
             
             $.inidb.set('settings','checker_storepath', args[1]);
             $.checkerstorepath = args[1];
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.donationhandler.new-file-path-set"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.donationhandler.new-file-path-set"));
             return;
         }
 
@@ -58,12 +58,12 @@ $.on('command', function (event) {
             if ($.donation_toggle == 1) {
                 $.inidb.set('settings','donation_toggle', 0);
                 $.donation_toggle = 0;
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.donationhandler.donation-toggle-off"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.donationhandler.donation-toggle-off"));
                 return;
             } else {
                 $.inidb.set('settings','donation_toggle', 1);
                 $.donation_toggle = 1;
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.donationhandler.donation-toggle-on"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.donationhandler.donation-toggle-on"));
                 return;
             }
         }
@@ -80,7 +80,7 @@ setTimeout(function(){
                 if ($var.currDonation.toString() != null || $var.currDonation.toString() != "") {
                     $.inidb.set("settings", "lastdonation", $.readFile($.checkerstorepath));
                     if ($.donation_toggle == 1) {
-                        $.say($.lang.get("net.phantombot.donationhandler.new-donation", $.username.resolve($.ownerName), $.readFile($.checkerstorepath)));
+                        $.say($.lang.get("net.quorrabot.donationhandler.new-donation", $.username.resolve($.ownerName), $.readFile($.checkerstorepath)));
                     }
                 }
             }

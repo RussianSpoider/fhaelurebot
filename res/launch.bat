@@ -18,5 +18,5 @@ IF %jver% LSS 17000 (
     pause
     exit
 )
-java -Dinteractive -Dfile.encoding=UTF-8 -jar PhantomBot.jar
+java -Dinteractive -Dfile.encoding=UTF-8 -jar QuorraBot.jar
 endlocal

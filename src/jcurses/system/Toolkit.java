@@ -140,7 +140,7 @@ public class Toolkit
         if (url.startsWith("jar:file:"))
         {
             url = url.substring("jar:file:".length(), url.length());
-            url = url.substring(0, url.length() - "/PhantomBot.jar!/jcurses/system/Toolkit.class".length());
+            url = url.substring(0, url.length() - "/QuorraBot.jar!/jcurses/system/Toolkit.class".length());
         } else if (url.startsWith("file:"))
         {
             url = url.substring("file:".length(), url.length());

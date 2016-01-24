@@ -11,30 +11,30 @@ $.on('command', function (event) {
    
     if (command.equalsIgnoreCase("tickets")) {
         if (!$.TicketRaffleRunning) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.no-raffle-opened"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketrafflesystem.no-raffle-opened"));
             return;
         } else if (args.length < 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketsystem.usage", $.ticketCost));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketsystem.usage", $.ticketCost));
             return;
         } else if ($.ticketCost > $.inidb.get('points', sender)) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketsystem.need-more-points"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketsystem.need-more-points"));
             return;
         } else if ($.TicketRaffleMaxEntries < parseInt(args[0])) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketsystem.max-tickets-allowed", $.TicketRaffleMaxEntries));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketsystem.max-tickets-allowed", $.TicketRaffleMaxEntries));
             return;
         } else if ($.inidb.exists('traffleplayer', sender)) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketsystem.error-already-in-raffle"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketsystem.error-already-in-raffle"));
             return;
         }
         if ($.Followers) {
             var CheckUser = $.twitch.GetUserFollowsChannel(sender, $.channelName);
             if (CheckUser.getInt('_http') != 200) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.following"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketrafflesystem.following"));
                 return;
             }
         } else if ($.Subscribers) {
             if (!$.isSubv3(sender, event.getTags())) { 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketrafflesystem.no-sub"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketrafflesystem.no-sub"));
                 return;
             }
         }
@@ -48,7 +48,7 @@ $.on('command', function (event) {
                 $.TicketRaffleEntries.push(sender);
             }
         }
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketsystem.buy-success", tickets));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketsystem.buy-success", tickets));
         $.inidb.set('traffleplayer', sender, 'true');
         $.inidb.decr('points', sender, (tickets * $.ticketCost));
         return;
@@ -56,26 +56,26 @@ $.on('command', function (event) {
 
     if (command.equalsIgnoreCase("entries")) {
         if (!$.isAdmin(sender)) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.cmd.adminonly"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.cmd.adminonly"));
             return;
         }
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketsystem.total-entries", $.TicketRaffleEntries.length));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketsystem.total-entries", $.TicketRaffleEntries.length));
         return;
     }
 
     if (command.equalsIgnoreCase("ticket")) {
         if (!$.isAdmin(sender)) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.cmd.adminonly"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.cmd.adminonly"));
             return;
         }
         if (args.length < 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.ticketsystem.cost-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.ticketsystem.cost-usage"));
             return;
         }
 
         if (args[0].equalsIgnoreCase("cost")) {
             $.inidb.set('settings', 'ticketcost', parseInt(args[1]));
-            $.say($.lang.get("net.phantombot.ticketsystem.new-cost", parseInt(args[1]), "point(s)"));
+            $.say($.lang.get("net.quorrabot.ticketsystem.new-cost", parseInt(args[1]), "point(s)"));
             return;
         }
     }

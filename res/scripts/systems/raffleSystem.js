@@ -110,7 +110,7 @@ $.on('command', function (event) {
                 }
 
                 if ($.raffleRunning == 1) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.start-error-running"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.start-error-running"));
                     return;
                 } else {
                     $.raffleTime = new Date();
@@ -150,10 +150,10 @@ $.on('command', function (event) {
                             i++;
                         } else if(args[i].startsWith('!')) {
                             if ($.moduleEnabled("./systems/pointSystem.js")) {
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.start-error-invalid-points"));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.start-error-invalid-points"));
                                 return;
                             } else {
-                                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.start-error-invalid-default"));
+                                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.start-error-invalid-default"));
                                 return;
                             }
                         } else {
@@ -169,12 +169,12 @@ $.on('command', function (event) {
 
                     if ($.raffleAutoCloseTimer > 0) {
                         setTimeout(function(){
-                            $.say($.lang.get("net.phantombot.rafflesystem.auto-close", $.raffleAutoCloseTimer));
+                            $.say($.lang.get("net.quorrabot.rafflesystem.auto-close", $.raffleAutoCloseTimer));
                             return;
                         }, 1000);
                         $.timer.addTimer("./systems/raffleSystem.js", "rraffle", true, function() {
                             $.timer.clearTimer("./systems/raffleSystem.js", "rraffle", true);
-                            $.say($.lang.get("net.phantombot.rafflesystem.auto-close2", ($.raffleAutoCloseTimer / 2)));
+                            $.say($.lang.get("net.quorrabot.rafflesystem.auto-close2", ($.raffleAutoCloseTimer / 2)));
                             return;
                         }, ($.raffleAutoCloseTimer * 60 * 1000) / 2);
 
@@ -183,7 +183,7 @@ $.on('command', function (event) {
                             $.raffleRunning = 0;
 
                             if ($.raffleEntrants.length == 0) {
-                                $.say($.lang.get("net.phantombot.rafflesystem.close-success-noentries"));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.close-success-noentries"));
                                 return;
                             }
                             
@@ -210,16 +210,16 @@ $.on('command', function (event) {
                             } while ($.raffleFollowers == 1 && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows != "1"));
                             
                             if ($.winnerUsername == null) {
-                                $.say($.lang.get("net.phantombot.rafflesystem.close-success-nofollow"));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.close-success-nofollow"));
                                 return;
                             }
 
                             if ($.raffleMode == 0) {
-                                $.say($.lang.get("net.phantombot.rafflesystem.close-success-default", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.close-success-default", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
                             } else {
                                 $.inidb.incr('points', $.winnerUsername.toLowerCase(), $.raffleReward);
 
-                                $.say($.lang.get("net.phantombot.rafflesystem.close-success-points", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.close-success-points", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
                             }
 
                             $.inidb.set('raffles', 'reward', $.raffleReward);
@@ -236,28 +236,28 @@ $.on('command', function (event) {
 
                     if ($.raffleReward == "") {
                         if ($.moduleEnabled("./systems/pointSystem.js")) {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.start-usage-points"));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.start-usage-points"));
                             return;
                         } else {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.start-usage-default"));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.start-usage-default"));
                             return;
                         }
                     } else {
                         if ($.moduleEnabled("./systems/pointSystem.js")) {
                             if ($.raffleFollowers == 1 && $.rafflePrice > 0) {
-                                $.say($.lang.get("net.phantombot.rafflesystem.start-success-followers-price", $.getRewardString($.raffleReward), $.getPointsString($.rafflePrice), $.raffleKeyword));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.start-success-followers-price", $.getRewardString($.raffleReward), $.getPointsString($.rafflePrice), $.raffleKeyword));
                             } else if ($.raffleFollowers == 1 && $.rafflePrice <= 0) {
-                                $.say($.lang.get("net.phantombot.rafflesystem.start-success-followers", $.getRewardString($.raffleReward), $.raffleKeyword));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.start-success-followers", $.getRewardString($.raffleReward), $.raffleKeyword));
                             } else if ($.raffleFollowers == 0 && $.rafflePrice > 0) {
-                                $.say($.lang.get("net.phantombot.rafflesystem.start-success-price", $.getRewardString($.raffleReward), $.getPointsString($.rafflePrice), $.raffleKeyword));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.start-success-price", $.getRewardString($.raffleReward), $.getPointsString($.rafflePrice), $.raffleKeyword));
                             } else {
-                                $.say($.lang.get("net.phantombot.rafflesystem.start-success-default", $.getRewardString($.raffleReward), $.raffleKeyword));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.start-success-default", $.getRewardString($.raffleReward), $.raffleKeyword));
                             }
                         } else {
                             if ($.raffleFollowers == 1) {
-                                $.say($.lang.get("net.phantombot.rafflesystem.start-success-followers", $.getRewardString($.raffleReward), $.raffleKeyword));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.start-success-followers", $.getRewardString($.raffleReward), $.raffleKeyword));
                             } else {
-                                $.say($.lang.get("net.phantombot.rafflesystem.start-success-default", $.getRewardString($.raffleReward), $.raffleKeyword));
+                                $.say($.lang.get("net.quorrabot.rafflesystem.start-success-default", $.getRewardString($.raffleReward), $.raffleKeyword));
                             }
                         }
                     }
@@ -285,7 +285,7 @@ $.on('command', function (event) {
                 $.raffleDateString = $.raffleMonth + "/" + $.raffleDay + "/" + $.raffleYear;
      
                 if ($.raffleRunning == 0) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.close-error-notrunning"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.close-error-notrunning"));
                     return;
                 } else {
 
@@ -297,7 +297,7 @@ $.on('command', function (event) {
                     $.raffleRunning = 0;
 
                     if ($.raffleEntrants.length == 0) {
-                        $.say($.lang.get("net.phantombot.rafflesystem.close-success-noentries"));
+                        $.say($.lang.get("net.quorrabot.rafflesystem.close-success-noentries"));
                         return;
                     }
                     
@@ -324,16 +324,16 @@ $.on('command', function (event) {
                     } while ($.raffleFollowers == 1 && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows != "1"));
                     
                     if ($.winnerUsername == null) {
-                        $.say($.lang.get("net.phantombot.rafflesystem.close-success-nofollow"));
+                        $.say($.lang.get("net.quorrabot.rafflesystem.close-success-nofollow"));
                         return;
                     }
 
                     if ($.raffleMode == 0) {
-                        $.say($.lang.get("net.phantombot.rafflesystem.close-success-default", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
+                        $.say($.lang.get("net.quorrabot.rafflesystem.close-success-default", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
                     } else {
                         $.inidb.incr('points', $.winnerUsername.toLowerCase(), $.raffleReward);
 
-                        $.say($.lang.get("net.phantombot.rafflesystem.close-success-points", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
+                        $.say($.lang.get("net.quorrabot.rafflesystem.close-success-points", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
                     }
 
                     $.inidb.set('raffles', 'reward', $.raffleReward);
@@ -359,16 +359,16 @@ $.on('command', function (event) {
                 $.raffleDateString = $.raffleMonth + "/" + $.raffleDay + "/" + $.raffleYear;
      
                 if ($.raffleRunning == 1) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.redraw-error-running"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.redraw-error-running"));
                     return;
                 }
 
                 if ($.raffleEntrants.length == 0) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.redraw-error-noentries"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.redraw-error-noentries"));
                 }
                 
                 if ($.raffleMode == 1) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.redraw-error-pointraffle", $.inidb.get('settings', 'pointNameMultiple')));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.redraw-error-pointraffle", $.inidb.get('settings', 'pointNameMultiple')));
                     return;
                 }
      
@@ -395,11 +395,11 @@ $.on('command', function (event) {
                 } while ($.raffleFollowers == 1 && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows != "1"));
                 
                 if ($.winnerUsername == null) {
-                    $.say($.lang.get("net.phantombot.rafflesystem.redraw-success-nofollow"));
+                    $.say($.lang.get("net.quorrabot.rafflesystem.redraw-success-nofollow"));
                     return;
                 }
 
-                $.say($.lang.get("net.phantombot.rafflesystem.redraw-success-default", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
+                $.say($.lang.get("net.quorrabot.rafflesystem.redraw-success-default", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
 
                 $.inidb.set('raffles', 'reward', $.raffleReward);
                 $.inidb.set('raffles', 'winner', $.winnerUsername);
@@ -434,15 +434,15 @@ $.on('command', function (event) {
                 if (isNaN(prevRaffleEntrantsCount)) prevRaffleEntrantsCount = 0;
 
                 if (prevRaffleReward == null || prevRafflePrice == null || prevRaffleMode == null || prevRaffleKeyword == null || prevRaffleDate == null) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.result-error-notfound"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.result-error-notfound"));
                     return;
                 }
 
                 if ($.raffleRunning == 1) {
-                    $.say($.lang.get("net.phantombot.rafflesystem.result-success-running", getRewardString(prevRaffleReward), $.getPointsString(prevRafflePrice), prevRaffleMode, prevRaffleFollowers, prevRaffleKeyword, prevRaffleEntrantsCount));
+                    $.say($.lang.get("net.quorrabot.rafflesystem.result-success-running", getRewardString(prevRaffleReward), $.getPointsString(prevRafflePrice), prevRaffleMode, prevRaffleFollowers, prevRaffleKeyword, prevRaffleEntrantsCount));
                     return;
                 } else {
-                    $.say($.lang.get("net.phantombot.rafflesystem.result-success-norunning", getRewardString(prevRaffleReward), $.getPointsString(prevRafflePrice), prevRaffleMode, prevRaffleFollowers, prevRaffleKeyword, prevRaffleEntrantsCount, prevRaffleWinner, prevRaffleDate));
+                    $.say($.lang.get("net.quorrabot.rafflesystem.result-success-norunning", getRewardString(prevRaffleReward), $.getPointsString(prevRafflePrice), prevRaffleMode, prevRaffleFollowers, prevRaffleKeyword, prevRaffleEntrantsCount, prevRaffleWinner, prevRaffleDate));
                     return;
                 }
             } else if (action.equalsIgnoreCase("entries") || action.equalsIgnoreCase("entrants")) {
@@ -458,7 +458,7 @@ $.on('command', function (event) {
                 }
 
                 if (raffleEntrants == null || raffleEntrants == undefined || raffleEntrants == "undefined" || raffleEntrants[0] == "" || raffleEntrants[0] == undefined || raffleEntrants[0] == "undefined") {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.entries-error-noresults"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.entries-error-noresults"));
                     return;
                 }
 
@@ -468,7 +468,7 @@ $.on('command', function (event) {
                 var returnString = "";
 
                 if (args[1] != null && isNaN(parseInt(args[1]))) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.entries-usage"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.entries-usage"));
                     return;
                 } else if (args[1] == null || parseInt(args[1]) <= 1 || maxRaffleEntrants <= maxResults) {
                     for (i = 0; i < maxResults; i++) { 
@@ -477,9 +477,9 @@ $.on('command', function (event) {
                         }
                     }
                     if (returnString == "") {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.entries-error-noresults"));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.entries-error-noresults"));
                     } else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.entries-success", 1, Math.ceil(maxRaffleEntrants / maxResults), returnString.slice(0,-2)));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.entries-success", 1, Math.ceil(maxRaffleEntrants / maxResults), returnString.slice(0,-2)));
                     }
                     return;
                 } else if (parseInt(args[1])) {
@@ -491,9 +491,9 @@ $.on('command', function (event) {
                         }
                     }
                     if (returnString == "") {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.entries-error-noresults"));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.entries-error-noresults"));
                     } else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.entries-success", Math.round(args[1]), Math.ceil(maxRaffleEntrants / maxResults), returnString.slice(0,-2)));
+                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.entries-success", Math.round(args[1]), Math.ceil(maxRaffleEntrants / maxResults), returnString.slice(0,-2)));
                     }
                     return;
                 }
@@ -506,12 +506,12 @@ $.on('command', function (event) {
                     $.inidb.set("settings", "raffleToggle", "true");
                     $.raffleToggle = $.inidb.get('settings', 'raffleToggle');
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.toggle-enabled"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.toggle-enabled"));
                 } else if ($.raffleToggle == "true") {
                     $.inidb.set("settings", "raffleToggle", "false");
                     $.raffleToggle = $.inidb.get('settings', 'raffleToggle');
 
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.toggle-disabled"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.toggle-disabled"));
                 }
             }
         } else {
@@ -519,47 +519,47 @@ $.on('command', function (event) {
                 if ($.raffleKeyword != "!raffle") {
                     if ($.moduleEnabled("./systems/pointSystem.js")) {
                         if ($.raffleFollowers == 1 && $.rafflePrice > 0) {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-notcommand-followers-price", $.getRewardString($.raffleReward), $.getPointsString($.rafflePrice), $.raffleKeyword));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-notcommand-followers-price", $.getRewardString($.raffleReward), $.getPointsString($.rafflePrice), $.raffleKeyword));
                         } else if ($.raffleFollowers == 1 && $.rafflePrice <= 0) {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-notcommand-followers", $.getRewardString($.raffleReward), $.raffleKeyword));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-notcommand-followers", $.getRewardString($.raffleReward), $.raffleKeyword));
                         } else if ($.raffleFollowers == 0 && $.rafflePrice > 0) {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-notcommand-price", $.getRewardString($.raffleReward), $.getPointsString($.rafflePrice), $.raffleKeyword));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-notcommand-price", $.getRewardString($.raffleReward), $.getPointsString($.rafflePrice), $.raffleKeyword));
                         } else {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-notcommand-default", $.getRewardString($.raffleReward), $.raffleKeyword));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-notcommand-default", $.getRewardString($.raffleReward), $.raffleKeyword));
                         }
                     } else {
                         if ($.raffleFollowers == 1) {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-notcommand-followers", $.getRewardString($.raffleReward), $.raffleKeyword));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-notcommand-followers", $.getRewardString($.raffleReward), $.raffleKeyword));
                         } else {
-                            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-notcommand-default", $.getRewardString($.raffleReward), $.raffleKeyword));
+                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-notcommand-default", $.getRewardString($.raffleReward), $.raffleKeyword));
                         }
                     }
                 } else {
                     switch ($.enterRaffle(sender, "!raffle")) {
                         case 1:
-                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-success"));
+                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-success"));
                             break;
                         case 2:
-                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-notrunning", "Moderator"));
+                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-notrunning", "Moderator"));
                             break;
                         case 3:
-                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-entered"));
+                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-entered"));
                             break;
                         case 4:
-                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-notenough", $.inidb.get('settings', 'pointNameMultiple')));
+                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-notenough", $.inidb.get('settings', 'pointNameMultiple')));
                             break;
                         case 5:
-                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-iscaster"));
+                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-iscaster"));
                             break;
                         case 6:
-                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-nofollow"));
+                            if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-nofollow"));
                             break;
                         default:
                             return;
                     }
                 }
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-notrunning", "Moderator"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-notrunning", "Moderator"));
             }
         }
     }
@@ -575,22 +575,22 @@ $.on('ircChannelMessage', function(event) {
                 return;
                 break;
             case 1:
-                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-success"));
+                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-success"));
                 break;
             case 2:
                 return;
                 break;
             case 3:
-                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-entered"));
+                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-entered"));
                 break;
             case 4:
-                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-notenough", $.inidb.get('settings', 'pointNameMultiple')));
+                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-notenough", $.inidb.get('settings', 'pointNameMultiple')));
                 break;
             case 5:
-                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-iscaster"));
+                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-iscaster"));
                 break;
             case 6:
-                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.rafflesystem.enter-error-nofollow"));
+                if ($.raffleToggle == "true") $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.enter-error-nofollow"));
                 break;
             default:
                 return;

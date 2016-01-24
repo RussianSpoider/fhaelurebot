@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 www.phantombot.net
+ * Copyright (C) 2015 www.quorrabot.net
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import java.security.KeyStore;
 
 import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 
-import me.mast3rplan.phantombot.musicplayer.MusicWebSocketServer;
+import me.gloriouseggroll.quorrabot.musicplayer.MusicWebSocketServer;
 
 
 public class MusicWebSocketSecureServer extends MusicWebSocketServer

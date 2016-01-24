@@ -16,35 +16,35 @@ $.on('command', function(event) {
 
     	 	var Win = new Array();
     	 	
-    	    Win.push($.lang.get("net.phantombot.roulettecommand-Win1", username));
-            Win.push($.lang.get("net.phantombot.roulettecommand-Win2", username));
-            Win.push($.lang.get("net.phantombot.roulettecommand-Win3", username));
-            Win.push($.lang.get("net.phantombot.roulettecommand-Win4", username));
-            Win.push($.lang.get("net.phantombot.roulettecommand-Win5", username));
-            Win.push($.lang.get("net.phantombot.roulettecommand-Win1", username));
-            Win.push($.lang.get("net.phantombot.roulettecommand-Win2", username));
-            Win.push($.lang.get("net.phantombot.roulettecommand-Win3", username));
-	    Win.push($.lang.get("net.phantombot.roulettecommand-Win4", username));
-	    Win.push($.lang.get("net.phantombot.roulettecommand-Win5", username));
-	    Win.push($.lang.get("net.phantombot.roulettecommand-Win1", username));
+    	    Win.push($.lang.get("net.quorrabot.roulettecommand-Win1", username));
+            Win.push($.lang.get("net.quorrabot.roulettecommand-Win2", username));
+            Win.push($.lang.get("net.quorrabot.roulettecommand-Win3", username));
+            Win.push($.lang.get("net.quorrabot.roulettecommand-Win4", username));
+            Win.push($.lang.get("net.quorrabot.roulettecommand-Win5", username));
+            Win.push($.lang.get("net.quorrabot.roulettecommand-Win1", username));
+            Win.push($.lang.get("net.quorrabot.roulettecommand-Win2", username));
+            Win.push($.lang.get("net.quorrabot.roulettecommand-Win3", username));
+	    Win.push($.lang.get("net.quorrabot.roulettecommand-Win4", username));
+	    Win.push($.lang.get("net.quorrabot.roulettecommand-Win5", username));
+	    Win.push($.lang.get("net.quorrabot.roulettecommand-Win1", username));
     	 	
     	 	var lost = new Array();
 
-    	    lost.push($.lang.get("net.phantombot.roulettecommand-lost1", username));
-            lost.push($.lang.get("net.phantombot.roulettecommand-lost2", username));
-	    lost.push($.lang.get("net.phantombot.roulettecommand-lost3", username));
-	    lost.push($.lang.get("net.phantombot.roulettecommand-lost4", username));
-	    lost.push($.lang.get("net.phantombot.roulettecommand-lost5", username));
-	    lost.push($.lang.get("net.phantombot.roulettecommand-lost6", username));
-	    lost.push($.lang.get("net.phantombot.roulettecommand-lost7", username));
+    	    lost.push($.lang.get("net.quorrabot.roulettecommand-lost1", username));
+            lost.push($.lang.get("net.quorrabot.roulettecommand-lost2", username));
+	    lost.push($.lang.get("net.quorrabot.roulettecommand-lost3", username));
+	    lost.push($.lang.get("net.quorrabot.roulettecommand-lost4", username));
+	    lost.push($.lang.get("net.quorrabot.roulettecommand-lost5", username));
+	    lost.push($.lang.get("net.quorrabot.roulettecommand-lost6", username));
+	    lost.push($.lang.get("net.quorrabot.roulettecommand-lost7", username));
 
             var lostmod = new Array();
 
-            lostmod.push($.lang.get("net.phantombot.roulettecommand-lostmod1", username));
-            lostmod.push($.lang.get("net.phantombot.roulettecommand-lostmod2", username));
-            lostmod.push($.lang.get("net.phantombot.roulettecommand-lostmod3", username));
-            lostmod.push($.lang.get("net.phantombot.roulettecommand-lostmod4", username));
-            lostmod.push($.lang.get("net.phantombot.roulettecommand-lostmod5", username));
+            lostmod.push($.lang.get("net.quorrabot.roulettecommand-lostmod1", username));
+            lostmod.push($.lang.get("net.quorrabot.roulettecommand-lostmod2", username));
+            lostmod.push($.lang.get("net.quorrabot.roulettecommand-lostmod3", username));
+            lostmod.push($.lang.get("net.quorrabot.roulettecommand-lostmod4", username));
+            lostmod.push($.lang.get("net.quorrabot.roulettecommand-lostmod5", username));
                  
     	 	if (d1 == d2) {
     	 		do {
@@ -78,7 +78,7 @@ $.on('command', function(event) {
 
     $.inidb.set('settings', 'roulettetimeout', parseInt(args[0]));
     $.roulettetimeout = parseInt(args[0]);
-    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.roulettecommand-timeout-time", $.roulettetimeout));
+    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.roulettecommand-timeout-time", $.roulettetimeout));
     
     }
 });

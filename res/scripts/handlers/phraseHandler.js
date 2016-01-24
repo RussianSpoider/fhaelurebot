@@ -40,7 +40,7 @@ $.on('command', function (event) {
         }
 
         if (args.length < 2) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.phrasehandler.trigger-error-add-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.phrasehandler.trigger-error-add-usage"));
             return;
         } 
 
@@ -51,7 +51,7 @@ $.on('command', function (event) {
         response = args[1];
          
         $.inidb.set('phrases', triggerphrase, response);
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.phrasehandler.trigger-add-success", triggerphrase, response));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.phrasehandler.trigger-add-success", triggerphrase, response));
         return;
     }
     
@@ -62,14 +62,14 @@ $.on('command', function (event) {
         }
 
         if (args.length == 0) { 
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.phrasehandler.trigger-remove-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.phrasehandler.trigger-remove-usage"));
             return;
         }
 
         triggerphrase = args[0].toLowerCase();
         
         $.inidb.del('phrases', triggerphrase);
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.phrasehandler.trigger-remove-success", triggerphrase));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.phrasehandler.trigger-remove-success", triggerphrase));
         return;
     }
 });

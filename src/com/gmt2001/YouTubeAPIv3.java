@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 www.phantombot.net
+ * Copyright (C) 2015 www.quorrabot.net
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import javax.net.ssl.HttpsURLConnection;
-import me.mast3rplan.phantombot.PhantomBot;
+import me.gloriouseggroll.quorrabot.Quorrabot;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.Period;
 import org.joda.time.format.ISOPeriodFormat;
@@ -44,7 +44,7 @@ public class YouTubeAPIv3
 {
 
     private static final YouTubeAPIv3 instance = new YouTubeAPIv3();
-    private String apikey = "AIzaSyCzHxG53pxE0hWrWBIMMGm75PRHBQ8ZP8c";
+    private String apikey = "AIzaSyD8n1WrvLI5wR2sBZBXg1XGlX0T88lykIk";
 
     private enum request_type
     {
@@ -107,7 +107,7 @@ public class YouTubeAPIv3
             c.setDefaultUseCaches(false);
             c.setConnectTimeout(5000);
             c.setReadTimeout(5000);
-            c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.52 Safari/537.36 PhantomBotJ/2015");
+            c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.52 Safari/537.36 QuorraBot/2015");
             c.setRequestProperty("Content-Type", "application/json-rpc");
             c.setRequestProperty("Content-length", "0");
 
@@ -202,7 +202,7 @@ public class YouTubeAPIv3
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (PhantomBot.enableDebugging)
+            if (Quorrabot.enableDebugging)
             {
                 com.gmt2001.Console.err.printStackTrace(ex);
             } else
@@ -221,7 +221,7 @@ public class YouTubeAPIv3
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (PhantomBot.enableDebugging)
+            if (Quorrabot.enableDebugging)
             {
                 com.gmt2001.Console.err.printStackTrace(ex);
             } else
@@ -240,7 +240,7 @@ public class YouTubeAPIv3
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (PhantomBot.enableDebugging)
+            if (Quorrabot.enableDebugging)
             {
                 com.gmt2001.Console.err.printStackTrace(ex);
             } else
@@ -259,7 +259,7 @@ public class YouTubeAPIv3
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (PhantomBot.enableDebugging)
+            if (Quorrabot.enableDebugging)
             {
                 com.gmt2001.Console.err.printStackTrace(ex);
             } else
@@ -285,7 +285,7 @@ public class YouTubeAPIv3
                 j.put("_exceptionMessage", ex.getMessage());
                 j.put("_content", "");
 
-                if (PhantomBot.enableDebugging)
+                if (Quorrabot.enableDebugging)
                 {
                     com.gmt2001.Console.err.printStackTrace(ex);
                 } else
@@ -295,7 +295,7 @@ public class YouTubeAPIv3
             }
         }
 
-        if (PhantomBot.enableDebugging)
+        if (Quorrabot.enableDebugging)
         {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetData Timers " + (preconnect.getTime() - start.getTime()) + " "
                     + (postconnect.getTime() - start.getTime()) + " " + (prejson.getTime() - start.getTime()) + " "
@@ -315,7 +315,7 @@ public class YouTubeAPIv3
 
     public String[] SearchForVideo(String q)
     {
-        if (PhantomBot.enableDebugging)
+        if (Quorrabot.enableDebugging)
         {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo Start q=" + q);
         }
@@ -337,7 +337,7 @@ public class YouTubeAPIv3
         {
             if (j.toString().contains("Unauthorized"))
             {
-                if (PhantomBot.enableDebugging)
+                if (Quorrabot.enableDebugging)
                 {
                     com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Private");
                 }
@@ -351,7 +351,7 @@ public class YouTubeAPIv3
             {
                 try
                 {
-                    if (PhantomBot.enableDebugging)
+                    if (Quorrabot.enableDebugging)
                     {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Success");
                     }
@@ -363,7 +363,7 @@ public class YouTubeAPIv3
                     };
                 } catch (Exception e)
                 {
-                    if (PhantomBot.enableDebugging)
+                    if (Quorrabot.enableDebugging)
                     {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo Exception");
                     }
@@ -387,7 +387,7 @@ public class YouTubeAPIv3
                     JSONObject pageInfo = j2.getJSONObject("pageInfo");
                     if (pageInfo.getInt("totalResults") == 0)
                     {
-                        if (PhantomBot.enableDebugging)
+                        if (Quorrabot.enableDebugging)
                         {
                             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End No Results");
                         }
@@ -406,7 +406,7 @@ public class YouTubeAPIv3
                         JSONObject id = it.getJSONObject("id");
                         JSONObject sn = it.getJSONObject("snippet");
 
-                        if (PhantomBot.enableDebugging)
+                        if (Quorrabot.enableDebugging)
                         {
                             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Success2");
                         }
@@ -417,7 +417,7 @@ public class YouTubeAPIv3
                         };
                     } else
                     {
-                        if (PhantomBot.enableDebugging)
+                        if (Quorrabot.enableDebugging)
                         {
                             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Fail");
                         }
@@ -429,7 +429,7 @@ public class YouTubeAPIv3
                     }
                 } else
                 {
-                    if (PhantomBot.enableDebugging)
+                    if (Quorrabot.enableDebugging)
                     {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Fail2");
                     }
@@ -441,7 +441,7 @@ public class YouTubeAPIv3
                 }
             } else
             {
-                if (PhantomBot.enableDebugging)
+                if (Quorrabot.enableDebugging)
                 {
                     com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Fail3");
                 }
@@ -453,7 +453,7 @@ public class YouTubeAPIv3
             }
         }
 
-        if (PhantomBot.enableDebugging)
+        if (Quorrabot.enableDebugging)
         {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Fail4");
         }
@@ -466,7 +466,7 @@ public class YouTubeAPIv3
 
     public int[] GetVideoLength(String id)
     {
-        if (PhantomBot.enableDebugging)
+        if (Quorrabot.enableDebugging)
         {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Start id=" + id);
         }
@@ -512,7 +512,7 @@ public class YouTubeAPIv3
                      *
                      * s = Integer.parseInt(d.substring(0, d.indexOf("S")));
                      */
-                    if (PhantomBot.enableDebugging)
+                    if (Quorrabot.enableDebugging)
                     {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Success");
                     }
@@ -523,7 +523,7 @@ public class YouTubeAPIv3
                     };
                 } else
                 {
-                    if (PhantomBot.enableDebugging)
+                    if (Quorrabot.enableDebugging)
                     {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Fail");
                     }
@@ -535,7 +535,7 @@ public class YouTubeAPIv3
                 }
             } else
             {
-                if (PhantomBot.enableDebugging)
+                if (Quorrabot.enableDebugging)
                 {
                     com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Fail2");
                 }
@@ -547,7 +547,7 @@ public class YouTubeAPIv3
             }
         }
 
-        if (PhantomBot.enableDebugging)
+        if (Quorrabot.enableDebugging)
         {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Fail3");
         }

@@ -21,7 +21,7 @@ $.QuoteCommand.getRandomQuote = function (event) {
         $.say('Quote #' + random + ' ' + $.inidb.get('quotes', 'quote_' + random));
         return;
     } else {
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.error-no-quotes"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.error-no-quotes"));
         return;
     }
 };
@@ -33,7 +33,7 @@ $.QuoteCommand.getQuote = function (event, quote) {
         $.say('Quote #' + quote + ' ' + $.inidb.get('quotes', 'quote_' + quote));
         return;
     } else {
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.quote-number"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.quote-number"));
         return;
     }
 };
@@ -75,43 +75,43 @@ $.on('command', function (event) {
                 return;
             } 
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.error-quote-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.error-quote-usage"));
                 return;
             }
             var message = argsString.substring(argsString.indexOf(" ") + 1, argsString.length());
             $.inidb.set('quotes', 'quote_' + $.QuoteCommand.getTotalQuotes, message + quoteInfo);
             $.QuoteCommand.getTotalQuotes++;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.quote-add-success", $.QuoteCommand.getTotalQuotes));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.quote-add-success", $.QuoteCommand.getTotalQuotes));
             return;
         } else if (args[0].equalsIgnoreCase('remove')) {
             if (!$.isModv3(sender, event.getTags())) {
                 $.say($.getWhisperString(sender) + $.modmsg);
                 return;
             } else if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.delquote-error-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.delquote-error-usage"));
                 return;
             } else if (!$.inidb.exists('quotes', 'quote_' + parseInt(args[1]))) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.delquote-error-wrong-id", $.QuoteCommand.getTotalQuotes));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.delquote-error-wrong-id", $.QuoteCommand.getTotalQuotes));
                 return;
             }
             $.inidb.del('quotes', 'quote_' + parseInt(args[1]));
             $.QuoteCommand.getTotalQuotes--;
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.delquote-success", parseInt(args[1])));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.delquote-success", parseInt(args[1])));
             return;
         } else if (args[0].equalsIgnoreCase('edit')) {
             if (!$.isModv3(sender, event.getTags())) {
                 $.say($.getWhisperString(sender) + $.modmsg);
                 return;
             } else if (args.length < 3) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.editquote-error-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.editquote-error-usage"));
                 return;
             } else if (!$.inidb.exists('quotes', 'quote_' + parseInt(args[1]))) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.editquote-error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.editquote-error"));
                 return;
             }
             var messageEdit = argsString.substring(argsString.indexOf(" ") + 2, argsString.length());
             $.inidb.set('quotes', 'quote_' + parseInt(args[1]), messageEdit + quoteInfo);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.editquote-success", parseInt(args[1]), messageEdit));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.editquote-success", parseInt(args[1]), messageEdit));
             return;
         } else if (args[0].equalsIgnoreCase('game')) {
             if (!$.isModv3(sender, event.getTags())) {
@@ -121,12 +121,12 @@ $.on('command', function (event) {
             if ($.QuoteCommand.quoteGameToggle) {
                 $.inidb.set('settings', 'quotegame', false);
                 $.QuoteCommand.quoteGameToggle = false;
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.game-success-disable"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.game-success-disable"));
                 return;
             } else {
                 $.inidb.set('settings', 'quotegame', true);
                 $.QuoteCommand.quoteGameToggle = true;
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.game-success-enable"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.game-success-enable"));
                 return;
             }
         } else if (args[0].equalsIgnoreCase('date')) {
@@ -137,12 +137,12 @@ $.on('command', function (event) {
             if ($.QuoteCommand.quoteDateToggle) {
                 $.inidb.set('settings', 'quotedate', false);
                 $.QuoteCommand.quoteDateToggle = false;
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.date-success-disable"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.date-success-disable"));
                 return;
             } else {
                 $.inidb.set('settings', 'quotedate', true);
                 $.QuoteCommand.quoteDateToggle = true;
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.quotecommand.date-success-enable"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.date-success-enable"));
                 return;
             }
         } 

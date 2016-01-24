@@ -19,7 +19,7 @@ function PlayRequest(user, gametag) {
 
     this.request = function () {
         if (!this.canRequest()) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.request-limit-hit", $.play_limit));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.request-limit-hit", $.play_limit));
             return;
         }
         if ($.playrequestusers[user] != null) {
@@ -61,7 +61,7 @@ $.on('command', function (event) {
         if (args[0] != null) {
             if ($.play_cost != null) {
                 if (points < parseInt($.play_cost)) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.error-need-more-points", $.pointname));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.error-need-more-points", $.pointname));
                     return;
                 }                  
             }
@@ -69,20 +69,20 @@ $.on('command', function (event) {
             var gametag = args[0];
             $.playrequest = new PlayRequest(username, gametag);
             $.playrequest.request();
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.added-to-waiting-list"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.added-to-waiting-list"));
             return;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.error-adding-to-waiting-list"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.error-adding-to-waiting-list"));
             return;
         }   
     }
     
     if (command.equalsIgnoreCase("currentplayer")) {
         if ($.playerqueue[0] == null) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.no-current-players"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.no-current-players"));
             return;
         }
-        $.say($.lang.get("net.phantombot.queueSystem.current-player", $.playerqueue[0].user, $.playerqueue[0].gametag));
+        $.say($.lang.get("net.quorrabot.queueSystem.current-player", $.playerqueue[0].user, $.playerqueue[0].gametag));
         return;
     }
     
@@ -97,10 +97,10 @@ $.on('command', function (event) {
                 if(args[1]!=null) {
                     $.play_limit = args[1];
                     $.inidb.set("settings","play_limit",$.play_limit);
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.request-limit-set", $.play_limit));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.request-limit-set", $.play_limit));
                     return;
                 } else {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.request-limit-error-usage"));
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.request-limit-error-usage"));
                     return;
                 }
             }   
@@ -110,7 +110,7 @@ $.on('command', function (event) {
         $.queuelist = "";
         
         if (list == null) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.no-player-in-q"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.no-player-in-q"));
             return;
         }
         
@@ -130,7 +130,7 @@ $.on('command', function (event) {
         }
         
         if ($.queuelist == "" || $.queuelist == null) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.no-player-in-q"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.no-player-in-q"));
             return;
         }
         
@@ -138,7 +138,7 @@ $.on('command', function (event) {
             $.queuelist = $.queuelist.substring(0, $.queuelist.length - 1);
         }
         
-        $.say($.lang.get("net.phantombot.queueSystem.current-players", $.queuelist));
+        $.say($.lang.get("net.quorrabot.queueSystem.current-players", $.queuelist));
         return;
     }
     
@@ -154,10 +154,10 @@ $.on('command', function (event) {
 
         $.playerqueue.shift();
         if ($.playerqueue[0] != null) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.senders-trun-to-player", $.playerqueue[0].gametag));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.senders-trun-to-player", $.playerqueue[0].gametag));
             return;
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.queueSystem.no-players-waiting"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.no-players-waiting"));
             return;
         }
     }

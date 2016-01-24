@@ -57,7 +57,7 @@ $.say = function (s) {
         $.logChat($.botname, str);
 
         if (!$.inidb.exists("settings", "response_@all") || $.inidb.get("settings", "response_@all").equalsIgnoreCase("1")
-                || str.equals($.lang.get("net.phantombot.misc.response-disable")) == true || str.indexOf(".timeout ") != -1 || str.indexOf(".ban ") != -1
+                || str.equals($.lang.get("net.quorrabot.misc.response-disable")) == true || str.indexOf(".timeout ") != -1 || str.indexOf(".ban ") != -1
                 || str.indexOf(".unban ") != -1 || str.equalsIgnoreCase(".clear") || str.equalsIgnoreCase(".mods")) {
             $.channel.say(str);
         }
@@ -289,12 +289,12 @@ $.on('command', function (event) {
             var msg;
 
             if ($.logEnable) {
-                msg = $.lang.get("net.phantombot.common.enabled");
+                msg = $.lang.get("net.quorrabot.common.enabled");
             } else {
-                msg = $.lang.get("net.phantombot.common.disabled");
+                msg = $.lang.get("net.quorrabot.common.disabled");
             }
 
-            msg = $.lang.get("net.phantombot.misc.log-status", msg, $.logRotateDays);
+            msg = $.lang.get("net.quorrabot.misc.log-status", msg, $.logRotateDays);
 
             $.say($.getWhisperString(sender) + msg);
 
@@ -308,7 +308,7 @@ $.on('command', function (event) {
 
             $.inidb.set('settings', 'logenable', '1');
 
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.log-enable"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.log-enable"));
         }
 
         if (args[0].equalsIgnoreCase("disable")) {
@@ -318,12 +318,12 @@ $.on('command', function (event) {
 
             $.inidb.set('settings', 'logenable', '0');
 
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.log-disable"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.log-disable"));
         }
 
         if (args[0].equalsIgnoreCase("days")) {
             if (args.length == 1 || isNaN(args[1]) || parseInt(args[1]) < 1) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.log-err-bad-days"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.log-err-bad-days"));
 
                 return;
             }
@@ -334,7 +334,7 @@ $.on('command', function (event) {
 
             $.inidb.set('settings', 'logrotatedays', args[1]);
 
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.log-days", args[1]));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.log-days", args[1]));
         }
     }
 
@@ -351,7 +351,7 @@ $.on('command', function (event) {
 
             $.inidb.set('settings', 'logchat', '1');
 
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.logchat-enable"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.logchat-enable"));
         }
 
         if (args[0].equalsIgnoreCase("disable")) {
@@ -361,7 +361,7 @@ $.on('command', function (event) {
 
             $.inidb.set('settings', 'logchat', '0');
 
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.logchat-disable"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.logchat-disable"));
         }
     }
 
@@ -375,9 +375,9 @@ $.on('command', function (event) {
         if (args.length == 0) {
             if ($.inidb.exists("settings", "response_@all")
                     && $.inidb.get("settings", "response_@all").equalsIgnoreCase("0")) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.response-disabled"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.response-disabled"));
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.response-enabled"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.response-enabled"));
             }
         } else {
             if (args[0].equalsIgnoreCase("enable")) {
@@ -387,13 +387,13 @@ $.on('command', function (event) {
 
                 $.logEvent("misc.js", 313, username + " enabled bot responses");
 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.response-enable"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.response-enable"));
             } else if (args[0].equalsIgnoreCase("disable")) {
                 $.inidb.set("settings", "response_@all", "0");
 
                 $.logEvent("misc.js", 319, username + " disabled bot responses");
 
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.misc.response-disable"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.misc.response-disable"));
             }
         }
     }

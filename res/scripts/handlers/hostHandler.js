@@ -1,6 +1,6 @@
 $.hostreward = parseInt($.inidb.get('settings', 'hostreward'));
 $.hosttimeout = parseInt($.inidb.get('settings', 'hosttimeout'));
-$.hostMessage = $.inidb.get('settings', 'hostmessage');
+$.hostMessage = ($.inidb.get('settings', 'hostmessage') ? $.inidb.get('settings', 'hostmessage') : $.lang.get("net.quorrabot.hosthandler.default-host-welcome-message"));
 
 if ($.hostlist == null || $.hostlist == undefined) {
     $.hostlist = new Array();
@@ -14,18 +14,6 @@ if ($.hosttimeout == null || $.hosttimeout == undefined || isNaN($.hosttimeout))
 
 if ($.hostreward == null || $.hostreward == undefined || isNaN($.hostreward)) {
     $.hostreward = 0;
-}
-
-if ($.hostMessage == null || $.hostMessage == undefined || $.strlen($.hostMessage) == 0 || $.hostMessage == "") {
-    if ($.moduleEnabled("./systems/pointSystem.js")) {
-        if ($.hostreward < 1) {
-            $.hostMessage = $.lang.get("net.phantombot.hosthandler.default-host-welcome-message");
-        } else if ($.hostreward > 0 && $.moduleEnabled('./systems/pointSystem.js')) {
-            $.hostMessage = $.lang.get("net.phantombot.hosthandler.default-host-welcome-message-and-reward", $.getPointsString($.hostreward));
-        }
-    } else {
-        $.hostMessage = $.lang.get("net.phantombot.hosthandler.default-host-welcome-message");
-    }
 }
 
 $.isHostUser = function (user) {
@@ -42,11 +30,12 @@ $.on('twitchHosted', function (event) {
     }
 
     if ($.announceHosts && $.moduleEnabled("./handlers/hostHandler.js") && ($.hostlist[username.toLowerCase()] == null || $.hostlist[username.toLowerCase()] == undefined || $.hostlist[username.toLowerCase()] < System.currentTimeMillis())) {
-        if ($.hostreward > 0) {
-            $.inidb.incr('points', username.toLowerCase(), $.hostreward);
-        }
         
         s = $.replaceAll(s, '(name)', username);
+        if ($.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
+            $.inidb.incr('points', username.toLowerCase(), $.hostreward);
+            s += " +" + $.getPointsString($.hostreward);
+        }
         $.say(s);
     }
 
@@ -89,15 +78,15 @@ $.on('command', function (event) {
 
         if ($.strlen(argsString) == 0) {
             if ($.inidb.exists('settings', 'hostreward')) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-reward-current-and-usage", $.getPointsString($.hostreward)));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-reward-current-and-usage", $.getPointsString($.hostreward)));
                 return;
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-reward-current-and-usage", $.getPointsString($.hostreward)));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-reward-current-and-usage", $.getPointsString($.hostreward)));
                 return;
             }
         } else {
             if (!parseInt(argsString) < 0) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-reward-error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-reward-error"));
                 return;
             }
 
@@ -105,7 +94,7 @@ $.on('command', function (event) {
 
             $.inidb.set('settings', 'hostreward', argsString);
             $.hostreward = parseInt(argsString);
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-reward-set-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-reward-set-success"));
             return;
         }
     }
@@ -116,10 +105,14 @@ $.on('command', function (event) {
             return;		
         }		
 				
-        if ($.strlen(argsString) == 0) {		
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.current-host-message", $.hostMessage));		
+        if ($.strlen(argsString) == 0) {
+            var msg = $.hostMessage;
+            if ($.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
+                msg += " +" + $.getPointsString($.hostreward);
+            }
+            $.say($.getWhisperString(sender) + msg);			
 		
-            var s = $.lang.get("net.phantombot.hosthandler.host-message-usage");		
+            var s = $.lang.get("net.quorrabot.hosthandler.host-message-usage");		
 		
             $.say($.getWhisperString(sender) + s);		
             return;
@@ -130,19 +123,19 @@ $.on('command', function (event) {
             $.inidb.set('settings', 'hostmessage', argsString);
             $.hostMessage = $.inidb.get('settings', 'hostmessage');
 		
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-message-set-success"));		
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-message-set-success"));		
             return;		
         }		
     }
 
     if (command.equalsIgnoreCase("hostcount")) {
-        $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-count", $.hostlist.length));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-count", $.hostlist.length));
         return;
     }
 
     if (command.equalsIgnoreCase("hosttime")) {
         if (args.length < 1) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-timeout-time", $.hosttimeout));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-timeout-time", $.hosttimeout));
             return;
         } else if (args.length >= 1) {
             if (!$.isAdmin(sender)) {
@@ -150,12 +143,12 @@ $.on('command', function (event) {
                 return;
             }
             if (parseInt(args[0]) < 30) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-timeout-time-error"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-timeout-time-error"));
                 return;
             } else {
                 $.inidb.set('settings', 'hosttimeout', parseInt(args[0]));
                 $.hosttimeout = parseInt(args[0]);
-                $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-timeout-time-set", parseInt(args[0])));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-timeout-time-set", parseInt(args[0])));
                 return;
             }
         }
@@ -176,7 +169,7 @@ $.on('command', function (event) {
             }
 
             if (b == 0) {
-                $.say($.lang.get("net.phantombot.hosthandler.host-list", $.hostlist.length, m));
+                $.say($.lang.get("net.quorrabot.hosthandler.host-list", $.hostlist.length, m));
                 return;
             } else {
                 $.say(">>" + m);
@@ -185,7 +178,7 @@ $.on('command', function (event) {
         }
 
         if ($.hostlist.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.phantombot.hosthandler.host-list-error"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-list-error"));
             return;
         }
     }

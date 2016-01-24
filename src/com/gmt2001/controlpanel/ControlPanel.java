@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 www.phantombot.net
+ * Copyright (C) 2015 www.quorrabot.net
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ public class ControlPanel extends Thread implements ActionListener
     @SuppressWarnings("LeakingThisInConstructor")
     private ControlPanel()
     {
-        w = new Window(80, 25, true, "PhantomBot Control Panel");
+        w = new Window(80, 25, true, "QuorraBot Control Panel");
         w.setShadow(false);
         mgr = new DefaultLayoutManager();
         mgr.bindToContainer(w.getRootPanel());

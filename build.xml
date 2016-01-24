@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (C) 2015 www.phantombot.net
+Copyright (C) 2015 www.quorrabot.net
 
-Credits: mast3rplan, gmt2001, PhantomIndex, GloriousEggroll
+Credits: gloriouseggroll, gmt2001, PhantomIndex, GloriousEggroll
 gloriouseggroll@gmail.com, phantomindex@gmail.com
 
 This program is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
     <property environment="env" />
     <property name="project.base.dir" value="." />
-    <property name="name" value="PhantomBot" />
+    <property name="name" value="QuorraBot" />
     <property name="version" value="1.6.6.2" />
     <property name="java.class.path" value="" />
     <property name="src" value="${project.base.dir}/src" />
@@ -83,7 +83,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
     <target depends="init,git.revision" name="pre.compile">
         <replace
-            file="${src}/me/mast3rplan/phantombot/RepoVersion.java"
+            file="${src}/me/gloriouseggroll/quorrabot/RepoVersion.java"
             token="@repository.version@"
             value="${repository.version}" />
     </target>
@@ -112,13 +112,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     
     <target name="post.compile">
         <replace
-            file="${src}/me/mast3rplan/phantombot/RepoVersion.java"
+            file="${src}/me/gloriouseggroll/quorrabot/RepoVersion.java"
             token="${repository.version}"
             value="@repository.version@" />
     </target>
 
     <target depends="compile.src,post.compile" name="jar">
-        <jar destfile="${build.dir}/PhantomBot.jar">
+        <jar destfile="${build.dir}/QuorraBot.jar">
             <fileset dir="${classes}" />
             <manifest>
                 <attribute name="Bundle-Name" value="${project.name}" />           
@@ -126,9 +126,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                 <attribute name="Bundle-Date" value="${NOW}" />
                 <attribute name="Implementation-Title" value="${project.name}" />
                 <attribute name="Implementation-Version" value="${version.num}" />
-                <attribute name="Implementation-URL" value="http://www.phantombot.net" />
+                <attribute name="Implementation-URL" value="http://www.quorrabot.net" />
                 <attribute name="Class-Path" value="${mf.classpath}" />
-                <attribute name="Main-Class" value="me.mast3rplan.phantombot.Main" />
+                <attribute name="Main-Class" value="me.gloriouseggroll.quorrabot.Main" />
             </manifest>
         </jar>
         <mkdir dir="${lib.dir}" />
@@ -148,10 +148,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <target depends="compile.src.test,post.compile" name="test"></target>
      
     <target name="run" depends="jar">
-        <java fork="true" classname="me.mast3rplan.phantombot.PhantomBot" dir="${build.dir}">
+        <java fork="true" classname="me.gloriouseggroll.quorrabot.QuorraBot" dir="${build.dir}">
             <classpath>
                 <path refid="classpath" />
-                <path location="${build.dir}/PhantomBot.jar" />
+                <path location="${build.dir}/QuorraBot.jar" />
             </classpath>
         </java>
     </target>
