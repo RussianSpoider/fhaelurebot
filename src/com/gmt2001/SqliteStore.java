@@ -18,6 +18,10 @@ package com.gmt2001;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -36,6 +40,8 @@ public class SqliteStore extends DataStore
 {
 
     private String dbname = "quorrabot.db";
+    private String dbprefix = dbname.substring(0, dbname.length() - 3);
+
     private int cache_size = 2000;
     private boolean safe_write = false;
     private Connection connection = null;
@@ -113,7 +119,16 @@ public class SqliteStore extends DataStore
                 }
 
                 connection = CreateConnection(dbname, cache_size, safe_write);
+            } else {
+                String data = "";
+                data += "dbname=" + dbname + "\r\n";
+                data += "cachesize=" + cache_size + "\r\n";
+                data += "safewrite=" + safe_write + "\r\n";
+                
+                Files.write(Paths.get("./sqlite3config.txt"), data.getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
             }
+            
         } catch (IOException ex)
         {
             com.gmt2001.Console.err.printStackTrace(ex);
@@ -189,7 +204,7 @@ public class SqliteStore extends DataStore
             {
                 statement.setQueryTimeout(10);
 
-                statement.executeUpdate("CREATE TABLE quorrabot_" + fName + " (section string, variable string, value string);");
+                statement.executeUpdate("CREATE TABLE " + dbprefix + "_" + fName + " (section string, variable string, value string);");
             } catch (SQLException ex)
             {
                 com.gmt2001.Console.err.printStackTrace(ex);
@@ -206,7 +221,7 @@ public class SqliteStore extends DataStore
 
         if (FileExists(fName))
         {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM quorrabot_" + fName + " WHERE section=? AND variable=?;"))
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " + dbprefix + "_" + fName + " WHERE section=? AND variable=?;"))
             {
                 statement.setQueryTimeout(10);
                 statement.setString(1, section);
@@ -228,7 +243,7 @@ public class SqliteStore extends DataStore
 
         if (FileExists(fName))
         {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM quorrabot_" + fName + " WHERE section=?;"))
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " + dbprefix + "_" + fName + " WHERE section=?;"))
             {
                 statement.setQueryTimeout(10);
                 statement.setString(1, section);
@@ -272,7 +287,7 @@ public class SqliteStore extends DataStore
         {
             statement.setQueryTimeout(10);
 
-            try (ResultSet rs = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='quorrabot_" + fName + "';"))
+            try (ResultSet rs = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" + dbprefix + "_" + fName + "';"))
             {
 
                 return rs.next();
@@ -294,7 +309,7 @@ public class SqliteStore extends DataStore
         {
             statement.setQueryTimeout(10);
 
-            try (ResultSet rs = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'quorrabot_%';"))
+            try (ResultSet rs = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE '" + dbprefix + "_%';"))
             {
 
                 ArrayList<String> s = new ArrayList<>();
@@ -329,7 +344,7 @@ public class SqliteStore extends DataStore
             {
                 statement.setQueryTimeout(10);
 
-                try (ResultSet rs = statement.executeQuery("SELECT section FROM quorrabot_" + fName + " GROUP BY section;"))
+                try (ResultSet rs = statement.executeQuery("SELECT section FROM " + dbprefix + "_" + fName + " GROUP BY section;"))
                 {
 
                     ArrayList<String> s = new ArrayList<>();
@@ -361,7 +376,7 @@ public class SqliteStore extends DataStore
 
         if (FileExists(fName))
         {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT variable FROM quorrabot_" + fName + " WHERE section=?;"))
+            try (PreparedStatement statement = connection.prepareStatement("SELECT variable FROM " + dbprefix + "_" + fName + " WHERE section=?;"))
             {
                 statement.setQueryTimeout(10);
                 statement.setString(1, section);
@@ -401,7 +416,7 @@ public class SqliteStore extends DataStore
             return false;
         }
 
-        try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM quorrabot_" + fName + " WHERE section=? AND variable=?;"))
+        try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM " + dbprefix + "_" + fName + " WHERE section=? AND variable=?;"))
         {
             statement.setQueryTimeout(10);
             statement.setString(1, section);
@@ -437,7 +452,7 @@ public class SqliteStore extends DataStore
             return result;
         }
 
-        try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM quorrabot_" + fName + " WHERE section=? AND variable=?;"))
+        try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM " + dbprefix + "_" + fName + " WHERE section=? AND variable=?;"))
         {
             statement.setQueryTimeout(10);
             statement.setString(1, section);
@@ -472,7 +487,7 @@ public class SqliteStore extends DataStore
         {
             if (HasKey(fName, section, key))
             {
-                try (PreparedStatement statement = connection.prepareStatement("UPDATE quorrabot_" + fName + " SET value=? WHERE section=? AND variable=?;"))
+                try (PreparedStatement statement = connection.prepareStatement("UPDATE " + dbprefix + "_" + fName + " SET value=? WHERE section=? AND variable=?;"))
                 {
                     statement.setQueryTimeout(10);
                     statement.setString(1, value);
@@ -482,7 +497,7 @@ public class SqliteStore extends DataStore
                 }
             } else
             {
-                try (PreparedStatement statement = connection.prepareStatement("INSERT INTO quorrabot_" + fName + " values(?, ?, ?);"))
+                try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " + dbprefix + "_" + fName + " values(?, ?, ?);"))
                 {
                     statement.setQueryTimeout(10);
                     statement.setString(1, section);
