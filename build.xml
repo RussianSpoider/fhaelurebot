@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (C) 2015 www.quorrabot.net
+Copyright (C) 2015 www.quorrabot.com
 
 Credits: gloriouseggroll, gmt2001, PhantomIndex, GloriousEggroll
 gloriouseggroll@gmail.com, phantomindex@gmail.com
@@ -126,7 +126,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                 <attribute name="Bundle-Date" value="${NOW}" />
                 <attribute name="Implementation-Title" value="${project.name}" />
                 <attribute name="Implementation-Version" value="${version.num}" />
-                <attribute name="Implementation-URL" value="http://www.quorrabot.net" />
+                <attribute name="Implementation-URL" value="http://www.quorrabot.com" />
                 <attribute name="Class-Path" value="${mf.classpath}" />
                 <attribute name="Main-Class" value="me.gloriouseggroll.quorrabot.Main" />
             </manifest>

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 www.quorrabot.net
+ * Copyright (C) 2015 www.quorrabot.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,7 +133,7 @@ public class Quorrabot implements Listener
         com.gmt2001.Console.err.println("Build revision " + RepoVersion.getRepoVersion());
         com.gmt2001.Console.out.println("Creator: GloriousEggroll");
         com.gmt2001.Console.out.println("Developers: gmt2001, GloriousEggroll");
-        com.gmt2001.Console.out.println("www.quorrabot.net");
+        com.gmt2001.Console.out.println("www.quorrabot.com");
         com.gmt2001.Console.out.println();
 
         interactive = System.getProperty("interactive") != null;
