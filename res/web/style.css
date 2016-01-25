@@ -1,5 +1,5 @@
 #logo {
-    width: 70px;
+    width: 400px;
     margin-left: 15px;
     float: left;
     display: inline-block;
@@ -10,11 +10,11 @@
 
 
 .header {
-    background-color: #009ae1;
+    background-color: #141414;
     margin-top: -20px;
     margin-bottom: 10px;
     max-width: 100%;
-    height: 85px;
+    height: 100px;
     -webkit-box-shadow: 0px 3px 5px #000;
     -moz-box-shadow:    0px 3px 5px #000;
     box-shadow:         0px 3px 5px #000;
@@ -119,10 +119,13 @@ option:hover {
     bottom: 0;
     height: 3%;
     width: 100%;
-    background-color: rgb(34, 34, 34);
+    background-color: #141414;
     position: fixed;
     text-align: center;
     color: gray;
+    -webkit-box-shadow: 0px 3px 15px #000;
+    -moz-box-shadow:    0px 3px 15px #000;
+    box-shadow:         0px 3px 15px #000;
 }
 
 
@@ -139,7 +142,7 @@ option:hover {
     z-index: 2;
 }
 a {
-    color: #6441a5;
+    color: #009ae1;
     text-decoration: none;
 }
 #chat {
