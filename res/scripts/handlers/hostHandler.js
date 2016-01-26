@@ -36,7 +36,7 @@ $.on('twitchHosted', function (event) {
             $.inidb.incr('points', username.toLowerCase(), $.hostreward);
             s += " +" + $.getPointsString($.hostreward);
         }
-        $.say(s);
+        $.say("/me " + s);
     }
 
     $.hostlist[username.toLowerCase()] = System.currentTimeMillis() + $.hosttimeout;
