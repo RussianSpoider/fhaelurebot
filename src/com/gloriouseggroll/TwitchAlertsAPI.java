@@ -37,11 +37,9 @@ import me.gloriouseggroll.quorrabot.Quorrabot;
  */
 public class TwitchAlertsAPI {
     private static final TwitchAlertsAPI instance = new TwitchAlertsAPI();
-    private static final String base_url = "http://www.twitchalerts.com/api/donations?access_token=";
+    private static final String base_url = "https://www.twitchalerts.com/api/donations?access_token=";
     private String clientid = "4S5Ml50i5g9lUvvpV85qUmXRF0KyvgkiS6F3g6st";
     private String access_token = "";
-    private static final String header_accept = "application/json";
-    private static final int timeout = 2 * 1000;
 
     
     private enum request_type
@@ -85,16 +83,6 @@ public class TwitchAlertsAPI {
 
         try
         {
-            if (url.contains("?") && !url.contains("oembed?"))
-            {
-                url += "&utcnow=" + System.currentTimeMillis();
-            } else
-            {
-                if (!url.contains("oembed?"))
-                {
-                    url += "?utcnow=" + System.currentTimeMillis();
-                }
-            }
 
             URL u = new URL(url);
             HttpsURLConnection c = (HttpsURLConnection) u.openConnection();
@@ -343,17 +331,21 @@ public class TwitchAlertsAPI {
                     }
                     
                     JSONArray donations = j.getJSONArray("donations");
+                    //com.gmt2001.Console.out.println(donations.toString());
+                    
                     JSONObject lastdonation = donations.getJSONObject(0);
                     String amount = lastdonation.getString("amount_label");
+                    String donatormessage = lastdonation.getString("message");
                     
                     JSONObject donator = lastdonation.getJSONObject("donator");
+                    //com.gmt2001.Console.out.println(donator);
                     String donatorname = donator.getString("name");
-                    String donatormessage = donator.getString("message");
 
                     return new String[]
                     {
                         donatorname, amount, donatormessage
                     };
+                    
                 } catch (Exception e)
                 {
                     if (Quorrabot.enableDebugging)

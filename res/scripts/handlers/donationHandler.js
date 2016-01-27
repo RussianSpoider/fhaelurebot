@@ -123,14 +123,14 @@ setTimeout(function(){
                 $.taamount = $.tadata[1];
                 $.tamsg = $.tadata[2];
                 var taDonation = $.tadata[0] + ": " + $.tadata[1];
-                if ($.currDonation==null || $.currDonation.toString() != taDonation) {
+                if ($.currDonation.toString() != taDonation) {
                     $.writeToFile(taDonation, $.DonationHandler.CheckerStorePath, false);
                     //$.inidb.set("settings", "lastdonation", taDonation);
                 }
             }
             
             
-            if ($.currDonation!=null || $.currDonation.toString() != $.inidb.get("settings", "lastdonation") || $.currDonation.toString() != "") {
+            if ($.currDonation.toString() != $.inidb.get("settings", "lastdonation") && $.currDonation.toString() != "") {
 
                     $.inidb.set("settings", "lastdonation", $.readFile($.DonationHandler.CheckerStorePath));
                     if ($.DonationHandler.DonationToggle == 1) {

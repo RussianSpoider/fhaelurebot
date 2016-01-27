@@ -667,10 +667,10 @@ public class Quorrabot implements Listener
         if (message.equals("twitchalertstoken"))
         {
             com.gmt2001.Console.out.print("Please enter a new TwitchAlerts Access Token: ");
-            String twitchalertstoken = System.console().readLine().trim();
+            String newtwitchalertstoken = System.console().readLine().trim();
 
-            TwitchAlertsAPI.instance().SetAccessToken(twitchalertstoken);
-            twitchalertstoken = twitchalertstoken;
+            TwitchAlertsAPI.instance().SetAccessToken(newtwitchalertstoken);
+            twitchalertstoken = newtwitchalertstoken;
 
             changed = true;
         }
@@ -1018,9 +1018,9 @@ public class Quorrabot implements Listener
                     {
                         youtubekey = line.substring(11);
                     }
-                    if (line.startsWith("twitchalertstoken=") && line.length() > 12)
+                    if (line.startsWith("twitchalertstoken=") && line.length() > 19)
                     {
-                        twitchalertstoken = line.substring(11);
+                        twitchalertstoken = line.substring(18);
                     }
                     if (line.startsWith("webenable=") && line.length() > 11)
                     {
