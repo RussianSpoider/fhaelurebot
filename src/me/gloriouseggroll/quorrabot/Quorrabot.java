@@ -129,10 +129,8 @@ public class Quorrabot implements Listener
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
         com.gmt2001.Console.out.println();
-        com.gmt2001.Console.out.println("QuorraBot Core 1.6.6.2 01/22/2016");
+        com.gmt2001.Console.out.println("QuorraBot Core 1.0 01/27/2016");
         com.gmt2001.Console.err.println("Build revision " + RepoVersion.getRepoVersion());
-        com.gmt2001.Console.out.println("Creator: GloriousEggroll");
-        com.gmt2001.Console.out.println("Developers: gmt2001, GloriousEggroll");
         com.gmt2001.Console.out.println("www.quorrabot.com");
         com.gmt2001.Console.out.println();
 

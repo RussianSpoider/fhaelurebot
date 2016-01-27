@@ -36,7 +36,7 @@ public class TwitchAlertsAPI {
     private static final String base_url = "http://www.twitchalerts.com/api/donations?access_token=";
     private String clientid = "4S5Ml50i5g9lUvvpV85qUmXRF0KyvgkiS6F3g6st";
     private String oauth = "";
-    private String access_token = "7258CD7F6EE034A12D1D";
+    private String access_token = "";
     private static final String header_accept = "application/json";
     private static final int timeout = 2 * 1000;
 
