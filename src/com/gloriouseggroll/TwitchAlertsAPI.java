@@ -17,15 +17,19 @@
 package com.gloriouseggroll;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.util.Date;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import me.gloriouseggroll.quorrabot.Quorrabot;
 
 /**
  *
@@ -35,7 +39,6 @@ public class TwitchAlertsAPI {
     private static final TwitchAlertsAPI instance = new TwitchAlertsAPI();
     private static final String base_url = "http://www.twitchalerts.com/api/donations?access_token=";
     private String clientid = "4S5Ml50i5g9lUvvpV85qUmXRF0KyvgkiS6F3g6st";
-    private String oauth = "";
     private String access_token = "";
     private static final String header_accept = "application/json";
     private static final int timeout = 2 * 1000;
@@ -57,107 +60,113 @@ public class TwitchAlertsAPI {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
         
-    private JSONObject GetData(request_type type, String url, boolean isJson)
+    private JSONObject GetData(request_type type, String url)
     {
-        return GetData(type, url, "", isJson);
-    }
-
-    private JSONObject GetData(request_type type, String url, String post, boolean isJson)
-    {
-        return GetData(type, url, post, "", isJson);
+        return GetData(type, url, "");
     }
     
-    @SuppressWarnings("UseSpecificCatch")
-    private JSONObject GetData(request_type type, String url, String post, String oauth, boolean isJson)
+    @SuppressWarnings(
+            {
+                "null", "SleepWhileInLoop", "UseSpecificCatch"
+            })
+    private JSONObject GetData(request_type type, String url, String post)
     {
+        Date start = new Date();
+        Date preconnect = start;
+        Date postconnect = start;
+        Date prejson = start;
+        Date postjson = start;
         JSONObject j = new JSONObject("{}");
-        InputStream i = null;
+        BufferedInputStream i = null;
         String rawcontent = "";
+        int available = 0;
+        int responsecode = 0;
+        long cl = 0;
 
         try
         {
-            if (url.contains("?"))
+            if (url.contains("?") && !url.contains("oembed?"))
             {
                 url += "&utcnow=" + System.currentTimeMillis();
             } else
             {
-                url += "?utcnow=" + System.currentTimeMillis();
+                if (!url.contains("oembed?"))
+                {
+                    url += "?utcnow=" + System.currentTimeMillis();
+                }
             }
 
             URL u = new URL(url);
             HttpsURLConnection c = (HttpsURLConnection) u.openConnection();
 
-            c.addRequestProperty("Accept", header_accept);
-
-            if (isJson)
-            {
-                c.addRequestProperty("Content-Type", "application/json");
-            } else
-            {
-                c.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            }
-
-            if (!clientid.isEmpty())
-            {
-                c.addRequestProperty("Client-ID", clientid);
-            }
-
-            if (!oauth.isEmpty())
-            {
-                c.addRequestProperty("Authorization", "OAuth " + oauth);
-            }
-
             c.setRequestMethod(type.name());
 
             c.setUseCaches(false);
             c.setDefaultUseCaches(false);
-            c.setConnectTimeout(timeout);
+            c.setConnectTimeout(5000);
+            c.setReadTimeout(5000);
             c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.52 Safari/537.36 QuorraBot/2015");
+            c.setRequestProperty("Content-Type", "application/json-rpc");
+            c.setRequestProperty("Content-length", "0");
 
             if (!post.isEmpty())
             {
                 c.setDoOutput(true);
             }
 
+            preconnect = new Date();
             c.connect();
+            postconnect = new Date();
 
             if (!post.isEmpty())
             {
-                try (OutputStream o = c.getOutputStream())
+                try (BufferedOutputStream o = new BufferedOutputStream(c.getOutputStream()))
                 {
                     IOUtils.write(post, o);
                 }
             }
 
             String content;
+            cl = c.getContentLengthLong();
+            responsecode = c.getResponseCode();
 
             if (c.getResponseCode() == 200)
             {
-                i = c.getInputStream();
+                i = new BufferedInputStream(c.getInputStream());
             } else
             {
-                i = c.getErrorStream();
+                i = new BufferedInputStream(c.getErrorStream());
             }
 
-            if (c.getResponseCode() == 204 || i == null)
-            {
-                content = "{}";
-            } else
-            {
-                content = IOUtils.toString(i, c.getContentEncoding());
-            }
-
+            /*
+             * if (i != null) { available = i.available();
+             *
+             * while (available == 0 && (new Date().getTime() -
+             * postconnect.getTime()) < 450) { Thread.sleep(500); available =
+             * i.available(); }
+             *
+             * if (available == 0) { i = new
+             * BufferedInputStream(c.getErrorStream());
+             *
+             * if (i != null) { available = i.available(); } } }
+             *
+             * if (available == 0) { content = "{}"; } else { content =
+             * IOUtils.toString(i, c.getContentEncoding()); }
+             */
+            content = IOUtils.toString(i, c.getContentEncoding());
             rawcontent = content;
-
+            prejson = new Date();
             j = new JSONObject(content);
             j.put("_success", true);
             j.put("_type", type.name());
             j.put("_url", url);
             j.put("_post", post);
             j.put("_http", c.getResponseCode());
+            j.put("_available", available);
             j.put("_exception", "");
             j.put("_exceptionMessage", "");
             j.put("_content", content);
+            postjson = new Date();
         } catch (JSONException ex)
         {
             if (ex.getMessage().contains("A JSONObject text must begin with"))
@@ -168,7 +177,8 @@ public class TwitchAlertsAPI {
                 j.put("_url", url);
                 j.put("_post", post);
                 j.put("_http", 0);
-                j.put("_exception", "");
+                j.put("_available", available);
+                j.put("_exception", "MalformedJSONData (HTTP " + responsecode + ")");
                 j.put("_exceptionMessage", "");
                 j.put("_content", rawcontent);
             } else
@@ -185,10 +195,18 @@ public class TwitchAlertsAPI {
             j.put("_url", url);
             j.put("_post", post);
             j.put("_http", 0);
+            j.put("_available", available);
             j.put("_exception", "MalformedURLException");
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
-            com.gmt2001.Console.err.logStackTrace(ex);
+
+            if (Quorrabot.enableDebugging)
+            {
+                com.gmt2001.Console.err.printStackTrace(ex);
+            } else
+            {
+                com.gmt2001.Console.err.logStackTrace(ex);
+            }
         } catch (SocketTimeoutException ex)
         {
             j.put("_success", false);
@@ -196,10 +214,18 @@ public class TwitchAlertsAPI {
             j.put("_url", url);
             j.put("_post", post);
             j.put("_http", 0);
+            j.put("_available", available);
             j.put("_exception", "SocketTimeoutException");
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
-            com.gmt2001.Console.err.logStackTrace(ex);
+
+            if (Quorrabot.enableDebugging)
+            {
+                com.gmt2001.Console.err.printStackTrace(ex);
+            } else
+            {
+                com.gmt2001.Console.err.logStackTrace(ex);
+            }
         } catch (IOException ex)
         {
             j.put("_success", false);
@@ -207,10 +233,18 @@ public class TwitchAlertsAPI {
             j.put("_url", url);
             j.put("_post", post);
             j.put("_http", 0);
+            j.put("_available", available);
             j.put("_exception", "IOException");
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
-            com.gmt2001.Console.err.logStackTrace(ex);
+
+            if (Quorrabot.enableDebugging)
+            {
+                com.gmt2001.Console.err.printStackTrace(ex);
+            } else
+            {
+                com.gmt2001.Console.err.logStackTrace(ex);
+            }
         } catch (Exception ex)
         {
             j.put("_success", false);
@@ -218,10 +252,18 @@ public class TwitchAlertsAPI {
             j.put("_url", url);
             j.put("_post", post);
             j.put("_http", 0);
+            j.put("_available", available);
             j.put("_exception", "Exception [" + ex.getClass().getName() + "]");
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
-            com.gmt2001.Console.err.logStackTrace(ex);
+
+            if (Quorrabot.enableDebugging)
+            {
+                com.gmt2001.Console.err.printStackTrace(ex);
+            } else
+            {
+                com.gmt2001.Console.err.logStackTrace(ex);
+            }
         }
 
         if (i != null)
@@ -236,11 +278,29 @@ public class TwitchAlertsAPI {
                 j.put("_url", url);
                 j.put("_post", post);
                 j.put("_http", 0);
+                j.put("_available", available);
                 j.put("_exception", "IOException");
                 j.put("_exceptionMessage", ex.getMessage());
                 j.put("_content", "");
-                com.gmt2001.Console.err.logStackTrace(ex);
+
+                if (Quorrabot.enableDebugging)
+                {
+                    com.gmt2001.Console.err.printStackTrace(ex);
+                } else
+                {
+                    com.gmt2001.Console.err.logStackTrace(ex);
+                }
             }
+        }
+
+        if (Quorrabot.enableDebugging)
+        {
+            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData Timers " + (preconnect.getTime() - start.getTime()) + " "
+                    + (postconnect.getTime() - start.getTime()) + " " + (prejson.getTime() - start.getTime()) + " "
+                    + (postjson.getTime() - start.getTime()) + " " + start.toString() + " " + postjson.toString());
+            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData Exception " + j.getString("_exception") + " " + j.getString("_exceptionMessage"));
+            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData HTTP/Available " + j.getInt("_http") + "(" + responsecode + ")/" + j.getInt("_available") + "(" + cl + ")");
+            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData RawContent[0,100] " + j.getString("_content").substring(0, Math.min(100, j.getString("_content").length())));
         }
 
         return j;
@@ -257,24 +317,66 @@ public class TwitchAlertsAPI {
     }
 
     /**
-     * Sets the TwitchAlerts API OAuth header
+     * Sets the TwitchAlerts API Access Token
      *
-     * @param oauth
+     * @param access_token
      */
-    public void SetOAuth(String oauth)
+    public void SetAccessToken(String access_token)
     {
-        this.oauth = oauth.replace("oauth:", "");
-    }
-
-    public boolean HasOAuth()
-    {
-        return !this.oauth.isEmpty();
+        this.access_token = access_token;
     }
     
-    public JSONObject GetChannelDonations(String channel, int limit, int offset, boolean ascending)
+    public String[] GetChannelDonations()
     {
+        
+        JSONObject j = GetData(TwitchAlertsAPI.request_type.GET, base_url + access_token);
+        if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found"))
+        {
+        
+            if (j.getInt("_http") == 200)
+            {
+                try
+                {
+                    if (Quorrabot.enableDebugging)
+                    {
+                        com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetChannelDonations Success");
+                    }
+                    
+                    JSONArray donations = j.getJSONArray("donations");
+                    JSONObject lastdonation = donations.getJSONObject(0);
+                    String amount = lastdonation.getString("amount_label");
+                    
+                    JSONObject donator = lastdonation.getJSONObject("donator");
+                    String donatorname = donator.getString("name");
+                    String donatormessage = donator.getString("message");
 
-        return GetData(request_type.GET, base_url + access_token, false);
+                    return new String[]
+                    {
+                        donatorname, amount, donatormessage
+                    };
+                } catch (Exception e)
+                {
+                    if (Quorrabot.enableDebugging)
+                    {
+                        com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetChannelDonations Exception");
+                    }
+
+                    return new String[]
+                    {
+                        "", "", ""
+                    };
+                }
+            } else {
+                return new String[]
+                {
+                    "", "", ""
+                };
+            } 
+        } else {
+            return new String[]
+            {
+                "", "", ""
+            };
+        }
     }
-
 }

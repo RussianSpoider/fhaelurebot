@@ -156,7 +156,7 @@ $.SendNotice = function () {
     }
 };
 
-$.timer.addTimer("./handlers/noticehandler.js", "Notices", true, function () {
+$.timer.addTimer("./handlers/noticeHandler.js", "Notices", true, function () {
     if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle) {
         if ($.Notice.MessageCount >= $.Notice.NoticeReqMessages) {
             $.SendNotice();
