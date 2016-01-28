@@ -52,9 +52,6 @@ $.enterRaffle = function(user, message) {
         }
         
         if ($.raffleFollowers == 1) {
-            var userFollows = $.inidb.get('followed', user);
-            if (userFollows == null || userFollows == undefined) {
-                // Let's give the user a fair chance, check again.
                 var userFollowsCheck = $.twitch.GetUserFollowsChannel($.username.resolve(user.toLowerCase()), $.channelName);
                 
                 if (userFollowsCheck.getInt("_http") != 200) {
@@ -64,7 +61,6 @@ $.enterRaffle = function(user, message) {
                         return 6;
                     }
                 }
-            }
         }
     
         $.raffleEntrants.push(user);
@@ -310,7 +306,6 @@ $.on('command', function (event) {
                         }
                         
                         $.winnerUsername = $.raffleEntrants[$.randRange(1, $.raffleEntrants.length) - 1];
-                        $.winnerFollows = $.inidb.get('followed', $.winnerUsername.toLowerCase());
                         
                         if ($.raffleFollowers && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows == "1")){
                             $.winnerFollowsCheck = $.twitch.GetUserFollowsChannel($.winnerUsername.toLowerCase(), $.channelName);
@@ -381,7 +376,6 @@ $.on('command', function (event) {
                     }
                     
                     $.winnerUsername = $.raffleEntrants[$.randRange(1, $.raffleEntrants.length) - 1];
-                    $.winnerFollows = $.inidb.get('followed', $.winnerUsername.toLowerCase());
                     
                     if ($.raffleFollowers && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows == "1")){
                         $.winnerFollowsCheck = $.twitch.GetUserFollowsChannel($.winnerUsername.toLowerCase(), $.channelName);

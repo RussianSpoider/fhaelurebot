@@ -428,7 +428,13 @@ $.timer.addTimer("./systems/timeSystem.js", "timesystem", true, function() {
 
         if ($.timeLevel == "true") {
             if(!$.isMod(nick)) {
-                if (parseInt($.getUserGroupId(nick)) > regularsGroupID && $.inidb.get('followed', nick) == 1) {
+                $.followsCheck = $.twitch.GetUserFollowsChannel(nick.toLowerCase(), $.channelName);
+                                    
+                if ($.followsCheck.getInt("_http") == 200) {
+                    $.nickFollows = "1";
+                }
+                
+                if (parseInt($.getUserGroupId(nick)) > regularsGroupID && $.nickFollows == 1) {
                     if(parseInt($.inidb.get('time', nick)) >= parseInt($.timePromoteHours * 60) * 60) {
                         var levelup = parseInt($.getUserGroupId(nick)) - 1;
 

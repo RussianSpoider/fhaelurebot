@@ -93,10 +93,9 @@ if ($.interval == undefined || $.interval == null || isNaN($.interval)) {
     $.interval = 5;
 }
 $.timer.addTimer("./commands/multiCommand.js", "sellouttimer", true, function() {
-    if ($.inidb.get('multicommand', 'timer').equalsIgnoreCase("true")) {
+    $.mctimer = $.inidb.get('multicommand', 'timer');
+    if ($.mctimer!=null && $.mctimer.equalsIgnoreCase("true")) {
         if ($.inidb.get('multicommand', 'lastmulti')) {
-            if (!$.isOnline($.channelName)) {
-            }
             $.say("http://kadgar.net/live/" + $.channelName.toLowerCase() + "/" + $.inidb.get('multicommand', 'lastmulti'));
             return;
         }

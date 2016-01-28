@@ -174,8 +174,11 @@ setTimeout(function () {
 }, 10 * 1000);
 
 var keys = $.inidb.GetKeyList('subscribed', '');
-for (var i = 0; i < keys.length; i++) {
+var kl = 0;
+while(kl < keys.length) {
     if ($.inidb.get('subscribed', keys[i]).equalsIgnoreCase('1')) {
-        Packages.me.gloriouseggroll.quorrabot.cache.SubscribersCache.instance($.channelName).addSubscriber(keys[i]);
+            Packages.me.gloriouseggroll.quorrabot.cache.SubscribersCache.instance($.channelName).addSubscriber(keys[i]);
     }
+    kl++;
 }
+

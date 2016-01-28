@@ -64,7 +64,13 @@ $.on('twitchFollow', function (event) {
     var s = $.FollowHandler.FollowMessage;
     var r = $.FollowHandler.FollowReward;
     var username = $.username.resolve(follower);
-
+    if ($.inidb.GetKeyList('followed', '').length == 0) {
+       $.FollowHandler.AnnounceFollowsAllowed = false;
+       var t = setTimeout(function () {
+         $.FollowHandler.AnnounceFollowsAllowed = true;
+         clearTimeout(t);
+       }, 300 * 1000);
+     }
     if (!$.inidb.exists('followed', follower)) {
         $.inidb.set('followed', follower, 1);
         $.FollowHandler.FollowTrain++;
@@ -225,10 +231,12 @@ $.checkFollowTrain = function () {
 };
 
 var keys = $.inidb.GetKeyList('followed', '');
-for (var i = 0; i < keys.length; i++) {
-    if ($.inidb.get('followed', keys[i]) == 1) {
-        Packages.me.gloriouseggroll.quorrabot.cache.FollowersCache.instance($.channelName).addFollower(keys[i]);
+var kl = 0;
+while(kl < keys.length) {
+    if ($.inidb.get('followed', keys[i]).equalsIgnoreCase('1')) {
+            Packages.me.gloriouseggroll.quorrabot.cache.FollowersCache.instance($.channelName).addFollower(keys[i]);
     }
+    kl++;
 }
 
 setTimeout(function () {

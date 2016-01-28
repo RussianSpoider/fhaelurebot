@@ -12,7 +12,11 @@ $.on('ircChannelMessage', function(event) {
     }
 
     for (i = 0; i < emoteKey.length; i++) {
-        phrase = emoteKey[i].toLowerCase();
+        if(emoteKey[i]!=null) {
+            phrase = emoteKey[i].toLowerCase();
+        } else {
+            return;
+        }
         regex = new RegExp( '\\b' + phrase + '\\b','i' );
 
         if( regex.test( message )){

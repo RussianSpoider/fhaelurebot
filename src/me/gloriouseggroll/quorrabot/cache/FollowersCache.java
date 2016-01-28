@@ -139,7 +139,7 @@ public class FollowersCache implements Runnable
     {
         try
         {
-            Thread.sleep(30 * 1000);
+            Thread.sleep(90 * 1000);
         } catch (InterruptedException e)
         {
             com.gmt2001.Console.out.println("FollowersCache.run>>Failed to initial sleep: [InterruptedException] " + e.getMessage());
