@@ -158,7 +158,7 @@ setTimeout(function(){
                 diffHrs = diffHrs.toString().substring(0, diffHrs.toString().indexOf("."));
                 diffMinutes = diffMinutes.toString().substring(0, diffMinutes.toString().indexOf("."));
                 
-                if (currentdate.getDate()!=donationdate.getDate() && parseInt(diffMinutes) > 30) {
+                if (currentdate.getDate()!=donationdate.getDate() || parseInt(diffMinutes) > 30 || !$.isOnline($.channelName)) {
                     return;
                 }
                 
