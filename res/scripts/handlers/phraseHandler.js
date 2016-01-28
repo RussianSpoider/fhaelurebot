@@ -14,17 +14,16 @@ $.on('ircChannelMessage', function(event) {
     for (i = 0; i < emoteKey.length; i++) {
         if(emoteKey[i]!=null) {
             phrase = emoteKey[i].toLowerCase();
-        } else {
-            return;
-        }
-        regex = new RegExp( '\\b' + phrase + '\\b','i' );
+            regex = new RegExp( '\\b' + phrase + '\\b','i' );
 
-        if( regex.test( message )){
-            var messageKEY = $.inidb.get('phrases', emoteKey[i]);
-            messageKEY = $.replaceAll(messageKEY, "(sender)", username);
-            $.say(messageKEY);
-            return;
+            if( regex.test( message )){
+                var messageKEY = $.inidb.get('phrases', emoteKey[i]);
+                messageKEY = $.replaceAll(messageKEY, "(sender)", username);
+                $.say(messageKEY);
+                return;
+            }
         }
+
     }
 });
 
