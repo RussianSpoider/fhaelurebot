@@ -109,8 +109,11 @@ $.on('command', function (event) {
 //Q: why is there a timeout delay here before a timer? seems redundant no?
 //A: the timeout sets a delay to start the timer, otherwise the timer won't detect if a module is disabled (because it hasnt loaded in yet)
 setTimeout(function(){ 
-    if ($.moduleEnabled("./handlers/donationHandler.js") && $.DonationHandler.DonationToggle == 1) {
+    if ($.moduleEnabled("./handlers/donationHandler.js")) {
         $.timer.addTimer("./handlers/donationHandler.js", "currdonation", true, function() {
+            if($.DonationHandler.DonationToggle != 1 || !$.isOnline($.channelName)) {
+                return;
+            }
             if(!$.readFile($.DonationHandler.CheckerStorePath)) {
                 return;
             }
@@ -158,7 +161,7 @@ setTimeout(function(){
                 diffHrs = diffHrs.toString().substring(0, diffHrs.toString().indexOf("."));
                 diffMinutes = diffMinutes.toString().substring(0, diffMinutes.toString().indexOf("."));
                 
-                if (currentdate.getDate()!=donationdate.getDate() || parseInt(diffMinutes) > 30 || !$.isOnline($.channelName)) {
+                if (currentdate.getDate()!=donationdate.getDate() || parseInt(diffMinutes) > 30) {
                     return;
                 }
                 
