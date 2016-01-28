@@ -385,13 +385,13 @@ $.on('command', function(event) {
     }
 
     if (command.equalsIgnoreCase("botuptime")) {
-        $.say("/me " + $.lang.get("net.quorrabot.botuptime.success", $.username.resolve($.botname), $.getTimeString($.botUptime * 60)));
+        $.say($.lang.get("net.quorrabot.botuptime.success", $.username.resolve($.botname), $.getTimeString($.botUptime * 60)));
         return;
     }
     
     if (command.equalsIgnoreCase("uptime")) {
         if ($.isOnline($.channelName)) {
-            $.say("/me " + $.lang.get("net.quorrabot.uptime.success-online", $.username.resolve($.channelName), $.getUptime($.channelName)));
+            $.say($.lang.get("net.quorrabot.uptime.success-online", $.username.resolve($.channelName), $.getUptime($.channelName)));
             return;
         } else {
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.uptime.success-offline", $.username.resolve($.channelName)));
