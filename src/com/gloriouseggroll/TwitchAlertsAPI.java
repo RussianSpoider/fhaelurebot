@@ -336,14 +336,14 @@ public class TwitchAlertsAPI {
                     JSONObject lastdonation = donations.getJSONObject(0);
                     String amount = lastdonation.getString("amount_label");
                     String donatormessage = lastdonation.getString("message");
+                    String createdat = lastdonation.getString("created_at");
                     
                     JSONObject donator = lastdonation.getJSONObject("donator");
-                    //com.gmt2001.Console.out.println(donator);
                     String donatorname = donator.getString("name");
-
+                    
                     return new String[]
                     {
-                        donatorname, amount, donatormessage
+                        donatorname, amount, donatormessage, createdat
                     };
                     
                 } catch (Exception e)
@@ -355,19 +355,19 @@ public class TwitchAlertsAPI {
 
                     return new String[]
                     {
-                        "", "", ""
+                        "", "", "", ""
                     };
                 }
             } else {
                 return new String[]
                 {
-                    "", "", ""
+                    "", "", "", ""
                 };
             } 
         } else {
             return new String[]
             {
-                "", "", ""
+                "", "", "", ""
             };
         }
     }

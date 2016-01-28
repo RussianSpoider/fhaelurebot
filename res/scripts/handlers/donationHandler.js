@@ -119,13 +119,52 @@ setTimeout(function(){
 
             if($.DonationHandler.DonationType=="twitchalerts") {
                 $.tadata = $.twitchalerts.GetChannelDonations();
+                
+                if($.tadata[0]=="" | $.tadata[1]=="" | $.tadata[3]=="") {
+                    return;
+                }
+                
                 $.tadonator = $.tadata[0];
                 $.taamount = $.tadata[1];
                 $.tamsg = $.tadata[2];
+                $.tacreated = $.tadata[3];
+                
+                //initiate date formatter
+                var df = new java.text.SimpleDateFormat( "yyyy-MM-dd'T'hh:mm:ssz" );
+
+                //parse created_at from TwitchAlerts, which is received in GMT
+                if ($.tacreated.endsWith( "Z" )) {
+                    $.tacreated = $.tacreated.substring( 0, $.tacreated.length() - 1) + "GMT-00:00";
+                    //$.say(createdAt);
+                } else {
+                    var inset = 6;
+                    var s0 = $.tacreated.substring( 0, $.tacreated.length() - inset );
+                    var s1 = $.tacreated.substring( $.tacreated.length() - inset, $.tacreated.length() );
+                    $.tacreated = s0 + "GMT" + s1;     
+                }
+
+                var datefmt = new java.text.SimpleDateFormat("EEEE MMMM d, yyyy @ h:mm a z");
+                var gtf = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                datefmt.setTimeZone(java.util.TimeZone.getTimeZone($.timezone));
+                var cal = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone($.timezone));
+                var now = cal.getTime();
+                var donationdate = new java.util.Date(gtf.format(df.parse( $.tacreated )));
+                var currentdate = new java.util.Date(gtf.format(now));
+
+                var diff = (currentdate.getTime() - donationdate.getTime())
+                var diffHrs = diff / (60 * 60 * 1000) % 24;
+                var diffMinutes = diff / (60 * 1000) % 60;
+
+                diffHrs = diffHrs.toString().substring(0, diffHrs.toString().indexOf("."));
+                diffMinutes = diffMinutes.toString().substring(0, diffMinutes.toString().indexOf("."));
+                
+                if (currentdate.getDate()!=donationdate.getDate() && parseInt(diffMinutes) > 30) {
+                    return;
+                }
+                
                 var taDonation = $.tadata[0] + ": " + $.tadata[1];
                 if ($.currDonation.toString() != taDonation) {
                     $.writeToFile(taDonation, $.DonationHandler.CheckerStorePath, false);
-                    //$.inidb.set("settings", "lastdonation", taDonation);
                 }
             }
             
@@ -138,7 +177,11 @@ setTimeout(function(){
                             if($.DonationHandler.DonationTASayMsg==0) {
                                 $.say($.lang.get("net.quorrabot.donationhandler.new-donation", $.tadonator, $.taamount));
                             } else {
-                                $.say($.lang.get("net.quorrabot.donationhandler.new-donation-with-message", $.tadonator, $.taamount, $.tamsg));
+                                if($.tadata[1]!="") {
+                                    $.say($.lang.get("net.quorrabot.donationhandler.new-donation-with-message", $.tadonator, $.taamount, $.tamsg));
+                                } else {
+                                    $.say($.lang.get("net.quorrabot.donationhandler.new-donation", $.tadonator, $.taamount));
+                                }
                             }
                         } else {
                             $.say($.lang.get("net.quorrabot.donationhandler.new-donation-text", $.readFile($.DonationHandler.CheckerStorePath)));
