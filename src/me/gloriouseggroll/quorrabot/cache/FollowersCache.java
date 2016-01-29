@@ -104,7 +104,7 @@ public class FollowersCache implements Runnable
                     if (cache == null || !cache.containsKey(key))
                     {
                         cache.put(key, newCache.get(key));
-                        EventBus.instance().post(new TwitchFollowEvent(key, Quorrabot.instance().getChannel("#" + this.channel)));
+                        EventBus.instance().postAsync(new TwitchFollowEvent(key, Quorrabot.instance().getChannel("#" + this.channel)));
                     }
                 }
 
@@ -183,7 +183,7 @@ public class FollowersCache implements Runnable
             com.gmt2001.Console.err.printStackTrace(e);
         }
 
-        EventBus.instance().post(new TwitchFollowsInitializedEvent(Quorrabot.instance().getChannel("#" + this.channel)));
+        EventBus.instance().postAsync(new TwitchFollowsInitializedEvent(Quorrabot.instance().getChannel("#" + this.channel)));
 
         while (!killed)
         {
@@ -388,18 +388,18 @@ public class FollowersCache implements Runnable
 
         for (String follower : followers)
         {
-            EventBus.instance().post(new TwitchFollowEvent(follower, Quorrabot.instance().getChannel("#" + this.channel)));
+            EventBus.instance().postAsync(new TwitchFollowEvent(follower, Quorrabot.instance().getChannel("#" + this.channel)));
         }
 
         for (String follower : unfollowers)
         {
-            EventBus.instance().post(new TwitchUnfollowEvent(follower, Quorrabot.instance().getChannel("#" + this.channel)));
+            EventBus.instance().postAsync(new TwitchUnfollowEvent(follower, Quorrabot.instance().getChannel("#" + this.channel)));
         }
 
         if (firstUpdate)
         {
             firstUpdate = false;
-            EventBus.instance().post(new TwitchFollowsInitializedEvent(Quorrabot.instance().getChannel("#" + this.channel)));
+            EventBus.instance().postAsync(new TwitchFollowsInitializedEvent(Quorrabot.instance().getChannel("#" + this.channel)));
         }
     }
 

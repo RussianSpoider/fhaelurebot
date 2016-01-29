@@ -33,6 +33,7 @@ public class ConsoleInputListener extends Thread
             try
             {
                 String msg = com.gmt2001.Console.in.readLine();
+                //don't change this to postAsync or console input will be delayed
                 EventBus.instance().post(new ConsoleInputEvent(msg));
                 Thread.sleep(10);
             } catch (Exception e)

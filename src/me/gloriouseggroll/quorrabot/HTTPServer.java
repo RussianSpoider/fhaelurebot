@@ -289,7 +289,7 @@ public class HTTPServer extends Thread
                                         String user = URLDecoder.decode(args.get("user"), "UTF-8");
                                         String message = URLDecoder.decode(args.get("message"), "UTF-8");
 
-                                        EventBus.instance().post(new IrcChannelMessageEvent(Quorrabot.instance().getSession(), user, message, Quorrabot.instance().getChannel()));
+                                        EventBus.instance().postAsync(new IrcChannelMessageEvent(Quorrabot.instance().getSession(), user, message, Quorrabot.instance().getChannel()));
 
                                         out.print("HTTP/1.0 200 OK\n"
                                                 + "ContentType: " + "text/text" + "\n"

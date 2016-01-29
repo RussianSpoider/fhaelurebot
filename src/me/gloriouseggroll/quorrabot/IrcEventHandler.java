@@ -138,6 +138,7 @@ public class IrcEventHandler implements IRCEventListener
                 String cusername = cmessageEvent.getNick();
                 String cmessage = cmessageEvent.getMessage();
 
+                //dont change this to postAsync or channel messages will be delayed in bot console
                 eventBus.post(new IrcChannelMessageEvent(session, cusername, cmessage, cchannel, cmessageTags));
                 break;
             case CTCP_EVENT:
