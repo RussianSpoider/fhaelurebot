@@ -313,18 +313,21 @@ public class SubscribersCache implements Runnable
 
         for (String subscriber : subscribers)
         {
-            EventBus.instance().postAsync(new TwitchSubscribeEvent(subscriber, Quorrabot.instance().getChannel("#" + this.channel)));
+            //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
+            EventBus.instance().post(new TwitchSubscribeEvent(subscriber, Quorrabot.instance().getChannel("#" + this.channel)));
         }
 
         for (String subscriber : unsubscribers)
         {
-            EventBus.instance().postAsync(new TwitchUnsubscribeEvent(subscriber, Quorrabot.instance().getChannel("#" + this.channel)));
+            //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
+            EventBus.instance().post(new TwitchUnsubscribeEvent(subscriber, Quorrabot.instance().getChannel("#" + this.channel)));
         }
 
         if (firstUpdate)
         {
             firstUpdate = false;
-            EventBus.instance().postAsync(new TwitchSubscribesInitializedEvent(Quorrabot.instance().getChannel("#" + this.channel)));
+            //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
+            EventBus.instance().post(new TwitchSubscribesInitializedEvent(Quorrabot.instance().getChannel("#" + this.channel)));
         }
     }
 
