@@ -18,7 +18,12 @@ package me.gloriouseggroll.quorrabot.event;
 
 import com.google.common.collect.Sets;
 import java.util.Set;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ArrayBlockingQueue;
+//import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import me.gloriouseggroll.quorrabot.Quorrabot;
 
 public class EventBus
@@ -30,7 +35,17 @@ public class EventBus
     {
         return instance;
     }
-    private final com.google.common.eventbus.AsyncEventBus aeventBus = new com.google.common.eventbus.AsyncEventBus(Executors.newFixedThreadPool(8), new ExceptionHandler());
+    
+        public static ExecutorService newFixedThreadPoolWithQueueSize(int nThreads, int queueSize) {
+           return new ThreadPoolExecutor(nThreads, nThreads,
+                                         5000L, TimeUnit.MILLISECONDS,
+                                         new ArrayBlockingQueue<Runnable>(queueSize, true), new ThreadPoolExecutor.CallerRunsPolicy());
+    }
+    
+    
+    private final com.google.common.eventbus.AsyncEventBus aeventBus = new com.google.common.eventbus.AsyncEventBus(newFixedThreadPoolWithQueueSize(5,20), new ExceptionHandler());
+    
+    //private final com.google.common.eventbus.AsyncEventBus aeventBus = new com.google.common.eventbus.AsyncEventBus(Executors.newFixedThreadPool(8), new ExceptionHandler());
     private final com.google.common.eventbus.EventBus eventBus = new com.google.common.eventbus.EventBus(new ExceptionHandler());
     private final Set<Listener> listeners = Sets.newHashSet();
 
