@@ -43,7 +43,8 @@ public class EventBus
     }
     
     
-    private final com.google.common.eventbus.AsyncEventBus aeventBus = new com.google.common.eventbus.AsyncEventBus(newFixedThreadPoolWithQueueSize(5,20), new ExceptionHandler());
+    //private final com.google.common.eventbus.AsyncEventBus aeventBus = new com.google.common.eventbus.AsyncEventBus(newFixedThreadPoolWithQueueSize(1,3), new ExceptionHandler());
+    private final com.google.common.eventbus.EventBus aeventBus = new com.google.common.eventbus.EventBus(new ExceptionHandler());
     
     //private final com.google.common.eventbus.AsyncEventBus aeventBus = new com.google.common.eventbus.AsyncEventBus(Executors.newFixedThreadPool(8), new ExceptionHandler());
     private final com.google.common.eventbus.EventBus eventBus = new com.google.common.eventbus.EventBus(new ExceptionHandler());

@@ -5,7 +5,7 @@ $.on('command', function(event) {
     var i = event.getArguments().trim();
 
     if (command.equalsIgnoreCase("multi")) {
-    	if (args.length >=0 && !$.isModv3(sender, event.getTags())) {
+    	if (args.length > 0 && !$.isModv3(sender, event.getTags())) {
                 $.say($.getWhisperString(sender) + $.adminmsg);
     		    return;
         }
