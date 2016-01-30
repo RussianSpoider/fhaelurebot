@@ -36,11 +36,11 @@ public class EventBus
         return instance;
     }
     
-        public static ExecutorService newFixedThreadPoolWithQueueSize(int nThreads, int queueSize) {
+    /*public static ExecutorService newFixedThreadPoolWithQueueSize(int nThreads, int queueSize) {
            return new ThreadPoolExecutor(nThreads, nThreads,
                                          5000L, TimeUnit.MILLISECONDS,
                                          new ArrayBlockingQueue<Runnable>(queueSize, true), new ThreadPoolExecutor.CallerRunsPolicy());
-    }
+    }*/
     
     
     //private final com.google.common.eventbus.AsyncEventBus aeventBus = new com.google.common.eventbus.AsyncEventBus(newFixedThreadPoolWithQueueSize(1,3), new ExceptionHandler());
