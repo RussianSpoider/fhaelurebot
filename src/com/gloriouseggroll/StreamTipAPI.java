@@ -35,11 +35,12 @@ import me.gloriouseggroll.quorrabot.Quorrabot;
  *
  * @author GloriousEggroll
  */
-public class TwitchAlertsAPI {
-    private static final TwitchAlertsAPI instance = new TwitchAlertsAPI();
-    private static String clientid = "4S5Ml50i5g9lUvvpV85qUmXRF0KyvgkiS6F3g6st";
-    private static String access_token = "";
-    private static final String base_url = "https://www.twitchalerts.com/api/donations?access_token=" + access_token;
+public class StreamTipAPI {
+    private static final StreamTipAPI instance = new StreamTipAPI();
+    private static String clientid = "55a42cd0169b2ddb62ba0eff";
+    private static String access_token = "YzM3Y2UzMzM4OWI0ZDk1Y2E2MjAxNTI4";
+    private static final String base_url = "https://streamtip.com/api/tips?client_id=" + clientid + "&access_token=" + access_token;
+
 
     
     private enum request_type
@@ -48,12 +49,12 @@ public class TwitchAlertsAPI {
         GET, POST, PUT, DELETE
     };
         
-    public static TwitchAlertsAPI instance()
+    public static StreamTipAPI instance()
     {
         return instance;
     }
     
-    private TwitchAlertsAPI()
+    private StreamTipAPI()
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
@@ -283,19 +284,19 @@ public class TwitchAlertsAPI {
 
         if (Quorrabot.enableDebugging)
         {
-            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData Timers " + (preconnect.getTime() - start.getTime()) + " "
+            com.gmt2001.Console.out.println(">>>[DEBUG] StreamTipAPI.GetData Timers " + (preconnect.getTime() - start.getTime()) + " "
                     + (postconnect.getTime() - start.getTime()) + " " + (prejson.getTime() - start.getTime()) + " "
                     + (postjson.getTime() - start.getTime()) + " " + start.toString() + " " + postjson.toString());
-            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData Exception " + j.getString("_exception") + " " + j.getString("_exceptionMessage"));
-            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData HTTP/Available " + j.getInt("_http") + "(" + responsecode + ")/" + j.getInt("_available") + "(" + cl + ")");
-            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData RawContent[0,100] " + j.getString("_content").substring(0, Math.min(100, j.getString("_content").length())));
+            com.gmt2001.Console.out.println(">>>[DEBUG] StreamTipAPI.GetData Exception " + j.getString("_exception") + " " + j.getString("_exceptionMessage"));
+            com.gmt2001.Console.out.println(">>>[DEBUG] StreamTipAPI.GetData HTTP/Available " + j.getInt("_http") + "(" + responsecode + ")/" + j.getInt("_available") + "(" + cl + ")");
+            com.gmt2001.Console.out.println(">>>[DEBUG] StreamTipAPI.GetData RawContent[0,100] " + j.getString("_content").substring(0, Math.min(100, j.getString("_content").length())));
         }
 
         return j;
     }
 
     /**
-     * Sets the TwitchAlerts API Client-ID header
+     * Sets the StreamTip API Client-ID header
      *
      * @param clientid
      */
@@ -305,7 +306,7 @@ public class TwitchAlertsAPI {
     }
 
     /**
-     * Sets the TwitchAlerts API Access Token
+     * Sets the StreamTip API Access Token
      *
      * @param access_token
      */
@@ -317,7 +318,7 @@ public class TwitchAlertsAPI {
     public String[] GetChannelDonations()
     {
         
-        JSONObject j = GetData(TwitchAlertsAPI.request_type.GET, base_url);
+        JSONObject j = GetData(StreamTipAPI.request_type.GET, base_url);
         if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found"))
         {
         
@@ -327,19 +328,19 @@ public class TwitchAlertsAPI {
                 {
                     if (Quorrabot.enableDebugging)
                     {
-                        com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetChannelDonations Success");
+                        com.gmt2001.Console.out.println(">>>[DEBUG] StreamTipAPI.GetChannelDonations Success");
                     }
                     
-                    JSONArray donations = j.getJSONArray("donations");
+                    JSONArray donations = j.getJSONArray("tips");
                     //com.gmt2001.Console.out.println(donations.toString());
                     
                     JSONObject lastdonation = donations.getJSONObject(0);
-                    String amount = lastdonation.getString("amount_label");
-                    String donatormessage = lastdonation.getString("message");
-                    String createdat = lastdonation.getString("created_at");
+                    String amount = lastdonation.getString("amount");
+                    String donatormessage = lastdonation.getString("note");
+                    String createdat = lastdonation.getString("date");
                     
-                    JSONObject donator = lastdonation.getJSONObject("donator");
-                    String donatorname = donator.getString("name");
+                    JSONObject donator = lastdonation.getJSONObject("user");
+                    String donatorname = donator.getString("displayName");
                     
                     return new String[]
                     {
@@ -350,7 +351,7 @@ public class TwitchAlertsAPI {
                 {
                     if (Quorrabot.enableDebugging)
                     {
-                        com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetChannelDonations Exception");
+                        com.gmt2001.Console.out.println(">>>[DEBUG] StreamTipAPI.GetChannelDonations Exception");
                     }
 
                     return new String[]

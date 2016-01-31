@@ -487,13 +487,13 @@ $.lang.data["net.quorrabot.donationhandler.donationalert-type"] = "Current donat
 $.lang.data["net.quorrabot.donationhandler.donationalert-set-type"] = "Current donation alert type has been set to: $1";
 $.lang.data["net.quorrabot.donationhandler.donation-toggle-on"] = "Donation alerts have been enabled.";
 $.lang.data["net.quorrabot.donationhandler.donation-toggle-off"] = "Donation alerts have been disabled.";
-$.lang.data["net.quorrabot.donationhandler.donation-saymsg-off"] = "TwitchAlerts donation messages will no longer be shown.";
-$.lang.data["net.quorrabot.donationhandler.donation-saymsg-on"] = "TwitchAlerts donation messages will now be shown in chat.";
+$.lang.data["net.quorrabot.donationhandler.donation-saymsg-off"] = "Donation messages will no longer be shown.";
+$.lang.data["net.quorrabot.donationhandler.donation-saymsg-on"] = "Donation messages will now be shown in chat.";
 $.lang.data["net.quorrabot.donationhandler.new-donation"] = "/me $1 has donated $2!";
 $.lang.data["net.quorrabot.donationhandler.new-donation-with-message"] = "/me $1 has donated $2! Message: $3";
 $.lang.data["net.quorrabot.donationhandler.new-donation-text"] = "/me has received a donation from $1!";
 
-$.lang.data["net.quorrabot.donationhandler.donationalert-usage"] = "!donationalert filepath | filepath (/path/to/file.txt) | toggle | type (twitchalerts|text)";
+$.lang.data["net.quorrabot.donationhandler.donationalert-usage"] = "!donationalert filepath | filepath (/path/to/file.txt) | toggle | type (twitchalerts|streamtip|text)";
 
 //subscribeHandler.js
 $.lang.data["net.quorrabot.subscribeHandler.sub-toggle-off"] = "Subscribers will no longer be thanked upon subscribing.";
