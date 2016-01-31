@@ -744,6 +744,16 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 19) {
     println("End version 19 upgrades...");
 }
 
+if ($.inidb.GetInteger("init", "upgrade", "version") < 20) {
+    println("   Starting version 20 upgrades...");
+    
+    println("     Creating tip alert command default aliases");
+    
+    $.inidb.set("aliases", "donationalert", "tipalert");
+    
+    println("   End version 20 upgrades...");
+}
+
 
 println("   Saving...");
 

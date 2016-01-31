@@ -481,17 +481,17 @@ $.lang.data["net.quorrabot.hosthandler.host-message-usage"] = "To change it use 
 $.lang.data["net.quorrabot.hosthandler.host-message-set-success"] = "New host message set!";
 
 //donationHandler.js 
-$.lang.data["net.quorrabot.donationhandler.current-file-path"] = "Current donation alert file path is: $1";
-$.lang.data["net.quorrabot.donationhandler.new-file-path-set"] = "File path for donation alert has been set!";
-$.lang.data["net.quorrabot.donationhandler.donationalert-type"] = "Current donation alert type is: $1";
-$.lang.data["net.quorrabot.donationhandler.donationalert-set-type"] = "Current donation alert type has been set to: $1";
-$.lang.data["net.quorrabot.donationhandler.donation-toggle-on"] = "Donation alerts have been enabled.";
-$.lang.data["net.quorrabot.donationhandler.donation-toggle-off"] = "Donation alerts have been disabled.";
-$.lang.data["net.quorrabot.donationhandler.donation-saymsg-off"] = "Donation messages will no longer be shown.";
-$.lang.data["net.quorrabot.donationhandler.donation-saymsg-on"] = "Donation messages will now be shown in chat.";
-$.lang.data["net.quorrabot.donationhandler.new-donation"] = "/me $1 has donated $2!";
-$.lang.data["net.quorrabot.donationhandler.new-donation-with-message"] = "/me $1 has donated $2! Message: $3";
-$.lang.data["net.quorrabot.donationhandler.new-donation-text"] = "/me has received a donation from $1!";
+$.lang.data["net.quorrabot.donationhandler.current-file-path"] = "Current tip alert file path is: $1";
+$.lang.data["net.quorrabot.donationhandler.new-file-path-set"] = "File path for tip alert has been set!";
+$.lang.data["net.quorrabot.donationhandler.donationalert-type"] = "Current tip alert type is: $1";
+$.lang.data["net.quorrabot.donationhandler.donationalert-set-type"] = "Current tip alert type has been set to: $1";
+$.lang.data["net.quorrabot.donationhandler.donation-toggle-on"] = "Tip alerts have been enabled.";
+$.lang.data["net.quorrabot.donationhandler.donation-toggle-off"] = "Tip alerts have been disabled.";
+$.lang.data["net.quorrabot.donationhandler.donation-saymsg-off"] = "Tip messages will no longer be shown.";
+$.lang.data["net.quorrabot.donationhandler.donation-saymsg-on"] = "Tip messages will now be shown in chat.";
+$.lang.data["net.quorrabot.donationhandler.new-donation"] = "/me $1 has tipped $2!";
+$.lang.data["net.quorrabot.donationhandler.new-donation-with-message"] = "/me $1 has tipped $2! Message: $3";
+$.lang.data["net.quorrabot.donationhandler.new-donation-text"] = "/me has received a tip: $1!";
 
 $.lang.data["net.quorrabot.donationhandler.donationalert-usage"] = "!donationalert filepath | filepath (/path/to/file.txt) | toggle | type (twitchalerts|streamtip|text)";
 
