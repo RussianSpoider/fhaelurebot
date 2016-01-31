@@ -87,6 +87,7 @@ public class Quorrabot implements Listener
     private String youtubekey;
     private String twitchalertstoken;
     private String streamtiptoken;
+    private String streamtipid;
     private boolean webenable;
     private boolean musicenable;
 	private boolean usehttps;
@@ -127,7 +128,7 @@ public class Quorrabot implements Listener
     }
 
     public Quorrabot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
-            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String twitchalertstoken, String streamtiptoken, boolean webenable,
+            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String twitchalertstoken, String streamtiptoken, String streamtipid, boolean webenable,
             boolean musicenable, boolean usehttps, String keystorepath, String keystorepassword, String keypassword)
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
@@ -162,6 +163,11 @@ public class Quorrabot implements Listener
         if (!streamtiptoken.isEmpty())
         {
             StreamTipAPI.instance().SetAccessToken(streamtiptoken);
+        }
+        this.streamtipid = streamtipid;
+        if (!streamtipid.isEmpty())
+        {
+            StreamTipAPI.instance().SetClientID(streamtipid);
         }
         this.webenable = webenable;
         this.musicenable = musicenable;
@@ -684,8 +690,14 @@ public class Quorrabot implements Listener
             changed = true;
         }
         
-        if (message.equals("streamtiptoken"))
+        if (message.equals("streamtip"))
         {
+            com.gmt2001.Console.out.print("Please enter a new StreamTip Client ID: ");
+            String newstreamtipid = System.console().readLine().trim();
+
+            StreamTipAPI.instance().SetClientID(newstreamtipid);
+            streamtipid = newstreamtipid;
+            
             com.gmt2001.Console.out.print("Please enter a new StreamTip Access Token: ");
             String newstreamtiptoken = System.console().readLine().trim();
 
@@ -750,6 +762,7 @@ public class Quorrabot implements Listener
                 data += "youtubekey=" + youtubekey + "\r\n";
                 data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
                 data += "streamtiptoken=" + streamtiptoken + "\r\n";
+                data += "streamtipid=" + streamtiptoken + "\r\n";
                 data += "webenable=" + webenable + "\r\n";
                 data += "musicenable=" + musicenable + "\r\n";
                 data += "usehttps=" + usehttps + "\r\n";
@@ -971,7 +984,8 @@ public class Quorrabot implements Listener
         String datastoreconfig = "";
         String youtubekey = "";
         String twitchalertstoken = "";
-        String streamtiptoken = "";        
+        String streamtiptoken = "";
+        String streamtipid = "";
         boolean webenable = true;
         boolean musicenable = true;
         boolean usehttps = false;
@@ -1047,6 +1061,10 @@ public class Quorrabot implements Listener
                     if (line.startsWith("streamtiptoken=") && line.length() > 16)
                     {
                         streamtiptoken = line.substring(15);
+                    }
+                    if (line.startsWith("streamtipid=") && line.length() > 13)
+                    {
+                        streamtipid = line.substring(12);
                     }
                     if (line.startsWith("webenable=") && line.length() > 11)
                     {
@@ -1130,6 +1148,7 @@ public class Quorrabot implements Listener
                     com.gmt2001.Console.out.println("youtubekey='" + youtubekey + "'");
                     com.gmt2001.Console.out.println("twitchalertstoken='" + twitchalertstoken + "'");
                     com.gmt2001.Console.out.println("streamtiptoken='" + streamtiptoken + "'");
+                    com.gmt2001.Console.out.println("streamtipid='" + streamtipid + "'");
                     com.gmt2001.Console.out.println("webenable=" + webenable);
                     com.gmt2001.Console.out.println("musicenable=" + musicenable);
                     com.gmt2001.Console.out.println("usehttps=" + usehttps);
@@ -1265,6 +1284,14 @@ public class Quorrabot implements Listener
                         changed = true;
                     }
                 }
+                if (arg.toLowerCase().startsWith("streamtipid=") && arg.length() > 13)
+                {
+                    if (!streamtipid.equals(arg.substring(12)))
+                    {
+                        streamtipid = arg.substring(12);
+                        changed = true;
+                    }
+                }
                 if (arg.toLowerCase().startsWith("webenable=") && arg.length() > 11)
                 {
                     if (webenable != Boolean.valueOf(arg.substring(10)))
@@ -1323,7 +1350,8 @@ public class Quorrabot implements Listener
                             + "[datastoreconfig=<Optional DataStore config option, different for each DataStore type>] "
                             + "[youtubekey=<youtube api key>] [webenable=<true | false>] [musicenable=<true | false>] "
                             + "[twitchalertstoken=<TwitchAlerts access token>] "
-                            + "[streamtiptoken=<StreamTip access token>]");
+                            + "[streamtiptoken=<StreamTip access token>] "
+                            + "[streamtipid=<StreamTip Client ID>]");
 
                     return;
                 }
@@ -1354,6 +1382,7 @@ public class Quorrabot implements Listener
             data += "youtubekey=" + youtubekey + "\r\n";
             data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
             data += "streamtiptoken=" + streamtiptoken + "\r\n";
+            data += "streamtipid=" + streamtipid + "\r\n";
             data += "webenable=" + webenable + "\r\n";
             data += "musicenable=" + musicenable + "\r\n";
             data += "usehttps=" + usehttps + "\r\n";
@@ -1365,6 +1394,6 @@ public class Quorrabot implements Listener
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
 
-        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, twitchalertstoken, streamtiptoken, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword);
+        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, twitchalertstoken, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword);
     }
 }

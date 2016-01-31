@@ -37,7 +37,7 @@ import me.gloriouseggroll.quorrabot.Quorrabot;
  */
 public class StreamTipAPI {
     private static final StreamTipAPI instance = new StreamTipAPI();
-    private static String clientid = "55a42cd0169b2ddb62ba0eff";
+    private static String clientid = "";
     private static String access_token = "";
     private static final String base_url = "https://streamtip.com/api/tips?client_id=" + clientid + "&access_token=" + access_token;
 
