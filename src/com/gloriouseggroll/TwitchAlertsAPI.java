@@ -335,7 +335,14 @@ public class TwitchAlertsAPI {
                     
                     JSONObject lastdonation = donations.getJSONObject(0);
                     String amount = lastdonation.getString("amount_label");
-                    String donatormessage = lastdonation.getString("message");
+                    String donatormessage = "";
+                    
+                    String ld = lastdonation.toString();
+                    if( !ld.substring(ld.indexOf("message"),ld.indexOf("message")+14).contains("null") ) {
+                        donatormessage = lastdonation.getString("message");
+                    }
+
+                    
                     String createdat = lastdonation.getString("created_at");
                     
                     JSONObject donator = lastdonation.getJSONObject("donator");

@@ -703,9 +703,20 @@ public class Quorrabot implements Listener
 
             StreamTipAPI.instance().SetAccessToken(newstreamtiptoken);
             streamtiptoken = newstreamtiptoken;
-
+            
             changed = true;
         }
+        
+        /*if (message.equals("streamtiptoken"))
+        {
+            com.gmt2001.Console.out.print("Please enter a new StreamTip Access Token: ");
+            String newstreamtiptoken = System.console().readLine().trim();
+
+            StreamTipAPI.instance().SetAccessToken(newstreamtiptoken);
+            streamtiptoken = newstreamtiptoken;
+            
+            changed = true;
+        }*/
 
         if (message.equals("webenable"))
         {
@@ -762,7 +773,7 @@ public class Quorrabot implements Listener
                 data += "youtubekey=" + youtubekey + "\r\n";
                 data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
                 data += "streamtiptoken=" + streamtiptoken + "\r\n";
-                data += "streamtipid=" + streamtiptoken + "\r\n";
+                data += "streamtipid=" + streamtipid + "\r\n";
                 data += "webenable=" + webenable + "\r\n";
                 data += "musicenable=" + musicenable + "\r\n";
                 data += "usehttps=" + usehttps + "\r\n";

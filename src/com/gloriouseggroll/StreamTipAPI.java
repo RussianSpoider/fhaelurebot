@@ -39,7 +39,7 @@ public class StreamTipAPI {
     private static final StreamTipAPI instance = new StreamTipAPI();
     private static String clientid = "";
     private static String access_token = "";
-    private static final String base_url = "https://streamtip.com/api/tips?client_id=" + clientid + "&access_token=" + access_token;
+    private static final String base_url = "https://streamtip.com/api/tips?client_id=";
 
 
     
@@ -318,7 +318,7 @@ public class StreamTipAPI {
     public String[] GetChannelDonations()
     {
         
-        JSONObject j = GetData(StreamTipAPI.request_type.GET, base_url);
+        JSONObject j = GetData(StreamTipAPI.request_type.GET, base_url + clientid + "&access_token=" + access_token);
         if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found"))
         {
         
@@ -335,16 +335,26 @@ public class StreamTipAPI {
                     //com.gmt2001.Console.out.println(donations.toString());
                     
                     JSONObject lastdonation = donations.getJSONObject(0);
-                    String amount = lastdonation.getString("amount");
-                    String donatormessage = lastdonation.getString("note");
-                    String createdat = lastdonation.getString("date");
+                    //com.gmt2001.Console.out.println(lastdonation.toString());
                     
-                    JSONObject donator = lastdonation.getJSONObject("user");
-                    String donatorname = donator.getString("displayName");
+                    String amount = lastdonation.getString("amount");
+                    String cs = lastdonation.getString("currencySymbol");
+                    
+                    String donatormessage = "";
+                    
+                    String ld = lastdonation.toString();
+                    if( !ld.substring(ld.indexOf("note"),ld.indexOf("note")+11).contains("null") ) {
+                        donatormessage = lastdonation.getString("note");
+                    }
+
+                    String createdat = lastdonation.getString("date");
+                    createdat = createdat.substring(0, createdat.indexOf(".")) + "Z";
+
+                    String donatorname = lastdonation.getString("username");
                     
                     return new String[]
                     {
-                        donatorname, amount, donatormessage, createdat
+                        donatorname,  cs + amount, donatormessage, createdat
                     };
                     
                 } catch (Exception e)
@@ -353,7 +363,7 @@ public class StreamTipAPI {
                     {
                         com.gmt2001.Console.out.println(">>>[DEBUG] StreamTipAPI.GetChannelDonations Exception");
                     }
-
+                    com.gmt2001.Console.out.println(e.toString());
                     return new String[]
                     {
                         "", "", "", ""
