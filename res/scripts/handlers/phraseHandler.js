@@ -2,29 +2,29 @@ $.on('ircChannelMessage', function(event) {
     var message = new String(event.getMessage().toLowerCase().trim());
     var sender = event.getSender();
     var username = $.username.resolve(sender, event.getTags());
-    var phrase = "";
-    var regex = "";
 
-    message = message.replace(/[^a-zA-Z0-9\s]+/g,'');
+    message = message.replace(/[^a-zA-Z0-9_\s]+/g,'');
     var emoteKey = $.inidb.GetKeyList("phrases", "");
     if (emoteKey == null || emoteKey[0] == "" || emoteKey[0] == null) {
         return;
     }
 
     for (i = 0; i < emoteKey.length; i++) {
-        if(emoteKey[i]!=null) {
-            phrase = emoteKey[i].toLowerCase();
-            regex = new RegExp( '\\b' + phrase + '\\b','i' );
+        if (message.indexOf(emoteKey[i].toLowerCase()) != -1) {
+            var msgcheck1 = message.substring(message.indexOf(emoteKey[i].toLowerCase()) - 1,message.indexOf(emoteKey[i].toLowerCase()));
+            var msgcheck2 = message.substring(message.indexOf(emoteKey[i].toLowerCase()) + emoteKey[i].toLowerCase().length(), emoteKey[i].toLowerCase().length() + 1);
+            if(msgcheck1==" " || msgcheck2==" " || message.equalsIgnoreCase(emoteKey[i].toLowerCase())) {
 
-            if( regex.test( message )){
                 var messageKEY = $.inidb.get('phrases', emoteKey[i]);
+            
                 messageKEY = $.replaceAll(messageKEY, "(sender)", username);
+			
                 $.say(messageKEY);
                 return;
             }
-        }
 
-    }
+        }
+    }    
 });
 
 $.on('command', function (event) {
@@ -49,7 +49,7 @@ $.on('command', function (event) {
 
         triggerphrase = args[0].toLowerCase();
         triggerphrase = new String(triggerphrase);
-        triggerphrase = triggerphrase.replace(/[^a-zA-Z0-9\s]+/g,'');
+        triggerphrase = triggerphrase.replace(/[^a-zA-Z0-9_\s]+/g,'');
         
         response = args[1];
          

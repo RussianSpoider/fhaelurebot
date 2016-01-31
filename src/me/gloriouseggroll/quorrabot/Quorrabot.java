@@ -679,7 +679,7 @@ public class Quorrabot implements Listener
             changed = true;
         }
         
-        if (message.equals("twitchalertstoken"))
+        if (message.equals("twitchalerts"))
         {
             com.gmt2001.Console.out.print("Please enter a new TwitchAlerts Access Token: ");
             String newtwitchalertstoken = System.console().readLine().trim();
