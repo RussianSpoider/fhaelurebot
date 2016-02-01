@@ -39,7 +39,7 @@ public class TwitchAlertsAPI {
     private static final TwitchAlertsAPI instance = new TwitchAlertsAPI();
     private static String clientid = "4S5Ml50i5g9lUvvpV85qUmXRF0KyvgkiS6F3g6st";
     private static String access_token = "";
-    private static final String base_url = "https://www.twitchalerts.com/api/donations?access_token=" + access_token;
+    private static final String base_url = "https://www.twitchalerts.com/api/donations?access_token=";
 
     
     private enum request_type
@@ -317,7 +317,7 @@ public class TwitchAlertsAPI {
     public String[] GetChannelDonations()
     {
         
-        JSONObject j = GetData(TwitchAlertsAPI.request_type.GET, base_url);
+        JSONObject j = GetData(TwitchAlertsAPI.request_type.GET, base_url + access_token);
         if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found"))
         {
         
