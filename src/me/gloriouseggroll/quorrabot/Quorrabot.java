@@ -134,10 +134,12 @@ public class Quorrabot implements Listener
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
         com.gmt2001.Console.out.println();
-        com.gmt2001.Console.out.println("QuorraBot Core 1.02 01/30/2016");
+        com.gmt2001.Console.out.println("QuorraBot Core 1.03 02/02/2016");
         com.gmt2001.Console.out.println("Build revision: " + RepoVersion.getRepoVersion());
         com.gmt2001.Console.out.println("www.quorrabot.com");
         com.gmt2001.Console.out.println();
+        com.gmt2001.Console.out.println("The working directory is: " + System.getProperty("user.dir"));
+
 
         interactive = System.getProperty("interactive") != null;
 
@@ -1005,8 +1007,6 @@ public class Quorrabot implements Listener
         String keypassword = "";
 
         boolean changed = false;
-
-        com.gmt2001.Console.out.println("The working directory is: " + System.getProperty("user.dir"));
 
         try
         {
