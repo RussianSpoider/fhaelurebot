@@ -750,8 +750,20 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 20) {
     println("     Creating tip alert command default aliases");
     
     $.inidb.set("aliases", "donationalert", "tipalert");
+    $.inidb.del("command", "multi");
     
     println("   End version 20 upgrades...");
+}
+
+if ($.inidb.GetInteger("init", "upgrade", "version") < 21) {
+    println("   Starting version 21 upgrades...");
+    
+    println("     Creating tip alert command default aliases");
+    
+    $.inidb.del("aliases", "donationalert");
+    $.inidb.set("aliases", "tipalert", "donationalert");
+    
+    println("   End version 21 upgrades...");
 }
 
 

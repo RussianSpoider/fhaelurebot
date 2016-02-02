@@ -31,7 +31,6 @@ $.on('command', function (event) {
     var sender = event.getSender();
     var command = event.getCommand();
     var argsString = event.getArguments().trim();
-    var argsString2 = argsString.substring(argsString.indexOf(" ") + 1, argsString.length());
     var args = event.getArgs();
     var triggerphrase = "";
     var response = "";
@@ -51,10 +50,16 @@ $.on('command', function (event) {
         triggerphrase = new String(triggerphrase);
         triggerphrase = triggerphrase.replace(/[^a-zA-Z0-9_\s]+/g,'');
         
-        response = args[1];
+        if(argsString.contains('“') | argsString.contains('”') | argsString.contains('"')) {
+            response = argsString.replace('“','"');
+            response = response.replace('”','"');
+            response = response.substring(response.indexOf('" "') + 3, response.length() -1);
+        } else {
+            response = argsString.substring(args[0].length() + 1,argsString.length());
+        }
          
         $.inidb.set('phrases', triggerphrase, response);
-        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.phrasehandler.trigger-add-success", triggerphrase, response));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.phrasehandler.trigger-add-success", args[0], response));
         return;
     }
     
