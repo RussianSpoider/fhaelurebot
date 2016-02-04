@@ -1,7 +1,7 @@
 $.SubscribeHandler = {
     SubMessage: ($.inidb.get('settings', 'subscribemessage') ? $.inidb.get('settings', 'subscribemessage') : '(name) just subscribed!'),
     ReSubMessage: ($.inidb.get('settings', 'resubscribemessage') ? $.inidb.get('settings', 'resubscribemessage') : '(name) just subscribed for (months) months in a row!'),
-    SubWelcomeToggle: ($.inidb.get('settings', 'sub_silentmode') ? $.inidb.get('settings', 'sub_silentmode') : 0),
+    SubWelcomeToggle: ($.inidb.get('settings', 'sub_announce') ? $.inidb.get('settings', 'sub_announce') : true),
     SubReward: (parseInt($.inidb.get('settings', 'subscribereward')) ? parseInt($.inidb.get('settings', 'subscribereward')) : 0),
     AutoSubModeTimer: (parseInt($.inidb.get('settings', 'submodeautotimer')) ? parseInt($.inidb.get('settings', 'submodeautotimer')) : 0),
 }
@@ -34,19 +34,19 @@ $.on('command', function (event) {
     var argsString = event.getArguments().trim();
     var args = event.getArgs();
 
-    if (command.equalsIgnoreCase('subsilentmode')) {
+    if (command.equalsIgnoreCase('subannounce')) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
-        if ($.SubscribeHandler.SubWelcomeToggle > 0) {
-            $.inidb.set('settings', 'sub_silentmode', 0);
-            $.SubscribeHandler.SubWelcomeToggle = 0;
+        if ($.SubscribeHandler.SubWelcomeToggle) {
+            $.inidb.set('settings', 'sub_announce', false);
+            $.SubscribeHandler.SubWelcomeToggle = false ;
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-toggle-off"));
             return;
         } else {
-            $.inidb.set('settings', 'sub_silentmode', 1);
-            $.SubscribeHandler.SubWelcomeToggle = 1;
+            $.inidb.set('settings', 'sub_announce', true);
+            $.SubscribeHandler.SubWelcomeToggle = true;
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-toggle-on"));
             return;
         }
@@ -164,7 +164,7 @@ $.on('ircPrivateMessage', function (event) {
 
 setTimeout(function () { 
     if ($.moduleEnabled('./handlers/subscribeHandler.js')) {
-        $.registerChatCommand("./handlers/subscribeHandler.js", "subsilentmode", "admin");
+        $.registerChatCommand("./handlers/subscribeHandler.js", "subannounce", "admin");
         $.registerChatCommand("./handlers/subscribeHandler.js", "subscribereward", "admin");
         $.registerChatCommand("./handlers/subscribeHandler.js", "subscribecount", "admin");
         $.registerChatCommand("./handlers/subscribeHandler.js", "submessage", "admin");

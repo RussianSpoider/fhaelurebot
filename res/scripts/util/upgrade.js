@@ -766,6 +766,29 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 21) {
     println("   End version 21 upgrades...");
 }
 
+if ($.inidb.GetInteger("init", "upgrade", "version") < 22) {
+    println("   Starting version 22 upgrades...");
+    
+    println("     Creating tip alert command default aliases");
+    
+    if($.inidb.get('settings', 'sub_silentmode')==1) {
+        $.inidb.del('settings', 'sub_silentmode');
+        $.inidb.set('settings', 'sub_announce', false);
+    }
+    
+    if($.inidb.get('settings', 'sub_silentmode')==0) {
+        $.inidb.del('settings', 'sub_silentmode');
+        $.inidb.set('settings', 'sub_announce', true);
+    }
+    
+    if($.inidb.exists('settings', 'announcefollows')) {
+        $.inidb.set('settings', 'followannounce', $.inidb.get('settings', 'announcefollows'));
+        $.inidb.del('settings', 'announcefollows');
+    }
+    
+    println("   End version 22 upgrades...");
+}
+
 
 println("   Saving...");
 
