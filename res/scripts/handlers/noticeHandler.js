@@ -118,7 +118,7 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-config", $.Notice.NoticeToggle, $.Notice.NoticeInterval, $.Notice.NoticeReqMessages, $.Notice.NumberOfNotices));
             return;
         } else if (action.equalsIgnoreCase('toggle')) {
-            if ($.Notice.NoticeToggle) {
+            if ($.Notice.NoticeToggle==true) {
                 $.Notice.NoticeToggle = false;
                 $.inidb.set('settings', 'noticetoggle', false);
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-disabled"));
@@ -157,7 +157,7 @@ $.SendNotice = function () {
 };
 
 $.timer.addTimer("./handlers/noticeHandler.js", "Notices", true, function () {
-    if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle) {
+    if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle==true) {
         if ($.Notice.MessageCount >= $.Notice.NoticeReqMessages) {
             $.SendNotice();
             $.Notice.MessageCount = 0;

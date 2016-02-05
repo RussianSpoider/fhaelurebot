@@ -656,6 +656,25 @@ $api.on(initscript, 'command', function (event) {
             $.say("cooldown will now be on users, and not everyone.");
         }
     }
+    
+    if (command.equalsIgnoreCase("modules")) {
+        var keys = $.inidb.GetKeyList("modules");
+        var s = "Disabled modules: ";
+        if (!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modmsg);
+            return;
+        }
+        for(i=0;i<keys.length;i++) {
+            if($.inidb.get("modules",keys[i])==0) {
+                s+= keys[i];
+                if(i!=keys.length) {
+                    s+=",";
+                }
+            }
+        }
+        s+=" Any module not listed is enabled.";
+        $.say($.getWhisperString(sender) + s);
+    }
 
     if (command.equalsIgnoreCase("coolcom")) {
         if (args.length == 0) {

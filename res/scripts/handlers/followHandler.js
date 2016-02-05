@@ -60,7 +60,7 @@ $.on('twitchFollow', function (event) {
     var s = $.FollowHandler.FollowMessage;
     var r = $.FollowHandler.FollowReward;
     var username = $.username.resolve(follower);
-    if ($.inidb.GetKeyList('followed', '').length == 0) {
+    if ($.inidb.GetKeyList('followed', '').length == 0 && $.FollowHandler.FollowToggle == true) {
        $.FollowHandler.FollowToggle = false;
        var t = setTimeout(function () {
          $.FollowHandler.FollowToggle = true;
@@ -77,7 +77,7 @@ $.on('twitchFollow', function (event) {
             $.inidb.incr('points', follower, r);
             s += " +" + $.getPointsString(r);
         } 
-        if ($.FollowHandler.FollowToggle && $.moduleEnabled("./handlers/followHandler.js")) {
+        if ($.FollowHandler.FollowToggle==true && $.moduleEnabled("./handlers/followHandler.js")) {
             s = $.replaceAll(s, '(name)', username);
             $.say("/me " + s);
             if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
@@ -142,7 +142,7 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
-        if ($.FollowHandler.FollowToggle) {
+        if ($.FollowHandler.FollowToggle==true) {
             $.inidb.set('settings', 'followannounce', false);
             $.FollowHandler.FollowToggle = false;
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.follows-toggle-off"));

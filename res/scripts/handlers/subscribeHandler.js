@@ -39,7 +39,7 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
-        if ($.SubscribeHandler.SubWelcomeToggle) {
+        if ($.SubscribeHandler.SubWelcomeToggle==true) {
             $.inidb.set('settings', 'sub_announce', false);
             $.SubscribeHandler.SubWelcomeToggle = false ;
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-toggle-off"));
@@ -143,14 +143,14 @@ $.on('ircPrivateMessage', function (event) {
     var r = $.SubscribeHandler.ReSubMessage;
 
     if (message.contains('just subscribed!') && sender.equalsIgnoreCase('twitchnotify')) {
-        if ($.SubscribeHandler.SubWelcomeToggle) {
+        if ($.SubscribeHandler.SubWelcomeToggle==true) {
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
             s = $.replaceAll(s, '(name)', sub);
             $.say("/me " + s);
             return;
         }
     } else if (message.contains('months in a row!') && sender.equalsIgnoreCase('twitchnotify')) {
-        if ($.SubscribeHandler.SubWelcomeToggle) {
+        if ($.SubscribeHandler.SubWelcomeToggle==true) {
             var months = message.substring( message.indexOf("months") - 3, message.indexOf("months") - 1 ).toString();
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
             r = $.replaceAll(r, '(name)', sub);
