@@ -1,7 +1,7 @@
 $.Notice = {
     NoticeReqMessages: parseInt($.inidb.get('notice', 'reqmessages')) ? parseInt($.inidb.get('notice', 'reqmessages')) : 25,
     NoticeInterval: parseInt($.inidb.get('notice', 'interval')) ? parseInt($.inidb.get('notice', 'interval')) : 10,
-    NoticeToggle: $.inidb.get('settings', 'noticetoggle') ? $.inidb.get('settings', 'noticetoggle') : true,
+    NoticeToggle: $.inidb.get('settings', 'noticetoggle') ? $.inidb.get('settings', 'noticetoggle') : "true",
     NumberOfNotices: parseInt($.inidb.GetKeyList('notices', '').length) ? parseInt($.inidb.GetKeyList('notices', '').length) : 0,
     MessageCount: 0,
 }
@@ -118,13 +118,13 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-config", $.Notice.NoticeToggle, $.Notice.NoticeInterval, $.Notice.NoticeReqMessages, $.Notice.NumberOfNotices));
             return;
         } else if (action.equalsIgnoreCase('toggle')) {
-            if ($.Notice.NoticeToggle==true) {
-                $.Notice.NoticeToggle = false;
-                $.inidb.set('settings', 'noticetoggle', false);
+            if ($.Notice.NoticeToggle=="true") {
+                $.Notice.NoticeToggle = "false";
+                $.inidb.set('settings', 'noticetoggle', "false");
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-disabled"));
             } else {
-                $.Notice.NoticeToggle = true;
-                $.inidb.set('settings', 'noticetoggle', true);
+                $.Notice.NoticeToggle = "true";
+                $.inidb.set('settings', 'noticetoggle', "true");
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-enabled"));
                 return;
             }
@@ -157,7 +157,7 @@ $.SendNotice = function () {
 };
 
 $.timer.addTimer("./handlers/noticeHandler.js", "Notices", true, function () {
-    if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle==true) {
+    if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle=="true") {
         if ($.Notice.MessageCount >= $.Notice.NoticeReqMessages) {
             $.SendNotice();
             $.Notice.MessageCount = 0;

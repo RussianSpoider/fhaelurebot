@@ -1,6 +1,6 @@
 $.FollowHandler = {
     FollowMessage: ($.inidb.get('settings', 'followmessage') ? $.inidb.get('settings', 'followmessage') : $.lang.get("net.quorrabot.followHandler.follows-message")),
-    FollowToggle: ($.inidb.get('settings', 'followannounce') ? $.inidb.get('settings', 'followannounce') : true),
+    FollowToggle: ($.inidb.get('settings', 'followannounce') ? $.inidb.get('settings', 'followannounce') : "true"),
     FollowReward: (parseInt($.inidb.get('settings', 'followreward')) ? parseInt($.inidb.get('settings', 'followreward')) : 100),
     FollowTrain: 0,
     LastFollow: 0,
@@ -60,10 +60,10 @@ $.on('twitchFollow', function (event) {
     var s = $.FollowHandler.FollowMessage;
     var r = $.FollowHandler.FollowReward;
     var username = $.username.resolve(follower);
-    if ($.inidb.GetKeyList('followed', '').length == 0 && $.FollowHandler.FollowToggle == true) {
-       $.FollowHandler.FollowToggle = false;
+    if ($.inidb.GetKeyList('followed', '').length == 0 && $.FollowHandler.FollowToggle == "true") {
+       $.FollowHandler.FollowToggle = "false";
        var t = setTimeout(function () {
-         $.FollowHandler.FollowToggle = true;
+         $.FollowHandler.FollowToggle = "true";
          clearTimeout(t);
        }, 300 * 1000);
      }
@@ -77,7 +77,7 @@ $.on('twitchFollow', function (event) {
             $.inidb.incr('points', follower, r);
             s += " +" + $.getPointsString(r);
         } 
-        if ($.FollowHandler.FollowToggle==true && $.moduleEnabled("./handlers/followHandler.js")) {
+        if ($.FollowHandler.FollowToggle=="true" && $.moduleEnabled("./handlers/followHandler.js")) {
             s = $.replaceAll(s, '(name)', username);
             $.say("/me " + s);
             if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
@@ -142,14 +142,14 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
-        if ($.FollowHandler.FollowToggle==true) {
-            $.inidb.set('settings', 'followannounce', false);
-            $.FollowHandler.FollowToggle = false;
+        if ($.FollowHandler.FollowToggle=="true") {
+            $.inidb.set('settings', 'followannounce', "false");
+            $.FollowHandler.FollowToggle = "false";
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.follows-toggle-off"));
             return;
         } else {
-            $.inidb.set('settings', 'followannounce', true);
-            $.FollowHandler.FollowToggle = true;
+            $.inidb.set('settings', 'followannounce', "true");
+            $.FollowHandler.FollowToggle = "true";
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.follows-toggle-on"));
         }
     } else if (command.equalsIgnoreCase('followed')) {

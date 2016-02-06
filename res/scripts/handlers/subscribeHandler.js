@@ -1,7 +1,7 @@
 $.SubscribeHandler = {
     SubMessage: ($.inidb.get('settings', 'subscribemessage') ? $.inidb.get('settings', 'subscribemessage') : '(name) just subscribed!'),
     ReSubMessage: ($.inidb.get('settings', 'resubscribemessage') ? $.inidb.get('settings', 'resubscribemessage') : '(name) just subscribed for (months) months in a row!'),
-    SubWelcomeToggle: ($.inidb.get('settings', 'sub_announce') ? $.inidb.get('settings', 'sub_announce') : true),
+    SubWelcomeToggle: ($.inidb.get('settings', 'sub_announce') ? $.inidb.get('settings', 'sub_announce') : "true"),
     SubReward: (parseInt($.inidb.get('settings', 'subscribereward')) ? parseInt($.inidb.get('settings', 'subscribereward')) : 0),
     AutoSubModeTimer: (parseInt($.inidb.get('settings', 'submodeautotimer')) ? parseInt($.inidb.get('settings', 'submodeautotimer')) : 0),
 }
@@ -39,14 +39,14 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
-        if ($.SubscribeHandler.SubWelcomeToggle==true) {
-            $.inidb.set('settings', 'sub_announce', false);
-            $.SubscribeHandler.SubWelcomeToggle = false ;
+        if ($.SubscribeHandler.SubWelcomeToggle=="true") {
+            $.inidb.set('settings', 'sub_announce', "false");
+            $.SubscribeHandler.SubWelcomeToggle = "false" ;
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-toggle-off"));
             return;
         } else {
-            $.inidb.set('settings', 'sub_announce', true);
-            $.SubscribeHandler.SubWelcomeToggle = true;
+            $.inidb.set('settings', 'sub_announce', "true");
+            $.SubscribeHandler.SubWelcomeToggle = "true";
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.subscribeHandler.sub-toggle-on"));
             return;
         }
@@ -143,14 +143,14 @@ $.on('ircPrivateMessage', function (event) {
     var r = $.SubscribeHandler.ReSubMessage;
 
     if (message.contains('just subscribed!') && sender.equalsIgnoreCase('twitchnotify')) {
-        if ($.SubscribeHandler.SubWelcomeToggle==true) {
+        if ($.SubscribeHandler.SubWelcomeToggle=="true") {
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
             s = $.replaceAll(s, '(name)', sub);
             $.say("/me " + s);
             return;
         }
     } else if (message.contains('months in a row!') && sender.equalsIgnoreCase('twitchnotify')) {
-        if ($.SubscribeHandler.SubWelcomeToggle==true) {
+        if ($.SubscribeHandler.SubWelcomeToggle=="true") {
             var months = message.substring( message.indexOf("months") - 3, message.indexOf("months") - 1 ).toString();
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
             r = $.replaceAll(r, '(name)', sub);

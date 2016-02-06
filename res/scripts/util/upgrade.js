@@ -773,12 +773,12 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 22) {
     
     if($.inidb.get('settings', 'sub_silentmode')==1) {
         $.inidb.del('settings', 'sub_silentmode');
-        $.inidb.set('settings', 'sub_announce', false);
+        $.inidb.set('settings', 'sub_announce', "false");
     }
     
     if($.inidb.get('settings', 'sub_silentmode')==0) {
         $.inidb.del('settings', 'sub_silentmode');
-        $.inidb.set('settings', 'sub_announce', true);
+        $.inidb.set('settings', 'sub_announce', "true");
     }
     
     if($.inidb.exists('settings', 'announcefollows')) {
