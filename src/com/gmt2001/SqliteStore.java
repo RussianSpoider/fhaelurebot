@@ -272,7 +272,7 @@ public class SqliteStore extends DataStore
             {
                 statement.setQueryTimeout(10);
 
-                statement.executeUpdate("DROP TABLE quorrabot_" + fName + ";");
+                statement.executeUpdate("DROP TABLE " + dbprefix + "_" + fName + ";");
             } catch (SQLException ex)
             {
                 com.gmt2001.Console.err.printStackTrace(ex);
