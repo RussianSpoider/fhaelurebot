@@ -50,6 +50,8 @@ $.lang.data["net.quorrabot.init.module-enable"] = "Module enabled!";
 $.lang.data["net.quorrabot.init.module-disable"] = "Module disabled!";
 $.lang.data["net.quorrabot.init.module-enabled"] = "The module $1 is currently enabled!";
 $.lang.data["net.quorrabot.init.module-disabled"] = "The module $1 is currently disabled!";
+$.lang.data["net.quorrabot.init.module-reload"] = "The module $1 has been reloaded!";
+$.lang.data["net.quorrabot.init.module-util-lang"] = "Modules inside /util or /lang can not be enabled, disabled, or reloaded.";
 $.lang.data["net.quorrabot.init.module-list"] = "Modules: ";
 
 //misc.js

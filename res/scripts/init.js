@@ -754,6 +754,7 @@ $api.on(initscript, 'command', function (event) {
         $.connmgr.reconnectSession($.hostname);
         $.say($.lang.get("net.quorrabot.init.reconn"));
     }
+    
 
     if (command.equalsIgnoreCase("module")) {
         if (!$.isAdmin(sender)) {
@@ -817,6 +818,7 @@ $api.on(initscript, 'command', function (event) {
 
             if (args[0].equalsIgnoreCase("enable")) {
                 if (args[1].indexOf("./util/") != -1 || args[1].indexOf("./lang/") != -1) {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.init.module-util-lang"));
                     return;
                 }
 
@@ -837,6 +839,7 @@ $api.on(initscript, 'command', function (event) {
 
             if (args[0].equalsIgnoreCase("disable")) {
                 if (args[1].indexOf("./util/") != -1 || args[1].indexOf("./lang/") != -1) {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.init.module-util-lang"));
                     return;
                 }
 
@@ -857,6 +860,7 @@ $api.on(initscript, 'command', function (event) {
 
             if (args[0].equalsIgnoreCase("status") || args[0].equalsIgnoreCase("check")) {
                 if (args[1].indexOf("./util/") != -1 || args[1].indexOf("./lang/") != -1) {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.init.module-util-lang"));
                     return;
                 }
 
@@ -872,6 +876,24 @@ $api.on(initscript, 'command', function (event) {
                     }
                 }
             }
+            
+            if (args[0].equalsIgnoreCase("reload")) {
+
+                if (args[1].indexOf("./util/") != -1 || args[1].indexOf("./lang/") != -1) {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.init.module-util-lang"));
+                    return;
+                }
+
+                index = $.getModuleIndex(args[1]);
+
+                if (index == -1) {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.init.module-not-exists"));
+                } else {
+                    $.reloadScript(args[1]);
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.init.module-reload", args[1]));
+                }
+            }
+        
         }
     }
 });
