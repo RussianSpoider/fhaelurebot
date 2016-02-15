@@ -138,6 +138,7 @@ $.loadScriptForce = function (scriptFile) {
     }
 }
 
+
 $.loadScript = function (scriptFile) {
     if (!$.isModuleLoaded(scriptFile)) {
         try {
@@ -184,6 +185,21 @@ $.loadScriptsRecursive = function (path) {
     for (i = 0; i < dirs.length; i++) {
         $.loadScriptsRecursive(path + "/" + dirs[i]);
     }
+}
+
+$.unloadScript = function (scriptFile) {
+    try {
+        $api.unloadScript($script, scriptFile);
+    } catch (e) {
+        if ($.isModuleLoaded("./util/misc.js")) {
+            $.logError("init.js", 132, "(unloadScript, " + scriptFile + ") " + e);
+        }
+    }
+}
+
+$.reloadScript = function (scriptFile) {
+    $.unloadScript(scriptFile);
+    $.loadScriptForce(scriptFile);
 }
 
 $.hook = new Array();

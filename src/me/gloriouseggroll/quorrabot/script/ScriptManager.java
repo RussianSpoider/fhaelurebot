@@ -36,6 +36,14 @@ public class ScriptManager
         scripts.put(scriptFile.toPath().toString(), script);
         script.load();
     }
+    
+    public static void unloadScript(File scriptFile) throws IOException
+    {
+        if (scripts.containsKey(scriptFile.toPath().toString()) && !scripts.get(scriptFile.toPath().toString()).isKilled())
+        {
+            scripts.remove(scriptFile.toPath().toString());
+        }
+    }
 
     public static Script loadScriptR(File scriptFile) throws IOException
     {

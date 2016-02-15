@@ -84,11 +84,13 @@ $.lang.data["net.quorrabot.permissions.mods"] = "Mods in channel: ";
 $.lang.data["net.quorrabot.permissions.admins"] = "Admins in channel: ";
 
 //commandList.js
-$.lang.data["net.quorrabot.commandlist.commands"] = "Commands";
+$.lang.data["net.quorrabot.commandlist.botcommands"] = "Bot commands";
 $.lang.data["net.quorrabot.commandlist.page"] = " page $1 of $2 ";
 $.lang.data["net.quorrabot.commandlist.more"] = " >> Type '!botcommands 2, 3 etc... for more";
+$.lang.data["net.quorrabot.commandlist.commands"] = "Custom commands";
+$.lang.data["net.quorrabot.commandlist.morecustom"] = " >> Type '!commands 2, 3 etc... for more";
 $.lang.data["net.quorrabot.commandlist.nocommands"] = "There are currently no commands available to you";
-$.lang.data["net.quorrabot.commandlist.commands-per-page"] = "There will now be $1 commands per page when using !botcommands";
+$.lang.data["net.quorrabot.commandlist.commands-per-page"] = "There will now be $1 commands per page when using !botcommands or !commands";
 $.lang.data["net.quorrabot.commandlist.commands-per-page-usage"] = "Usage: !commandsperpage <number no less than 10>";
 
 //chatModerator.js
@@ -255,7 +257,6 @@ $.lang.data["net.quorrabot.addcommand.aliascom-success"] = "the command !$1 was 
 $.lang.data["net.quorrabot.addcommand.aliascom-error-no-command"] = "The target command does not exist!";
 $.lang.data["net.quorrabot.addcommand.aliascom-failed"] = "You can only overwrite an alias!";
 $.lang.data["net.quorrabot.addcommand.aliascom-error-usage"] = "Usage: \"!aliascom (existing command) (alias name)\"";
-$.lang.data["net.quorrabot.addcommand.custom-commands"] = "Current custom commands: $1";
 $.lang.data["net.quorrabot.addcommand.delalias-success"] = "$1, the alias !$2 was successfully deleted!";
 $.lang.data["net.quorrabot.addcommand.delalias-error-no-command"] = "That alias does not exist!";
 $.lang.data["net.quorrabot.addcommand.delalias-error-usage"] = "Usage: \"!delalias (alias name)\"";
@@ -264,7 +265,6 @@ $.lang.data["net.quorrabot.addcommand.permcom-removed-success"] = "All recursive
 $.lang.data["net.quorrabot.addcommand.permcom-syntax-error"] = "You must specify a permission mode of 1 or 2! 1 specifies only a single group, multiple single groups can be added for the same command. 2 specifies recursive (all groups higher than the group specified).";
 $.lang.data["net.quorrabot.addcommand.permcom-error-no-command"] = "The command !$1 does not exist!";
 $.lang.data["net.quorrabot.addcommand.permcom-error-usage"] = "Usage: \"!permcom (command name) (group name) (1/2). Restricts usage of a command to viewers with a certain permission level. 1 specifies only a single group, multiple single groups can be added for the same command. 2 specifies recursive (all groups higher than the group specified).\"";
-$.lang.data["net.quorrabot.addcommand.error-no-custom-commands"] = "There are no custom commands!";
 $.lang.data["net.quorrabot.addcommand.filetag-error"] = "The File path may not contain any Slashes. The file has to be in addons/txt/ folder!";
 
 //raffleSystem.js
@@ -690,6 +690,7 @@ $.lang.data["net.quorrabot.bankheistsystem.joined-heist"] = ", you have joined i
 $.lang.data["net.quorrabot.bankheistsystem.bank-open"] = "The banks are now open for the taking! Use !bankheist (amount) to bet.";
 $.lang.data["net.quorrabot.bankheistsystem.heist-canceled"] = "has cleared all previous bankheists. A new bankheist will start in ";
 $.lang.data["net.quorrabot.bankheistsystem.heist-cleared"] = "All previous bankheists have been cleared.";
+$.lang.data["net.quorrabot.bankheistsystem.heist-defaults"] = "All bankheist options have been reset to default values.";
 $.lang.data["net.quorrabot.bankheistsystem.max-allowed"] = "The maximum amount allowed is $1";
 $.lang.data["net.quorrabot.bankheistsystem.bank-is-safe"] = "No one joined the bankheist! The banks are safe for now.";
 $.lang.data["net.quorrabot.bankheistsystem.bankheist-enabled"] = "Bankheists are now enabled!";

@@ -96,6 +96,11 @@ public class ScriptApi
     {
         ScriptManager.loadScript(new File(new File("./scripts/"), fileName));
     }
+    
+    public void unloadScript(Script script, String fileName) throws IOException
+    {
+        ScriptManager.unloadScript(new File(new File("./scripts/"), fileName));
+    }
 
     public Script loadScriptR(Script script, String fileName) throws IOException
     {

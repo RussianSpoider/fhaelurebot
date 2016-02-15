@@ -79,28 +79,6 @@ $.on('command', function (event) {
         }
     }
 
-    if (command.equalsIgnoreCase("commands")) {
-        var customcommands = "";
-        var keys = $.inidb.GetKeyList("command", "");
-        for (var i = 0; i < keys.length; i++) {
-            customcommands += "!";
-            customcommands += keys[i];
-            customcommands += " ";
-        }
-
-        if (customcommands.substr(customcommands.length - 1) == " ") {
-            customcommands = customcommands.substring(0, customcommands.length - 1);
-        }
-
-        if (customcommands == null || customcommands == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.error-no-custom-commands"));
-            return;
-        }
-
-        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.custom-commands", customcommands));
-        return;
-    }
-
     if (command.equalsIgnoreCase("aliascom")) {
         if (!$.isModv3(sender, event.getTags())) {
             $.say($.getWhisperString(sender) + $.modmsg);
@@ -483,7 +461,6 @@ setTimeout(function () {
         $.registerChatCommand("./commands/addCommand.js", "delcom", "mod");
         $.registerChatCommand("./commands/addCommand.js", "permcom", "admin");
         $.registerChatCommand("./commands/addCommand.js", "helpcom", "mod");
-        $.registerChatCommand("./commands/addCommand.js", "commands");
     }
 }, 10 * 1000);
 

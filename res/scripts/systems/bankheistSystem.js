@@ -387,6 +387,26 @@ $.on('command', function (event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.heist-cleared"));
                 return;
                 
+        } else if (args[0].equalsIgnoreCase("defaults")) {
+                $.timer.clearTimer("./systems/bankheistSystem.js", "bankheist", true);
+                $.timer.clearTimer("./systems/bankheistSystem.js", "enterbankheist", true);
+                $.inidb.RemoveFile("bankheist_roster");
+                $.inidb.RemoveFile("bankheist_bets");
+		$.inidb.RemoveFile("bankheist_timers");
+		$.inidb.RemoveFile("bankheist_strings");
+		$.inidb.RemoveFile("bankheist_chances");
+		$.inidb.RemoveFile("bankheist_ratios");
+		$.inidb.set("settings", "bankheistToggle", "false");
+		$.inidb.set("settings", "bankheistmaxbet", "1000");
+                $.senderId = "";
+                $.senderBet = "";
+		$.bankheistIsOn = false;
+		$.entrySeconds = 0;
+		$.winningPot = 0;
+		$.pointsId = 0;
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.bankheistsystem.heist-defaults"));
+                $.reloadScript("./systems/bankheistSystem.js");
+                return;
         } else if (!isNaN(betAmount) && parseInt(betAmount) > 0) {
 
             if ($.bankheistIsOn == false) {
