@@ -789,6 +789,16 @@ if ($.inidb.GetInteger("init", "upgrade", "version") < 22) {
     println("   End version 22 upgrades...");
 }
 
+if ($.inidb.GetInteger("init", "upgrade", "version") < 23) {
+    println("   Starting version 23 upgrades...");
+    
+    println("     Creating creating delcom alias delalias");
+    
+    $.inidb.set("aliases", "delalias", "delcom");
+    
+    println("   End version 23 upgrades...");
+}
+
 
 println("   Saving...");
 

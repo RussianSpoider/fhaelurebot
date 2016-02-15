@@ -609,7 +609,7 @@ if ($.inidb.GetBoolean("init", "initialsettings", "loaded") == false) {
     $.loadScript('./util/initialsettings.js');
 }
 
-$.upgrade_version = 22;
+$.upgrade_version = 23;
 
 if ($.firstrun) {
     $.inidb.SetInteger("init", "upgrade", "version", parseInt($.upgrade_version));

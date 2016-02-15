@@ -51,34 +51,6 @@ $.on('command', function (event) {
         return;
     }
 
-    if (command.equalsIgnoreCase("delalias")) {
-        if (!$.isModv3(sender, event.getTags())) {
-            $.say($.getWhisperString(sender) + $.modmsg);
-            return;
-        }
-
-        if (args.length < 1) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.delalias-error-usage"));
-        } else {
-            if (args[0].substring(0, 1) == '!') {
-                args[0] = args[0].substring(1);
-            }
-            if (!$.inidb.exists('aliases', args[0].toLowerCase())) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.delalias-error-no-command"));
-                return;
-            }
-
-            $.logEvent("addCommand.js", 56, username + " deleted the alias !" + args[0].toLowerCase());
-
-            $.inidb.del('aliases', args[0].toLowerCase());
-
-            $.unregisterCustomChatCommand("./commands/addCommand.js", args[0].toLowerCase());
-
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.delalias-success", args[0]));
-            return;
-        }
-    }
-
     if (command.equalsIgnoreCase("aliascom")) {
         if (!$.isModv3(sender, event.getTags())) {
             $.say($.getWhisperString(sender) + $.modmsg);
@@ -134,14 +106,16 @@ $.on('command', function (event) {
                 commandString = commandString.substring(1);
             }
 
-            var acommands = $.inidb.GetKeyList("aliases", "");
+            var acommands = $.inidb.GetKeyList('aliases', "");
+            
 
             for (var i = 0; i < acommands.length; i++) {
-                if ($.inidb.get("aliases", acommands[i]).equalsIgnoreCase(commandString)) {
-                    $.unregisterCustomChatCommand(acommands[i]);
-                    $.inidb.del("aliases", acommands[i]);
+                if (acommands[i].toLowerCase().contains(commandString)) {
+                    $.unregisterCustomChatCommand(commandString);
+                    $.inidb.del('aliases', commandString);
                 }
             }
+          
 
             $.inidb.del('command', commandString);
             $.inidb.del('commandperm', commandString);
