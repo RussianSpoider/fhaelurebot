@@ -951,23 +951,26 @@ $.on('command', function (event) {
 offlinePlayer = function() {setTimeout(function(){
     if ($.moduleEnabled('./addonscripts/youtubePlayer.js')) {
         $.timer.addTimer("./addonscripts/youtubePlayer.js", "currsongyt", true, function() {
-            $.currsongfile = $.inidb.get("settings", "currsongfile");
-            if($.currsongfile!="./addons/youtubePlayer/currentsong.txt") {
-                $var.ytcurrSong = $.readFile($.currsongfile);
-            } else {
-                $var.ytcurrSong = $.readFile("./addons/youtubePlayer/currentsong.txt");            
-            }
-            if (!$var.ytcurrSong.toString().equalsIgnoreCase($.inidb.get("settings", "lastsong")) && !musicPlayerConnected) {
-                if ($var.ytcurrSong.toString()!=null || $var.ytcurrSong.toString()!="") {
-                    $.inidb.set("settings", "lastsong", $var.ytcurrSong.toString());
-                    if ($.song_toggle == 1) {
-                        $.say($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
-                    } else {
-                        $.println($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
+            
+            if($.isOnline($.channelName)) {
+                $.currsongfile = $.inidb.get("settings", "currsongfile");
+                if($.currsongfile!="./addons/youtubePlayer/currentsong.txt") {
+                    $var.ytcurrSong = $.readFile($.currsongfile);
+                } else {
+                    $var.ytcurrSong = $.readFile("./addons/youtubePlayer/currentsong.txt");            
+                }
+                if (!$var.ytcurrSong.toString().equalsIgnoreCase($.inidb.get("settings", "lastsong")) && !musicPlayerConnected) {
+                    if ($var.ytcurrSong.toString()!=null || $var.ytcurrSong.toString()!="") {
+                        $.inidb.set("settings", "lastsong", $var.ytcurrSong.toString());
+                        if ($.song_toggle == 1) {
+                            $.say($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
+                        } else {
+                            $.println($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
+                        }
                     }
                 }
             }
-
+            
         }, 10* 1000);
     }   
 }, 10* 1000); 
