@@ -302,7 +302,7 @@ function nextDefault() {
         $.println($.lang.get("net.quorrabot.musicplayer.now-playing", name, user));
     }
     
-    $.writeToFile($.lang.get("net.quorrabot.musicplayer.now-playing", name, user), "./addons/youtubePlayer/currentsong.txt", false);
+    $.writeToFile($.lang.get("net.quorrabot.musicplayer.current-playing-requested", name, user),"./addons/youtubePlayer/currentsong.txt", false);
 }
 
 function next() {
@@ -343,7 +343,7 @@ function next() {
         }
     }
     
-    $.writeToFile($.lang.get("net.quorrabot.musicplayer.now-playing", name, user), "./addons/youtubePlayer/currentsong.txt", false);
+    $.writeToFile("./addons/youtubePlayer/currentsong.txt", false);
 }
 
 $.on('musicPlayerState', function (event) {
@@ -550,6 +550,20 @@ $.on('command', function (event) {
                 $.parseSongQueue();
                 return;
             }
+        }
+        
+        if (action.equalsIgnoreCase("currsongfile")) {
+            if (!$.isAdmin(sender)) {
+                $.say($.getWhisperString(sender) + $.adminmsg);
+                return;
+            }
+            if(args[1]!=null) {
+                $.currsongfile = argsString.substring(argsString.indexOf(args[1]), argsString.length());;
+            }
+            
+            $.inidb.set('settings','currsongfile', $.currsongfile);
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.new-currsongfile-path", $.currsongfile));
+            return;
         }
         
         if (action.equalsIgnoreCase("reloadplaylist")) {
@@ -831,12 +845,27 @@ $.on('command', function (event) {
     }
 
     if (command.equalsIgnoreCase("currentsong")) {
-        if ($.readFile("./addons/youtubePlayer/currentsong.txt") == "") {
-            $.say($.lang.get("net.quorrabot.musicplayer.queue-is-empty"));
-            return;
+        $.currsongfile = $.readFile($.inidb.get("settings", "currsongfile"));
+        $.defaultcurrsong = $.readFile("./addons/youtubePlayer/currentsong.txt");
+        var csong = "";
+        
+        if (musicPlayerConnected) {
+            if($.defaultcurrsong == "") {
+                $.say($.lang.get("net.quorrabot.musicplayer.no-current-song"));
+                return;
+            } else {
+                csong = $.defaultcurrsong; 
+            }
+        } else {
+            if($.currsongfile == "") {
+                $.say($.lang.get("net.quorrabot.musicplayer.no-current-song"));
+                return;
+            } else {
+                csong = $.lang.get("net.quorrabot.musicplayer.current-song", $.currsongfile);
+            }
         }
 
-        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.current-song", $.readFile("./addons/youtubePlayer/currentsong.txt")));
+        $.say($.getWhisperString(sender) + csong);
         return;
     }
 
@@ -922,14 +951,19 @@ $.on('command', function (event) {
 offlinePlayer = function() {setTimeout(function(){
     if ($.moduleEnabled('./addonscripts/youtubePlayer.js')) {
         $.timer.addTimer("./addonscripts/youtubePlayer.js", "currsongyt", true, function() {
-            $var.ytcurrSong = $.readFile("./addons/youtubePlayer/currentsong.txt");
+            $.currsongfile = $.inidb.get("settings", "currsongfile");
+            if($.currsongfile!="./addons/youtubePlayer/currentsong.txt") {
+                $var.ytcurrSong = $.readFile($.currsongfile);
+            } else {
+                $var.ytcurrSong = $.readFile("./addons/youtubePlayer/currentsong.txt");            
+            }
             if (!$var.ytcurrSong.toString().equalsIgnoreCase($.inidb.get("settings", "lastsong")) && !musicPlayerConnected) {
                 if ($var.ytcurrSong.toString()!=null || $var.ytcurrSong.toString()!="") {
                     $.inidb.set("settings", "lastsong", $var.ytcurrSong.toString());
                     if ($.song_toggle == 1) {
-                        $.say($var.ytcurrSong.toString());
+                        $.say($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
                     } else {
-                        $.println($var.ytcurrSong.toString());
+                        $.println($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
                     }
                 }
             }
