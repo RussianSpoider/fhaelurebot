@@ -361,6 +361,7 @@ $.on('command', function(event) {
 
                 if (setTimezone(action)) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timezone.success", action));
+                    $.reloadScript("./systems/timeSystem.js");
                     return;
                 } else {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.timezone.error-invalid", action));

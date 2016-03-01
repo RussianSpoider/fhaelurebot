@@ -306,15 +306,19 @@ $.on('command', function (event) {
                 messageCommand = $.replaceAll(messageCommand, '(touser)', $.username.resolve(sender));
             }
         } 
-        if (messageCommand.contains('(game)') && args.length > 0) {
-            messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve(args[0])));
-        } else {
-            messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve($.channelName)));
+        if (messageCommand.contains('(game)')) {
+            if (args.length > 0) {
+                messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve(args[0])));
+            } else {
+                messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve($.channelName)));
+            }
         }
-        if (messageCommand.contains('(status)') && args.length > 0) {
-            messageCommand = $.replaceAll(messageCommand, '(status)', $.getStatus($.username.resolve(args[0])));
-        } else {
-            messageCommand = $.replaceAll(messageCommand, '(status)', $.getStatus($.username.resolve($.channelName)));
+        if (messageCommand.contains('(status)')) {
+            if (args.length > 0) {
+                messageCommand = $.replaceAll(messageCommand, '(status)', $.getStatus($.username.resolve(args[0])));
+            } else {
+                messageCommand = $.replaceAll(messageCommand, '(status)', $.getStatus($.username.resolve($.channelName)));
+            }
         }
         if (messageCommand.contains('(echo)') && args.length > 0) {
             messageCommand = $.replaceAll(messageCommand, '(echo)', argsString);
