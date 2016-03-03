@@ -151,9 +151,43 @@ $.SendNotice = function () {
         EventBus.instance().post(new CommandEvent($.botname, notice, ' '));
         return;
     } else {
+
+        if (notice.contains('(game)')) {
+                notice = $.replaceAll(notice, '(game)', $.getGame($.username.resolve($.channelName)));
+            }
+        }
+        if (notice.contains('(status)')) {
+                notice = $.replaceAll(notice, '(status)', $.getStatus($.username.resolve($.channelName)));
+        }
+        if (notice.contains('(random)')) {
+            notice = $.replaceAll(notice, '(random)', $.users[$.rand($.users.length)][0]);
+        }
+        if (notice.contains('(viewers)')) {
+            notice = $.replaceAll(notice, '(viewers)', $.getViewers($.username.resolve($.channelName)));
+        }
+        if (notice.contains('(#)')) {
+            notice = $.replaceAll(notice, '(#)', $.randRange(1, 100));
+        } 
+
+        if (notice.contains('(z_stroke)')) {
+            notice = $.replaceAll(notice, '(z_stroke)', java.lang.Character.toString(java.lang.Character.toChars(0x01B6)[0]));
+        } 
+        while (notice.contains('(customapi')) {
+            if (notice.search(/(\(customapi ([^)]+)\))/g) >= 0) {
+            	notice = $.replaceAll(notice, RegExp.$1, getcustomapivalue(RegExp.$2));
+            }
+        }
+        if (notice.contains('(code)')) {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            for (var i = 0; i < 8; i++) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            notice = $.replaceAll(notice, '(code)', text);
+        }
+   
         $.say(notice);
         return;
-    }
 };
 
 $.timer.addTimer("./handlers/noticeHandler.js", "Notices", true, function () {
