@@ -437,6 +437,7 @@ $.lang.data["net.quorrabot.followHandler.ultra-follow-train"] = "Ultra follow tr
 $.lang.data["net.quorrabot.followHandler.massive-follow-train"] = "MASSIVE FOLLOW TRAAAAIIIN!! ($1)";
 $.lang.data["net.quorrabot.followHandler.followtrain-announce-true"] = "Follow train messages have been enabled.";
 $.lang.data["net.quorrabot.followHandler.followtrain-announce-false"] = "Follow train messages have been disabled.";
+$.lang.data["net.quorrabot.followHandler.followtrain-msgs-reset"] = "Follow train messages have been reset to defaults.";
 $.lang.data["net.quorrabot.followHandler.followtrain-wrong-count"] = "Follow train and train messages start at 3 (3 follows) and end at 8 (8 or more follows). Please use numbers 3-8.";
 $.lang.data["net.quorrabot.followHandler.followtrain-message-set"] = "Follow train ($1) message successfully set.";
 $.lang.data["net.quorrabot.followHandler.followtrain-currentmsg"] = "The current follow train $1 message is: $2";

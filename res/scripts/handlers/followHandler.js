@@ -230,6 +230,13 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
+        if (trainString.equalsIgnoreCase("default")) {
+            for(var i=3;i<8;i++) {
+                $.inidb.del("settings", "followtrain" + i.toString() + "msg");
+            }
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.followtrain-msgs-reset"));
+            return;
+        }
         if(args[0]==null | args[0]=="" | parseInt(args[0]) < 3 | parseInt(args[0]) > 8) {
            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.followtrain-wrong-count"));
            return;
