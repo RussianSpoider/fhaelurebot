@@ -434,8 +434,13 @@ $.lang.data["net.quorrabot.followHandler.Quadra-follow-train"] = "Quadra follow!
 $.lang.data["net.quorrabot.followHandler.penta-follow-train"] = "Penta follow!!";
 $.lang.data["net.quorrabot.followHandler.mega-follow-train"] = "M-M-M-Mega follow train!! ($1)";
 $.lang.data["net.quorrabot.followHandler.ultra-follow-train"] = "Ultra follow train!! ($1) *Explosions*";
-$.lang.data["net.quorrabot.followHandler.massive-follow-train"] = "MASSIVE FOLLOW TRAAAAIIIN!! ($1)";	
-
+$.lang.data["net.quorrabot.followHandler.massive-follow-train"] = "MASSIVE FOLLOW TRAAAAIIIN!! ($1)";
+$.lang.data["net.quorrabot.followHandler.followtrain-announce-true"] = "Follow train messages have been enabled.";
+$.lang.data["net.quorrabot.followHandler.followtrain-announce-false"] = "Follow train messages have been disabled.";
+$.lang.data["net.quorrabot.followHandler.followtrain-wrong-count"] = "Follow train and train messages start at 3 (3 follows) and end at 8 (8 or more follows). Please use numbers 3-8.";
+$.lang.data["net.quorrabot.followHandler.followtrain-message-set"] = "Follow train ($1) message successfully set.";
+$.lang.data["net.quorrabot.followHandler.followtrain-currentmsg"] = "The current follow train $1 message is: $2";
+$.lang.data["net.quorrabot.followHandler.followtrain-usage"] = "To set a follow train message use this format with message number being from 3 (3 follows) to 8 (8 or more follows): !followtrain (number) (message)";
 // noticeHandler.js
 $.lang.data["net.quorrabot.noticehandler.notice-config"] = "[Notice Settings] - [Notices: $1] - [Interval: $2 minutes] - [Msg Trigger: $3 messages] - [Amount: $4 notices]";
 $.lang.data["net.quorrabot.noticehandler.notice-usage"] = "Usage: !notice add / remove / edit / config / interval / req / toggle";

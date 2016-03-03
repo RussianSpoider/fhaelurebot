@@ -1,6 +1,7 @@
 $.FollowHandler = {
     FollowMessage: ($.inidb.get('settings', 'followmessage') ? $.inidb.get('settings', 'followmessage') : $.lang.get("net.quorrabot.followHandler.follows-message")),
     FollowToggle: ($.inidb.get('settings', 'followannounce') ? $.inidb.get('settings', 'followannounce') : "true"),
+    FollowTrainToggle: ($.inidb.get('settings', 'followtraintoggle') ? $.inidb.get('settings', 'followtraintoggle') : "true"),
     FollowReward: (parseInt($.inidb.get('settings', 'followreward')) ? parseInt($.inidb.get('settings', 'followreward')) : 100),
     FollowTrain: 0,
     LastFollow: 0,
@@ -43,10 +44,10 @@ $.getUserFollowed = function (user, channel) {
     var follows = $.twitch.GetUserFollowsChannel(user, channel);
 
     if (follows.getInt('_http') != 200) {
-        $.say($.lang.get("net.quorrabot.followHandler.is-not-following", user, channel));
+        $.say($.lang.get("net.quorrabot.followHandler.is-not-following", user, $.username.resolve(channel)));
         return;
     } else {
-       $.say($.lang.get("net.quorrabot.followHandler.is-following", user, channel)); 
+       $.say($.lang.get("net.quorrabot.followHandler.is-following", user, $.username.resolve(channel))); 
        return;
     }
 };
@@ -80,11 +81,13 @@ $.on('twitchFollow', function (event) {
         if ($.FollowHandler.FollowToggle=="true" && $.moduleEnabled("./handlers/followHandler.js")) {
             s = $.replaceAll(s, '(name)', username);
             $.say("/me " + s);
-            if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
-                $.timer.addTimer("./handlers/followHandler.js", "followtrain", true, function () {
-                    $.checkFollowTrain();
-                }, 1000);
-            } 
+            if($.FollowHandler.FollowTrainToggle=="true") {
+                if (!$.timer.hasTimer("./handlers/followHandler.js", "followtrain", true)) {
+                    $.timer.addTimer("./handlers/followHandler.js", "followtrain", true, function () {
+                        $.checkFollowTrain();
+                    }, 1000);
+                }
+            }
         }
     }  
 });
@@ -201,25 +204,119 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.followage-is-not-following", user, channel));
             return
         }
+    } else if (command.equalsIgnoreCase('followtrain')) {
+        if (!$.isAdmin(sender)) {
+            $.say($.getWhisperString(sender) + $.adminmsg);
+            return;
+        }
+        if($.inidb.get("settings","followtraintoggle")=="true") {
+            $.inidb.set("settings","followtraintoggle","false");
+            $.FollowHandler.FollowTrainToggle=="false";
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.followtrain-announce-false"));
+            return;
+        } else {
+            $.inidb.set("settings","followtraintoggle","true");
+            $.FollowHandler.FollowTrainToggle=="true";
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.followtrain-announce-true"));
+            return;
+        }
+    } else if (command.equalsIgnoreCase('followtrainmsg')) {
+        var message = "";
+        var trainString = "";
+        if(args[0]!=null) {
+            trainString = args[0];
+        }
+        if (!$.isAdmin(sender)) {
+            $.say($.getWhisperString(sender) + $.adminmsg);
+            return;
+        }
+        if(args[0]==null | args[0]=="" | parseInt(args[0]) < 3 | parseInt(args[0]) > 8) {
+           $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.followtrain-wrong-count"));
+           return;
+        }
+        if(args.length < 2) {
+            if($.inidb.get("settings", "followtrain" + args[0] + "msg")!=null) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.followtrain-currentmsg", args[0], $.inidb.get("settings", "followtrain" + args[0] + "msg")));
+            }
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.followtrain-usage"));
+            return;
+        }
+        if (args.length > 2 && parseInt(trainString)) {
+            message = argsString.substring(argsString.indexOf(args[0]) + $.strlen(args[0]) + 1);
+            $.inidb.set("settings","followtrain" + args[0] + "msg", message);
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.followtrain-message-set", args[0]));
+            return;
+        }
     }
+    
 });
 
 $.checkFollowTrain = function () {
+    $.ftmsg = "";
     if (System.currentTimeMillis() - $.FollowHandler.LastFollow > 65 * 1000) {
         $.timer.clearTimer("./handlers/followHandler.js", "followtrain", true);
         if ($.FollowHandler.FollowTrain > 1) {
             if ($.FollowHandler.FollowTrain == 3) {
-                $.say($.lang.get("net.quorrabot.followHandler.triple-follow-train"));
+                if($.inidb.get("settings","followtrain3msg")!="") {
+                    $.ftmsg = $.inidb.get("settings","followtrain3msg");
+                    if ($.ftmsg.contains('(followtraincount)')) {
+                        $.ftmsg = $.replaceAll($.ftmsg, '(followtraincount)', $.FollowHandler.FollowTrain);
+                    } 
+                    $.say($.inidb.get("settings","followtrain3msg"));
+                } else {
+                    $.say($.lang.get("net.quorrabot.followHandler.triple-follow-train"));
+                }
             } else if ($.FollowHandler.FollowTrain == 4) {
-                $.say($.lang.get("net.quorrabot.followHandler.Quadra-follow-train"));
+                if($.inidb.get("settings","followtrain4msg")!="") {
+                    $.ftmsg = $.inidb.get("settings","followtrain4msg");
+                    if ($.ftmsg.contains('(followtraincount)')) {
+                        $.ftmsg = $.replaceAll($.ftmsg, '(followtraincount)', $.FollowHandler.FollowTrain);
+                    } 
+                    $.say($.inidb.get("settings","followtrain4msg"));
+                } else {
+                    $.say($.lang.get("net.quorrabot.followHandler.Quadra-follow-train"));
+                }
             } else if ($.FollowHandler.FollowTrain == 5) {
-                $.say($.lang.get("net.quorrabot.followHandler.penta-follow-train"));
+                if($.inidb.get("settings","followtrain5msg")!="") {
+                    $.ftmsg = $.inidb.get("settings","followtrain5msg");
+                    if ($.ftmsg.contains('(followtraincount)')) {
+                        $.ftmsg = $.replaceAll($.ftmsg, '(followtraincount)', $.FollowHandler.FollowTrain);
+                    } 
+                    $.say($.inidb.get("settings","followtrain5msg"));
+                } else {
+                    $.say($.lang.get("net.quorrabot.followHandler.penta-follow-train"));
+                }
             } else if ($.FollowHandler.FollowTrain > 5 && $.FollowHandler.FollowTrain <= 10) {
-                $.say($.lang.get("net.quorrabot.followHandler.mega-follow-train", $.FollowHandler.FollowTrain));
+                if($.inidb.get("settings","followtrain6msg")!="") {
+                    $.ftmsg = $.inidb.get("settings","followtrain6msg");
+                    if ($.ftmsg.contains('(followtraincount)')) {
+                        $.ftmsg = $.replaceAll($.ftmsg, '(followtraincount)', $.FollowHandler.FollowTrain);
+                    } 
+                    $.say($.inidb.get("settings","followtrain6msg"));
+                } else {
+                    $.say($.lang.get("net.quorrabot.followHandler.mega-follow-train", $.FollowHandler.FollowTrain));
+                }
             } else if ($.FollowHandler.FollowTrain > 10 && $.FollowHandler.FollowTrain <= 20) {
-                $.say($.lang.get("net.quorrabot.followHandler.ultra-follow-train", $.FollowHandler.FollowTrain));
+                if($.inidb.get("settings","followtrain7msg")!="") {
+                    $.ftmsg = $.inidb.get("settings","followtrain7msg");
+                    if ($.ftmsg.contains('(followtraincount)')) {
+                        $.ftmsg = $.replaceAll($.ftmsg, '(followtraincount)', $.FollowHandler.FollowTrain);
+                    } 
+                    $.say($.inidb.get("settings","followtrain7msg"));
+                } else {
+                    $.say($.lang.get("net.quorrabot.followHandler.ultra-follow-train", $.FollowHandler.FollowTrain));
+                }
             } else if ($.FollowHandler.FollowTrain > 20) {
-                $.say($.lang.get("net.quorrabot.followHandler.massive-follow-train", $.FollowHandler.FollowTrain));
+                if($.inidb.get("settings","followtrain8msg")!="") {
+                    $.ftmsg = $.inidb.get("settings","followtrain8msg");
+                    if ($.ftmsg.contains('(followtraincount)')) {
+                        $.ftmsg = $.replaceAll($.ftmsg, '(followtraincount)', $.FollowHandler.FollowTrain);
+                    } 
+                    $.say($.inidb.get("settings","followtrain8msg"));
+                } else {
+                    $.say($.lang.get("net.quorrabot.followHandler.massive-follow-train", $.FollowHandler.FollowTrain));
+                }
+
             }
         }
         $.FollowHandler.FollowTrain = 0;
@@ -243,6 +340,8 @@ setTimeout(function () {
         $.registerChatCommand("./handlers/followHandler.js", "follow", "mod");
         $.registerChatCommand("./handlers/followHandler.js", "followannounce", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followmessage", "admin");
+        $.registerChatCommand("./handlers/followHandler.js", "followtrain", "mod");
+        $.registerChatCommand("./handlers/followHandler.js", "followtrainmsg", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followreward", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followage");
     }
