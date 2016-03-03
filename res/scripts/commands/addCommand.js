@@ -326,6 +326,9 @@ $.on('command', function (event) {
         if (messageCommand.contains('(random)')) {
             messageCommand = $.replaceAll(messageCommand, '(random)', $.users[$.rand($.users.length)][0]);
         }
+        if (messageCommand.contains('(viewers)')) {
+            messageCommand = $.replaceAll(messageCommand, '(viewers)', $.getViewers($.username.resolve($.channelName)));
+        }
         if (messageCommand.contains('(#)')) {
             messageCommand = $.replaceAll(messageCommand, '(#)', $.randRange(1, 100));
         } 
