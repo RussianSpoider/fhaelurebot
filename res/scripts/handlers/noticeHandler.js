@@ -78,7 +78,7 @@ $.on('command', function (event) {
             if (args.length < 2) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-remove-usage", $.Notice.NumberOfNotices));
                 return;
-            } else if (parseInt(args[1]) > $.Notice.NumberOfNotices | !$.inidb.exists('notices', 'message_' + args[1])) {
+            } else if (parseInt(args[1]) > $.Notice.NumberOfNotices) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-error-notice-404"));
                 return;
             } else {
