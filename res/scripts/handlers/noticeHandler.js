@@ -42,7 +42,7 @@ $.on('command', function (event) {
             return;
         }
         if(action.toLowerCase()!="trigger" | action.toLowerCase()!="interval" ) {
-            if(parseInt(args[1]) > 0) {
+            if(args[1]!=null && parseInt(args[1]) > 0) {
                 args[1] = parseInt(args[1] - 1);
             } else if(parseInt(args[1] == 0)) {
                 args[1] = 1;
