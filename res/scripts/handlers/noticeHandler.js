@@ -2,7 +2,7 @@ $.Notice = {
     NoticeReqMessages: parseInt($.inidb.get('notice', 'reqmessages')) ? parseInt($.inidb.get('notice', 'reqmessages')) : 25,
     NoticeInterval: parseInt($.inidb.get('notice', 'interval')) ? parseInt($.inidb.get('notice', 'interval')) : 10,
     NoticeToggle: $.inidb.get('settings', 'noticetoggle') ? $.inidb.get('settings', 'noticetoggle') : "true",
-    NumberOfNotices: parseInt($.inidb.GetKeyList('notices', '').length) ? parseInt($.inidb.GetKeyList('notices', '').length) : 0,
+    NumberOfNotices: (parseInt($.inidb.GetKeyList('notices', '').length)) ? (parseInt($.inidb.GetKeyList('notices', '').length)) : 0,
     MessageCount: 0,
 }
 
@@ -36,10 +36,21 @@ $.on('command', function (event) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
-        } else if (args.length == 0) {
+        }
+        if (args.length == 0) {
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-usage"));
             return;
-        } else if (action.equalsIgnoreCase('get')) {
+        }
+        if(action.toLowerCase()!="trigger" | action.toLowerCase()!="interval" ) {
+            if(parseInt(args[1]) > 0) {
+                args[1] = parseInt(args[1] - 1);
+            } else if(parseInt(args[1] == 0)) {
+                args[1] = 1;
+            }
+            args[1] = args[1].toString();
+        }
+        
+        if (action.equalsIgnoreCase('get')) {
             if (args.length < 2) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-get-usage", $.Notice.NumberOfNotices));
                 return;
@@ -67,7 +78,7 @@ $.on('command', function (event) {
             if (args.length < 2) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-remove-usage", $.Notice.NumberOfNotices));
                 return;
-            } else if (!$.inidb.exists('notices', 'message_' + args[1])) {
+            } else if (parseInt(args[1]) > $.Notice.NumberOfNotices | !$.inidb.exists('notices', 'message_' + args[1])) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-error-notice-404"));
                 return;
             } else {
@@ -101,17 +112,17 @@ $.on('command', function (event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-inteval-success"));
                 return;
             }
-        } else if (action.equalsIgnoreCase('req')) {
+        } else if (action.equalsIgnoreCase('trigger')) {
             if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-req-usage"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-trigger-usage"));
                 return;
             } else if (parseInt(args[1]) < 1) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-req-404"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-trigger-404"));
                 return;
             } else {
                 $.inidb.set('notice', 'reqmessages', parseInt(args[1]));
                 $.Notice.NoticeReqMessages = parseInt(args[1]);
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-req-success"));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-trigger-success"));
                 return;
             }
         } else if (action.equalsIgnoreCase('config')) {

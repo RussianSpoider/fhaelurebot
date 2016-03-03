@@ -444,11 +444,11 @@ $.lang.data["net.quorrabot.followHandler.followtrain-currentmsg"] = "The current
 $.lang.data["net.quorrabot.followHandler.followtrain-usage"] = "To set a follow train message use this format with message number being from 3 (3 follows) to 8 (8 or more follows): !followtrain (number) (message)";
 // noticeHandler.js
 $.lang.data["net.quorrabot.noticehandler.notice-config"] = "[Notice Settings] - [Notices: $1] - [Interval: $2 minutes] - [Msg Trigger: $3 messages] - [Amount: $4 notices]";
-$.lang.data["net.quorrabot.noticehandler.notice-usage"] = "Usage: !notice add / remove / edit / config / interval / req / toggle";
+$.lang.data["net.quorrabot.noticehandler.notice-usage"] = "Usage: !notice get/ add / remove / edit / config / interval / trigger / toggle";
 $.lang.data["net.quorrabot.noticehandler.notice-get-usage"] = "Usage: !notice get (notice id) Notice id\'s go from 0 to $1";
 $.lang.data["net.quorrabot.noticehandler.notice-error-notice-404"] = "That notice does not exists.";
 $.lang.data["net.quorrabot.noticehandler.notice-edit-usage"] = "Usage: !notice edit (notice id) (message) Notice id\'s go from 0 to $1";
-$.lang.data["net.quorrabot.noticehandler.notice-remove-usage"] = "Usage: !notice remove (notice id) Notice id\'s go from 0 to $1";
+$.lang.data["net.quorrabot.noticehandler.notice-remove-usage"] = "Usage: !notice remove (notice id). There are $1 notices";
 $.lang.data["net.quorrabot.noticehandler.notice-edit-success"] = "Notice edited!";
 $.lang.data["net.quorrabot.noticehandler.notice-remove-success"] = "Notice removed!";
 $.lang.data["net.quorrabot.noticehandler.notice-add-success"] = "Notice added!";
@@ -456,9 +456,9 @@ $.lang.data["net.quorrabot.noticehandler.notice-add-usage"] = "Usage: !notice ad
 $.lang.data["net.quorrabot.noticehandler.notice-interval-usage"] = "Usage: !notice interval (interval)";
 $.lang.data["net.quorrabot.noticehandler.notice-interval-404"] = "Notice interval needs to be more then 2 minutes.";
 $.lang.data["net.quorrabot.noticehandler.notice-inteval-success"] = "Notice interval set!";
-$.lang.data["net.quorrabot.noticehandler.notice-req-success"] = "Notice req message set!";
-$.lang.data["net.quorrabot.noticehandler.notice-req-usage"] = "Usage: !notice req (req messages)";
-$.lang.data["net.quorrabot.noticehandler.notice-req-404"] = "Notice req messages needs to at lease 1.";
+$.lang.data["net.quorrabot.noticehandler.notice-trigger-success"] = "Notice req message set!";
+$.lang.data["net.quorrabot.noticehandler.notice-trigger-usage"] = "Usage: !notice req (req messages)";
+$.lang.data["net.quorrabot.noticehandler.notice-trigger-404"] = "Notice trigger messages needs to at lease 1.";
 $.lang.data["net.quorrabot.noticehandler.notice-enabled"] = "Notices have been enabled!";
 $.lang.data["net.quorrabot.noticehandler.notice-disabled"] = "Notices have been disabled.";
 
