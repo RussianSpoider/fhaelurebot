@@ -325,7 +325,7 @@ public class Quorrabot implements Listener
     private void TwitchGroupChatHandler(String oauth, ConnectionManager connManager)
     {
         int gport = 6667;
-        String ghostname = "192.16.64.180";
+        String ghostname = "199.9.253.119";
 
         tgcSession = connManager.requestConnection(ghostname, gport, oauth);
         tgcSession.addIRCEventListener(new IrcEventHandler());

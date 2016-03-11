@@ -30,13 +30,15 @@ $.on('command', function (event) {
             var list = $.inidb.GetKeyList("highlights", "");
             $.writeToFile("", "web/highlights.txt", false);
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.highlightcommand.highlight-recent-5"));
-            for(var i=0;i < list.length;i++) {
+            var i=0
+            while(i < list.length) {
                 var highlightkey = list[i];
                 var highlight = $.inidb.get('highlights',highlightkey);
                 $.writeToFile(highlightkey + " - " + highlight, "web/highlights.txt", true);
-                if(i<5) {
+                if(i>(list.length - 6)) {
                    $.say($.getWhisperString(sender) + highlightkey + " - " + highlight); 
                 }
+                i++
             }
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.highlightcommand.highlight-see-list"));
             return;

@@ -59,9 +59,24 @@ $.say = function (s) {
         if (!$.inidb.exists("settings", "response_@all") || $.inidb.get("settings", "response_@all").equalsIgnoreCase("1")
                 || str.equals($.lang.get("net.quorrabot.misc.response-disable")) == true || str.indexOf(".timeout ") != -1 || str.indexOf(".ban ") != -1
                 || str.indexOf(".unban ") != -1 || str.equalsIgnoreCase(".clear") || str.equalsIgnoreCase(".mods")) {
-            $.channel.say(str);
+            var whispercheck = str.substring(0,3);
+            if(whispercheck.equalsIgnoreCase("/w ")) {
+                sleep(1000);
+                $.channel.say(str);
+            } else {
+                $.channel.say(str);
+            }
         }
     }
+}
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
 }
 
 $.replaceAll = function (string, find, replace) {
