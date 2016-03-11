@@ -578,6 +578,8 @@ $.lang.data["net.quorrabot.highlightcommand.usage"] = "Usage: !highlight (note)"
 $.lang.data["net.quorrabot.highlightcommand.error-stream-offline"] = "Stream is Offline!";
 $.lang.data["net.quorrabot.highlightcommand.highlight-saved"] = "Highlight saved! '$1' @ $2";
 $.lang.data["net.quorrabot.highlightcommand.highlight-cleared"] = "All Highlights have been erased!";
+$.lang.data["net.quorrabot.highlightcommand.highlight-recent-5"] = "Here are your 5 most recent highlights:";
+$.lang.data["net.quorrabot.highlightcommand.highlight-see-list"] = "To view the full list, please see highlights.txt in the bot's \"web\" folder.";
 
 //lastseenCommand.js 
 $.lang.data["net.quorrabot.lastseencommand.usage"] = "Usage: !lastseen (username)";
