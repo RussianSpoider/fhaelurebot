@@ -33,7 +33,7 @@ $.QuoteCommand.getQuote = function (event, quote) {
         $.say('Quote #' + quote + ' ' + $.inidb.get('quotes', 'quote_' + quote));
         return;
     } else {
-        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.quote-number"));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.quote-number", $.QuoteCommand.getTotalQuotes, ($.QuoteCommand.getTotalQuotes - 1) ));
         return;
     }
 };
