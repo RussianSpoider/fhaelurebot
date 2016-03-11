@@ -19,6 +19,7 @@ package com.gmt2001.Console;
 import com.gmt2001.Logger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Calendar;
 import java.util.TimeZone;
 import me.gloriouseggroll.quorrabot.Quorrabot;
 
@@ -44,12 +45,8 @@ public class out
     {
         if (Quorrabot.enableDebugging)
         {
-            SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss");
-            datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-            String timestamp = datefmt.format(new Date());
-
-            Logger.instance().log(Logger.LogType.Output, timestamp + "Z " + o.toString());
+            String datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss").format(Calendar.getInstance().getTime());
+            Logger.instance().log(Logger.LogType.Output, datefmt + "Z " + o.toString());
         }
 
         System.out.print(o);
@@ -62,17 +59,14 @@ public class out
 
     public static void println(Object o)
     {
-        SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss");
-        datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        String timestamp = datefmt.format(new Date());
+        String datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss").format(Calendar.getInstance().getTime());
 
         if (Quorrabot.enableDebugging)
         {
-            Logger.instance().log(Logger.LogType.Output, timestamp + "Z " + o.toString());
+            Logger.instance().log(Logger.LogType.Output, datefmt + "Z " + o.toString());
             Logger.instance().log(Logger.LogType.Blank, "");
         }
 
-        System.out.println("[" + timestamp + "] " + o);
+        System.out.println("[" + datefmt + "] " + o);
     }
 }
