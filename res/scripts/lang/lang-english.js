@@ -553,7 +553,7 @@ $.lang.data["net.quorrabot.8ballCommand.answer-33"] = "This is not the Bot you'r
 
 //quoteCommand.js
 $.lang.data["net.quorrabot.quotecommand.error-no-quotes"] = "There are no quotes at this time, or the specified quote does not exist.";
-$.lang.data["net.quorrabot.quotecommand.quote-number"] = "There are only $1 quotes right now! Remember that quotes are numbered from 0 to $2!";
+$.lang.data["net.quorrabot.quotecommand.quote-number"] = "There are only $1 quotes right now!";
 $.lang.data["net.quorrabot.quotecommand.random-quote"] = "#$1: $2";
 $.lang.data["net.quorrabot.quotecommand.error-quote-usage"] = "Usage: !quote add (quote)";
 $.lang.data["net.quorrabot.quotecommand.quote-add-success"] = "Quote added! There are now $1 quotes!";
