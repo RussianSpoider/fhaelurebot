@@ -495,9 +495,8 @@ $.customAPIJSON = function(message, command, args, sender) {
                                             customAPIResponse = jsonObject.getInt(jsonCheckList[0]);
                                         } catch (ex) {
                                             $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
+                                            return;
                                         }
-                                    } else {
-                                        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
                                     }
                                 }
                                 customAPIReturnString += " " + customAPIResponse;
@@ -517,9 +516,8 @@ $.customAPIJSON = function(message, command, args, sender) {
                                             customAPIResponse = jsonObject.getInt(jsonCheckList[i]);
                                         } catch (ex) {
                                             $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
+                                            return;
                                         }
-                                    } else {
-                                        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
                                     }
                                 }
                                 customAPIReturnString += " " + customAPIResponse;
@@ -544,15 +542,15 @@ $.customAPI = function(message, command, args, sender) {
         var reCustomAPI = new RegExp(/\(customapi\s([\w\W:\/\$\=\?\&]+)\)/); // URL[1]
 
         if ((regExCheck = csmessage.match(reCustomAPI))) {
-                    if (regExCheck[1].indexOf('$1') != -1) {
-                        var urlString = regExCheck[1].substring(regExCheck[1].indexOf("http"),regExCheck[1].indexOf(" "));
-                        if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
+                    if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
                             var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1,message.length());
                             args = mArgsString.split(" ");
-                        }
-                        if($.isJSON($.getCustomAPIValue(urlString))) {
-                            return $.customAPIJSON(message, command, args, sender);
-                        }
+                    }
+                    if($.isJSON($.getCustomAPIValue(regExCheck[1]))) {
+                        return $.customAPIJSON(message, command, args, sender);
+                    }
+            
+                    if (regExCheck[1].indexOf('$1') != -1) {
                         for (var i = 1; i <= 9; i++) {
                             if (regExCheck[1].indexOf('$' + i) != -1) {
                                 if (!args[i - 1]) {
