@@ -31,9 +31,6 @@ var graphemelimit = parseInt($.inidb.get("settings", "graphemelimit"));
 var graphememessage = $.inidb.get("settings", "graphememessage");
 var warningtypes = new Array($.inidb.get("settings", "warning1type"), $.inidb.get("settings", "warning2type"), $.inidb.get("settings", "warning3type"));
 var warningmessages = new Array($.inidb.get("settings", "warning1message"), $.inidb.get("settings", "warning2message"), $.inidb.get("settings", "warning3message"));
-var keys = $.inidb.GetKeyList("autobanphrases", "").length + 1;
-var keyss = $.inidb.GetKeyList("autopurgephrases", "").length + 1;
-var keysss = $.inidb.GetKeyList("whitelist", "").length + 1;
 
 if ($.spamtracker == null || $.spamtracker == undefined) {
     $.spamtracker = new Array();
@@ -215,6 +212,8 @@ $.on('command', function(event) {
     if (command.equalsIgnoreCase("chat") && username.equalsIgnoreCase($.botname)) {
         $.say(argsString);
     } else if (command.equalsIgnoreCase("autoban")) {
+        var abkeys = ((parseInt($.inidb.GetKeyList('autobanphrases', '').length) ? parseInt($.inidb.GetKeyList('autobanphrases', '').length) : 0) + 1);
+        
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
@@ -226,9 +225,9 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-add-usage"));
                 return;
             }
-            $.inidb.set("autobanphrases", "phrase_" + keys++, phrase);
+            $.inidb.set("autobanphrases", "phrase_" + parseInt(abkeys++), phrase);
             $.logEvent("chatModerator.js", 404, username + " added a phrase to the autoban list: " + phrase);
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-add-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-add-success", $.inidb.GetKeyList("autobanphrases", "").length));
             return;
         } else if (args[0].equalsIgnoreCase("remove")) {
             if (args.length < 2) {
@@ -239,7 +238,7 @@ $.on('command', function(event) {
                 return;
             }
             $.inidb.del("autobanphrases", "phrase_" + parseInt(args[1]));
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-remove-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-remove-success", $.inidb.GetKeyList("autobanphrases", "").length));
             return;
         } else if (args[0].equalsIgnoreCase("get")) {
             if (args.length < 2) {
@@ -251,8 +250,14 @@ $.on('command', function(event) {
             }
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autoban-get", parseInt(args[1]), $.inidb.get("autobanphrases", "phrase_" + parseInt(args[1]))));
             return;
+        } else if (args[0].equalsIgnoreCase("clear")) {
+            $.inidb.RemoveFile("autobanphrases");
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-clear-success"));
+            return;
         }
     } else if (command.equalsIgnoreCase("autopurge")) {
+        var apkeys = ((parseInt($.inidb.GetKeyList('autopurgephrases', '').length) ? parseInt($.inidb.GetKeyList('autopurgephrases', '').length) : 0) + 1);
+
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
@@ -264,9 +269,9 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-add-usage"));
                 return;
             }
-            $.inidb.set("autopurgephrases", "phrase_" + keyss++, phrase);
+            $.inidb.set("autopurgephrases", "phrase_" + parseInt(apkeys++), phrase);
             $.logEvent("chatModerator.js", 404, username + " added a phrase to the autopurge list: " + phrase);
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-add-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-add-success", $.inidb.GetKeyList("autopurgephrases", "").length));
             return;
         } else if (args[0].equalsIgnoreCase("remove")) {
             if (args.length < 2) {
@@ -277,7 +282,7 @@ $.on('command', function(event) {
                 return;
             }
             $.inidb.del("autopurgephrases", "phrase_" + parseInt(args[1]));
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-remove-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-remove-success", $.inidb.GetKeyList("autopurgephrases", "").length));
             return;
         } else if (args[0].equalsIgnoreCase("get")) {
             if (args.length < 2) {
@@ -289,8 +294,14 @@ $.on('command', function(event) {
             }
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.autopurge-get", parseInt(args[1]), $.inidb.get("autopurgephrases", "phrase_" + parseInt(args[1]))));
             return;
+        } else if (args[0].equalsIgnoreCase("clear")) {
+            $.inidb.RemoveFile("autopurgephrases");
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-clear-success"));
+            return;
         }
     } else if (command.equalsIgnoreCase("whitelist")) {
+        var wlkeys = ((parseInt($.inidb.GetKeyList('whitelist', '').length) ? parseInt($.inidb.GetKeyList('whitelist', '').length) : 0) + 1);
+
         if (!$.isModv3(sender, event.getTags())) {
             $.say($.getWhisperString(sender) + $.modmsg);
             return;
@@ -302,8 +313,8 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-add-usage"));
                 return;
             }
-            $.inidb.set("whitelist", "link_" + keysss++, phrase);
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-add-success"));
+            $.inidb.set("whitelist", "link_" + parseInt(wlkeys++), phrase);
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-add-success",  $.inidb.GetKeyList("whitelist", "").length));
             return;
         } else if (args[0].equalsIgnoreCase("remove")) {
             if (args.length < 2) {
@@ -314,7 +325,7 @@ $.on('command', function(event) {
                 return;
             }
             $.inidb.del("whitelist", "link_" + parseInt(args[1]));
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-remove-success"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-remove-success", $.inidb.GetKeyList("whitelist", "").length));
             return;
         } else if (args[0].equalsIgnoreCase("get")) {
             if (args.length < 2) {
@@ -324,9 +335,13 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.error"));
                 return;
             }
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-get", parseInt(args[1]), $.inidb.get("whitelist", "phrase_" + parseInt(args[1]))));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-get", parseInt(args[1]), $.inidb.get("whitelist", "link_" + parseInt(args[1]))));
             return;
-        } 
+        } else if (args[0].equalsIgnoreCase("clear")) {
+            $.inidb.RemoveFile("whitelist");
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.chatmoderator.whitelist-clear-success"));
+            return;
+        }
     } else if (command.equalsIgnoreCase("purge")) {
         if ($.isModv3(sender, event.getTags())) {
             if (args.length == 1) {
