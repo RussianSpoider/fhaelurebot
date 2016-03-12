@@ -47,6 +47,11 @@ $.on('command', function (event) {
             return;
         } 
         
+        if (action.equalsIgnoreCase('send')) {
+            $.SendNotice();
+            return;
+        }
+        
         if (action.equalsIgnoreCase('toggle')) {
             if ($.Notice.NoticeToggle=="true") {
                 $.Notice.NoticeToggle = "false";
@@ -203,12 +208,12 @@ $.SendNotice = function () {
         if (notice.contains('(customapi')) {
             var noticeId = '';
             for(var i=0;i<noticeList.length;i++) {
-                if(noticeList[i] = notice) {
-                    noticeId="Notice ID: #" + i;
+                if($.inidb.get('notices', 'message_' + i) == notice) {
+                    noticeId="Notice ID: #" + parseInt(i+1);
                     break;
                 }
             }
-            notice = $.customAPI(notice,noticeId,notice.split(" "),$.botName);
+            notice = $.customAPI(notice,noticeId,"",$.botName);
         }
         if (notice.contains('(code)')) {
             var text = "";

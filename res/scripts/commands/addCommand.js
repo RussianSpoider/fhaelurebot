@@ -448,6 +448,7 @@ $.customAPIJSON = function(message, command, args, sender) {
             customJSONStringTag = '',
             csmessage = message + '',
             sender = sender + '',
+            command = command + '',
             regExCheck,
             jsonItems,
             jsonCheckList;
@@ -527,12 +528,16 @@ $.customAPIJSON = function(message, command, args, sender) {
                     }
                 }
                 var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
+                if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
+                        replacedmessage = replacedmessage.substring(0, replacedmessage.indexOf(customAPIReturnString) + customAPIReturnString.length);
+                }
                 return replacedmessage;
 }
 
 $.customAPI = function(message, command, args, sender) {
         var csmessage = message + '',
             sender = sender + '',
+            command = command + '',
             customAPIReturnString = '',
             regExCheck;
 
@@ -541,6 +546,10 @@ $.customAPI = function(message, command, args, sender) {
         if ((regExCheck = csmessage.match(reCustomAPI))) {
                     if (regExCheck[1].indexOf('$1') != -1) {
                         var urlString = regExCheck[1].substring(regExCheck[1].indexOf("http"),regExCheck[1].indexOf(" "));
+                        if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
+                            var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1,message.length());
+                            args = mArgsString.split(" ");
+                        }
                         if($.isJSON($.getCustomAPIValue(urlString))) {
                             return $.customAPIJSON(message, command, args, sender);
                         }
