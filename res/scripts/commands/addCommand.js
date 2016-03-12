@@ -338,10 +338,8 @@ $.on('command', function (event) {
         if (messageCommand.contains('(z_stroke)')) {
             messageCommand = $.replaceAll(messageCommand, '(z_stroke)', java.lang.Character.toString(java.lang.Character.toChars(0x01B6)[0]));
         } 
-        while (messageCommand.contains('(customapi')) {
-            if (messageCommand.search(/(\(customapi ([^)]+)\))/g) >= 0) {
-            	messageCommand = $.replaceAll(messageCommand, RegExp.$1, getcustomapivalue(RegExp.$2));
-            }
+        if (messageCommand.contains('(customapi')) {
+            messageCommand = $.customAPI(messageCommand,command,args,sender);
         }
         while (messageCommand.contains('(file')) {
             if (messageCommand.search(/(\(file ([^)]+)\))/g) >= 0) {
@@ -352,6 +350,7 @@ $.on('command', function (event) {
             	messageCommand = $.replaceAll(messageCommand, RegExp.$1, $.readFile('addons/txt/'+RegExp.$2)[0]);
             }
         }
+
         if (messageCommand.contains('(code)')) {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -432,6 +431,138 @@ $.on('command', function (event) {
     }
 });
 
+$.getCustomAPIValue = function(url) {
+	var HttpResponse = Packages.com.gmt2001.HttpResponse;
+	var HttpRequest = Packages.com.gmt2001.HttpRequest;
+	var HashMap = Packages.java.util.HashMap;
+	var response = HttpRequest.getData(HttpRequest.RequestType.GET, url, "", new HashMap());
+	return response.content;
+}
+
+$.customAPIJSON = function(message, command, args, sender) {
+        var JSONObject = Packages.org.json.JSONObject,
+            jsonObject,
+            customAPIResponse = '',
+            origCustomAPIResponse = '',
+            customAPIReturnString = '',
+            customJSONStringTag = '',
+            csmessage = message + '',
+            sender = sender + '',
+            regExCheck,
+            jsonItems,
+            jsonCheckList;
+            
+        var reCustomAPIJson = new RegExp(/\(customapi ([\w\.:\/\$=\?\&]+)\s([\w\W]+)\)/), // URL[1], JSONmatch[2..n]
+            reCustomAPITextTag = new RegExp(/{([\w\W]+)}/);
+            
+                if ((regExCheck = csmessage.match(reCustomAPIJson))) {
+                    // Check for and process $1 - $9 in the URL.
+                    if (regExCheck[1].indexOf('$1') != -1) {
+                        for (var i = 1; i <= 9; i++) {
+                            if (regExCheck[1].indexOf('$' + i) != -1) {
+                                if (!args[i - 1]) {
+                                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapi.404', command));
+                                    return;
+                                }
+                                regExCheck[1] = regExCheck[1].replace('$' + i, args[i - 1]);
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    origCustomAPIResponse = getCustomAPIValue(regExCheck[1]);
+                    jsonItems = regExCheck[2].split(' ');
+                    for (var j = 0; j < jsonItems.length; j++) {
+                        if (jsonItems[j].startsWith('{') && jsonItems[j].endsWith('}')) {
+                            customAPIReturnString += " " + jsonItems[j].match(reCustomAPITextTag)[1];
+                        } else if (jsonItems[j].startsWith('{') && !jsonItems[j].endsWith('}')) {
+                            customJSONStringTag = '';
+                            while (!jsonItems[j].endsWith('}')) {
+                                customJSONStringTag += jsonItems[j++] + " ";
+                            }
+                            customJSONStringTag += jsonItems[j];
+                            customAPIReturnString += " " + customJSONStringTag.match(reCustomAPITextTag)[1];
+                        } else {
+                            jsonCheckList = jsonItems[j].split('.');
+                            if (jsonCheckList.length == 1) {
+                                try {
+                                    customAPIResponse = new JSONObject(origCustomAPIResponse).getString(jsonCheckList[0]);
+                                } catch (ex) {
+                                    if (ex.message.indexOf('not a string') != -1) {
+
+                                        try {
+                                            customAPIResponse = jsonObject.getInt(jsonCheckList[0]);
+                                        } catch (ex) {
+                                            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
+                                        }
+                                    } else {
+                                        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
+                                    }
+                                }
+                                customAPIReturnString += " " + customAPIResponse;
+                            } else {
+                                for (var i = 0; i < jsonCheckList.length - 1; i++) {
+                                    if (i == 0) {
+                                        jsonObject = new JSONObject(origCustomAPIResponse).getJSONObject(jsonCheckList[i]);
+                                    } else {
+                                        jsonObject = jsonObject.getJSONObject(jsonCheckList[i]);
+                                    }
+                                }
+                                try {
+                                    customAPIResponse = jsonObject.getString(jsonCheckList[i]);
+                                } catch (ex) {
+                                    if (ex.message.indexOf('not a string') != -1) {
+                                        try {
+                                            customAPIResponse = jsonObject.getInt(jsonCheckList[i]);
+                                        } catch (ex) {
+                                            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
+                                        }
+                                    } else {
+                                        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
+                                    }
+                                }
+                                customAPIReturnString += " " + customAPIResponse;
+                            }
+                        }
+                    }
+                }
+                var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
+                return replacedmessage;
+}
+
+$.customAPI = function(message, command, args, sender) {
+        var csmessage = message + '',
+            sender = sender + '',
+            customAPIReturnString = '',
+            regExCheck;
+
+        var reCustomAPI = new RegExp(/\(customapi\s([\w\W:\/\$\=\?\&]+)\)/); // URL[1]
+
+        if ((regExCheck = csmessage.match(reCustomAPI))) {
+                    if (regExCheck[1].indexOf('$1') != -1) {
+                        var urlString = regExCheck[1].substring(regExCheck[1].indexOf("http"),regExCheck[1].indexOf(" "));
+                        if($.isJSON($.getCustomAPIValue(urlString))) {
+                            return $.customAPIJSON(message, command, args, sender);
+                        }
+                        for (var i = 1; i <= 9; i++) {
+                            if (regExCheck[1].indexOf('$' + i) != -1) {
+                                if (!args[i - 1]) {
+                                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapi.404', command));
+                                    return;
+                                }
+                                regExCheck[1] = regExCheck[1].replace('$' + i, args[i - 1]);
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    customAPIReturnString = $.getCustomAPIValue(regExCheck[1]);
+                    var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
+                    return replacedmessage;
+                    
+            }
+}
+
 setTimeout(function () {
     if ($.moduleEnabled('./commands/addCommand.js')) {
         $.registerChatCommand("./commands/addCommand.js", "addcom", "mod");
@@ -463,11 +594,3 @@ $.timer.addTimer("./commands/addCommand.js", "registerAliases", false, function 
         $.registerCustomChatCommand("./commands/addCommand.js", acommands[i]);
     }
 }, 2 * 1000);
-
-getcustomapivalue = function(url) {
-	var HttpResponse = Packages.com.gmt2001.HttpResponse;
-	var HttpRequest = Packages.com.gmt2001.HttpRequest;
-	var HashMap = Packages.java.util.HashMap;
-	var response = HttpRequest.getData(HttpRequest.RequestType.GET, url, "", new HashMap());
-	return response.content;
-}

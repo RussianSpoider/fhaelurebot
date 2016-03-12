@@ -266,6 +266,8 @@ $.lang.data["net.quorrabot.addcommand.permcom-syntax-error"] = "You must specify
 $.lang.data["net.quorrabot.addcommand.permcom-error-no-command"] = "The command !$1 does not exist!";
 $.lang.data["net.quorrabot.addcommand.permcom-error-usage"] = "Usage: \"!permcom (command name) (group name) (1/2). Restricts usage of a command to viewers with a certain permission level. 1 specifies only a single group, multiple single groups can be added for the same command. 2 specifies recursive (all groups higher than the group specified).\"";
 $.lang.data["net.quorrabot.addcommand.filetag-error"] = "The File path may not contain any Slashes. The file has to be in addons/txt/ folder!";
+$.lang.data["net.quorrabot.addcommand.customapijson.err"] = "An error occurred processing the API for notice or command: $1";
+$.lang.data["net.quorrabot.addcommand.customapi.404"] = "Invalid parameters were specified for notice or command: $1";
 
 //raffleSystem.js
 $.lang.data["net.quorrabot.rafflesystem.start-success-followers-price"] = "/me [Raffle Started] Enter now for a chance to win [$1]! You need to be following to enter, and the fee to enter is $2. Enter the raffle by typing \"$3\".";

@@ -171,9 +171,10 @@ $.SendNotice = function () {
     var EventBus = Packages.me.gloriouseggroll.quorrabot.event.EventBus;
     var CommandEvent = Packages.me.gloriouseggroll.quorrabot.event.command.CommandEvent;
     var notice = $.inidb.get('notices', 'message_' + $.randRange(0, $.Notice.NumberOfNotices));
+    var noticeList = $.inidb.GetKeyList('notices', '');
 
-    if (notice.toLowerCase().startsWith('command:')) {
-        notice = notice.substring(8);
+    if (notice.toLowerCase().startsWith('!')) {
+        notice = notice.substring(1);
         EventBus.instance().post(new CommandEvent($.botname, notice, ' '));
         return;
     } else {
@@ -198,10 +199,16 @@ $.SendNotice = function () {
         if (notice.contains('(z_stroke)')) {
             notice = $.replaceAll(notice, '(z_stroke)', java.lang.Character.toString(java.lang.Character.toChars(0x01B6)[0]));
         } 
-        while (notice.contains('(customapi')) {
-            if (notice.search(/(\(customapi ([^)]+)\))/g) >= 0) {
-            	notice = $.replaceAll(notice, RegExp.$1, getcustomapivalue(RegExp.$2));
+
+        if (notice.contains('(customapi')) {
+            var noticeId = '';
+            for(var i=0;i<noticeList.length;i++) {
+                if(noticeList[i] = notice) {
+                    noticeId="Notice ID: #" + i;
+                    break;
+                }
             }
+            notice = $.customAPI(notice,noticeId,notice.split(" "),$.botName);
         }
         if (notice.contains('(code)')) {
             var text = "";

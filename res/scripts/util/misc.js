@@ -26,6 +26,16 @@ $.formatNumbers = function(n, econ) {
 	)+econ;
 }
 
+$.isJSON = function isJSON(data) {
+   var ret = true;
+   try {
+      JSON.parse(data);
+   }catch(e) {
+      ret = false;
+   }
+   return ret;
+}
+
 $.say = function (s) {
     var str = String(s);
     var i = str.indexOf("<");
