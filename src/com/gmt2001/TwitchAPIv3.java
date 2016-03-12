@@ -29,6 +29,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONString;
 
 /**
  * Communicates with Twitch Kraken server using the version 3 API
@@ -562,5 +563,30 @@ public class TwitchAPIv3
     public JSONObject GetUserFollowsChannel(String user, String channel)
     {
         return GetData(request_type.GET, base_url + "/users/" + user + "/follows/channels/" + channel, false);
+    }
+    
+
+    /**
+     * Gets the full list of emotes from Twitch
+     *
+     * @return
+     */
+    public JSONObject GetEmotes()
+    {
+        return GetData(request_type.GET, base_url + "/chat/emoticons", false);
+    }
+
+    /**
+     * Requests Twitch to send chat server information
+     * @param channel
+     * @return JSONObject
+     */
+    public JSONObject GetChatServer(String channel) {
+        return GetData(request_type.GET, "https://tmi.twitch.tv/servers?channel=" + channel, false);
+    }
+    
+    public String GetChatServerType(String channel) {
+        JSONObject chatServerJSON = GetChatServer(channel);
+        return chatServerJSON.getString("cluster");
     }
 }

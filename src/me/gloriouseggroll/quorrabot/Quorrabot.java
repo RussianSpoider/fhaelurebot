@@ -79,6 +79,8 @@ public class Quorrabot implements Listener
     private final String channelName;
     private final String ownerName;
     private final String hostname;
+    private final String clusterhost;
+    private final Boolean useclusterhost;
     private int port;
     private int baseport;
     private double msglimit30;
@@ -129,7 +131,7 @@ public class Quorrabot implements Listener
 
     public Quorrabot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String twitchalertstoken, String streamtiptoken, String streamtipid, boolean webenable,
-            boolean musicenable, boolean usehttps, String keystorepath, String keystorepassword, String keypassword)
+            boolean musicenable, boolean usehttps, String keystorepath, String keystorepassword, String keypassword, String clusterhost)
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
@@ -184,6 +186,11 @@ public class Quorrabot implements Listener
         rng = new SecureRandom();
         pollResults = new TreeMap<>();
         voters = new TreeSet<>();
+        
+        switch(TwitchAPIv3.instance().GetChatServerType(channel)) {
+            case "aws": useclusterhost = true; break;
+            default: case "main": useclusterhost = false; break;
+        }
 
         if (hostname.isEmpty())
         {
@@ -193,6 +200,12 @@ public class Quorrabot implements Listener
         {
             this.hostname = hostname;
             this.port = port;
+        }
+        
+        if (clusterhost.isEmpty()) {
+            this.clusterhost = "irc.chat.twitch.tv";
+        } else {
+            this.clusterhost = clusterhost;
         }
 
         if (msglimit30 > 0)
@@ -265,7 +278,12 @@ public class Quorrabot implements Listener
 
         channels = new HashMap<>();
 
-        this.session = connectionManager.requestConnection(this.hostname, this.port, oauth);
+        if (useclusterhost) {
+            this.session = connectionManager.requestConnection(this.clusterhost, this.port, oauth);
+        } else {
+            this.session = connectionManager.requestConnection(this.hostname, this.port, oauth);
+        }
+
         TwitchGroupChatHandler(this.oauth, this.connectionManager);
 
         if (clientid.length() == 0)
@@ -405,6 +423,7 @@ public class Quorrabot implements Listener
         Script.global.defineProperty("pollVoters", voters, 0);
         Script.global.defineProperty("connmgr", connectionManager, 0);
         Script.global.defineProperty("hostname", hostname, 0);
+        Script.global.defineProperty("clusterhost", clusterhost, 0);
 
         t = new Thread(new Runnable()
         {
@@ -991,6 +1010,7 @@ public class Quorrabot implements Listener
         String owner = "";
         String hostname = "";
         int baseport = 25300;
+        String clusterhost = "";
         int port = 0;
         double msglimit30 = 0;
         String datastore = "";
@@ -1048,6 +1068,9 @@ public class Quorrabot implements Listener
                     if (line.startsWith("hostname=") && line.length() > 10)
                     {
                         hostname = line.substring(9);
+                    }
+                    if (line.startsWith("clusterhost=") && line.length() > 13) {
+                        clusterhost = line.substring(12);
                     }
                     if (line.startsWith("port=") && line.length() > 6)
                     {
@@ -1153,6 +1176,7 @@ public class Quorrabot implements Listener
                     com.gmt2001.Console.out.println("owner='" + owner + "'");
                     com.gmt2001.Console.out.println("baseport='" + baseport + "'");
                     com.gmt2001.Console.out.println("hostname='" + hostname + "'");
+                    com.gmt2001.Console.out.println("clusterhost='" + clusterhost + "'");
                     com.gmt2001.Console.out.println("port='" + port + "'");
                     com.gmt2001.Console.out.println("msglimit30='" + msglimit30 + "'");
                     com.gmt2001.Console.out.println("datastore='" + datastore + "'");
@@ -1240,6 +1264,12 @@ public class Quorrabot implements Listener
                     if (!hostname.equals(arg.substring(9)))
                     {
                         hostname = arg.substring(9);
+                        changed = true;
+                    }
+                }
+                if (arg.toLowerCase().startsWith("clusterhost=") && arg.length() > 13) {
+                    if (!hostname.equals(arg.substring(12))) {
+                        hostname = arg.substring(12);
                         changed = true;
                     }
                 }
@@ -1355,7 +1385,7 @@ public class Quorrabot implements Listener
                 {
                     com.gmt2001.Console.out.println("Usage: java -Dfile.encoding=UTF-8 -jar QuorraBot.jar [printlogin] [user=<bot username>] "
                             + "[oauth=<bot irc oauth>] [apioauth=<editor oauth>] [clientid=<oauth clientid>] [channel=<channel to join>] "
-                            + "[owner=<bot owner username>] [baseport=<bot webserver port, music server will be +1>] [hostname=<custom irc server>] "
+                            + "[owner=<bot owner username>] [baseport=<bot webserver port, music server will be +1>] [hostname=<custom irc server>] [clusterhost=<twitch irc server cluster>] "
                             + "[port=<custom irc port>] [msglimit30=<message limit per 30 seconds>] "
                             + "[datastore=<DataStore type, for a list, run java -jar QuorraBot.jar storetypes>] "
                             + "[datastoreconfig=<Optional DataStore config option, different for each DataStore type>] "
@@ -1387,6 +1417,7 @@ public class Quorrabot implements Listener
             data += "owner=" + owner + "\r\n";
             data += "baseport=" + baseport + "\r\n";
             data += "hostname=" + hostname + "\r\n";
+            data += "clusterhost=" + clusterhost + "\r\n";
             data += "port=" + port + "\r\n";
             data += "msglimit30=" + msglimit30 + "\r\n";
             data += "datastore=" + datastore + "\r\n";
@@ -1405,6 +1436,6 @@ public class Quorrabot implements Listener
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
 
-        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, twitchalertstoken, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword);
+        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, twitchalertstoken, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword, clusterhost);
     }
 }
