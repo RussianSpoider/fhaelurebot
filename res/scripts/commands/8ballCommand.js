@@ -57,7 +57,7 @@ var points = $.inidb.get('points', sender);
 		b = $.randElement(ball);
 	} while (b.equalsIgnoreCase($var.lastRandom) && ball.length > 1);
 
-	$.say("Magic-8ball says... " + b);
+	$.say("Magic 8-ball says... " + b);
         return;
 }
 

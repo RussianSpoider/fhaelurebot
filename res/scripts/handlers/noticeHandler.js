@@ -47,11 +47,6 @@ $.on('command', function (event) {
             return;
         } 
         
-        if (action.equalsIgnoreCase('send')) {
-            $.SendNotice();
-            return;
-        }
-        
         if (action.equalsIgnoreCase('toggle')) {
             if ($.Notice.NoticeToggle=="true") {
                 $.Notice.NoticeToggle = "false";
@@ -160,7 +155,19 @@ $.on('command', function (event) {
                 return;
             }
         } 
-
+        if (action.equalsIgnoreCase('send')) {
+            if (args.length < 2) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-get-usage", $.Notice.NumberOfNotices));
+                return;
+            } else if (!$.inidb.exists('notices', 'message_' + args[1])) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-error-notice-404"));
+                return;
+            } else {
+                $.SendNotice(args[1]);
+                return;
+            }
+        } 
+        
         $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-usage"));
         return;
     }
@@ -172,10 +179,16 @@ setTimeout(function () {
     }
 }, 10 * 1000);
 
-$.SendNotice = function () {
+$.SendNotice = function (number) {
     var EventBus = Packages.me.gloriouseggroll.quorrabot.event.EventBus;
     var CommandEvent = Packages.me.gloriouseggroll.quorrabot.event.command.CommandEvent;
-    var notice = $.inidb.get('notices', 'message_' + $.randRange(0, $.Notice.NumberOfNotices));
+    var notice = "";
+
+    if(number!=null || number !="") {
+        notice = $.inidb.get('notices', 'message_' + number);    
+    } else {
+        notice = $.inidb.get('notices', 'message_' + $.randRange(0, $.Notice.NumberOfNotices));
+    }
     var noticeList = $.inidb.GetKeyList('notices', '');
 
     if (notice.toLowerCase().startsWith('!')) {
@@ -231,7 +244,7 @@ $.SendNotice = function () {
 $.timer.addTimer("./handlers/noticeHandler.js", "Notices", true, function () {
     if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle=="true") {
         if ($.Notice.MessageCount >= $.Notice.NoticeReqMessages) {
-            $.SendNotice();
+            $.SendNotice("","");
             $.Notice.MessageCount = 0;
             return;
         }
