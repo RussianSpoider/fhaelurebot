@@ -533,6 +533,7 @@ $.customAPIJSON = function(message, command, args, sender) {
 }
 
 $.customAPI = function(message, command, args, sender) {
+        
         var csmessage = message + '',
             sender = sender + '',
             command = command + '',
@@ -546,7 +547,14 @@ $.customAPI = function(message, command, args, sender) {
                             var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1,message.length());
                             args = mArgsString.split(" ");
                     }
-                    if($.isJSON($.getCustomAPIValue(regExCheck[1]))) {
+                    var urlsubstr = message.toLowerCase().substring(message.indexOf("http"), message.length());
+                    var urlString = "";
+                    if(urlsubstr.indexOf(" ")!=-1) {
+                        urlString = urlsubstr.substring(0, urlsubstr.indexOf(" "));
+                    } else {
+                        urlString = urlsubstr.substring(0, urlsubstr.indexOf(")"));
+                    }
+                    if($.isJSON($.getCustomAPIValue(urlString))) {
                         return $.customAPIJSON(message, command, args, sender);
                     }
             

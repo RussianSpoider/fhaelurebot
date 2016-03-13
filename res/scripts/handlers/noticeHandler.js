@@ -180,12 +180,13 @@ setTimeout(function () {
 }, 10 * 1000);
 
 $.SendNotice = function (number) {
+    var noticenum = number;
     var EventBus = Packages.me.gloriouseggroll.quorrabot.event.EventBus;
     var CommandEvent = Packages.me.gloriouseggroll.quorrabot.event.command.CommandEvent;
     var notice = "";
 
-    if(number!=null || number !="") {
-        notice = $.inidb.get('notices', 'message_' + number);    
+    if(parseInt(noticenum)) {
+        notice = $.inidb.get('notices', 'message_' + noticenum); 
     } else {
         notice = $.inidb.get('notices', 'message_' + $.randRange(0, $.Notice.NumberOfNotices));
     }
@@ -244,7 +245,7 @@ $.SendNotice = function (number) {
 $.timer.addTimer("./handlers/noticeHandler.js", "Notices", true, function () {
     if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle=="true") {
         if ($.Notice.MessageCount >= $.Notice.NoticeReqMessages) {
-            $.SendNotice("","");
+            $.SendNotice("");
             $.Notice.MessageCount = 0;
             return;
         }
