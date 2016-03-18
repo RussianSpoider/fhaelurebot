@@ -61,7 +61,7 @@ $.on('command', function (event) {
         }
         
         if (action.equalsIgnoreCase('interval')) {
-            if (args.length < 2) {
+            if (args.length < 3) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-interval-usage"));
                 return;
             } else if (parseInt(args[1]) < 2) {
@@ -76,7 +76,7 @@ $.on('command', function (event) {
         } 
         
         if (action.equalsIgnoreCase('trigger')) {
-            if (args.length < 2) {
+            if (args.length < 3) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-trigger-usage"));
                 return;
             } else if (parseInt(args[1]) < 1) {
@@ -91,16 +91,15 @@ $.on('command', function (event) {
         }
         
         if(action.toLowerCase()!="trigger" | action.toLowerCase()!="interval") {
-            if(args[1]!=null && parseInt(args[1]) > 0) {
+            if((args[1]!=null || args[1]!="") && parseInt(args[1]) > 0) {
                 args[1] = parseInt(args[1] - 1);
             } else if(parseInt(args[1] == 0)) {
                 args[1] = 1;
             }
-            args[1] = args[1].toString();
         }
         
         if (action.equalsIgnoreCase('get')) {
-            if (args.length < 2) {
+            if (args.length < 3) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-get-usage", $.Notice.NumberOfNotices));
                 return;
             } else if (!$.inidb.exists('notices', 'message_' + args[1])) {
@@ -128,7 +127,7 @@ $.on('command', function (event) {
         } 
         
         if (action.equalsIgnoreCase('remove')) {
-            if (args.length < 2) {
+            if (args.length < 3) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-remove-usage", $.Notice.NumberOfNotices));
                 return;
             } else if (parseInt(args[1]) > $.Notice.NumberOfNotices) {
@@ -144,7 +143,7 @@ $.on('command', function (event) {
         } 
         
         if (action.equalsIgnoreCase('add')) {
-            if (args.length < 2) {
+            if (args.length < 3) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-add-usage"));
                 return;
             } else {
@@ -156,8 +155,8 @@ $.on('command', function (event) {
             }
         } 
         if (action.equalsIgnoreCase('send')) {
-            if (args.length < 2) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-get-usage", $.Notice.NumberOfNotices));
+            if (args.length < 3) {
+                $.SendNotice("");
                 return;
             } else if (!$.inidb.exists('notices', 'message_' + args[1])) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-error-notice-404"));
