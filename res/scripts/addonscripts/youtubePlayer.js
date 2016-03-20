@@ -955,8 +955,6 @@ offlinePlayer = function() {setTimeout(function(){
             if($.isOnline($.channelName)) {
                 if($.inidb.exists("settings", "currsongfile")) {
                     $.currsongfile = $.inidb.get("settings", "currsongfile");
-                }
-                if($.currsongfile!="" || $.currsongfile!=null) {
                     $var.ytcurrSong = $.readFile($.currsongfile);
                 } else {
                     $var.ytcurrSong = $.readFile("./addons/youtubePlayer/currentsong.txt");            
