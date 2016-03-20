@@ -953,8 +953,10 @@ offlinePlayer = function() {setTimeout(function(){
         $.timer.addTimer("./addonscripts/youtubePlayer.js", "currsongyt", true, function() {
             
             if($.isOnline($.channelName)) {
-                $.currsongfile = $.inidb.get("settings", "currsongfile");
-                if($.currsongfile!="./addons/youtubePlayer/currentsong.txt") {
+                if($.inidb.exists("settings", "currsongfile")) {
+                    $.currsongfile = $.inidb.get("settings", "currsongfile");
+                }
+                if($.currsongfile!="" || $.currsongfile!=null) {
                     $var.ytcurrSong = $.readFile($.currsongfile);
                 } else {
                     $var.ytcurrSong = $.readFile("./addons/youtubePlayer/currentsong.txt");            

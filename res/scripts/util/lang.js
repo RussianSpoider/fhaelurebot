@@ -46,9 +46,11 @@ $.lang.get = function(str_name) {
 	    var s = $.lang.data[str_name];
 	}
     
-    var i;
-    for (i = 1; i < arguments.length; i++) {
-        s = $.replaceAll(s, "$" + i, arguments[i]);
+    for (var i = 1; i < arguments.length; i++) {
+        var v = "$" + i.toString();
+        var arg = arguments[i].toString();
+
+        s = $.replaceAll(s, v, arg);
     }
     
     return s;

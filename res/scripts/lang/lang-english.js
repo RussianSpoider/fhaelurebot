@@ -3,6 +3,7 @@ $.lang.data["net.quorrabot.lang.not-exists"] = "!!! Missing string in lang file 
 $.lang.data["net.quorrabot.lang.lang-not-exists"] = "That language file does not exist!";
 $.lang.data["net.quorrabot.lang.lang-changed"] = "Changed language to $1!";
 $.lang.data["net.quorrabot.lang.curlang"] = "The current language is $1!";
+$.lang.data["net.quorrabot.lang.test"] = "$1 $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 $12";
 
 //common
 $.lang.data["net.quorrabot.common.enabled"] = "enabled";
@@ -448,9 +449,9 @@ $.lang.data["net.quorrabot.followHandler.followtrain-usage"] = "To set a follow 
 // noticeHandler.js
 $.lang.data["net.quorrabot.noticehandler.notice-config"] = "[Notice Settings] - [Notices: $1] - [Interval: $2 minutes] - [Msg Trigger: $3 messages] - [Amount: $4 notices]";
 $.lang.data["net.quorrabot.noticehandler.notice-usage"] = "Usage: !notice get/ add / remove / edit / config / interval / trigger / toggle";
-$.lang.data["net.quorrabot.noticehandler.notice-get-usage"] = "Usage: !notice get (notice id) Notice id\'s go from 0 to $1";
+$.lang.data["net.quorrabot.noticehandler.notice-get-usage"] = "Usage: !notice get (notice id) Notice id\'s go from 1 to $1";
 $.lang.data["net.quorrabot.noticehandler.notice-error-notice-404"] = "That notice does not exists.";
-$.lang.data["net.quorrabot.noticehandler.notice-edit-usage"] = "Usage: !notice edit (notice id) (message) Notice id\'s go from 0 to $1";
+$.lang.data["net.quorrabot.noticehandler.notice-edit-usage"] = "Usage: !notice edit (notice id) (message) Notice id\'s go from 1 to $1";
 $.lang.data["net.quorrabot.noticehandler.notice-remove-usage"] = "Usage: !notice remove (notice id). There are $1 notices";
 $.lang.data["net.quorrabot.noticehandler.notice-edit-success"] = "Notice edited!";
 $.lang.data["net.quorrabot.noticehandler.notice-remove-success"] = "Notice removed!";
@@ -566,7 +567,7 @@ $.lang.data["net.quorrabot.quotecommand.editquote-success"] = "Quote #$1 modifie
 $.lang.data["net.quorrabot.quotecommand.delquote-error"] = "There are no quotes at this time!";
 $.lang.data["net.quorrabot.quotecommand.delquote-error-usage"] = "Usage: !quote remove (ID)";
 $.lang.data["net.quorrabot.quotecommand.delquote-success"] = "Quote removed! There are now $1 quotes!";
-$.lang.data["net.quorrabot.quotecommand.delquote-error-wrong-id"] = "That quote does not exist, Remember quotes are marked from 0 to $1";
+$.lang.data["net.quorrabot.quotecommand.delquote-error-wrong-id"] = "That quote does not exist, Remember quotes are marked from 1 to $1";
 $.lang.data["net.quorrabot.quotecommand.game-usage"] = "Usage: !quote game (enable/disable)";
 $.lang.data["net.quorrabot.quotecommand.game-error"] = "$1 is not valid syntax, use enable/disable.";
 $.lang.data["net.quorrabot.quotecommand.game-success-enable"] = "The game being played will now be added to quotes.";
@@ -591,10 +592,10 @@ $.lang.data["net.quorrabot.lastseencommand.error-no-data"] = "No data.";
 
 //killCommand.js 
 $.lang.data["net.quorrabot.killcommand.error-no-kills"] = "There are no kill messages at this time";
-$.lang.data["net.quorrabot.killcommand.num-kills"] = "There are only $1 kills right now! Remember that kill messages are numbered from 0 to $2!";
+$.lang.data["net.quorrabot.killcommand.num-kills"] = "There are only $1 kills right now! Remember that kill messages are numbered from 1 to $2!";
 $.lang.data["net.quorrabot.killcommand.addkill-usage"] = "Usage: !addkill (message)";
 $.lang.data["net.quorrabot.killcommand.kill-added"] = "kill message added! There are now $1 kill messages!";
-$.lang.data["net.quorrabot.killcommand.error-wrong-id"] = "There are $1 kill messages. Message IDs go from 0 to $2 and $3 isn't one of them";
+$.lang.data["net.quorrabot.killcommand.error-wrong-id"] = "There are $1 kill messages. Message IDs go from 1 to $2 and $3 isn't one of them";
 $.lang.data["net.quorrabot.killcommand.edit-kill-usage"] = "Usage: !editkill (id) (message)";
 $.lang.data["net.quorrabot.killcommand.kill-edited"] = "kill message #$1 changed to: $2";
 $.lang.data["net.quorrabot.killcommand.del-kill-usage"] = "Usage: !delkill (ID)";

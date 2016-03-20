@@ -89,16 +89,40 @@ function sleep(milliseconds) {
   }
 }
 
+
 $.replaceAll = function (string, find, replace) {
     if (find.equals(replace)) {
         return string;
     }
-
-    while (string.indexOf(find) >= 0) {
-        string = string.replace(find, replace);
+    
+    if(find.indexOf("(")!=-1) {
+        while(string.indexOf(find)>=0) {
+            string = string.replace(find, replace);
+        }
+        return string;
+    } else {
+        var args = string.split(" ");
+        var retstr = "";
+    
+        for(var i=0;i<args.length;i++) {
+            if(args[i].indexOf(find)>=0) {
+                var substr = args[i].substring( args[i].indexOf(find), find.length + 1);
+                var substr2 = substr.substring(find.length, find.length+1);
+            
+                if(isNaN(substr2) || substr2=="") {
+                    args[i] = args[i].replace(find,replace);
+                }
+            }
+        
+            retstr += args[i];
+        
+            if(i<args.length) {
+                retstr+=" ";
+            }
+        }
+    
+        return retstr;
     }
-
-    return string;
 }
 
 $.list = {};

@@ -155,7 +155,7 @@ $.on('command', function (event) {
             }
         } 
         if (action.equalsIgnoreCase('send')) {
-            if (args.length < 3) {
+            if (args[1]==null) {
                 $.SendNotice("");
                 return;
             } else if (!$.inidb.exists('notices', 'message_' + args[1])) {
