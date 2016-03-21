@@ -460,11 +460,14 @@ $.lang.data["net.quorrabot.noticehandler.notice-add-usage"] = "Usage: !notice ad
 $.lang.data["net.quorrabot.noticehandler.notice-interval-usage"] = "Usage: !notice interval (interval)";
 $.lang.data["net.quorrabot.noticehandler.notice-interval-404"] = "Notice interval needs to be at least 2 minutes.";
 $.lang.data["net.quorrabot.noticehandler.notice-inteval-success"] = "Notice interval set!";
-$.lang.data["net.quorrabot.noticehandler.notice-trigger-success"] = "Notice trigger message set!";
+$.lang.data["net.quorrabot.noticehandler.notice-trigger-success"] = "Notice trigger amount set!";
 $.lang.data["net.quorrabot.noticehandler.notice-trigger-usage"] = "Usage: !notice trigger (trigger amount of messages)";
 $.lang.data["net.quorrabot.noticehandler.notice-trigger-404"] = "Notice trigger messages needs to at lease 1.";
 $.lang.data["net.quorrabot.noticehandler.notice-enabled"] = "Notices have been enabled!";
 $.lang.data["net.quorrabot.noticehandler.notice-disabled"] = "Notices have been disabled.";
+
+$.lang.data["net.quorrabot.noticehandler.notice-timer-success"] = "Notice timer has been set for Notice $1.";
+$.lang.data["net.quorrabot.noticehandler.notice-timer-usage"] = "Usage: !notice timer (notice id) (time in minutes). Notice id\'s go from 1 to $1";
 
 //phraseHandler.js
 $.lang.data["net.quorrabot.phrasehandler.trigger-error-add-usage"] = "Usage: !addphrase \"trigger\" \"message\" - (sender) can be used in the message to display the username.";

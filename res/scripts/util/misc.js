@@ -5,13 +5,17 @@ $.econNameFormat = function(amt, name){
 	if(name === undefined){
 		name = "";
 	}
-	if (amt >= 1) {
-		if (regex.test(name)){
-			name = " " + name+"ies";
-		} else {
+	if (amt > 1) {
+                if($.inidb.exists("settings","pointNameMultiple")) {
+                    name = $.inidb.get("settings","pointNameMultiple");
+                } else {
+                    if (regex.test(name)){
+                    	name = " " + name+"ies";
+                    } else {
 			name = " " + name+"s";
-		}
-	}
+                    }
+                }
+        }
 	return $.formatNumbers(amt, name);
 }
 //Converts int based numbers (not string based) to normal currency values. Ex: 1000 -> 1,000
@@ -23,7 +27,7 @@ $.formatNumbers = function(n, econ) {
 	return n.toFixed().replace(/./g, function(c, i, a) {
 			return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
 		}
-	)+econ;
+	) + " " + econ;
 }
 
 $.isJSON = function isJSON(data) {
