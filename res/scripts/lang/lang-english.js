@@ -70,7 +70,7 @@ $.lang.data["net.quorrabot.misc.response-disable"] = "Responses are now disabled
 
 //permissions.js
 $.lang.data["net.quorrabot.permissions.group-not-exists"] = "That group does not exist! To view a list of groups, use !group list.";
-$.lang.data["net.quorrabot.permissions.group-remove"] = "Group $1 has been successfully removed. All users in that group have been moved to the Viewers group.";
+$.lang.data["net.quorrabot.permissions.group-remove"] = "Group $1 has been successfully removed. All users in that group have been moved to the Viewer group.";
 $.lang.data["net.quorrabot.permissions.group-create"] = "Group $1 created!";
 $.lang.data["net.quorrabot.permissions.group-set"] = "Group for $1 changed to $2!";
 $.lang.data["net.quorrabot.permissions.group-set-err-above"] = "You must be a higher rank than the person you are trying to promote!";
@@ -85,6 +85,8 @@ $.lang.data["net.quorrabot.permissions.group-name"] = "Changed group '$1' to '$2
 $.lang.data["net.quorrabot.permissions.users"] = "Users in channel: ";
 $.lang.data["net.quorrabot.permissions.mods"] = "Mods in channel: ";
 $.lang.data["net.quorrabot.permissions.admins"] = "Admins in channel: ";
+$.lang.data["net.quorrabot.permissions.group-already-exists"] = "The user group $1 already exists.";
+$.lang.data["net.quorrabot.permissions.group-err-default"] = "Default groups cannot be removed!";
 
 //commandList.js
 $.lang.data["net.quorrabot.commandlist.botcommands"] = "Bot commands";

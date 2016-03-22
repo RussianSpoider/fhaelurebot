@@ -310,14 +310,14 @@ $.on('command', function (event) {
             if (args.length > 0) {
                 messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve(args[0])));
             } else {
-                messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve($.channelName)));
+                messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.channelName));
             }
         }
         if (messageCommand.contains('(status)')) {
             if (args.length > 0) {
                 messageCommand = $.replaceAll(messageCommand, '(status)', $.getStatus($.username.resolve(args[0])));
             } else {
-                messageCommand = $.replaceAll(messageCommand, '(status)', $.getStatus($.username.resolve($.channelName)));
+                messageCommand = $.replaceAll(messageCommand, '(status)', $.getStatus($.channelName));
             }
         }
         if (messageCommand.contains('(echo)') && args.length > 0) {
@@ -327,7 +327,11 @@ $.on('command', function (event) {
             messageCommand = $.replaceAll(messageCommand, '(random)', $.users[$.rand($.users.length)][0]);
         }
         if (messageCommand.contains('(viewers)')) {
-            messageCommand = $.replaceAll(messageCommand, '(viewers)', $.getViewers($.username.resolve($.channelName)));
+            if (args.length > 0) {
+                messageCommand = $.replaceAll(messageCommand, '(viewers)', $.getViewers($.username.resolve(args[0])));
+            } else {
+                messageCommand = $.replaceAll(messageCommand, '(viewers)', $.getViewers($.channelName));
+            }
         }
         if (messageCommand.contains('(#)')) {
             messageCommand = $.replaceAll(messageCommand, '(#)', $.randRange(1, 100));

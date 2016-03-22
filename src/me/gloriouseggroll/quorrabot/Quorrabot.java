@@ -136,7 +136,7 @@ public class Quorrabot implements Listener
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
         com.gmt2001.Console.out.println();
-        com.gmt2001.Console.out.println("QuorraBot Core 1.08.1 03/12/2016");
+        com.gmt2001.Console.out.println("QuorraBot Core 1.09 03/22/2016");
         com.gmt2001.Console.out.println("Build revision: " + RepoVersion.getRepoVersion());
         com.gmt2001.Console.out.println("www.quorrabot.com");
         com.gmt2001.Console.out.println();
@@ -467,17 +467,17 @@ public class Quorrabot implements Listener
         }
 
         com.gmt2001.Console.out.print("[SHUTDOWN] Waiting for running scripts to finish...");
-        try
-        {
-            for (int i = 30; i > 0; i--)
-            {
-                com.gmt2001.Console.out.print("\r[SHUTDOWN] Waiting for running scripts to finish..." + i + " ");
-                Thread.sleep(1000);
-            }
-        } catch (InterruptedException ex)
-        {
-            com.gmt2001.Console.err.printStackTrace(ex);
-        }
+        //try
+        //{
+            //for (int i = 30; i > 0; i--)
+            //{
+                //com.gmt2001.Console.out.print("\r[SHUTDOWN] Waiting for running scripts to finish..." + i + " ");
+                //Thread.sleep(1000);
+            //}
+        //} catch (InterruptedException ex)
+        //{
+            //com.gmt2001.Console.err.printStackTrace(ex);
+        //}
 
         com.gmt2001.Console.out.println("\r[SHUTDOWN] Waiting for running scripts to finish...  ");
 

@@ -106,7 +106,7 @@ $.getViewers = function(channel) {
     try {
         return stream.getJSONObject("stream").getInt("viewers");
     } catch(e) {
-        return 0;
+        return "0";
     }
 }
 

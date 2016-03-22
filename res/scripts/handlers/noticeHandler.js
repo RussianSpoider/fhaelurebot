@@ -159,6 +159,11 @@ $.on('command', function (event) {
             } else {
                 $.inidb.del('notices', 'message_' + args[1]);
                 $.Notice.NumberOfNotices--;
+                if($.inidb.exists('notice_timers', 'message_' + args[1])) {
+                    $.inidb.del('notice_timers','message_' + args[1]);
+                    $.Notice.NoticeTimers.splice('message_' + args[1]);
+                    $.timer.clearTimer("./handlers/noticeHandler.js", "notice_timer_message_" + args[1], true);
+                }
                 $.Notice.reloadNotices();
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-remove-success"));
                 return;
@@ -225,17 +230,16 @@ $.SendNotice = function (number) {
     } else {
 
         if (notice.contains('(game)')) {
-                notice = $.replaceAll(notice, '(game)', $.getGame($.username.resolve($.channelName)));
-            }
+                notice = $.replaceAll(notice, '(game)', $.getGame($.channelName));
         }
         if (notice.contains('(status)')) {
-                notice = $.replaceAll(notice, '(status)', $.getStatus($.username.resolve($.channelName)));
+                notice = $.replaceAll(notice, '(status)', $.getStatus($.channelName));
         }
         if (notice.contains('(random)')) {
             notice = $.replaceAll(notice, '(random)', $.users[$.rand($.users.length)][0]);
         }
         if (notice.contains('(viewers)')) {
-            notice = $.replaceAll(notice, '(viewers)', $.getViewers($.username.resolve($.channelName)));
+            notice = $.replaceAll(notice, '(viewers)', $.getViewers($.channelName));
         }
         if (notice.contains('(#)')) {
             notice = $.replaceAll(notice, '(#)', $.randRange(1, 100));
@@ -266,23 +270,27 @@ $.SendNotice = function (number) {
    
         $.say(notice);
         return;
+    }
 };
 
-for(var i=0;i<$.Notice.NoticeTimers.length;i++) {
-    var noticeStr = $.Notice.NoticeTimers[i];
-    $.timer.addTimer("./handlers/noticeHandler.js", "notice_timer_" + noticeStr, true, function() {
-        if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle=="true") {
-            var nId = noticeStr.substring( noticeStr.indexOf("message_") + 8, noticeStr.length() );
-            $.SendNotice(nId);
-            return;
-        }
-    }, parseInt($.inidb.get("notice_timers", noticeStr)) * 60 * 1000);
+$.startTimer = function(id) {
+        $.timer.addTimer("./handlers/noticeHandler.js", "notice_timer_message_" + id, true, function() {
+                $.SendNotice(id);
+                return;
+        }, parseInt($.inidb.get("notice_timers", "message_" + id)) * 60 * 1000);    
+}
+
+if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle=="true") {
+    for(var i=0;i<$.Notice.NoticeTimers.length;i++) {
+        var nId = $.Notice.NoticeTimers[i].substring($.Notice.NoticeTimers[i].indexOf("message_") + 8, $.Notice.NoticeTimers[i].length());
+        $.startTimer(nId);
+    }
 }
 
 $.timer.addTimer("./handlers/noticeHandler.js", "Notices", true, function () {
     if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle=="true") {
         if ($.Notice.MessageCount >= $.Notice.NoticeReqMessages) {
-            $.SendNotice("");
+            $.SendNotice();
             $.Notice.MessageCount = 0;
             return;
         }
