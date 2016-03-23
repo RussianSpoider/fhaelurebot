@@ -144,7 +144,9 @@ $.on('command', function (event) {
                     }
                 }, args[2] * 60 * 1000);
                 
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-timer-success", args[1] + 1));
+                var timer = parseInt(args[1]);
+                timer++;
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-timer-success", timer));
                 return;
             }
         } 
