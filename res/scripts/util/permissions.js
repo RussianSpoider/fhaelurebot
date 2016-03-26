@@ -417,25 +417,35 @@ $.on('command', function (event) {
 
             if (action.equalsIgnoreCase("set") || action.equalsIgnoreCase("add") || action.equalsIgnoreCase("change")) {
                 name = args[2];
-                groupid = $.getGroupIdByName(name);
-                groupname = $.getGroupNameById(groupid);
+                groupname;
                 
-                if (name.toLowerCase() != groupname.toLowerCase()) {
+                if(args[2]!=null) {
+                    if(parseInt(name)) {
+                        groupname = $.getGroupNameById(name);
+                    } else {
+                        for(var i=0;i<$.usergroups.length;i++) {
+                            if(name.equalsIgnoreCase($.usergroups[i])) {
+                                groupname = $.usergroups[i];
+                            }
+                        }
+                    }
+                }
+                
+                if(groupname==null) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.permissions.group-not-exists"));
+                    return;
                 }
-                else {
-                    if (parseInt($.getGroupIdByName($.getUserGroupName(sender))) < parseInt($.getGroupIdByName($.getUserGroupName($.username.resolve(args[1])))))
-                    {
-                            $.setUserGroupByName(args[1], name);
-                            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.permissions.group-set", $.username.resolve(args[1]), $.getUserGroupName($.username.resolve(args[1]))));
-                            $.logEvent("permissions.js", 200, username + " changed " + args[1] + "'s group to " + $.getUserGroupName($.username.resolve(args[1])));
-                            return;
-                    }
-                    else {
-                        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.permissions.group-set-err-above"));
-                        return;
-                    }
+
+                if (parseInt($.getGroupIdByName($.getUserGroupName(sender))) < parseInt($.getGroupIdByName($.getUserGroupName($.username.resolve(args[1]))))) {
+                    $.setUserGroupByName(args[1], name);
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.permissions.group-set", $.username.resolve(args[1]), $.getUserGroupName($.username.resolve(args[1]))));
+                    $.logEvent("permissions.js", 200, username + " changed " + args[1] + "'s group to " + $.getUserGroupName($.username.resolve(args[1])));
+                    return;
+                } else {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.permissions.group-set-err-above"));
+                    return;
                 }
+                
             }
             if (action.equalsIgnoreCase("points")) {
                 name = args[1];
@@ -484,9 +494,15 @@ $.on('command', function (event) {
                 }
 
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.permissions.group-list", ranks));
+                return;
+                
+            } else if($.username.resolve(args[0])) {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.permissions.group-current-other", $.username.resolve(args[0]), $.getUserGroupName(args[0])));
+                    return;
             } else {
                 if (!argsString.isEmpty()) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.permissions.group-usage"));
+                    return;
                 }
             }        
         } else {

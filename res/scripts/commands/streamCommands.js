@@ -1,6 +1,7 @@
 $.isOnline = function(channel) {
+    channel = channel.toLowerCase();
     var stream = $.twitch.GetStream(channel);
-    if (!stream.toString().contains('"stream":"null"')) {
+    if (stream.toString().indexOf('stream":{')!=-1) {
         return true;
     }
 
@@ -125,7 +126,15 @@ $.on('command', function(event) {
     var res;
 
     if (command.equalsIgnoreCase("online")) {
-        if (!$.isOnline($.channelName)) {
+        if( args[0] != null ) {
+            if (!$.isOnline(args[0])) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.stream-offline"));
+                return;
+            } else {
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.stream-online"));
+                return;
+            }
+        } else if (!$.isOnline($.channelName)) {
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.stream-offline"));
             return;
         } else {

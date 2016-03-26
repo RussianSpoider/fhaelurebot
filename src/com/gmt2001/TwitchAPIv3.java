@@ -585,8 +585,4 @@ public class TwitchAPIv3
         return GetData(request_type.GET, "https://tmi.twitch.tv/servers?channel=" + channel, false);
     }
     
-    public String GetChatServerType(String channel) {
-        JSONObject chatServerJSON = GetChatServer(channel);
-        return chatServerJSON.getString("cluster");
-    }
 }
