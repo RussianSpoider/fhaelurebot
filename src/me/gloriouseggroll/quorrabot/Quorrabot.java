@@ -1121,7 +1121,7 @@ public class Quorrabot implements Listener
                 com.gmt2001.Console.out.println("Login details for bot not found");
 
                 com.gmt2001.Console.out.print("Please enter the bot's twitch username: ");
-                user = System.console().readLine().trim();
+                user = System.console().readLine().trim().toLowerCase();
 
                 com.gmt2001.Console.out.println("Visit https://twitchapps.com/tmi/ to generate an oAuth token (including 'oauth:') & type it below.");
                 com.gmt2001.Console.out.println("IMPORTANT: This MUST be done while logged in as the bot account!" + "\n");
@@ -1129,7 +1129,7 @@ public class Quorrabot implements Listener
                 oauth = System.console().readLine().trim();
 
                 com.gmt2001.Console.out.print("Please enter the name of the twitch channel the bot should join (not the link, just the name): ");
-                channel = System.console().readLine().trim();
+                channel = System.console().readLine().trim().toLowerCase();
 
                 changed = true;
             } catch (NullPointerException ex)
@@ -1189,7 +1189,7 @@ public class Quorrabot implements Listener
                 {
                     if (!user.equals(arg.substring(5)))
                     {
-                        user = arg.substring(5);
+                        user = arg.substring(5).toLowerCase();
                         changed = true;
                     }
                 }
@@ -1221,7 +1221,7 @@ public class Quorrabot implements Listener
                 {
                     if (!channel.equals(arg.substring(8)))
                     {
-                        channel = arg.substring(8);
+                        channel = arg.substring(8).toLowerCase();
                         changed = true;
                     }
                 }
@@ -1229,7 +1229,7 @@ public class Quorrabot implements Listener
                 {
                     if (!owner.equals(arg.substring(6)))
                     {
-                        owner = arg.substring(6);
+                        owner = arg.substring(6).toLowerCase();
                         changed = true;
                     }
                 }
