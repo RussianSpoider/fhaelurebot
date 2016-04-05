@@ -271,7 +271,8 @@ public class ChannelHostCache implements Runnable
         for (String hoster : hosted)
         {
             //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
-            EventBus.instance().post(new TwitchHostedEvent(hoster, Quorrabot.instance().getChannel("#" + this.channel)));
+            //3-30-16 - twitch added group-send delay on host events. The line below has been disabled, and instead detected via jtv msg in quorrabot.jar
+            //EventBus.instance().post(new TwitchHostedEvent(hoster, Quorrabot.instance().getChannel("#" + this.channel)));
         }
 
         for (String unhoster : unhosted)
