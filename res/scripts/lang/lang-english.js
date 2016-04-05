@@ -335,10 +335,10 @@ $.lang.data["net.quorrabot.bidsystem.warning-success-noentries"] = "/me [Auction
 // penaltySystem.js
 $.lang.data["net.quorrabot.penaltysystem.get-nopenalty"] = "You currently have no active penalty. Keep it this way! :-)";
 $.lang.data["net.quorrabot.penaltysystem.get-other-nopenalty"] = "$1 currently has no active penalty.";
-$.lang.data["net.quorrabot.penaltysystem.get-other-penalty"] = "$1 currently can not earn any $2. This will last untill they gained $3.";
-$.lang.data["net.quorrabot.penaltysystem.get-other-penalty-indefinitely"] = "$1 currently can not earn any $2. Untill a $3 disables it, this is permanent.";
-$.lang.data["net.quorrabot.penaltysystem.get-penalty"] = "You currently can not earn any $1. This will last untill you gained $2.";
-$.lang.data["net.quorrabot.penaltysystem.get-penalty-indefinitely"] = "You currently can not earn any $1. Untill a $2 disables it, this is permanent.";
+$.lang.data["net.quorrabot.penaltysystem.get-other-penalty"] = "$1 currently can not earn any $2. This will last until they gained $3.";
+$.lang.data["net.quorrabot.penaltysystem.get-other-penalty-indefinitely"] = "$1 currently can not earn any $2. Until a $3 disables it, this is permanent.";
+$.lang.data["net.quorrabot.penaltysystem.get-penalty"] = "You currently can not earn any $1. This will last until you gained $2.";
+$.lang.data["net.quorrabot.penaltysystem.get-penalty-indefinitely"] = "You currently can not earn any $1. Until a $2 disables it, this is permanent.";
 $.lang.data["net.quorrabot.penaltysystem.lifted"] = "$1 no longer has an active penalty. Increased their balance by $2.";
 $.lang.data["net.quorrabot.penaltysystem.points-disabled"] = " You can not use this command while the points module is disabled.";
 $.lang.data["net.quorrabot.penaltysystem.set-disabled"] = "$1 no longer has an active penalty.";
