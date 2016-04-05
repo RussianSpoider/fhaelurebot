@@ -139,20 +139,20 @@ $.on('command', function (event) {
                 }, $.Time * 60 * 1000);
 
                 if (key == "") {
-                    $.say($.lang.get("net.quorrabot.ticketrafflesystem.raffle-opened", MaxEntries));
+                    $.say($.lang.get("net.quorrabot.ticketrafflesystem.raffle-opened", $.TicketRaffleMaxEntries));
                     $.say($.lang.get("net.quorrabot.ticketrafflesystem.auto-close", $.Time));
                     $.TicketRaffleRunning = true;
                 } else {
-                    $.say($.lang.get("net.quorrabot.ticketrafflesystem.raffle-opened2", MaxEntries, key));
+                    $.say($.lang.get("net.quorrabot.ticketrafflesystem.raffle-opened2", $.TicketRaffleMaxEntries, key));
                     $.say($.lang.get("net.quorrabot.ticketrafflesystem.auto-close", $.Time));
                     $.TicketRaffleRunning = true;
                     return;
                 }
             } else if (key == "") {
-                $.say($.lang.get("net.quorrabot.ticketrafflesystem.raffle-opened", MaxEntries));
+                $.say($.lang.get("net.quorrabot.ticketrafflesystem.raffle-opened", $.TicketRaffleMaxEntries));
                 $.TicketRaffleRunning = true;
             } else {
-                $.say($.lang.get("net.quorrabot.ticketrafflesystem.raffle-opened2", MaxEntries, key));
+                $.say($.lang.get("net.quorrabot.ticketrafflesystem.raffle-opened2", $.TicketRaffleMaxEntries, key));
                 $.TicketRaffleRunning = true;
                 return;
             }
