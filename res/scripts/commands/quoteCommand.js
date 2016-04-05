@@ -26,6 +26,21 @@ $.QuoteCommand.getRandomQuote = function (event) {
     }
 };
 
+$.QuoteCommand.reloadQuotes = function () {
+    var keys = $.inidb.GetKeyList('quotes', '');
+    var count = 0;
+    for (var i = 0; i < keys.length; i++) {
+        $.inidb.set('tempquotes', keys[i], $.inidb.get('quotes', keys[i]));
+    }
+    $.inidb.RemoveFile('quotes');
+    keys = $.inidb.GetKeyList('tempquotes', '');
+    for (var i = 0; i < keys.length; i++) {
+        $.inidb.set('quotes', 'quote_' + count, $.inidb.get('tempquotes', keys[i]));
+        count++;
+    }
+    $.inidb.RemoveFile('tempquotes');
+};
+
 $.QuoteCommand.getQuote = function (event, quote) {
     var sender = event.getSender();
 
@@ -150,6 +165,7 @@ $.on('command', function (event) {
             }
             $.inidb.del('quotes', 'quote_' + parseInt(args[1]));
             $.QuoteCommand.getTotalQuotes--;
+            $.QuoteCommand.reloadQuotes();
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.delquote-success", $.QuoteCommand.getTotalQuotes));
             return;
         } 
