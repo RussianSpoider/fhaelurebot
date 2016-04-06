@@ -1147,32 +1147,34 @@ public class Quorrabot implements Listener
             com.gmt2001.Console.err.printStackTrace(ex);
         }
 
-        if (user.isEmpty() || oauth.isEmpty() || apioauth.isEmpty() || channel.isEmpty())
-        {
-            try
-            {
-                com.gmt2001.Console.out.println("Login details for bot not found");
 
+        try {
+            if(user.isEmpty()) {
                 com.gmt2001.Console.out.print("Please enter the bot's twitch username: ");
                 user = System.console().readLine().trim();
-
+            }
+            if(oauth.isEmpty()) {
                 com.gmt2001.Console.out.println("Visit http://quorrabot.com/pages/twitchapi/ to generate oAuth tokens for both the bot and the channel owner accounts (including 'oauth:') & type it below.");
-                com.gmt2001.Console.out.println("IMPORTANT: This MUST be done while logged in as the bot account!" + "\n");
+                com.gmt2001.Console.out.println("IMPORTANT: This MUST be done while logged in as the BOT account!" + "\n");
                 com.gmt2001.Console.out.println("Please enter the bot's tmi oauth token: ");
                 oauth = System.console().readLine().trim();
-
+            }
+            if(channel.isEmpty()) {
                 com.gmt2001.Console.out.print("Please enter the name of the twitch channel the bot should join (not the link, just the name): ");
                 channel = System.console().readLine().trim();
-
+            }
+            if(apioauth.isEmpty()) {
+                com.gmt2001.Console.out.println("Visit http://quorrabot.com/pages/twitchapi/ to generate oAuth tokens for both the bot and the channel owner accounts (including 'oauth:') & type it below.");
+                com.gmt2001.Console.out.println("IMPORTANT: This MUST be done while logged in on the CHANNEL OWNER account!" + "\n");
                 com.gmt2001.Console.out.println("Please enter the channel owner's tmi oauth token: ");
                 apioauth = System.console().readLine().trim();                
-                
-                changed = true;
-            } catch (NullPointerException ex)
-            {
-                com.gmt2001.Console.err.printStackTrace(ex);
             }
+            changed = true;
+        } catch (NullPointerException ex)
+        {
+            com.gmt2001.Console.err.printStackTrace(ex);
         }
+
 
         if (owner.isEmpty())
         {
