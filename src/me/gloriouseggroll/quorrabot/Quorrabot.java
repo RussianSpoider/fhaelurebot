@@ -1151,7 +1151,7 @@ public class Quorrabot implements Listener
         try {
             if(user.isEmpty()) {
                 com.gmt2001.Console.out.print("Please enter the bot's twitch username: ");
-                user = System.console().readLine().trim();
+                user = System.console().readLine().trim().toLowerCase();
             }
             if(oauth.isEmpty()) {
                 com.gmt2001.Console.out.println("Visit http://quorrabot.com/pages/twitchapi/ to generate oAuth tokens for both the bot and the channel owner accounts (including 'oauth:') & type it below.");
@@ -1161,7 +1161,8 @@ public class Quorrabot implements Listener
             }
             if(channel.isEmpty()) {
                 com.gmt2001.Console.out.print("Please enter the name of the twitch channel the bot should join (not the link, just the name): ");
-                channel = System.console().readLine().trim();
+                channel = System.console().readLine().trim().toLowerCase();
+                changed = true;
             }
             if(apioauth.isEmpty()) {
                 com.gmt2001.Console.out.println("Visit http://quorrabot.com/pages/twitchapi/ to generate oAuth tokens for both the bot and the channel owner accounts (including 'oauth:') & type it below.");
@@ -1227,7 +1228,7 @@ public class Quorrabot implements Listener
                 {
                     if (!user.equals(arg.substring(5)))
                     {
-                        user = arg.substring(5);
+                        user = arg.substring(5).toLowerCase();
                         changed = true;
                     }
                 }
@@ -1259,7 +1260,7 @@ public class Quorrabot implements Listener
                 {
                     if (!channel.equals(arg.substring(8)))
                     {
-                        channel = arg.substring(8);
+                        channel = arg.substring(8).toLowerCase();
                         changed = true;
                     }
                 }
@@ -1267,7 +1268,7 @@ public class Quorrabot implements Listener
                 {
                     if (!owner.equals(arg.substring(6)))
                     {
-                        owner = arg.substring(6);
+                        owner = arg.substring(6).toLowerCase();
                         changed = true;
                     }
                 }
