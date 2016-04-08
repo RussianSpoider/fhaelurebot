@@ -110,7 +110,6 @@ public class Quorrabot implements Listener
     private ConnectionManager connectionManager;
     private ConnectionManager tceConnectionManager;
     private final Session session;
-    public static Session tgcSession;
     public static Session tceSession;    
     private Channel channel;
     private final HashMap<String, Channel> channels;
@@ -288,7 +287,6 @@ public class Quorrabot implements Listener
  
         this.session = connectionManager.requestConnection(this.hostname, this.port, oauth);
 
-        TwitchGroupChatHandler(oauth, this.connectionManager);
         TwitchChatEventHandler(apioauth, this.tceConnectionManager);
 
         TwitchAPIv3.instance().SetClientID(this.clientid);
@@ -336,22 +334,12 @@ public class Quorrabot implements Listener
     {
         return channels;
     }
-
-    private void TwitchGroupChatHandler(String oauth, ConnectionManager connManager)
-    {
-        int gport = 6667;
-        String ghostname = "199.9.253.119";
-
-        tgcSession = connManager.requestConnection(ghostname, gport, oauth);
-        tgcSession.addIRCEventListener(new IrcEventHandler());
-    }
     
     private void TwitchChatEventHandler(String oauth, ConnectionManager connManager)
     {
         int ceport = 6667;
-        String cehostname = "irc.chat.twitch.tv";
 
-        tceSession = connManager.requestConnection(cehostname, ceport, apioauth);
+        tceSession = connManager.requestConnection(hostname, ceport, apioauth);
         tceSession.addIRCEventListener(new IrcEventHandler());
     }
 
@@ -536,12 +524,7 @@ public class Quorrabot implements Listener
                 this.session.join("#" + channelName.toLowerCase());
             }
         }
-        if(event.getSession().equals(tgcSession))
-        {
-            tgcSession.sayRaw("CAP REQ :twitch.tv/tags");
-            tgcSession.sayRaw("CAP REQ :twitch.tv/commands");
-            tgcSession.sayRaw("CAP REQ :twitch.tv/membership");
-        }
+
         if(event.getSession().equals(tceSession))
         {
             tceSession.sayRaw("CAP REQ :twitch.tv/tags");
@@ -1152,12 +1135,14 @@ public class Quorrabot implements Listener
             if(user.isEmpty()) {
                 com.gmt2001.Console.out.print("Please enter the bot's twitch username: ");
                 user = System.console().readLine().trim().toLowerCase();
+                changed = true;                
             }
             if(oauth.isEmpty()) {
                 com.gmt2001.Console.out.println("Visit http://quorrabot.com/pages/twitchapi/ to generate oAuth tokens for both the bot and the channel owner accounts (including 'oauth:') & type it below.");
                 com.gmt2001.Console.out.println("IMPORTANT: This MUST be done while logged in as the BOT account!" + "\n");
                 com.gmt2001.Console.out.println("Please enter the bot's tmi oauth token: ");
                 oauth = System.console().readLine().trim();
+                changed = true;
             }
             if(channel.isEmpty()) {
                 com.gmt2001.Console.out.print("Please enter the name of the twitch channel the bot should join (not the link, just the name): ");
@@ -1168,9 +1153,9 @@ public class Quorrabot implements Listener
                 com.gmt2001.Console.out.println("Visit http://quorrabot.com/pages/twitchapi/ to generate oAuth tokens for both the bot and the channel owner accounts (including 'oauth:') & type it below.");
                 com.gmt2001.Console.out.println("IMPORTANT: This MUST be done while logged in on the CHANNEL OWNER account!" + "\n");
                 com.gmt2001.Console.out.println("Please enter the channel owner's tmi oauth token: ");
-                apioauth = System.console().readLine().trim();                
+                apioauth = System.console().readLine().trim();
+                changed = true;
             }
-            changed = true;
         } catch (NullPointerException ex)
         {
             com.gmt2001.Console.err.printStackTrace(ex);

@@ -302,12 +302,12 @@ public class Session extends RequestGenerator
             this.sayChannelReal(channel, msg);
         } else
         {
-            if (msg.startsWith("/w "))
-            {
-                msg = msg.replace("/w ", "PRIVMSG #jtv :/w ");
-                me.gloriouseggroll.quorrabot.Quorrabot.tgcSession.sayRaw(msg);
-                return;
-            }
+            //if (msg.startsWith("/w "))
+            //{
+                //msg = msg.replace("/w ", "PRIVMSG #jtv :/w ");
+                //me.gloriouseggroll.quorrabot.Quorrabot.session.sayRaw(msg);
+                //return;
+            //}
             if (msg.length() + 14 + channel.getName().length() < 512)
             {
                 messages.add(new Message(channel, msg));
