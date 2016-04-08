@@ -579,7 +579,7 @@ public class Quorrabot implements Listener
         }
         if (!event.getSender().equalsIgnoreCase("jtv") && !event.getSender().equalsIgnoreCase("twitchnotify"))
         {
-            com.gmt2001.Console.out.println("PMSG: " + event.getSender() + ": " + event.getMessage());
+            //com.gmt2001.Console.out.println("PMSG: " + event.getSender() + ": " + event.getMessage());
         }
     }
 
