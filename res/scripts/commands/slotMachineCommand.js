@@ -267,7 +267,7 @@
 
              if (action.equalsIgnoreCase("bonus") && !argsString.isEmpty()) {
                  if (!$.isModv3(sender, event.getTags())) {
-                     $.say($.modmsg);
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (isNaN(args[1]) || args[1] < 0) {
@@ -283,7 +283,7 @@
              if (action.equalsIgnoreCase("emote")) {
                  if (!argsString.isEmpty()) {
                      if (!$.isModv3(sender, event.getTags())) {
-                         $.say($.modmsg);
+                         $.say($.getWhisperString(sender) + $.modmsg);
                          return;
                      }
                      if (args[1].equalsIgnoreCase("1") && args[2] != null) {
@@ -322,7 +322,7 @@
              
              if (action.equalsIgnoreCase("reward") && !argsString.isEmpty()) {
                  if (!$.isModv3(sender, event.getTags())) {
-                     $.say($.modmsg);
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (isNaN(args[2]) || args[2] < 0) {
@@ -364,7 +364,7 @@
 
              if (action.equalsIgnoreCase("halfreward") && !argsString.isEmpty()) {
                  if (!$.isModv3(sender, event.getTags())) {
-                     $.say($.modmsg);
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (args[1].equalsIgnoreCase("on")) {
@@ -407,7 +407,7 @@
 
              if (action.equalsIgnoreCase("seereward") && !argsString.isEmpty()) {
                  if (!$.isModv3(sender, event.getTags())) {
-                     $.say($.modmsg);
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (isNaN(args[1]) || args[1] < 0) {
@@ -426,7 +426,7 @@
 
              if (action.equalsIgnoreCase("jackpot") && !argsString.isEmpty()) {
                  if (!$.isModv3(sender, event.getTags())) {
-                     $.say($.modmsg);
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (isNaN(args[1]) || args[1] < 0) {
