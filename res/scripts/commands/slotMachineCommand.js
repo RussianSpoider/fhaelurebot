@@ -266,8 +266,8 @@
          if (args.length >= 2) {
 
              if (action.equalsIgnoreCase("bonus") && !argsString.isEmpty()) {
-                 if (!$.isMod(sender)) {
-                     $.say($.modmsg);
+                 if (!$.isModv3(sender, event.getTags())) {
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (isNaN(args[1]) || args[1] < 0) {
@@ -282,8 +282,8 @@
 
              if (action.equalsIgnoreCase("emote")) {
                  if (!argsString.isEmpty()) {
-                     if (!$.isMod(sender)) {
-                         $.say($.modmsg);
+                     if (!$.isModv3(sender, event.getTags())) {
+                         $.say($.getWhisperString(sender) + $.modmsg);
                          return;
                      }
                      if (args[1].equalsIgnoreCase("1") && args[2] != null) {
@@ -321,8 +321,8 @@
              }
              
              if (action.equalsIgnoreCase("reward") && !argsString.isEmpty()) {
-                 if (!$.isMod(sender)) {
-                     $.say($.modmsg);
+                 if (!$.isModv3(sender, event.getTags())) {
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (isNaN(args[2]) || args[2] < 0) {
@@ -363,8 +363,8 @@
              }
 
              if (action.equalsIgnoreCase("halfreward") && !argsString.isEmpty()) {
-                 if (!$.isMod(sender)) {
-                     $.say($.modmsg);
+                 if (!$.isModv3(sender, event.getTags())) {
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (args[1].equalsIgnoreCase("on")) {
@@ -406,8 +406,8 @@
              }
 
              if (action.equalsIgnoreCase("seereward") && !argsString.isEmpty()) {
-                 if (!$.isMod(sender)) {
-                     $.say($.modmsg);
+                 if (!$.isModv3(sender, event.getTags())) {
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (isNaN(args[1]) || args[1] < 0) {
@@ -425,8 +425,8 @@
              }
 
              if (action.equalsIgnoreCase("jackpot") && !argsString.isEmpty()) {
-                 if (!$.isMod(sender)) {
-                     $.say($.modmsg);
+                 if (!$.isModv3(sender, event.getTags())) {
+                     $.say($.getWhisperString(sender) + $.modmsg);
                      return;
                  }
                  if (isNaN(args[1]) || args[1] < 0) {
@@ -444,7 +444,10 @@
          }
          
          if (args.length == 1) {
-             if (action.equalsIgnoreCase("emotes") || action.equalsIgnoreCase("emote")) {
+             if (!$.isModv3(sender, event.getTags())) {
+                     $.say($.getWhisperString(sender) + $.modmsg);
+                     return;
+             } else if (action.equalsIgnoreCase("emotes") || action.equalsIgnoreCase("emote")) {
                  $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.slotmachine-emote-list", $.SlotCommand.SlotEmote1, $.SlotCommand.SlotEmote2, $.SlotCommand.SlotEmote3, $.SlotCommand.SlotEmote4, $.SlotCommand.SlotEmote5, $.SlotCommand.SlotEmote6, $.SlotCommand.SlotEmote7));
              } else if (action.equalsIgnoreCase("rewards") || action.equalsIgnoreCase("reward")) {
                  $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.slotmachine-reward-list", $.SlotCommand.SlotEmote1, $.SlotCommand.SlotReward1, $.SlotCommand.SlotEmote2, $.SlotCommand.SlotReward2, $.SlotCommand.SlotEmote3, $.SlotCommand.SlotReward3, $.SlotCommand.SlotEmote4, $.SlotCommand.SlotReward4, $.SlotCommand.SlotEmote5, $.SlotCommand.SlotReward5, $.SlotCommand.SlotEmote6, $.SlotCommand.SlotReward6, $.SlotCommand.SlotEmote7, $.SlotCommand.SlotJackpot));
