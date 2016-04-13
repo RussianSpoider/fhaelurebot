@@ -17,18 +17,25 @@ import twitter4j.auth.RequestToken;
  */
 public class TwitterAPI {
         private static final TwitterAPI instance = new TwitterAPI();
-	static String consumerKeyStr = "	au2DSbPirzPknSuzhICL9nGgL";
-	static String consumerSecretStr = "2DKZMKWwospj1aqGFPMW6DWhsEWm1KFLGfp1QiCXC8poP2hsnO";
-        static AccessToken access_token;
-	static Twitter twitter = TwitterFactory.getSingleton();
+	public static String consumerKeyStr = "oZ91vatOx75m8dEf1ljTRq8Hr";
+	public static String consumerSecretStr = "OKrghaoRfmWjdMXZuIJbAraUwMYnvyIrAk4h4Nvvz3WLghqX11";
+        public static AccessToken access_token;
+        public static Twitter twitter = TwitterFactory.getSingleton();
+        public static RequestToken requestToken = getRequestToken();
+        public static RequestToken getRequestToken() {
+            twitter.setOAuthConsumer(consumerKeyStr, consumerSecretStr);
+            try {
+                return twitter.getOAuthRequestToken();
+            } catch (TwitterException te) {
+                te.printStackTrace();
+                return null;
+            }
+        }
+
         
-        //static RequestToken requestToken = twitter.getOAuthRequestToken();
-        
-        
-        
+
         public static TwitterAPI instance()
         {
-            twitter.setOAuthConsumer(consumerKeyStr, consumerSecretStr);
             return instance;
         }
         
@@ -38,27 +45,46 @@ public class TwitterAPI {
         }
         
         
-        public void SetAccessToken(String access_token)
+        public void CreateAccessToken(String pin)
         {
             //this.access_token = access_token;
+                try{
+                    if(pin.length() > 0){
+                        this.access_token = twitter.getOAuthAccessToken(requestToken, pin);
+                    }else{
+                        this.access_token = twitter.getOAuthAccessToken();
+                    }
+                } catch (TwitterException te) {
+                    if(401 == te.getStatusCode()){
+                            System.out.println("Unable to get the access token.");
+                    }else{
+                            te.printStackTrace();
+                        }
+                }
         }
         
-        public void getOAuthRequestToken()
+
+        public void loadAccessToken(String token, String tokenSecret){
+            this.access_token = new AccessToken(token, tokenSecret);
+            twitter.setOAuthAccessToken(access_token);
+        }
+        
+        public String getAccessToken()
         {
-            //return requestToken.getAuthorizationURL();
+            return access_token.getToken();
+        }
+        public String getAccessTokenSecret()
+        {
+            return access_token.getTokenSecret();
+        }        
+        public static String getRequestTokenURL()
+        {
+            return requestToken.getAuthorizationURL();
         }
         
 	public static void tweet(String args) {
-
 		try {
-
-			AccessToken accessToken = null;
-
-                        twitter.setOAuthAccessToken(accessToken);
-
 			twitter.updateStatus(args);
-
-			System.out.println("Successfully updated the status in Twitter.");
 		} catch (TwitterException te) {
 			te.printStackTrace();
 		}

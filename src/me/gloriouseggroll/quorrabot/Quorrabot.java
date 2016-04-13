@@ -94,6 +94,7 @@ public class Quorrabot implements Listener
     private String youtubekey;
     private String twitchalertstoken;
     private String twittertoken;    
+    private String twittertokensecret;    
     private String streamtiptoken;
     private String streamtipid;
     private boolean webenable;
@@ -138,7 +139,7 @@ public class Quorrabot implements Listener
     }
 
     public Quorrabot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
-            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String twitchalertstoken, String twittertoken, String streamtiptoken, String streamtipid, boolean webenable,
+            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String twitchalertstoken, String twittertoken, String twittertokensecret, String streamtiptoken, String streamtipid, boolean webenable,
             boolean musicenable, boolean usehttps, String keystorepath, String keystorepassword, String keypassword)
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
@@ -182,10 +183,12 @@ public class Quorrabot implements Listener
             StreamTipAPI.instance().SetClientID(streamtipid);
         }
         this.twittertoken = twittertoken;
-        if (!twittertoken.isEmpty())
+        this.twittertokensecret = twittertokensecret;
+        if (!twittertoken.isEmpty() || !twittertokensecret.isEmpty())
         {
-            TwitterAPI.instance().SetAccessToken(twittertoken);
+            TwitterAPI.instance().loadAccessToken(twittertoken,twittertokensecret);
         }
+
         this.webenable = webenable;
         this.musicenable = musicenable;
         this.usehttps = usehttps;
@@ -723,13 +726,15 @@ public class Quorrabot implements Listener
         }
         if (message.equals("twitter"))
         {
-                com.gmt2001.Console.out.print("Open the following URL and grant the bot access to your twitter account:");
-                //com.gmt2001.Console.out.print(TwitterAPI.instance().getOAuthRequestToken());
+                com.gmt2001.Console.out.print("Please visit this url to grant QuorraBot twitter access, then enter your pin");
+                com.gmt2001.Console.out.print(TwitterAPI.instance().getRequestTokenURL());
+                com.gmt2001.Console.out.print("Twitter PIN:");
 
                 String newtwittertoken = System.console().readLine().trim();
 
-                TwitterAPI.instance().SetAccessToken(newtwittertoken);
-                twittertoken = newtwittertoken;
+                TwitterAPI.instance().CreateAccessToken(newtwittertoken);
+                twittertoken = TwitterAPI.instance().getAccessToken();
+                twittertokensecret = TwitterAPI.instance().getAccessTokenSecret();
 
                 changed = true;
         }
@@ -817,6 +822,7 @@ public class Quorrabot implements Listener
                 data += "youtubekey=" + youtubekey + "\r\n";
                 data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
                 data += "twittertoken=" + twittertoken + "\r\n";                
+                data += "twittertokensecret=" + twittertokensecret + "\r\n";                
                 data += "streamtiptoken=" + streamtiptoken + "\r\n";
                 data += "streamtipid=" + streamtipid + "\r\n";
                 data += "webenable=" + webenable + "\r\n";
@@ -1041,6 +1047,7 @@ public class Quorrabot implements Listener
         String youtubekey = "";
         String twitchalertstoken = "";
         String twittertoken = "";
+        String twittertokensecret = "";
         String streamtiptoken = "";
         String streamtipid = "";
         boolean webenable = true;
@@ -1116,6 +1123,10 @@ public class Quorrabot implements Listener
                     if (line.startsWith("twittertoken=") && line.length() > 14)
                     {
                         twittertoken = line.substring(13);
+                    }
+                    if (line.startsWith("twittertokensecret=") && line.length() > 20)
+                    {
+                        twittertokensecret = line.substring(19);
                     }
                     if (line.startsWith("streamtiptoken=") && line.length() > 16)
                     {
@@ -1215,6 +1226,7 @@ public class Quorrabot implements Listener
                     com.gmt2001.Console.out.println("youtubekey='" + youtubekey + "'");
                     com.gmt2001.Console.out.println("twitchalertstoken='" + twitchalertstoken + "'");
                     com.gmt2001.Console.out.println("twittertoken='" + twittertoken + "'");
+                    com.gmt2001.Console.out.println("twittertokensecret='" + twittertokensecret + "'");
                     com.gmt2001.Console.out.println("streamtiptoken='" + streamtiptoken + "'");
                     com.gmt2001.Console.out.println("streamtipid='" + streamtipid + "'");
                     com.gmt2001.Console.out.println("webenable=" + webenable);
@@ -1352,6 +1364,14 @@ public class Quorrabot implements Listener
                         changed = true;
                     }
                 }
+                if (arg.toLowerCase().startsWith("twittertokensecret=") && arg.length() > 20)
+                {
+                    if (!twittertokensecret.equals(arg.substring(19)))
+                    {
+                        twittertokensecret = arg.substring(19);
+                        changed = true;
+                    }
+                }
                 if (arg.toLowerCase().startsWith("streamtiptoken=") && arg.length() > 16)
                 {
                     if (!streamtiptoken.equals(arg.substring(15)))
@@ -1428,7 +1448,9 @@ public class Quorrabot implements Listener
                             + "[twitchalertstoken=<TwitchAlerts access token>] "
                             + "[streamtiptoken=<StreamTip access token>] "
                             + "[streamtipid=<StreamTip Client ID>] "
-                            + "[twittertoken=<Twitter access token>]");
+                            + "[twittertoken=<Twitter access token>] "
+                            + "[twittertokensecret=<Twitter access token secret>]");
+
                     return;
                 }
                 if (arg.equalsIgnoreCase("storetypes"))
@@ -1458,6 +1480,7 @@ public class Quorrabot implements Listener
             data += "youtubekey=" + youtubekey + "\r\n";
             data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
             data += "twittertoken=" + twittertoken + "\r\n";
+            data += "twittertokensecret=" + twittertokensecret + "\r\n";
             data += "streamtiptoken=" + streamtiptoken + "\r\n";
             data += "streamtipid=" + streamtipid + "\r\n";
             data += "webenable=" + webenable + "\r\n";
@@ -1471,6 +1494,6 @@ public class Quorrabot implements Listener
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
 
-        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, twitchalertstoken, twittertoken, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword);
+        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, twitchalertstoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword);
     }
 }

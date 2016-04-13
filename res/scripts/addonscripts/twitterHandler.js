@@ -7,7 +7,7 @@ var args = event.getArgs();
 
 
         if (command.equalsIgnoreCase("tweet")) {
-            if (!$.isAdminv3(sender, event.getTags())) {
+            if (!$.isAdmin(sender)) {
                 $.say($.getWhisperString(sender) + $.adminmsg);
                 return;
             }
@@ -22,3 +22,9 @@ var args = event.getArgs();
         
 
 });
+
+setTimeout(function(){ 
+    if ($.moduleEnabled('./addonscripts/twitterHandler.js')) {
+        $.registerChatCommand("./addonscripts/twitterHandler.js", "tweet", "admin");
+    }
+},10 * 1000);
