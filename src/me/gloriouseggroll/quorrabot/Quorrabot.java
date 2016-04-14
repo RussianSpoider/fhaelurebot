@@ -726,8 +726,8 @@ public class Quorrabot implements Listener
         }
         if (message.equals("twitter"))
         {
-                com.gmt2001.Console.out.print("Please visit this url to grant QuorraBot twitter access, then enter your pin");
-                com.gmt2001.Console.out.print(TwitterAPI.instance().getRequestTokenURL());
+                com.gmt2001.Console.out.print("Please visit this url to grant QuorraBot twitter access, then enter your pin" + "\n");
+                com.gmt2001.Console.out.print(TwitterAPI.instance().getRequestTokenURL() + "\n");
                 com.gmt2001.Console.out.print("Twitter PIN:");
 
                 String newtwittertoken = System.console().readLine().trim();
