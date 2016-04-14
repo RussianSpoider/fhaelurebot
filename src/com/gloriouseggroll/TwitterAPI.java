@@ -5,6 +5,8 @@
  */
 package com.gloriouseggroll;
 
+import java.util.List;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -83,11 +85,21 @@ public class TwitterAPI {
         }
         
 	public static void tweet(String args) {
-		try {
-			twitter.updateStatus(args);
-		} catch (TwitterException te) {
-			te.printStackTrace();
-		}
+            try {
+		twitter.updateStatus(args);
+            } catch (TwitterException te) {
+		te.printStackTrace();
+            }
+	}
+	public static String getlast() {
+            try {
+                List<Status> statuses = twitter.getUserTimeline();
+                Status status = statuses.get(0);
+                return status.getText();
+            } catch (TwitterException te) {
+		te.printStackTrace();
+                return null;
+            }
 	}
     
 }

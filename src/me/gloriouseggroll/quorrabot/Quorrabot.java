@@ -472,17 +472,17 @@ public class Quorrabot implements Listener
         }
 
         com.gmt2001.Console.out.print("[SHUTDOWN] Waiting for running scripts to finish...");
-        //try
-        //{
-            //for (int i = 30; i > 0; i--)
-            //{
-                //com.gmt2001.Console.out.print("\r[SHUTDOWN] Waiting for running scripts to finish..." + i + " ");
-                //Thread.sleep(1000);
-            //}
-        //} catch (InterruptedException ex)
-        //{
-            //com.gmt2001.Console.err.printStackTrace(ex);
-        //}
+        try
+        {
+            for (int i = 10; i > 0; i--)
+            {
+                com.gmt2001.Console.out.print("\r[SHUTDOWN] Waiting for running scripts to finish..." + i + " ");
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException ex)
+        {
+            com.gmt2001.Console.err.printStackTrace(ex);
+        }
 
         com.gmt2001.Console.out.println("\r[SHUTDOWN] Waiting for running scripts to finish...  ");
 
