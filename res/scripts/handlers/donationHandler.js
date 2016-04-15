@@ -41,7 +41,7 @@ $.on('command', function (event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.donationhandler.donationalert-usage"));
             }
         
-            if (args[1].equalsIgnoreCase("twitchalerts") | args[1].equalsIgnoreCase("streamtip") | args[1].equalsIgnoreCase("text")) {
+            if (args[1].equalsIgnoreCase("twitchalerts") | args[1].equalsIgnoreCase("streamtip") | args[1].equalsIgnoreCase("tipeeestream") | args[1].equalsIgnoreCase("text")) {
                 $.DonationHandler.DonationType = args[1].toLowerCase();
                 $.inidb.set("settings","donationtype",$.DonationHandler.DonationType);
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.donationhandler.donationalert-set-type", $.DonationHandler.DonationType));
@@ -120,11 +120,15 @@ setTimeout(function(){
             
             $.currDonation = $.readFile($.DonationHandler.CheckerStorePath);
 
-            if($.DonationHandler.DonationType=="twitchalerts" || $.DonationHandler.DonationType=="streamtip") {
+            if($.DonationHandler.DonationType=="twitchalerts" || $.DonationHandler.DonationType=="streamtip" ||  $.DonationHandler.DonationType=="tipeeestream") {
                 if($.DonationHandler.DonationType=="twitchalerts") {
-                    $.tadata = $.twitchalerts.GetChannelDonations();
-                } else {
-                    $.tadata = $.streamtip.GetChannelDonations();
+                    $.tadata = $.donationhandler.taGetChannelDonations();
+                }
+                if($.DonationHandler.DonationType=="streamtip") {
+                    $.tadata = $.donationhandler.stGetChannelDonations();
+                }
+                if($.DonationHandler.DonationType=="tipeeestream") {
+                    $.tadata = $.donationhandler.tpeGetChannelDonations();
                 }
                 
                 if($.tadata[0]=="" | $.tadata[1]=="" | $.tadata[3]=="") {
@@ -139,7 +143,7 @@ setTimeout(function(){
                 //initiate date formatter
                 var df = new java.text.SimpleDateFormat( "yyyy-MM-dd'T'hh:mm:ssz" );
 
-                //parse created_at/date from TwitchAlerts/StreamTip, which is received in GMT                
+                //parse created_at/date, which is received in GMT                
                 if ($.tacreated.endsWith( "Z" )) {
                     $.tacreated = $.tacreated.substring( 0, $.tacreated.length() - 1) + "GMT-00:00";  
                 } else {
@@ -179,7 +183,7 @@ setTimeout(function(){
 
                     $.inidb.set("settings", "lastdonation", $.readFile($.DonationHandler.CheckerStorePath));
                     if ($.DonationHandler.DonationToggle == 1) {
-                        if($.DonationHandler.DonationType=="twitchalerts" | $.DonationHandler.DonationType=="streamtip") {
+                        if($.DonationHandler.DonationType=="twitchalerts" | $.DonationHandler.DonationType=="streamtip" | $.DonationHandler.DonationType=="tipeeestream") {
                             if($.DonationHandler.DonationTASayMsg==0) {
                                 $.say($.lang.get("net.quorrabot.donationhandler.new-donation", $.tadonator, $.taamount));
                             } else {

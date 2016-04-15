@@ -35,11 +35,21 @@ import me.gloriouseggroll.quorrabot.Quorrabot;
  *
  * @author GloriousEggroll
  */
-public class TwitchAlertsAPI {
-    private static final TwitchAlertsAPI instance = new TwitchAlertsAPI();
-    private static String clientid = "4S5Ml50i5g9lUvvpV85qUmXRF0KyvgkiS6F3g6st";
-    private static String access_token = "";
-    private static final String base_url = "https://www.twitchalerts.com/api/donations?access_token=";
+public class DonationHandlerAPI {
+    private static final DonationHandlerAPI instance = new DonationHandlerAPI();
+    
+    //Twitchalerts auth info
+    private static String ta_access_token = "";
+    private static final String ta_base_url = "https://www.twitchalerts.com/api/donations?access_token=";
+    
+    //Streamtip auth info
+    private static String st_clientid = "";
+    private static String st_access_token = "";
+    private static final String st_base_url = "https://streamtip.com/api/tips?client_id=";
+    
+    //tipeeestream auth info
+    private static String tpe_access_token = "";
+    private static final String tpe_base_url = "https://api.tipeeestream.com/v1.0/events.json?apiKey=";
 
     
     private enum request_type
@@ -48,12 +58,12 @@ public class TwitchAlertsAPI {
         GET, POST, PUT, DELETE
     };
         
-    public static TwitchAlertsAPI instance()
+    public static DonationHandlerAPI instance()
     {
         return instance;
     }
     
-    private TwitchAlertsAPI()
+    private DonationHandlerAPI()
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
@@ -283,41 +293,55 @@ public class TwitchAlertsAPI {
 
         if (Quorrabot.enableDebugging)
         {
-            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData Timers " + (preconnect.getTime() - start.getTime()) + " "
+            com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetData Timers " + (preconnect.getTime() - start.getTime()) + " "
                     + (postconnect.getTime() - start.getTime()) + " " + (prejson.getTime() - start.getTime()) + " "
                     + (postjson.getTime() - start.getTime()) + " " + start.toString() + " " + postjson.toString());
-            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData Exception " + j.getString("_exception") + " " + j.getString("_exceptionMessage"));
-            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData HTTP/Available " + j.getInt("_http") + "(" + responsecode + ")/" + j.getInt("_available") + "(" + cl + ")");
-            com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetData RawContent[0,100] " + j.getString("_content").substring(0, Math.min(100, j.getString("_content").length())));
+            com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetData Exception " + j.getString("_exception") + " " + j.getString("_exceptionMessage"));
+            com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetData HTTP/Available " + j.getInt("_http") + "(" + responsecode + ")/" + j.getInt("_available") + "(" + cl + ")");
+            com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetData RawContent[0,100] " + j.getString("_content").substring(0, Math.min(100, j.getString("_content").length())));
         }
 
         return j;
     }
 
     /**
-     * Sets the TwitchAlerts API Client-ID header
+     * Sets the API Client-ID header
      *
      * @param clientid
      */
-    public void SetClientID(String clientid)
+    public void SetClientID(String clientid, String type)
     {
-        this.clientid = clientid;
+        if(type.equals("streamtip")) {
+            this.st_clientid = clientid;
+            return;
+        }
     }
 
     /**
-     * Sets the TwitchAlerts API Access Token
+     * Sets the API Access Token
      *
      * @param access_token
      */
-    public void SetAccessToken(String access_token)
+    public void SetAccessToken(String access_token, String type)
     {
-        this.access_token = access_token;
+        if(type.equals("twitchalerts")) {
+            this.ta_access_token = access_token;
+            return;
+        }
+        if(type.equals("streamtip")) {
+            this.st_access_token = access_token;
+            return;
+        }
+        if(type.equals("tpestream")) {
+            this.tpe_access_token = access_token;
+            return;
+        }
     }
     
-    public String[] GetChannelDonations()
+    public String[] taGetChannelDonations()
     {
         
-        JSONObject j = GetData(TwitchAlertsAPI.request_type.GET, base_url + access_token);
+        JSONObject j = GetData(DonationHandlerAPI.request_type.GET, ta_base_url + ta_access_token);
         if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found"))
         {
         
@@ -327,7 +351,7 @@ public class TwitchAlertsAPI {
                 {
                     if (Quorrabot.enableDebugging)
                     {
-                        com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetChannelDonations Success");
+                        com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetChannelDonations Success");
                     }
                     
                     JSONArray donations = j.getJSONArray("donations");
@@ -357,7 +381,7 @@ public class TwitchAlertsAPI {
                 {
                     if (Quorrabot.enableDebugging)
                     {
-                        com.gmt2001.Console.out.println(">>>[DEBUG] TwitchAlertsAPI.GetChannelDonations Exception");
+                        com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetChannelDonations Exception");
                     }
 
                     return new String[]
@@ -378,4 +402,135 @@ public class TwitchAlertsAPI {
             };
         }
     }
+    
+    public String[] stGetChannelDonations()
+    {
+        
+        JSONObject j = GetData(DonationHandlerAPI.request_type.GET, st_base_url + st_clientid + "&access_token=" + st_access_token);
+        if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found"))
+        {
+        
+            if (j.getInt("_http") == 200)
+            {
+                try
+                {
+                    if (Quorrabot.enableDebugging)
+                    {
+                        com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetChannelDonations Success");
+                    }
+                    
+                    JSONArray donations = j.getJSONArray("tips");
+                    //com.gmt2001.Console.out.println(donations.toString());
+                    
+                    JSONObject lastdonation = donations.getJSONObject(0);
+                    //com.gmt2001.Console.out.println(lastdonation.toString());
+                    
+                    String amount = lastdonation.getString("amount");
+                    String cs = lastdonation.getString("currencySymbol");
+                    
+                    String donatormessage = "";
+                    
+                    String ld = lastdonation.toString();
+                    if( !ld.substring(ld.indexOf("note"),ld.indexOf("note")+11).contains("null") ) {
+                        donatormessage = lastdonation.getString("note");
+                    }
+
+                    String createdat = lastdonation.getString("date");
+                    createdat = createdat.substring(0, createdat.indexOf(".")) + "Z";
+
+                    String donatorname = lastdonation.getString("username");
+                    
+                    return new String[]
+                    {
+                        donatorname,  cs + amount, donatormessage, createdat
+                    };
+                    
+                } catch (Exception e)
+                {
+                    if (Quorrabot.enableDebugging)
+                    {
+                        com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetChannelDonations Exception");
+                    }
+                    com.gmt2001.Console.out.println(e.toString());
+                    return new String[]
+                    {
+                        "", "", "", ""
+                    };
+                }
+            } else {
+                return new String[]
+                {
+                    "", "", "", ""
+                };
+            } 
+        } else {
+            return new String[]
+            {
+                "", "", "", ""
+            };
+        }
+    }
+
+    public String[] tpeGetChannelDonations()
+    {
+        
+        JSONObject j = GetData(DonationHandlerAPI.request_type.GET, tpe_base_url + tpe_access_token + "&type[]=donation");
+        if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found"))
+        {
+        
+            if (j.getInt("_http") == 200)
+            {
+                try
+                {
+                    if (Quorrabot.enableDebugging)
+                    {
+                        com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetChannelDonations Success");
+                    }
+                    JSONObject datas = j.getJSONObject("datas");
+                    
+                    JSONArray donations = datas.getJSONArray("items");
+                    
+                    JSONObject lastdonation = donations.getJSONObject(0);
+                    
+                    String amount = lastdonation.getString("formattedAmount");
+                    
+                    JSONObject parameters = lastdonation.getJSONObject("parameters");
+                    String donatormessage = parameters.getString("formattedMessage");
+                    String donatorname = parameters.getString("username");
+
+                    String createdat = lastdonation.getString("created_at");
+                    createdat = createdat.substring(0, createdat.indexOf("+")) + "Z";
+                    
+                    return new String[]
+                    {
+                        donatorname, amount, donatormessage, createdat
+                    };
+                    
+                } catch (Exception e)
+                {
+                    if (Quorrabot.enableDebugging)
+                    {
+                        com.gmt2001.Console.out.println(">>>[DEBUG] DonationHandlerAPI.GetChannelDonations Exception");
+                    }
+
+                    return new String[]
+                    {
+                        "", "", "", ""
+                    };
+                }
+            } else {
+                return new String[]
+                {
+                    "", "", "", ""
+                };
+            } 
+        } else {
+            return new String[]
+            {
+                "", "", "", ""
+            };
+        }
+    }
+
+
 }
