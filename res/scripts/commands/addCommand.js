@@ -443,7 +443,8 @@ $.getCustomAPIValue = function(url) {
 	return response.content;
 }
 
-$.customAPIJSON = function(message, command, args, sender) {
+$.customAPI = function(message, command, args, sender) {
+
         var JSONObject = Packages.org.json.JSONObject,
             jsonObject,
             customAPIResponse = '',
@@ -453,28 +454,38 @@ $.customAPIJSON = function(message, command, args, sender) {
             csmessage = message + '',
             sender = sender + '',
             command = command + '',
+            customAPIReturnString = '',
             regExCheck,
             jsonItems,
             jsonCheckList;
-            
-        var reCustomAPIJson = new RegExp(/\(customapi ([\w\.:\/\$=\?\&]+)\s([\w\W]+)\)/), // URL[1], JSONmatch[2..n]
+
+        var reCustomAPI = new RegExp(/\(customapi\s([\w\W:\/\$\=\?\&]+)\)/), // URL[1]
+            reCustomAPIJson = new RegExp(/\(customapi ([\w\.:\/\$=\?\&]+)\s([\w\W]+)\)/), // URL[1], JSONmatch[2..n]
             reCustomAPITextTag = new RegExp(/{([\w\W]+)}/);
             
-                if ((regExCheck = csmessage.match(reCustomAPIJson))) {
-                    // Check for and process $1 - $9 in the URL.
-                    if (regExCheck[1].indexOf('$1') != -1) {
-                        for (var i = 1; i <= 9; i++) {
-                            if (regExCheck[1].indexOf('$' + i) != -1) {
-                                if (!args[i - 1]) {
-                                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapi.404', command));
-                                    return;
-                                }
-                                regExCheck[1] = regExCheck[1].replace('$' + i, args[i - 1]);
-                            } else {
-                                break;
-                            }
+        $.customAPIParseArgs = function(regExCheck) {
+            if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
+                var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1,message.length());
+                args = mArgsString.split(" ");
+            }
+            
+            if (regExCheck[1].indexOf('$1') != -1) {
+                for (var i = 1; i <= 9; i++) {
+                    if (regExCheck[1].indexOf('$' + i) != -1) {
+                        if (!args[i - 1]) {
+                            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapi.404', command));
+                            return;
                         }
+                        regExCheck[1] = regExCheck[1].replace('$' + i, args[i - 1]);
+                    } else {
+                        break;
                     }
+                }
+            }
+        }
+
+        if ((regExCheck = csmessage.match(reCustomAPIJson))) {
+                    $.customAPIParseArgs(regExCheck);
                     origCustomAPIResponse = getCustomAPIValue(regExCheck[1]);
                     jsonItems = regExCheck[2].split(' ');
                     for (var j = 0; j < jsonItems.length; j++) {
@@ -528,58 +539,18 @@ $.customAPIJSON = function(message, command, args, sender) {
                             }
                         }
                     }
-                }
-                var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
-                if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
-                        replacedmessage = replacedmessage.substring(0, replacedmessage.indexOf(customAPIReturnString) + customAPIReturnString.length);
-                }
-                return replacedmessage;
-}
-
-$.customAPI = function(message, command, args, sender) {
-        
-        var csmessage = message + '',
-            sender = sender + '',
-            command = command + '',
-            customAPIReturnString = '',
-            regExCheck;
-
-        var reCustomAPI = new RegExp(/\(customapi\s([\w\W:\/\$\=\?\&]+)\)/); // URL[1]
-
-        if ((regExCheck = csmessage.match(reCustomAPI))) {
-                    if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
-                            var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1,message.length());
-                            args = mArgsString.split(" ");
-                    }
-                    var urlsubstr = message.toLowerCase().substring(message.indexOf("http"), message.length());
-                    var urlString = "";
-                    if(urlsubstr.indexOf(" ")!=-1) {
-                        urlString = urlsubstr.substring(0, urlsubstr.indexOf(" "));
-                    } else {
-                        urlString = urlsubstr.substring(0, urlsubstr.indexOf(")"));
-                    }
-                    if($.isJSON($.getCustomAPIValue(urlString))) {
-                        return $.customAPIJSON(message, command, args, sender);
-                    }
+            var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
+            if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
+                replacedmessage = replacedmessage.substring(0, replacedmessage.indexOf(customAPIReturnString) + customAPIReturnString.length);
+            }
+            return replacedmessage;
             
-                    if (regExCheck[1].indexOf('$1') != -1) {
-                        for (var i = 1; i <= 9; i++) {
-                            if (regExCheck[1].indexOf('$' + i) != -1) {
-                                if (!args[i - 1]) {
-                                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapi.404', command));
-                                    return;
-                                }
-                                regExCheck[1] = regExCheck[1].replace('$' + i, args[i - 1]);
-                            } else {
-                                break;
-                            }
-                        }
-                    }
+        } else if(regExCheck = csmessage.match(reCustomAPI)) {
+                    $.customAPIParseArgs(regExCheck);
                     customAPIReturnString = $.getCustomAPIValue(regExCheck[1]);
                     var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
                     return replacedmessage;
-                    
-            }
+        }
 }
 
 setTimeout(function () {
