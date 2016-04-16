@@ -549,6 +549,9 @@ $.customAPI = function(message, command, args, sender) {
                     $.customAPIParseArgs(regExCheck);
                     customAPIReturnString = $.getCustomAPIValue(regExCheck[1]);
                     var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
+                    if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
+                        replacedmessage = replacedmessage.substring(0, replacedmessage.indexOf(customAPIReturnString) + customAPIReturnString.length);
+                    }
                     return replacedmessage;
         }
 }
