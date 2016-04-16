@@ -489,6 +489,7 @@ $.customAPI = function(message, command, args, sender) {
                     origCustomAPIResponse = getCustomAPIValue(regExCheck[1]);
                     jsonItems = regExCheck[2].split(' ');
                     for (var j = 0; j < jsonItems.length; j++) {
+                        
                         if (jsonItems[j].startsWith('{') && jsonItems[j].endsWith('}')) {
                             customAPIReturnString += " " + jsonItems[j].match(reCustomAPITextTag)[1];
                         } else if (jsonItems[j].startsWith('{') && !jsonItems[j].endsWith('}')) {
@@ -514,7 +515,11 @@ $.customAPI = function(message, command, args, sender) {
                                         }
                                     }
                                 }
-                                customAPIReturnString += " " + customAPIResponse;
+                                //prevent duplicate data due to for loop
+                                if(customAPIReturnString.indexOf(customAPIResponse)==-1) {
+                                    customAPIReturnString += " " + customAPIResponse;
+                                }
+
                             } else {
                                 for (var i = 0; i < jsonCheckList.length - 1; i++) {
                                     if (i == 0) {
@@ -535,9 +540,13 @@ $.customAPI = function(message, command, args, sender) {
                                         }
                                     }
                                 }
-                                customAPIReturnString += " " + customAPIResponse;
+                                //prevent duplicate data due to for loop
+                                if(customAPIReturnString.indexOf(customAPIResponse)==-1) {
+                                    customAPIReturnString += " " + customAPIResponse;
+                                }
                             }
                         }
+                        
                     }
             var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
             if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
