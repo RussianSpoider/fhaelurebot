@@ -476,7 +476,7 @@ public class Quorrabot implements Listener
         }
 
         com.gmt2001.Console.out.print("[SHUTDOWN] Waiting for running scripts to finish...");
-        try
+        /*try
         {
             for (int i = 10; i > 0; i--)
             {
@@ -488,7 +488,7 @@ public class Quorrabot implements Listener
             com.gmt2001.Console.err.printStackTrace(ex);
         }
 
-        com.gmt2001.Console.out.println("\r[SHUTDOWN] Waiting for running scripts to finish...  ");
+        com.gmt2001.Console.out.println("\r[SHUTDOWN] Waiting for running scripts to finish...  ");*/
 
         com.gmt2001.Console.out.println("[SHUTDOWN] Terminating TwitchAPI caches...");
         ChannelHostCache.killall();
@@ -594,7 +594,18 @@ public class Quorrabot implements Listener
         }
         if (!event.getSender().equalsIgnoreCase("jtv") && !event.getSender().equalsIgnoreCase("twitchnotify"))
         {
-            //com.gmt2001.Console.out.println("PMSG: " + event.getSender() + ": " + event.getMessage());
+            if(event.getMessage().startsWith("!") && event.getSession()==session) {
+                String command;
+                String argsString;
+                if(event.getMessage().indexOf(" ")==-1) {
+                    command = event.getMessage().substring(1,event.getMessage().length());
+                    argsString = "";
+                } else {
+                    command = event.getMessage().substring(1, event.getMessage().indexOf(" "));
+                    argsString = event.getMessage().substring(event.getMessage().indexOf(" ") + 1, event.getMessage().length());
+                }
+                EventBus.instance().post(new CommandEvent(event.getSender(), command, argsString));
+            }
         }
     }
 
@@ -649,6 +660,9 @@ public class Quorrabot implements Listener
     {
         String message = msg.getMsg();
         boolean changed = false;
+        if (message == null) {
+             return;
+         }
 
         if (message.equals("debugon"))
         {
