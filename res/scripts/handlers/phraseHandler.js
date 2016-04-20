@@ -3,7 +3,7 @@ $.on('ircChannelMessage', function(event) {
     var sender = event.getSender();
     var username = $.username.resolve(sender, event.getTags());
 
-    message = message.replace(/[^a-zA-Z0-9_\s]+/g,'');
+    //message = message.replace(/[^a-zA-Z0-9_\s]+/g,'');
     var emoteKey = $.inidb.GetKeyList("phrases", "");
     if (emoteKey == null || emoteKey[0] == "" || emoteKey[0] == null) {
         return;
@@ -48,7 +48,7 @@ $.on('command', function (event) {
 
         triggerphrase = args[0].toLowerCase();
         triggerphrase = new String(triggerphrase);
-        triggerphrase = triggerphrase.replace(/[^a-zA-Z0-9_\s]+/g,'');
+        //triggerphrase = triggerphrase.replace(/[^a-zA-Z0-9_\s]+/g,'');
         
         if(argsString.contains('“') | argsString.contains('”') | argsString.contains('"')) {
             response = argsString.replace('“','"');
