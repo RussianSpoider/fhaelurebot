@@ -974,6 +974,6 @@ $.lang.data["net.quorrabot.pollsystem.open.usage"] = "Usage: !poll open \"questi
 $.lang.data["net.quorrabot.pollsystem.open.moreoptions"] = "More than one option is required for a poll.";
 $.lang.data["net.quorrabot.pollsystem.runpoll.novotes"] = "The poll on \"$1\" has ended! Not enough votes were cast!";
 $.lang.data["net.quorrabot.pollsystem.runpoll.winner"] = "The poll on \"$1\" has ended! The winner is \"$2\"!";
-$.lang.data["net.quorrabot.pollsystem.runpoll.tie"] = "The poll on \"$1\" has ended in a tie! Check !poll results.";
+$.lang.data["net.quorrabot.pollsystem.runpoll.tie"] = "The poll on \"$1\" has ended in a tie! Check !poll result.";
 $.lang.data["net.quorrabot.pollsystem.runpoll.started"] = "Poll started! Use \"!poll close\" to end the poll manually";
 $.lang.data["net.quorrabot.pollsystem.close.nopoll"] = "There is currently no poll running.";

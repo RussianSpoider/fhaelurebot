@@ -331,6 +331,13 @@ $.on('command', function (event) {
     var argsString = event.getArguments().trim();
     var args = event.getArgs();
 
+    if(command.toString().equalsIgnoreCase("say")) {
+        if(!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modmsg);
+            return;
+        }
+        $.say(argsString);
+    }
     if (command.equalsIgnoreCase("log")) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
@@ -508,6 +515,7 @@ $.on('ircChannelMessage', function (event) {
 
 $.timer.addTimer("./util/misc.js", "registercommand", false, function () {
     $.registerChatCommand("./util/misc.js", "log", "admin");
+    $.registerChatCommand("./util/misc.js", "say", "admin");    
     $.registerChatCommand("./util/misc.js", "logchat", "admin");
     $.registerChatCommand("./util/misc.js", "response", "admin");
 }, 5000);
