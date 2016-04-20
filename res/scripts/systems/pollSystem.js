@@ -54,7 +54,7 @@ function runPoll(question, options, time, pollMaster, minVotes, callback) {
 };
 
 function makeVote(sender, voteText) {
-        var optionIndex;
+        var optionIndex = voteText;
 
         if (!$.poll.pollRunning) {
             $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.vote.nopoll'));
@@ -64,13 +64,22 @@ function makeVote(sender, voteText) {
             $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.vote.already'));
             return;
         }
-
-        optionIndex = parseInt(voteText);
+        if(parseInt(voteText)) {
+            optionIndex = parseInt(voteText);
+        } else {
+            for(var i=0;i<$.poll.options.length;i++) {
+                if(voteText.toString().equalsIgnoreCase($.poll.options[i])){
+                    optionIndex = i + 1;
+                }
+            }
+        }
+        
         if (isNaN(optionIndex) || optionIndex < 1 || optionIndex > $.poll.options.length) {
             $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.vote.invalid', voteText));
             return;
-        }
-
+        } 
+        
+        
         optionIndex--;
         $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.vote.success', $.poll.options[optionIndex], $.poll.question));
         $.poll.voters.push(sender);
