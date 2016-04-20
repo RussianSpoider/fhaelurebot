@@ -152,7 +152,7 @@ $.on('command', function (event) {
                 $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.poll.running', $.poll.question, optionsStr));
             } else {
                 if (!$.isMod(sender)) {
-                    $.say($.getWhisperString(sender) + $.modMsg);
+                    $.say($.getWhisperString(sender) + $.modmsg);
                     return;
                 }
                 $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.poll.usage'));
@@ -161,7 +161,7 @@ $.on('command', function (event) {
         }
         
         if (!$.isModv3(sender, event.getTags())) {
-            $.say($.getWhisperString(sender) + $.modMsg);
+            $.say($.getWhisperString(sender) + $.modmsg);
             return;
         }
         
