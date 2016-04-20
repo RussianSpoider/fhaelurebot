@@ -178,14 +178,20 @@ $.on('command', function (event) {
             return;
         }
         var caster = $.username.resolve(args[0]);
-
-        if ($.isOnline(caster)) {
-            $.say($.lang.get("net.quorrabot.followHandler.shoutout-online", caster, $.getGame(caster)));
-            return;
+        
+        if($.username.resolve(caster)) {
+            if ($.isOnline(caster)) {
+                $.say($.lang.get("net.quorrabot.followHandler.shoutout-online", caster, $.getGame(caster)));
+                return;
+            } else {
+                $.say($.lang.get("net.quorrabot.followHandler.shoutout-offline", caster, $.getGame(caster)));
+                return;
+            }
         } else {
-            $.say($.lang.get("net.quorrabot.followHandler.shoutout-offline", caster, $.getGame(caster)));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.shoutout-not-exist", caster));
             return;
         }
+        
     } else if (command.equalsIgnoreCase('followage')) {
         var user = $.username.resolve(sender);
         var channel = $.channelName;

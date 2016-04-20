@@ -405,6 +405,7 @@ $.lang.data["net.quorrabot.greetingsystem.toggle-enabled-other"] = "A greeting m
 $.lang.data["net.quorrabot.greetingsystem.usage"] = "Usage: \"!greet max <amount>\", \"!greet set [global OR user <name>] <message>\", \"!greet toggle [global OR user <name>]\"";
 
 //followHandler.js
+$.lang.data["net.quorrabot.followHandler.shoutout-not-exist"] = "The user $1 does not exist.";
 $.lang.data["net.quorrabot.followHandler.shoutout-offline"] = "Hey go give $1 a follow over at twitch.tv/$1! They were last seen playing: $2!";
 $.lang.data["net.quorrabot.followHandler.shoutout-online"] = "Hey go give $1 a follow over at twitch.tv/$1! They are currently playing: $2!";
 $.lang.data["net.quorrabot.followHandler.shoutout-usage"] = "Usage: !follow (caster)";
