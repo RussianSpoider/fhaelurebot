@@ -1,286 +1,231 @@
-$var.pollID = 0;
-var results = [];
-var high = 0;
-var length = 0;
-var options = [];
-var current = "";
-var optionsStr = "";
-var l = 0;
-var count = 0;
-
-function makeVote(option) {
-    options = $var.pollOptions;
-    if(!parseInt(option)) {
-        option = option.toLowerCase();
-    } else {
-        if((parseInt(option) > 0) && (parseInt(option) <= parseInt(options.length))) {
-            var option2 = parseInt(option) - 1;
-            option = options[option2].toLowerCase();
-        } else {
-            return false;
-        }
-    }
-    current = $.pollResults.get(option);
-
-    if (current != null) {
-        var n = current.intValue() + 1;
-        $.pollResults.put(option, n);
-        $var.pollTotalVotes++;
-        return true;
-    }
-    return false;
-}
-
-$.endPoll = function () {
-    if (pollCallback != null) {
-        $var.pollID += 1;
-        results = [];
-        high = 0;
-        options = $var.pollOptions;
-        for (var i = 0; i < options.length; ++i) {
-            count = $.pollResults.get(options[i].toLowerCase()).intValue();
-            if (high < count) {
-                high = count;
-                results = [options[i]];
-            } else if (high == count) {
-                results[results.length] = options[i];
-            }
-        }
-        $var.vote_running = false;
-        pollCallback(results);
-        $.pollResults.clear();
-        $.pollVoters.clear();
-        $var.pollMaster = null;
-        pollCallback = null;
-        return true;
-    }
-    return false;
+$.poll = {
+    id: 0,
+    options: [],
+    votes: [],
+    voters: [],
+    callback: function() {},
+    pollRunning: false,
+    pollMaster: '',
+    time: 0,
+    question: '',
+    minVotes: 0,
+    result: '',
+    pollTimerId: -1,
+    hasTie: 0,
+    counts: [],
 };
 
-$.runPoll = function (callback, options, time, pollMaster) {
-    if ($var.vote_running) {
-        return false;
-    } else {
-        $var.vote_running = true;
-    }
+var rePollOpenFourOptions = new RegExp(/"([\w\W]+)"\s+"([\w\W]+)"\s+(\d+)\s+(\d+)/),
+    rePollOpenThreeOptions = new RegExp(/"([\w\W]+)"\s+"([\w\W]+)"\s+(\d+)/),
+    rePollOpenTwoOptions = new RegExp(/"([\w\W]+)"\s+"([\w\W]+)"/);
 
-    for (var i = 0; i < options.length; ++i) {
-        var option = options[i];
-        $.pollResults.put(option.toLowerCase(), 0);
-    }
-    
-    $var.pollOptions = options;
-    $var.pollMaster = pollMaster;
-    $var.pollTotalVotes = 0;
+function runPoll(question, options, time, pollMaster, minVotes, callback) {
+        var optionsStr = "";
 
-    if (time > 0) {
-        pollCallback = callback;
-        var oldID = $var.pollID;
-        setTimeout(function () {
-            if (oldID == $var.pollID) {
-                $.endPoll();
-            } else {
-                println("Poll closed manually");
-            }
-        }, time);
-        setTimeout(function () {
-            if (oldID == $var.pollID) {
-                $.say("The poll will close in " + (time * 0.3) / 1000 + " seconds, cast your vote soon.");
-            } else {
-                println("Poll closed manually");
-            }
-        }, time * 0.7);
-    } else {
-        pollCallback = callback;
-    }
-    return true;
+        if ($.poll.pollRunning) {
+            return false
+        }
+
+        $.poll.pollRunning = true;
+        $.poll.pollMaster = pollMaster;
+        $.poll.time = (isNaN(time) || time == 0 ? false : time * 1000);
+        $.poll.callback = callback;
+        $.poll.question = question;
+        $.poll.options = options;
+        $.poll.minVotes = (minVotes ? minVotes : 1);
+        $.poll.votes = [];
+        $.poll.voters = [];
+        $.poll.counts = [];
+        $.poll.hasTie = 0;
+
+        for (var i = 0; i < $.poll.options.length; i++) {
+            optionsStr += (i + 1) + ") " + $.poll.options[i] + " ";
+        }
+
+        $.say($.lang.get('net.quorrabot.pollsystem.poll.started', $.username.resolve(pollMaster), time, $.poll.minVotes, $.poll.question, optionsStr));
+        if ($.poll.time) {
+            $.poll.pollTimerId = setTimeout(function() {
+                endPoll();
+                clearTimeout($.poll.pollTimerId);
+            }, $.poll.time);
+        }
+
+        return true;
 };
+
+function makeVote(sender, voteText) {
+        var optionIndex;
+
+        if (!$.poll.pollRunning) {
+            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.vote.nopoll'));
+        }
+
+        if ($.array.contains($.poll.voters, sender.toLowerCase())) {
+            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.vote.already'));
+            return;
+        }
+
+        optionIndex = parseInt(voteText);
+        if (isNaN(optionIndex) || optionIndex < 1 || optionIndex > $.poll.options.length) {
+            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.vote.invalid', voteText));
+            return;
+        }
+
+        optionIndex--;
+        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.vote.success', $.poll.options[optionIndex], $.poll.question));
+        $.poll.voters.push(sender);
+        $.poll.votes.push(optionIndex);
+};
+
+function endPoll() {
+        var mostVotes = -1,
+            i;
+
+        if (!$.poll.pollRunning) {
+            return;
+        }
+
+        if ($.poll.pollTimerId > -1) {
+            clearTimeout($.poll.pollTimerId);
+            $.poll.pollTimerId = -1;
+        }
+
+        if ($.poll.minVotes > 0 && $.poll.votes.length < $.poll.minVotes) {
+            $.poll.result = '';
+            $.poll.pollMaster = '';
+            $.poll.pollRunning = false;
+            $.poll.callback(false);
+            return;
+        }
+
+        for (i = 0; i < $.poll.options.length; $.poll.counts.push(0), i++);
+        for (i = 0; i < $.poll.votes.length; $.poll.counts[$.poll.votes[i++]] += 1);
+        for (i = 0; i < $.poll.counts.length; winner = (($.poll.counts[i] > mostVotes) ? i : winner), mostVotes = (($.poll.counts[i] > mostVotes) ? $.poll.counts[i] : mostVotes), i++);
+        for (i = 0; i < $.poll.counts.length;
+            (i != winner && $.poll.counts[i] == $.poll.counts[winner] ? $.poll.hasTie = 1 : 0), ($.poll.hasTie == 1 ? i = $.poll.counts.length : 0), i++);
+
+        $.poll.result = $.poll.options[winner];
+        $.poll.pollMaster = '';
+        $.poll.pollRunning = false;
+        $.inidb.set('pollresults', 'question', $.poll.question);
+        $.inidb.set('pollresults', 'result', $.poll.result);
+        $.inidb.set('pollresults', 'votes', $.poll.votes.length);
+        $.inidb.set('pollresults', 'options', $.poll.options.join(','));
+        $.inidb.set('pollresults', 'counts', $.poll.counts.join(','));
+        $.inidb.set('pollresults', 'istie', $.poll.hasTie);
+        $.poll.callback($.poll.result);
+};
+
 
 $.on('command', function (event) {
-    var sender = event.getSender().toLowerCase();
-    var username = $.username.resolve(sender, event.getTags());
-    var command = event.getCommand();
-    var argsString = event.getArguments().trim();
-    var args = event.getArgs();
-    var currentTime = new Date();
-    var action = args[0];
-    var month = currentTime.getMonth() + 1;
-    var day = currentTime.getDate();
-    var year = currentTime.getFullYear();
-    var date = month + "/" + day + "/" + year;
+    var sender = event.getSender().toLowerCase(),
+        command = event.getCommand(),
+        argsString = event.getArguments().trim(),
+        args = event.getArgs(),
+        action = args[0];
 
-    if (command.equalsIgnoreCase("vote")) {
-        if (!$var.vote_running) {
-            $.say("There are no open polls running.");
+    if (command.equalsIgnoreCase('vote') && action) {
+        if (!$.poll.pollRunning) {
+            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.vote.nopoll'));
             return;
         }
-        if ($.pollVoters.contains(sender)) {
-            $.say($.getWhisperString(sender) + username + ", you have already voted.");
-            return;
-        }
-        if (!makeVote(args[0])) {
-            $.say($.getWhisperString(sender) + "'" + args[0] + "' is not a valid option!");
-        } else {
-            $.pollVoters.add(sender);
-            if ($var.vote_toggle == true) {
-                $.say($.getWhisperString(sender) + "Your vote has been recorded, " + username + ".");
-            } else if ($var.vote_toggle == false) {
-                println("Your vote has been recorded, " + username + ".");
-            }
-        }
-    } else if (command.equalsIgnoreCase("poll")) {
-        if (!argsString.isEmpty()) {
-            action = args[0].toLowerCase();
-        }
-
-
-        $var.vote_toggle = true;
-        if ($.inidb.get('settings', 'vote_toggle') == 1) {
-            $var.vote_toggle = true;
-        } else if ($.inidb.get('settings', 'vote_toggle') == 2) {
-            $var.vote_toggle = false;
-        }
-
-        if (args.length >= 1) {
-
-            if (action.equalsIgnoreCase("toggle")) {
-                if (!$.isAdmin(sender)) {
-                    $.say($.getWhisperString(sender) + $.adminmsg);
+        makeVote(sender, action);
+    }
+    
+    if (command.equalsIgnoreCase("poll")) {
+        
+        if (!action) {
+            if ($.poll.pollRunning) {
+                var optionsStr = "";
+                for (var i = 0; i < $.poll.options.length; i++) {
+                    optionsStr += (i + 1) + ") " + $.poll.options[i] + (i == $.poll.options.length - 1 ? "" : " ");
+                }
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.poll.running', $.poll.question, optionsStr));
+            } else {
+                if (!$.isMod(sender)) {
+                    $.say($.getWhisperString(sender) + $.modMsg);
                     return;
                 }
-
-                if ($var.vote_toggle == false) {
-                    $var.vote_toggle = true;
-                    $.inidb.set('settings', 'vote_toggle', 1);
-                    $.say($.getWhisperString(sender) + "Vote messages have been turned on!");
-                } else if ($var.vote_toggle == true) {
-                    $var.vote_toggle = false;
-                    $.inidb.set('settings', 'vote_toggle', 2);
-                    $.say($.getWhisperString(sender) + "Vote messages have been turned off!");
-                }
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.poll.usage'));
             }
-            if (action.equalsIgnoreCase("results")) {
-                if ($var.vote_running) {
-
-                    $.say("[Poll Session] - [" + parseInt($var.pollTotalVotes) + " Total Votes] - [Options: " + $.displayOptions + "]");
-
+            return;
+        }
+        
+        if (!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modMsg);
+            return;
+        }
+        
+        if (action.equalsIgnoreCase('result')) {
+            if ($.poll.pollRunning) {
+                $.say($.lang.get('net.quorrabot.pollsystem.results.running'));
+            } else if ($.poll.result != '') {
+                if ($.poll.hasTie) {
+                    $.say($.lang.get('net.quorrabot.pollsystem.results.lastpoll', $.poll.question, $.poll.votes.length, "Tie!", $.poll.options.join('", "'), $.poll.counts.join('", "')));
                 } else {
+                    $.say($.lang.get('net.quorrabot.pollsystem.results.lastpoll', $.poll.question, $.poll.votes.length, $.poll.result, $.poll.options.join('", "'), $.poll.counts.join(', ')));
+                }
+            } else {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.results.404'));
+            }
+        }
+        
+        if (action.equalsIgnoreCase('open')) {
+            var time = 60,
+                question = '',
+                options = [],
+                minVotes = 1;
 
-                    var date = $.inidb.get('polls', 'date');
-                    var vOptions = $.inidb.get('polls', 'vote_options');
-                    var vTotal = $.inidb.get('polls', 'total_votes');
-                    var WinR = $.inidb.get('polls', 'winning_result');
-                    var WinRV = $.inidb.get('polls', 'winning_result_votes');
+            argsString = argsString + ""; // Cast as a JavaScript string.
 
-                    if (vOptions == null) {
-                        $.say("No past polls.");
+            if (argsString.match(rePollOpenFourOptions)) {
+                question = argsString.match(rePollOpenFourOptions)[1];
+                options = argsString.match(rePollOpenFourOptions)[2].split(/,\s*/);
+                time = parseInt(argsString.match(rePollOpenFourOptions)[3]);
+                minVotes = parseInt(argsString.match(rePollOpenFourOptions)[4]);
+            } else if (argsString.match(rePollOpenThreeOptions)) {
+                question = argsString.match(rePollOpenThreeOptions)[1];
+                options = argsString.match(rePollOpenThreeOptions)[2].split(/,\s*/);
+                time = parseInt(argsString.match(rePollOpenThreeOptions)[3]);
+            } else if (argsString.match(rePollOpenTwoOptions)) {
+                question = argsString.match(rePollOpenTwoOptions)[1];
+                options = argsString.match(rePollOpenTwoOptions)[2].split(/,\s*/);
+            } else {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.open.usage'));
+                return;
+            }
+
+            if (isNaN(time) || !question || !options || options.length == 0 || isNaN(minVotes) || minVotes < 1) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.open.usage'));
+                return;
+            }
+            if (options.length == 1) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.open.moreoptions'));
+                return;
+            }
+
+            if (runPoll(question, options, (time == 0 ? 60 : time), sender, minVotes, function(winner) {
+                    if (winner === false) {
+                        $.say($.lang.get('net.quorrabot.pollsystem.runpoll.novotes', question));
+                        return;
+                    }
+                    if ($.poll.hasTie) {
+                        $.say($.lang.get('net.quorrabot.pollsystem.runpoll.tie', question));
                     } else {
-                        if (vTotal == null) {
-                            vTotal = 0;
-                        }
-
-                        if (WinR == null) {
-                            WinR = "None";
-                        }
-
-                        if (WinRV == null) {
-                            WinRV = "0";
-                        }
-
-                        $.say("[" + date + "] - [" + vTotal + " Total Votes] - [Winning Result: " + WinR + " with " + WinRV + " votes] - [Options: " + vOptions + "]") 
+                        $.say($.lang.get('net.quorrabot.pollsystem.runpoll.winner', question, winner));
                     }
-                }
+                })) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.runpoll.started'));
+            } else {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.results.running'));
             }
-        }
-
-        if (args.length >= 2) {
-            if (action.equalsIgnoreCase("open")) {
-                if (!$.isModv3(sender, event.getTags())) {
-                    $.say($.getWhisperString(sender) + $.modmsg);
+            
+            if (action.equalsIgnoreCase('close')) {
+                if (!$.poll.pollRunning) {
+                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.pollsystem.close.nopoll'));
                     return;
                 }
-                length = 0;
-                options = []
-
-                if (args.length < 2) {
-                    $.say($.getWhisperString(sender) + "Usage: '!poll open -t (seconds) (option 1) (option 2)' -- '!poll results' -- '!poll close'");
-                    return;
-                }
-
-                argStart = 1
-                if (args[argStart] == '-t') {
-                    length = parseInt(args[argStart + 1]);
-                    argStart += 2
-                }
-
-                options = args.slice(argStart);
-
-                if (options.length < 2) {
-                    $.say($.getWhisperString(sender) + "Not enough options, polls must have at least two options!");
-                    return;
-                }
-                if (options.length > 10) {
-                    $.say($.getWhisperString(sender) + "Max number of options in a poll is 10!");
-                    return;
-                }
-
-                if ($var.vote_running) {
-                    $.say($.getWhisperString(sender) + "A vote is already running");
-                    return;
-                }
-            }
-
-            if ($.runPoll(function (result) {
-                if (result.length && $.pollResults.get(result[0]).intValue()> 0 ) {
-                    $.say("Polls are closed! The winner is \"" + result + "\" with " + $.pollResults.get(result[0]).intValue() + " out of " + parseInt($var.pollTotalVotes) + " votes.");
-                    $.inidb.set('polls', 'total_votes', parseInt($var.pollTotalVotes));
-                    $.inidb.set('polls', 'winning_result', result);
-                    $.inidb.set('polls', 'winning_result_votes', $.pollResults.get(result[0]).intValue());
-
-                } else {
-                    var optionsStr = "";
-                    var l = result.length - 2;
-                    for (var i = 0; i < l; ++i) {
-                        optionsStr += result[i] + ", ";
-                    }
-
-                    $.say("The poll resulted in a " + result.length + " way tie '" + optionsStr + result[l] + " and " + result[l + 1] + "', each received " + $.pollResults.get(result[0]).intValue() + " out of " + parseInt($var.pollTotalVotes) + " votes.");
-                    $.inidb.set('polls', 'total_votes', parseInt($var.pollTotalVotes));
-                    $.inidb.set('polls', 'winning_result', result);
-                    $.inidb.set('polls', 'winning_result_votes', $.pollResults.get(result[0]).intValue());
-
-                }
-            }, options, length * 1000, sender)) {
-                optionsStr = "";
-                l = options.length - 2;
-                for (var i = 0; i < l; ++i) {
-                    optionsStr += (i+1).toString() + "." + options[i] + " | ";
-                }
-
-                $.displayOptions = optionsStr + (l+1).toString() + "." + options[l] + " | " + (l+2).toString() + "." + options[l+1];
-
-                $.say("Polls are open! Vote with '!vote (option)'. The options are: " + $.displayOptions);
-                $.inidb.set('polls', 'vote_options', $.displayOptions);
-                $.inidb.set('polls', 'date', date);
-            }
-        } else if (args.length >= 1 && action.equalsIgnoreCase("close")) {
-            if ($var.pollMaster == null) {
-                
-            }
-
-            if (!$.isModv3(sender, event.getTags())) {
-                if ($var.pollMaster != sender) {
-                    $.say($.getWhisperString(sender) + $.modmsg);
-                    return;
-                }
-            }
-
-            if (!$.endPoll()) {
-                $.say("There is no poll running.");
-            }
-        } else {
-            if (argsString.isEmpty()) {
-                $.say($.getWhisperString(sender) + "Usage: '!poll open [-t (seconds)] (option 1) (option 2)' -- '!poll results' -- '!poll close'");
+                endPoll();
             }
 
         }
@@ -290,5 +235,6 @@ $.on('command', function (event) {
 setTimeout(function(){ 
     if ($.moduleEnabled('./systems/pollSystem.js')) {
         $.registerChatCommand("./systems/pollSystem.js", "poll", "mod");
+        $.registerChatCommand("./systems/pollSystem.js", "vote");
     }
 },10*1000);

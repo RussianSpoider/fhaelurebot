@@ -958,3 +958,22 @@ $.lang.data["net.quorrabot.slotmachine.win-6"] = "Baby, now you think you're num
 $.lang.data["net.quorrabot.slotmachine.win-7"] = "X GON GIVE IT TO YA!";
 $.lang.data["net.quorrabot.slotmachine.win-8"] = "If there were many clumsy, perverted and fun people like you the world would be a better place.";
 $.lang.data["net.quorrabot.slotmachine.win-9"] = "Congratulations!";
+
+//pollSystem.js
+$.lang.data["net.quorrabot.pollsystem.vote.nopoll"] = "There is currently no poll running.";
+$.lang.data["net.quorrabot.pollsystem.vote.already"] = "You have already voted!";
+$.lang.data["net.quorrabot.pollsystem.vote.invalid"] = "\"$1\" is not a valid option!";
+$.lang.data["net.quorrabot.pollsystem.vote.success"] = "You have voted \"$1\" on \"$2\".";
+$.lang.data["net.quorrabot.pollsystem.poll.started"] = "$1 started a poll for $2 seconds (minimum votes: $3): $4! Use \"!vote [option]\" to vote. Options: $5";
+$.lang.data["net.quorrabot.pollsystem.poll.running"] = "There is a poll running for \"$1\". Use \"!vote [option]\" to vote. The options are \"$2\".";
+$.lang.data["net.quorrabot.pollsystem.poll.usage"] = "usage: !poll [open | result | close]";
+$.lang.data["net.quorrabot.pollsystem.results.lastpoll"] = "[Last Poll]  - [Question: \"$1\"] - [Total Votes: $2] - [Result: \"$3\"] - [Options: \"$4\"] [Votes: $5]";
+$.lang.data["net.quorrabot.pollsystem.results.running"] = "A poll is currently running!";
+$.lang.data["net.quorrabot.pollsystem.results.404"] = "There is no latest poll to retrieve results from!";
+$.lang.data["net.quorrabot.pollsystem.open.usage"] = "Usage: !poll open \"question\" \"option1, option2, ...\" [seconds] [min votes].  If seconds is 0, defaults to 60.";
+$.lang.data["net.quorrabot.pollsystem.open.moreoptions"] = "More than one option is required for a poll.";
+$.lang.data["net.quorrabot.pollsystem.runpoll.novotes"] = "The poll on \"$1\" has ended! Not enough votes were cast!";
+$.lang.data["net.quorrabot.pollsystem.runpoll.winner"] = "The poll on \"$1\" has ended! The winner is \"$2\"!";
+$.lang.data["net.quorrabot.pollsystem.runpoll.tie"] = "The poll on \"$1\" has ended in a tie! Check !poll results.";
+$.lang.data["net.quorrabot.pollsystem.runpoll.started"] = "Poll started! Use \"!poll close\" to end the poll manually";
+$.lang.data["net.quorrabot.pollsystem.close.nopoll"] = "There is currently no poll running.";
