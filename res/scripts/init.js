@@ -4,6 +4,22 @@ var out = Packages.com.gmt2001.Console.out;
 
 var initscript = $script;
 
+isDirectory = function(path) {
+    try {
+        var f = new java.io.File(path);
+        return f.isDirectory();
+    } catch (e) {
+        return false;
+    }  
+    return false;
+}
+
+
+if(!isDirectory("logs")) {
+    var dir = new java.io.File("logs");
+    dir.mkdir();
+}
+
 $.tostring = Objects.toString;
 $.println = function (o) {
     out.println(tostring(o));
