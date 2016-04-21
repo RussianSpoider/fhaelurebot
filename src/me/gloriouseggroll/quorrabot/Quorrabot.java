@@ -39,6 +39,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -586,10 +587,12 @@ public class Quorrabot implements Listener
                 }
             }
             
-            if (message.contains("is now hosting you for"))
+            if (message.contains("is now hosting you"))
             {
                 String hoster = message.substring(0, message.indexOf(" ", 1)).toString();
-                EventBus.instance().post(new TwitchHostedEvent(hoster, channel));                
+                //if(!ChannelHostCache.getCache().containsValue(hoster)) {
+                EventBus.instance().post(new TwitchHostedEvent(hoster, channel));    
+                //}          
             }
         }
         if (!event.getSender().equalsIgnoreCase("jtv") && !event.getSender().equalsIgnoreCase("twitchnotify"))
