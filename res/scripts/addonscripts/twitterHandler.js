@@ -56,8 +56,6 @@ var args = event.getArgs();
             return;
         }
         
-        
-
 });
 
 setTimeout(function(){ 
