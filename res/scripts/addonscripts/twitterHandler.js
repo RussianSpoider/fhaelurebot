@@ -17,7 +17,7 @@ var args = event.getArgs();
                 return;
             }
             if(args[0]==null || args[0]=="") {
-                $.say($.getWhisperString(sender) + "No message specified");
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.twitterhandler.no-message"));
                 return;
             }
             if(args[0].toString().equalsIgnoreCase("getlast")) {
@@ -27,11 +27,11 @@ var args = event.getArgs();
             
             if(args[0].toString().equalsIgnoreCase("stream")) {
                 if($.twitter.getlast().toString().toLowerCase().contains($.getStatus($.channelName).toLowerCase())) {
-                    $.say($.getWhisperString(sender) + "Duplicate post, status update not posted.");
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.twitterhandler.duplicate-post"));
                     return;
                 }
                 $.twitter.tweet($.getStatus($.channelName) + ": " + "twitch.tv/" + $.channelName.toLowerCase());
-                $.say($.getWhisperString(sender) + "Stream has been tweeted."); 
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.twitterhandler.stream-tweeted")); 
                 return;
             }
             
@@ -39,20 +39,20 @@ var args = event.getArgs();
                 if($.TwitterHandler.TweetStreamToggle == "0") {
                     $.inidb.set('settings', 'tweet_stream_toggle', "1");
                     $.TwitterHandler.TweetStreamToggle = "1";
-                    $.say($.getWhisperString(sender) + "Stream title and game will now be tweeted when stream goes live.");
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.twitterhandler.auto-stream-tweet-enabled"));
                 } else {
                     $.inidb.set('settings', 'tweet_stream_toggle', "0");
                     $.TwitterHandler.TweetStreamToggle = "0";
-                    $.say($.getWhisperString(sender) + "Stream title and game will no longer be tweeted when stream goes live.");                    
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.twitterhandler.auto-stream-tweet-disabled"));                 
                 }
                 return;
             }
             if($.twitter.getlast().toString().equalsIgnoreCase(argsString)) {
-                $.say($.getWhisperString(sender) + "Duplicate post, status update not posted.");
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.twitterhandler.no-message"));
                 return;
             }
             $.twitter.tweet(argsString);
-            $.say($.getWhisperString(sender) + "Tweet sent successfully");
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.twitterhandler.tweet-successful"));
             return;
         }
         

@@ -963,3 +963,12 @@ $.lang.data["net.quorrabot.pollsystem.runpoll.winner"] = "The poll on \"$1\" has
 $.lang.data["net.quorrabot.pollsystem.runpoll.tie"] = "The poll on \"$1\" has ended in a tie! Check !poll result.";
 $.lang.data["net.quorrabot.pollsystem.runpoll.started"] = "Poll started! Use \"!poll close\" to end the poll manually";
 $.lang.data["net.quorrabot.pollsystem.close.nopoll"] = "There is currently no poll running.";
+
+//twitterHandler.js
+$.lang.data["net.quorrabot.twitterhandler.no-message"] = "No message specified.";
+$.lang.data["net.quorrabot.twitterhandler.duplicate-post"] = "Duplicate post, status update not posted.";
+$.lang.data["net.quorrabot.twitterhandler.stream-tweeted"] = "Stream has been tweeted.";
+$.lang.data["net.quorrabot.twitterhandler.auto-stream-tweet-enabled"] = "Stream title and game will now be tweeted when stream goes live.";
+$.lang.data["net.quorrabot.twitterhandler.auto-stream-tweet-disabled"] = "Stream title and game will no longer be tweeted when stream goes live.";
+$.lang.data["net.quorrabot.twitterhandler.tweet-successful"] = "Tweet sent successfully.";
+
