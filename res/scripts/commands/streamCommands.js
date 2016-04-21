@@ -1,11 +1,24 @@
 $.isOnline = function(channel) {
     channel = channel.toLowerCase();
+    if($.getUserExists(channel)==false) {
+        return false;
+    }
     var stream = $.twitch.GetStream(channel);
     if (stream.toString().indexOf('stream":{')!=-1) {
         return true;
     }
 
     return false;
+}
+
+$.getUserExists = function(user) {
+    var exists = $.twitch.GetUser(user);
+
+    if (exists.getInt('_http') != 200) {
+        return false;
+    } else {
+       return true;
+    }
 }
 
 $.getStatus = function(channel) {

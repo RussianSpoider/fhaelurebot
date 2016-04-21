@@ -179,7 +179,7 @@ $.on('command', function (event) {
         }
         var caster = $.username.resolve(args[0]);
         
-        if($.username.resolve(caster)) {
+        if($.getUserExists(caster)==true) {
             if ($.isOnline(caster)) {
                 $.say($.lang.get("net.quorrabot.followHandler.shoutout-online", caster, $.getGame(caster)));
                 return;
