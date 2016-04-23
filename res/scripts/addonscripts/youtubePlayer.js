@@ -9,6 +9,7 @@ $.storing = parseInt($.inidb.get('settings','song_storing'));
 $.titles = parseInt($.inidb.get('settings','song_titles'));
 $.song = null;
 $.songrequester = null;
+$.lastfmtoggle = parseInt($.inidb.get('settings','lastfmtoggle'));
 $.songname = null;
 $.songid = null;
 $.songurl = null;
@@ -18,6 +19,10 @@ $var.playChoice = false;
 
 if ($.song_limit == null || isNaN($.song_limit) || $.song_limit < 0) {
     $.song_limit = 3;
+}
+
+if($.lastfmtoggle==null || $.lastfmtoggle=="") {
+    $.lastfmtoggle = 0;
 }
 
 if($.song_toggle==null || $.song_toggle=="") {
@@ -424,6 +429,25 @@ $.on('command', function (event) {
                 $.song_toggle = 2;
                 $.inidb.set('settings', 'song_toggle', $.song_toggle.toString());
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-msg-disabled"));
+                return;
+            }
+        }
+        
+        if (action.equalsIgnoreCase("lastfm")) {
+            if (!$.isAdmin(sender)) {
+                $.say($.getWhisperString(sender) + $.adminmsg);
+                return;
+            }
+
+            if ($.lastfmtoggle == 0) {
+                $.lastfmtoggle = 1;
+                $.inidb.set('settings', 'lastfmtoggle', $.lastfmtoggle.toString());
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.lastfm-msg-enabled"));
+                return;
+            } else {
+                $.lastfmtoggle = 0;
+                $.inidb.set('settings', 'lastfmtoggle', $.lastfmtoggle.toString());
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.lastfm-msg-disabled"));
                 return;
             }
         }
@@ -857,11 +881,20 @@ $.on('command', function (event) {
                 csong = $.defaultcurrsong; 
             }
         } else {
-            if($.currsongfile == "") {
-                $.say($.lang.get("net.quorrabot.musicplayer.no-current-song"));
-                return;
+            if($.lastfmtoggle == 1) {
+                $.lastfmdata = $.lastfm.getLastTrack();
+                $.lastfmartist = $.lastfmdata[0];
+                $.lastfmsong = $.lastfmdata[1];
+                $.lastfmuser = $.lastfmdata[2];
+                csong = $.lang.get("net.quorrabot.musicplayer.current-song", $.lastfmartist + " - " + $.lastfmsong);
+                csong += $.lang.get("net.quorrabot.musicplayer.lastfm-url", $.lastfmuser);
             } else {
-                csong = $.lang.get("net.quorrabot.musicplayer.current-song", $.currsongfile);
+                if($.currsongfile == "") {
+                    $.say($.lang.get("net.quorrabot.musicplayer.no-current-song"));
+                    return;
+                } else {
+                    csong = $.lang.get("net.quorrabot.musicplayer.current-song", $.currsongfile);
+                }
             }
         }
 
@@ -951,7 +984,7 @@ $.on('command', function (event) {
 offlinePlayer = function() {setTimeout(function(){
     if ($.moduleEnabled('./addonscripts/youtubePlayer.js')) {
         $.timer.addTimer("./addonscripts/youtubePlayer.js", "currsongyt", true, function() {
-            
+            var cs = "";
             if($.isOnline($.channelName)) {
                 if($.inidb.exists("settings", "currsongfile")) {
                     $.currsongfile = $.inidb.get("settings", "currsongfile");
@@ -959,13 +992,32 @@ offlinePlayer = function() {setTimeout(function(){
                 } else {
                     $var.ytcurrSong = $.readFile("./addons/youtubePlayer/currentsong.txt");            
                 }
+                
+                if($.lastfmtoggle == 1) {
+                    $.lastfmdata = $.lastfm.getLastTrack();
+                    $.lastfmartist = $.lastfmdata[0];
+                    $.lastfmsong = $.lastfmdata[1];
+                    $.lastfmuser = $.lastfmdata[2];
+                    cs = $.lang.get("net.quorrabot.musicplayer.current-song", $.lastfmartist + " - " + $.lastfmsong);
+                    cs += $.lang.get("net.quorrabot.musicplayer.lastfm-url", $.lastfmuser);
+                    $var.ytcurrSong = $.lang.get("net.quorrabot.musicplayer.current-song", $.lastfmartist + " - " + $.lastfmsong);
+                }
+                
                 if (!$var.ytcurrSong.toString().equalsIgnoreCase($.inidb.get("settings", "lastsong")) && !musicPlayerConnected) {
                     if ($var.ytcurrSong.toString()!=null || $var.ytcurrSong.toString()!="") {
                         $.inidb.set("settings", "lastsong", $var.ytcurrSong.toString());
                         if ($.song_toggle == 1) {
-                            $.say($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
+                            if($.lastfmtoggle == 1) {
+                                $.say(cs);
+                            } else {
+                                $.say($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
+                            }
                         } else {
-                            $.println($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
+                            if($.lastfmtoggle == 1) {
+                                $.println(cs);
+                            } else {
+                                $.println($.lang.get("net.quorrabot.musicplayer.current-song", $var.ytcurrSong.toString(), ""));
+                            }
                         }
                     }
                 }
