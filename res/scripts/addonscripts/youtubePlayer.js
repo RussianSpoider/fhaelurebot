@@ -985,7 +985,7 @@ offlinePlayer = function() {setTimeout(function(){
     if ($.moduleEnabled('./addonscripts/youtubePlayer.js')) {
         $.timer.addTimer("./addonscripts/youtubePlayer.js", "currsongyt", true, function() {
             var cs = "";
-            if($.isOnline($.channelName)) {
+            //if($.isOnline($.channelName)) {
                 if($.inidb.exists("settings", "currsongfile")) {
                     $.currsongfile = $.inidb.get("settings", "currsongfile");
                     $var.ytcurrSong = $.readFile($.currsongfile);
@@ -993,13 +993,14 @@ offlinePlayer = function() {setTimeout(function(){
                     $var.ytcurrSong = $.readFile("./addons/youtubePlayer/currentsong.txt");            
                 }
                 
-                if($.lastfmtoggle == 1) {
+                if($.lastfmtoggle == 1 && !musicPlayerConnected) {
                     $.lastfmdata = $.lastfm.getLastTrack();
                     $.lastfmartist = $.lastfmdata[0];
                     $.lastfmsong = $.lastfmdata[1];
                     $.lastfmuser = $.lastfmdata[2];
                     cs = $.lang.get("net.quorrabot.musicplayer.current-song", $.lastfmartist + " - " + $.lastfmsong);
                     cs += $.lang.get("net.quorrabot.musicplayer.lastfm-url", $.lastfmuser);
+                    $.writeToFile($.lang.get("net.quorrabot.musicplayer.current-song", $.lastfmartist + " - " + $.lastfmsong),"./addons/youtubePlayer/currentsong.txt", false);
                     $var.ytcurrSong = $.lang.get("net.quorrabot.musicplayer.current-song", $.lastfmartist + " - " + $.lastfmsong);
                 }
                 
@@ -1021,7 +1022,7 @@ offlinePlayer = function() {setTimeout(function(){
                         }
                     }
                 }
-            }
+            //}
             
         }, 10* 1000);
     }   
