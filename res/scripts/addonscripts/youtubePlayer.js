@@ -313,7 +313,7 @@ function nextDefault() {
     } else {
         $.println($.lang.get("net.quorrabot.musicplayer.now-playing", name, user));
     }
-    
+    var writestring = $.lang.get("net.quorrabot.musicplayer.current-playing-requested", name, user);
     $.writeToFile($.lang.get("net.quorrabot.musicplayer.current-playing-requested", name, user),"./addons/youtubePlayer/currentsong.txt", false);
 }
 
@@ -355,7 +355,7 @@ function next() {
         }
     }
     
-    $.writeToFile("./addons/youtubePlayer/currentsong.txt", false);
+    $.writeToFile($.lang.get("net.quorrabot.musicplayer.now-playing", name, user),"./addons/youtubePlayer/currentsong.txt", false);
 }
 
 $.on('musicPlayerState', function (event) {
