@@ -16,6 +16,8 @@ $.songurl = null;
 $.songprefix = null;
 $.song_shuffle = parseInt($.inidb.get('settings','song_shuffle'));
 $var.playChoice = false;
+var musicport = parseInt($.baseport) + 1;
+$.writeToFile("var musicport = '" + musicport.toString() + "';","web/port.js", false);
 
 if ($.song_limit == null || isNaN($.song_limit) || $.song_limit < 0) {
     $.song_limit = 3;
@@ -985,7 +987,7 @@ offlinePlayer = function() {setTimeout(function(){
     if ($.moduleEnabled('./addonscripts/youtubePlayer.js')) {
         $.timer.addTimer("./addonscripts/youtubePlayer.js", "currsongyt", true, function() {
             var cs = "";
-            //if($.isOnline($.channelName)) {
+            if($.isOnline($.channelName)) {
                 if($.inidb.exists("settings", "currsongfile")) {
                     $.currsongfile = $.inidb.get("settings", "currsongfile");
                     $var.ytcurrSong = $.readFile($.currsongfile);
@@ -1022,7 +1024,7 @@ offlinePlayer = function() {setTimeout(function(){
                         }
                     }
                 }
-            //}
+            }
             
         }, 10* 1000);
     }   

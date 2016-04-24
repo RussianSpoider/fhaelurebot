@@ -46,7 +46,7 @@ function onPlayerStateChange(event) {
 }
 
 var url = window.location.host.split (":");
-var addr = 'ws://' + url [0] + ':25301';
+var addr = 'ws://' + url [0] + ':' + musicport;
 var connection = new WebSocket(addr, []);
 
 connection.onopen = function (e) {

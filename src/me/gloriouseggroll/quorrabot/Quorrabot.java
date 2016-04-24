@@ -436,6 +436,7 @@ public class Quorrabot implements Listener
         Script.global.defineProperty("youtube", YouTubeAPIv3.instance(), 0);
         Script.global.defineProperty("donationhandler", DonationHandlerAPI.instance(), 0);
         Script.global.defineProperty("lastfm", LastFMAPI.instance(), 0);
+        Script.global.defineProperty("baseport", baseport, 0);
         Script.global.defineProperty("twitter", TwitterAPI.instance(), 0);
         Script.global.defineProperty("pollResults", pollResults, 0);
         Script.global.defineProperty("pollVoters", voters, 0);
