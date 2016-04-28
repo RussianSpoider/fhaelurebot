@@ -232,6 +232,20 @@ $.parseSongQueue = function parseSongQueue() {
     }
 }
 
+function shuffleSong() {
+            var playlistpos = $.randRange(0, ($var.defaultplaylist.length - 1));
+            for(var i=0;i<$var.defaultplaylist.length;i++) {
+                if($.inidb.get('musicplayer_shuffle', 'played_' + i)==playlistpos) {
+                    playlistpos = $.randRange(0, ($var.defaultplaylist.length - 1));
+                    setTimeout(function () {
+                        nextDefault();
+                    }, 3000);
+                }
+            }
+            $.inidb.set('musicplayer_shuffle', 'played_' + playlistpos, playlistpos); 
+            return playlistpos;
+}
+
 function nextDefault() {
     var name = "";
     var user = "";
@@ -270,18 +284,17 @@ function nextDefault() {
     if ($var.defaultplaylist.length > 0) {
         var playlistpos;
         if($.song_shuffle==1 && $var.playChoice==false) {
-            playlistpos = $.randRange(0, $var.defaultplaylist.length);
-           
-            if($.inidb.get('musicplayer_shuffle', 'played_' + playlistpos)==null) {
-                $.inidb.set('musicplayer_shuffle', 'played_' + playlistpos, playlistpos);
-                $var.defaultplaylistpos = playlistpos;
-            } else {
-                var musicplayer_shuffle_keys = $.inidb.GetKeyList("musicplayer_shuffle", "");
-                if($var.defaultplaylist.length >= musicplayer_shuffle_keys.length ) {
+            var musicplayer_shuffle_keys = $.inidb.GetKeyList('musicplayer_shuffle', '');
+            if(musicplayer_shuffle_keys!=null) {
+                if(musicplayer_shuffle_keys.length >= $var.defaultplaylist.length ) {
+                    $.println("1");
                     $.inidb.RemoveFile("musicplayer_shuffle");
                 }
-                nextDefault();
+                playlistpos = shuffleSong();                               
             }
+              
+            $var.defaultplaylistpos = playlistpos;
+            
         } else {
            playlistpos = $var.defaultplaylistpos;
         }
@@ -292,6 +305,7 @@ function nextDefault() {
         if ($var.defaultplaylistpos >= $var.defaultplaylist.length) {
             $var.defaultplaylistpos = 0;
         }
+
         s.play();
         name = s.song.getName();
         user = s.user;
