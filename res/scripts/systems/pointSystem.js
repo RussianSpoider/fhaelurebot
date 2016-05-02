@@ -7,6 +7,7 @@ $.pointIntervalOffline = parseInt($.inidb.get('settings', 'pointIntervalOffline'
 $.pointGiftMin = parseInt($.inidb.get('settings', 'pointGiftMin'));
 $.permTogglePoints = $.inidb.get("settings", "permTogglePoints");
 $.pointname = $.pointNameMultiple;
+$.lastpointInterval = 0;
 
 if ($.pointNameSingle == undefined || $.pointNameSingle == null || $.pointNameSingle.isEmpty()) {
     $.pointNameSingle = "point";
@@ -680,20 +681,17 @@ $.timer.addTimer("./systems/pointSystem.js", "pointsystem", true, function () {
     if (!$.moduleEnabled("./systems/pointSystem.js")) {
         return;
     }
-
-    if ($.lastpointInterval == null || $.lastpointInterval == undefined) {
-        $.lastpointInterval = System.currentTimeMillis();
-        return;
-    }
-
+    
     if (!$.isOnline($.channelName)) {
         amount = $.pointGainOffline;
-        if ($.lastpointInterval + ($.pointIntervalOffline * 60 * 1000) >= System.currentTimeMillis()) {
+        if (($.pointIntervalOffline - 1) > $.lastpointInterval) {
+            $.lastpointInterval ++;
             return;
         }
     } else {
         amount = $.pointGain;
-        if ($.lastpointInterval + ($.pointInterval * 60 * 1000) >= System.currentTimeMillis()) {
+        if (($.pointInterval - 1) > $.lastpointInterval) {
+            $.lastpointInterval ++;
             return;
         }
     }
@@ -710,8 +708,7 @@ $.timer.addTimer("./systems/pointSystem.js", "pointsystem", true, function () {
 			$.inidb.incr('points', nick, points);
 		}
     }
-
-    $.lastpointInterval = System.currentTimeMillis();
+    $.lastpointInterval = 0;
 }, 60 * 1000);
 
 setTimeout(function () {
