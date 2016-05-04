@@ -30,7 +30,7 @@ var args = event.getArgs();
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.twitterhandler.duplicate-post"));
                     return;
                 }
-                $.twitter.tweet($.getStatus($.channelName) + ": " + "twitch.tv/" + $.channelName.toLowerCase());
+                $.twitter.tweet($.getGame($.channelName) + " | " + $.getStatus($.channelName) + ": " + "twitch.tv/" + $.channelName.toLowerCase());
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.twitterhandler.stream-tweeted")); 
                 return;
             }
@@ -65,10 +65,9 @@ setTimeout(function(){
                 if ($.isOnline($.channelName)) {
                     if($.TwitterHandler.StreamTweeted == 0) {
                         var lasttweet = $.twitter.getlast().toString();                    
-                        var streamlive = $.getStatus($.channelName) + ": " + "twitch.tv/" + $.channelName.toLowerCase();
                         if(!lasttweet.toLowerCase().contains($.getStatus($.channelName).toLowerCase())) {
                             $.TwitterHandler.StreamTweeted = 1;
-                            $.twitter.tweet(streamlive);
+                            $.twitter.tweet($.getGame($.channelName) + " | " + $.getStatus($.channelName) + ": " + "twitch.tv/" + $.channelName.toLowerCase());
                         } else {
                             $.TwitterHandler.StreamTweeted = 0;
                         }
