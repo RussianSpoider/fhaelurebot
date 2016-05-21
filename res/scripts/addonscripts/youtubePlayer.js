@@ -16,14 +16,19 @@ $.songurl = null;
 $.songprefix = null;
 $.song_shuffle = parseInt($.inidb.get('settings','song_shuffle'));
 $.currsongpath = $.inidb.get('settings','currsongfile');
+$.volume = $.inidb.get('settings','musicvolume');
 $var.playChoice = false;
-var musicport = parseInt($.baseport) + 1;
-$.writeToFile("var musicport = '" + musicport.toString() + "';","web/port.js", false);
+//var musicport = parseInt($.baseport) + 1;
+//$.writeToFile("var musicport = '" + musicport.toString() + "';","web/port.js", false);
 $.snameshuffle = "";
 $.susershuffle = "";
 
 if ($.currsongpath == null || isNaN($.currsongpath) || $.currsongpath < 0) {
     $.currsongpath = 'addons/youtubePlayer/currentsong.txt';
+}
+
+if ($.volume == null || isNaN($.volume) || $.volume < 0) {
+    $.volume = '100';
 }
 
 if ($.song_limit == null || isNaN($.song_limit) || $.song_limit < 0) {
@@ -389,6 +394,7 @@ $.on('musicPlayerConnect', function (event) {
     }
     
     musicPlayerConnected = true;
+    $.musicplayer.setVolume(parseInt($.volume));
 });
 
 $.on('musicPlayerDisconnect', function (event) {
@@ -812,6 +818,8 @@ $.on('command', function (event) {
 
         if (args.length > 0) {
             $.musicplayer.setVolume(parseInt(args[0]));
+            $.inidb.set('settings','musicvolume',args[0]);
+            $.volume = args[0];
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.volume-set", parseInt(args[0])));
         } else {
             $.musicplayer.currentVolume();

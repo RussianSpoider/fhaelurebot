@@ -420,30 +420,31 @@ $.on('command', function (event) {
 				//Changed to use point system for formatting
                     $.say($.getWhisperString(sender) + $.affordBet + "[Points available: " + $.getPointsString($.heistUserPoints) + " ]");
                     return;
-                } else if (parseInt(betAmount) > $.bankheistMaxBet) {
+                }
+                
+                if (parseInt(betAmount) > $.bankheistMaxBet) {
 				//Only reformats the numbers and doesn't add suffix
                     $.say($.getWhisperString(sender) + $.betTooLarge + $.formatNumbers($.bankheistMaxBet) + ".");
                     return;
-                } else {
-                    if ($.inidb.exists("bankheist_roster", sender))
-                    {
+                }
+                    
+                if ($.inidb.exists("bankheist_roster", sender)) {
                         $.senderId = $.inidb.get("bankheist_roster", sender);
                         $.senderBet = $.inidb.get("bankheist_bets", $.senderId);
 						//Changed to point system for formatting
                         $.say($.getWhisperString(sender) + username + $.alreadyBet + $.getPointsString($.senderBet));
                         return;
-                    } else {
-                        $.inidb.set("bankheist_roster", $.userPointsId.toString(), sender);
-                        $.inidb.set("bankheist_roster", sender, $.userPointsId.toString());
-                        $.pointsId++;
-                        $.inidb.set("bankheist_bets", $.userPointsId, betAmount);
-                        $.inidb.decr("points", sender, betAmount);
-                        if ($.userPointsId == 1) {
-                            $.say(username + " " + $.startedHeist);
-                        } else {
-                            $.say($.getWhisperString(sender) + $.joinedHeist);
-                        }
-                    }
+                }
+                
+                $.inidb.set("bankheist_roster", $.userPointsId.toString(), sender);
+                $.inidb.set("bankheist_roster", sender, $.userPointsId.toString());
+                $.pointsId++;
+                $.inidb.set("bankheist_bets", $.userPointsId, betAmount);
+                $.inidb.decr("points", sender, betAmount);
+                if ($.userPointsId == 1) {
+                    $.say(username + " " + $.startedHeist);
+                } else {
+                    $.say($.getWhisperString(sender) + $.joinedHeist);
                 }
             }
         } else {

@@ -40,20 +40,15 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.SecureRandom;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import me.gloriouseggroll.quorrabot.cache.ChannelHostCache;
 import me.gloriouseggroll.quorrabot.cache.ChannelUsersCache;
 import me.gloriouseggroll.quorrabot.cache.FollowersCache;
 import me.gloriouseggroll.quorrabot.cache.SubscribersCache;
 import me.gloriouseggroll.quorrabot.cache.UsernameCache;
 import me.gloriouseggroll.quorrabot.console.ConsoleInputListener;
-import me.gloriouseggroll.quorrabot.event.EventBus;
 import me.gloriouseggroll.quorrabot.event.Listener;
 import me.gloriouseggroll.quorrabot.event.command.CommandEvent;
 import me.gloriouseggroll.quorrabot.event.console.ConsoleInputEvent;
@@ -375,7 +370,17 @@ public class Quorrabot implements Listener
                 httpserver = new HTTPServer(baseport, oauth);
                 if (musicenable)
                 {
-                	musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword);
+                    try
+                    {
+                        String data = "var musicport = '" + Integer.toString(baseport + 1) + "';";
+                        
+                        Files.write(Paths.get("./web/port.js"), data.getBytes(StandardCharsets.UTF_8),
+                            StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);                 
+                    } catch (IOException ex)
+                    {
+                        com.gmt2001.Console.err.printStackTrace(ex);
+                    }
+                    musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword);
                 }
                 eventsocketserver = new EventWebSocketSecureServer(baseport + 2, keystorepath, keystorepassword, keypassword);
             }
@@ -384,7 +389,17 @@ public class Quorrabot implements Listener
                 httpserver = new HTTPServer(baseport, oauth);
                 if (musicenable)
                 {
-                	musicsocketserver = new MusicWebSocketServer(baseport + 1);
+                    try
+                    {
+                        String data = "var musicport = '" + Integer.toString(baseport + 1) + "';";
+                        
+                        Files.write(Paths.get("./web/port.js"), data.getBytes(StandardCharsets.UTF_8),
+                            StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);                 
+                    } catch (IOException ex)
+                    {
+                        com.gmt2001.Console.err.printStackTrace(ex);
+                    }
+                    musicsocketserver = new MusicWebSocketServer(baseport + 1);
                 }
                 eventsocketserver = new EventWebSocketServer(baseport + 2);
             }
