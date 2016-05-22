@@ -423,8 +423,8 @@ $.on('command', function (event) {
                 }
                 
                 if (parseInt(betAmount) > $.bankheistMaxBet) {
-				//Only reformats the numbers and doesn't add suffix
-                    $.say($.getWhisperString(sender) + $.betTooLarge + $.formatNumbers($.bankheistMaxBet) + ".");
+                    var fmaxbet = $.formatNumbers(parseInt($.bankheistMaxBet));
+                    $.say($.getWhisperString(sender) + $.betTooLarge.replace("$1",fmaxbet)) + ".";
                     return;
                 }
                     
@@ -432,7 +432,7 @@ $.on('command', function (event) {
                         $.senderId = $.inidb.get("bankheist_roster", sender);
                         $.senderBet = $.inidb.get("bankheist_bets", $.senderId);
 						//Changed to point system for formatting
-                        $.say($.getWhisperString(sender) + username + $.alreadyBet + $.getPointsString($.senderBet));
+                        $.say($.getWhisperString(sender) + $.alreadyBet.replace("$1",$.getPointsString($.senderBet)));
                         return;
                 }
                 
