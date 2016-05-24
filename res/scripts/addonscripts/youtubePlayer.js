@@ -18,6 +18,8 @@ $.song_shuffle = parseInt($.inidb.get('settings','song_shuffle'));
 $.currsongpath = $.inidb.get('settings','currsongfile');
 $.volume = $.inidb.get('settings','musicvolume');
 $var.playChoice = false;
+var musicport = parseInt($.baseport) + 1;
+$.writeToFile("var musicport = '" + musicport.toString() + "';","web/port.js", false);
 $.snameshuffle = "";
 $.susershuffle = "";
 

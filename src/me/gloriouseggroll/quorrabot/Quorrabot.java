@@ -370,16 +370,6 @@ public class Quorrabot implements Listener
                 httpserver = new HTTPServer(baseport, oauth);
                 if (musicenable)
                 {
-                    try
-                    {
-                        String data = "var musicport = '" + Integer.toString(baseport + 1) + "';";
-                        
-                        Files.write(Paths.get("./web/port.js"), data.getBytes(StandardCharsets.UTF_8),
-                            StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);                 
-                    } catch (IOException ex)
-                    {
-                        com.gmt2001.Console.err.printStackTrace(ex);
-                    }
                     musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword);
                 }
                 eventsocketserver = new EventWebSocketSecureServer(baseport + 2, keystorepath, keystorepassword, keypassword);
@@ -389,16 +379,6 @@ public class Quorrabot implements Listener
                 httpserver = new HTTPServer(baseport, oauth);
                 if (musicenable)
                 {
-                    try
-                    {
-                        String data = "var musicport = '" + Integer.toString(baseport + 1) + "';";
-                        
-                        Files.write(Paths.get("./web/port.js"), data.getBytes(StandardCharsets.UTF_8),
-                            StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);                 
-                    } catch (IOException ex)
-                    {
-                        com.gmt2001.Console.err.printStackTrace(ex);
-                    }
                     musicsocketserver = new MusicWebSocketServer(baseport + 1);
                 }
                 eventsocketserver = new EventWebSocketServer(baseport + 2);
