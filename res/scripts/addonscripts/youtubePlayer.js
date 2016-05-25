@@ -28,7 +28,7 @@ if ($.currsongpath == null || isNaN($.currsongpath) || $.currsongpath < 0) {
 }
 
 if ($.volume == null || isNaN($.volume) || $.volume < 0) {
-    $.volume = 100;
+	$.volume = 100;
 }
 
 if ($.song_limit == null || isNaN($.song_limit) || $.song_limit < 0) {
@@ -259,11 +259,11 @@ function nextDefault() {
                 if ($.fileExists("./addons/youtubePlayer/playlist.txt")) {
                     $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
                 }
-            }, 3000);
-            $var.defaultplaylistpos = 0;
-            setTimeout(function() {
-                next();
-            }, 3000);
+            }, 1);
+			setTimeout(function(){
+				$var.defaultplaylistpos = 0;
+				next();
+			}, 3000);
         }
         return;
     }
@@ -329,7 +329,7 @@ function next() {
             playlistpos = $.randRange(0, ($var.defaultplaylist.length - 1));
             var musicplayer_shuffle_keys = $.inidb.GetKeyList('musicplayer_shuffle', '');
             if(musicplayer_shuffle_keys!=null) {
-                if(musicplayer_shuffle_keys.length >= $var.defaultplaylist.length) {
+                if(musicplayer_shuffle_keys.length >= $var.defaultplaylist.length - 1) {
                     $.inidb.RemoveFile("musicplayer_shuffle");
                     next();
                 }
@@ -366,8 +366,8 @@ function next() {
 }
 
 $.on('musicPlayerState', function (event) {
-    $.musicplayer.setVolume(parseInt($.volume));
-
+	$.musicplayer.setVolume(parseInt($.volume));
+	
     if (event.getStateId() == -2) {
         $var.songqueue = [];
         $var.requestusers = {};
@@ -383,7 +383,6 @@ $.on('musicPlayerState', function (event) {
         $.musicplayer.play();
         $.musicplayer.currentId();
     }
-    
 });
 
 var musicPlayerConnected = false;
@@ -397,6 +396,7 @@ $.on('musicPlayerConnect', function (event) {
         $.println($.lang.get("net.quorrabot.musicplayer.songrequest-enabled"));
         $.println($.lang.get("net.quorrabot.musicplayer.queue-is-empty"));
     }
+    
     musicPlayerConnected = true;
 });
 
@@ -821,8 +821,8 @@ $.on('command', function (event) {
 
         if (args.length > 0) {
             $.musicplayer.setVolume(parseInt(args[0]));
-            $.inidb.set('settings','musicvolume',args[0]);
-            $.volume = args[0];
+			$.inidb.set('settings','musicvolume',args[0]);
+			$.volume = args[0];
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.volume-set", parseInt(args[0])));
         } else {
             $.musicplayer.currentVolume();
@@ -1018,7 +1018,6 @@ offlinePlayer = function() {setTimeout(function(){
                     $.lastfmuser = $.lastfmdata[2];
                     cs = $.lang.get("net.quorrabot.musicplayer.current-song", $.lastfmartist + " - " + $.lastfmsong);
                     cs += $.lang.get("net.quorrabot.musicplayer.lastfm-url", $.lastfmuser);
-                    
                     $var.ytcurrSong = $.lang.get("net.quorrabot.musicplayer.current-song", $.lastfmartist + " - " + $.lastfmsong);
                 }
                 
