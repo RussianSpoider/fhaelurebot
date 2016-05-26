@@ -261,7 +261,9 @@ function nextDefault() {
                 }
             }, 1);
 			setTimeout(function(){
-				$var.defaultplaylistpos = 0;
+				if($.song_shuffle!=1) {
+					$var.defaultplaylistpos = 0;
+				}
 				next();
 			}, 3000);
         }
@@ -326,20 +328,22 @@ function next() {
     if($var.currSong==null) {
         if($.song_shuffle==1 && $var.playChoice==false) {
             var playlistpos;
-            playlistpos = $.randRange(0, ($var.defaultplaylist.length - 1));
+            playlistpos = $.randRange(0, $var.defaultplaylist.length);
             var musicplayer_shuffle_keys = $.inidb.GetKeyList('musicplayer_shuffle', '');
-            if(musicplayer_shuffle_keys!=null) {
-                if(musicplayer_shuffle_keys.length >= $var.defaultplaylist.length - 1) {
-                    $.inidb.RemoveFile("musicplayer_shuffle");
-                    next();
-                }
-            }
-            if($.inidb.exists("musicplayer_shuffle", "played_" + playlistpos)) {
-                next();
-            }
+			if(musicplayer_shuffle_keys !=null) {
+				$.println(musicplayer_shuffle_keys.length);
+				if($.inidb.exists("musicplayer_shuffle", "played_" + playlistpos)) {
+					if(musicplayer_shuffle_keys.length >= $var.defaultplaylist.length) {
+						$.inidb.RemoveFile("musicplayer_shuffle");
+						$.inidb.set('musicplayer_shuffle', 'played_' + $var.defaultplaylistpos, $var.defaultplaylistpos);
+					}
+					next();
+				}
+			}
+
             
             $var.defaultplaylistpos = playlistpos;
-            $.inidb.set('musicplayer_shuffle', 'played_' + playlistpos, playlistpos); 
+			$.inidb.set('musicplayer_shuffle', 'played_' + $var.defaultplaylistpos, $var.defaultplaylistpos);
             nextDefault();
 
         } else {
