@@ -254,18 +254,15 @@ function nextDefault() {
 
         if ($var.defaultplaylistretry < 3) {
             $var.defaultplaylistretry++;
-            
-            setTimeout(function(){
                 if ($.fileExists("./addons/youtubePlayer/playlist.txt")) {
                     $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
                 }
-            }, 1);
-			setTimeout(function(){
-				if($.song_shuffle!=1) {
-					$var.defaultplaylistpos = 0;
-				}
-				next();
-			}, 3000);
+		setTimeout(function(){
+                    if($.song_shuffle!=1) {
+			$var.defaultplaylistpos = 0;
+                    }
+                    next();
+		}, 3000);
         }
         return;
     }
@@ -331,12 +328,12 @@ function next() {
             playlistpos = $.randRange(0, $var.defaultplaylist.length);
             var musicplayer_shuffle_keys = $.inidb.GetKeyList('musicplayer_shuffle', '');
 			if(musicplayer_shuffle_keys !=null) {
-				$.println(musicplayer_shuffle_keys.length);
+				if(musicplayer_shuffle_keys.length >= $var.defaultplaylist.length) {
+					$.inidb.RemoveFile("musicplayer_shuffle");
+					$.inidb.set('musicplayer_shuffle', 'played_' + $var.defaultplaylistpos, $var.defaultplaylistpos);
+                                        next();
+				}
 				if($.inidb.exists("musicplayer_shuffle", "played_" + playlistpos)) {
-					if(musicplayer_shuffle_keys.length >= $var.defaultplaylist.length) {
-						$.inidb.RemoveFile("musicplayer_shuffle");
-						$.inidb.set('musicplayer_shuffle', 'played_' + $var.defaultplaylistpos, $var.defaultplaylistpos);
-					}
 					next();
 				}
 			}
