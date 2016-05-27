@@ -73,7 +73,7 @@ public class EventWebSocketServer extends WebSocketServer implements Listener
         try
         {
             this.stop(2000);
-        } catch (IOException | InterruptedException ex)
+        } catch (InterruptedException ex)
         {
             com.gmt2001.Console.err.printStackTrace(ex);
         }

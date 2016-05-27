@@ -24,6 +24,8 @@ import com.gmt2001.TwitchAPIv3;
 import com.gloriouseggroll.DonationHandlerAPI;
 import com.gloriouseggroll.LastFMAPI;
 import com.gloriouseggroll.TwitterAPI;
+import com.gloriouseggroll.SingularityAPI;
+import com.gloriouseggroll.GameWispAPI;
 import com.gmt2001.YouTubeAPIv3;
 import com.google.common.eventbus.Subscribe;
 import de.simeonf.EventWebSocketSecureServer;
@@ -43,6 +45,9 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import me.gloriouseggroll.quorrabot.cache.ChannelHostCache;
 import me.gloriouseggroll.quorrabot.cache.ChannelUsersCache;
 import me.gloriouseggroll.quorrabot.cache.FollowersCache;
@@ -57,6 +62,10 @@ import me.gloriouseggroll.quorrabot.event.irc.complete.IrcConnectCompleteEvent;
 import me.gloriouseggroll.quorrabot.event.irc.complete.IrcJoinCompleteEvent;
 import me.gloriouseggroll.quorrabot.event.irc.message.IrcChannelMessageEvent;
 import me.gloriouseggroll.quorrabot.event.irc.message.IrcPrivateMessageEvent;
+import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispChangeEvent;
+import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispBenefitsEvent;
+import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispSubscribeEvent;
+import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispAnniversaryEvent;
 import me.gloriouseggroll.quorrabot.jerklib.Channel;
 import me.gloriouseggroll.quorrabot.jerklib.ConnectionManager;
 import me.gloriouseggroll.quorrabot.jerklib.Profile;
@@ -82,6 +91,8 @@ public class Quorrabot implements Listener
     private final String channelName;
     private final String ownerName;
     private final String hostname;
+    private String gamewispauth;
+    private String gamewisprefresh;
     private int port;
     private int baseport;
     private double msglimit30;
@@ -137,7 +148,7 @@ public class Quorrabot implements Listener
     }
 
     public Quorrabot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
-            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken, String streamtipid, boolean webenable,
+            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh, String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken, String streamtipid, boolean webenable,
             boolean musicenable, boolean usehttps, String keystorepath, String keystorepassword, String keypassword)
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
@@ -165,6 +176,8 @@ public class Quorrabot implements Listener
         {
             YouTubeAPIv3.instance().SetAPIKey(youtubekey);
         }
+        this.gamewispauth = gamewispauth;
+        this.gamewisprefresh = gamewisprefresh;
         this.twitchalertstoken = twitchalertstoken;
         if (!twitchalertstoken.isEmpty())
         {
@@ -312,7 +325,7 @@ public class Quorrabot implements Listener
 
         this.session.addIRCEventListener(new IrcEventHandler());
     }
-
+    
     public static void setDebugging(boolean debug)
     {
         Quorrabot.enableDebugging = debug;
@@ -400,6 +413,14 @@ public class Quorrabot implements Listener
             int eventport = baseport+2;
             com.gmt2001.Console.out.println("EventSocketServer accepting connections on port " + eventport);
             EventBus.instance().register(eventsocketserver);
+            
+            if (gamewispauth.length() > 0) {
+                GameWispAPI.instance().SetAccessToken(gamewispauth);
+                GameWispAPI.instance().SetRefreshToken(gamewisprefresh);
+                SingularityAPI.instance().setAccessToken(gamewispauth);
+                SingularityAPI.instance().StartService();
+                doRefreshGameWispToken();
+            }
         }
 
         if (interactive)
@@ -429,6 +450,7 @@ public class Quorrabot implements Listener
         Script.global.defineProperty("musicplayer", musicsocketserver, 0);
         Script.global.defineProperty("random", rng, 0);
         Script.global.defineProperty("youtube", YouTubeAPIv3.instance(), 0);
+        Script.global.defineProperty("gamewisp", GameWispAPI.instance(), 0);
         Script.global.defineProperty("donationhandler", DonationHandlerAPI.instance(), 0);
         Script.global.defineProperty("lastfm", LastFMAPI.instance(), 0);
         Script.global.defineProperty("baseport", baseport, 0);
@@ -799,16 +821,34 @@ public class Quorrabot implements Listener
             changed = true;
         }
         
-        /*if (message.equals("streamtiptoken"))
+        if (message.equals("gamewisp"))
         {
-            com.gmt2001.Console.out.print("Please enter a new StreamTip Access Token: ");
-            String newstreamtiptoken = System.console().readLine().trim();
-
-            StreamTipAPI.instance().SetAccessToken(newstreamtiptoken);
-            streamtiptoken = newstreamtiptoken;
+            com.gmt2001.Console.out.print("Please enter a new GameWisp Access Token: ");
+            String newgamewispauth = System.console().readLine().trim();
+            gamewispauth = newgamewispauth;
+            GameWispAPI.instance().SetAccessToken(gamewispauth);
+            SingularityAPI.instance().setAccessToken(gamewispauth);
             
+            com.gmt2001.Console.out.print("Please enter a new GameWisp Refresh Token: ");
+            String newgamewisprefresh = System.console().readLine().trim();
+
+            gamewisprefresh = newgamewisprefresh;
+            GameWispAPI.instance().SetRefreshToken(gamewisprefresh);
+            doRefreshGameWispToken();
             changed = true;
-        }*/
+        }
+        
+        if (message.equals("testgwsub")) {
+            com.gmt2001.Console.out.println("[CONSOLE] Executing testgwsub");
+            EventBus.instance().post(new GameWispSubscribeEvent(this.username, 1));
+            return;
+        }
+
+        if (message.equals("testgwresub")) {
+            com.gmt2001.Console.out.println("[CONSOLE] Executing testgwresub");
+            EventBus.instance().post(new GameWispAnniversaryEvent(this.username, 2, 3));
+            return;
+        }
 
         if (message.equals("webenable"))
         {
@@ -879,6 +919,8 @@ public class Quorrabot implements Listener
 
                 Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+                
+                SingularityAPI.instance().setAccessToken(gamewispauth);
 
                 //Commented out since you need to restart the bot for port changes anyway
                 /*
@@ -1090,6 +1132,8 @@ public class Quorrabot implements Listener
         String datastore = "";
         String datastoreconfig = "";
         String youtubekey = "";
+        String gamewispauth = "";
+        String gamewisprefresh = "";
         String twitchalertstoken = "";
         String lastfmuser = "";
         String tpetoken = "";
@@ -1162,6 +1206,12 @@ public class Quorrabot implements Listener
                     if (line.startsWith("youtubekey=") && line.length() > 12)
                     {
                         youtubekey = line.substring(11);
+                    }
+                    if (line.startsWith("gamewispauth=") && line.length() > 14) {
+                        gamewispauth = line.substring(13);
+                    }
+                    if (line.startsWith("gamewisprefresh=") && line.length() > 17) {
+                        gamewisprefresh = line.substring(16);
                     }
                     if (line.startsWith("twitchalertstoken=") && line.length() > 19)
                     {
@@ -1279,6 +1329,8 @@ public class Quorrabot implements Listener
                     com.gmt2001.Console.out.println("msglimit30='" + msglimit30 + "'");
                     com.gmt2001.Console.out.println("datastore='" + datastore + "'");
                     com.gmt2001.Console.out.println("youtubekey='" + youtubekey + "'");
+                    com.gmt2001.Console.out.println("gamewispauth=" + gamewispauth);
+                    com.gmt2001.Console.out.println("gamewisprefresh=" + gamewisprefresh);
                     com.gmt2001.Console.out.println("twitchalertstoken='" + twitchalertstoken + "'");
                     com.gmt2001.Console.out.println("lastfmuser='" + lastfmuser + "'");
                     com.gmt2001.Console.out.println("tpetoken='" + tpetoken + "'");
@@ -1405,6 +1457,18 @@ public class Quorrabot implements Listener
                         changed = true;
                     }
                 }
+                if (arg.toLowerCase().startsWith("gamewispauth=") && arg.length() > 14) {
+                    if (!gamewispauth.equals(arg.substring(13))) {
+                        gamewispauth = arg.substring(13);
+                        changed = true;
+                    }
+                }
+                if (arg.toLowerCase().startsWith("gamewisprefresh=") && arg.length() > 17) {
+                    if (!gamewisprefresh.equals(arg.substring(16))) {
+                        gamewisprefresh = arg.substring(16);
+                        changed = true;
+                    }
+                }
                 if (arg.toLowerCase().startsWith("twitchalertstoken=") && arg.length() > 19)
                 {
                     if (!twitchalertstoken.equals(arg.substring(18)))
@@ -1518,6 +1582,8 @@ public class Quorrabot implements Listener
                             + "[datastore=<DataStore type, for a list, run java -jar QuorraBot.jar storetypes>] "
                             + "[datastoreconfig=<Optional DataStore config option, different for each DataStore type>] "
                             + "[youtubekey=<youtube api key>] [webenable=<true | false>] [musicenable=<true | false>] "
+                            + "[gamewispauth=<gamewisp oauth>] "
+                            + "[gamewisprefresh=<gamewisp refresh key>] "
                             + "[twitchalertstoken=<TwitchAlerts access token>] "
                             + "[lastfmuser=<Last.FM username>] "
                             + "[tpetoken=<Tipeeestream access token>] "
@@ -1553,6 +1619,8 @@ public class Quorrabot implements Listener
             data += "msglimit30=" + msglimit30 + "\r\n";
             data += "datastore=" + datastore + "\r\n";
             data += "youtubekey=" + youtubekey + "\r\n";
+            data += "gamewispauth=" + gamewispauth + "\r\n";
+            data += "gamewisprefresh=" + gamewisprefresh + "\r\n";
             data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
             data += "lastfmuser=" + lastfmuser + "\r\n";
             data += "tpetoken=" + tpetoken + "\r\n";            
@@ -1571,6 +1639,73 @@ public class Quorrabot implements Listener
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
 
-        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, twitchalertstoken, lastfmuser, tpetoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword);
+        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken, lastfmuser, tpetoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword);
     }
+    public void updateGameWispTokens(String[] newTokens) {
+            String data = "";
+            data += "user=" + username + "\r\n";
+            data += "oauth=" + oauth + "\r\n";
+            data += "apioauth=" + apioauth + "\r\n";
+            data += "clientid=" + clientid + "\r\n";
+            data += "channel=" + channel + "\r\n";
+            data += "owner=" + ownerName + "\r\n";
+            data += "baseport=" + baseport + "\r\n";
+            data += "hostname=" + hostname + "\r\n";
+            data += "port=" + port + "\r\n";
+            data += "msglimit30=" + msglimit30 + "\r\n";
+            data += "datastore=" + datastore + "\r\n";
+            data += "youtubekey=" + youtubekey + "\r\n";
+            data += "gamewispauth=" + gamewispauth + "\r\n";
+            data += "gamewisprefresh=" + gamewisprefresh + "\r\n";
+            data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
+            data += "lastfmuser=" + lastfmuser + "\r\n";
+            data += "tpetoken=" + tpetoken + "\r\n";            
+            data += "twittertoken=" + twittertoken + "\r\n";
+            data += "twittertokensecret=" + twittertokensecret + "\r\n";
+            data += "streamtiptoken=" + streamtiptoken + "\r\n";
+            data += "streamtipid=" + streamtipid + "\r\n";
+            data += "webenable=" + webenable + "\r\n";
+            data += "musicenable=" + musicenable + "\r\n";
+            data += "usehttps=" + usehttps + "\r\n";
+            data += "keystorepath=" + keystorepath + "\r\n";
+            data += "keystorepassword=" + keystorepassword + "\r\n";
+            data += "keypassword=" + keypassword;
+
+        try {
+            Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
+                        StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+            com.gmt2001.Console.out.println("GameWisp Token has been refreshed.");
+        } catch (IOException ex) {
+            com.gmt2001.Console.err.println("!!!! CRITICAL !!!! Failed to update GameWisp Refresh Tokens into botlogin.txt! Must manually add!");
+            com.gmt2001.Console.err.println("!!!! CRITICAL !!!! gamewispauth = " + newTokens[0] + " gamewisprefresh = " + newTokens[1]);
+        }
+
+        SingularityAPI.instance().setAccessToken(gamewispauth);
+        
+    }
+    
+    public void doRefreshGameWispToken() {
+
+        long curTime = System.currentTimeMillis() / 1000l;
+
+        if (!dataStoreObj.exists("settings", "gameWispRefreshTime")) {
+            dataStoreObj.set("settings", "gameWispRefreshTime", String.valueOf(curTime));
+        }
+
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                long curTime = System.currentTimeMillis() / 1000l;
+                String lastRunStr = dataStoreObj.GetString("settings", "", "gameWispRefreshTime");
+
+                long lastRun = Long.parseLong(lastRunStr);
+                if ((curTime - lastRun) > (10 * 24 * 60 * 60)) { // 10 days, token expires every 35.
+                    dataStoreObj.set("settings", "gameWispRefreshTime", String.valueOf(curTime));
+                    updateGameWispTokens(GameWispAPI.instance().refreshToken());
+                }
+            }
+        }, 0, 1, TimeUnit.DAYS);
+    }
+
 }

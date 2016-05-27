@@ -15,7 +15,8 @@ $.on('twitchSubscribe', function (event) {
 
     if (!$.inidb.exists('subscribed', subscriber)) {
         $.inidb.set('subscribed', subscriber, '1');
-    } else if ($.SubscribeHandler.SubReward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
+    }
+    if ($.SubscribeHandler.SubReward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
         $.inidb.incr('points', subscriber, $.SubscribeHandler.SubReward);
     }
 });

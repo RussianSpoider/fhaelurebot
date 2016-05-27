@@ -41,8 +41,8 @@ public class GameWispAPI {
     private static final GameWispAPI instance = new GameWispAPI();
     private static final String sAPIURL = "https://api.gamewisp.com";
     private static final int iHTTPTimeout = 2 * 1000;
-    private static final String gwIdentifier = "4233a265e2fa9f17b53850da05b2c8aaab9a3a9";
-    private static final String gwSecret = "7a77c8009180450c219ddeb8ed5e9c7a312c29e";
+    private static final String gwIdentifier = "790f895a60b74cc09975b92f72e34b53b1f74ee";
+    private static final String gwSecret = "8cc5027882f13937f563ea360070fb9c2e0a335";
     private static final String devURI = "http://www.quorrabot.com/pages/gamewispapi";
 
     private static String sAccessToken = "";

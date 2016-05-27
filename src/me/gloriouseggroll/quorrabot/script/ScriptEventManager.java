@@ -45,6 +45,7 @@ public class ScriptEventManager implements Listener
         "me.gloriouseggroll.quorrabot.event.irc.channel",
         "me.gloriouseggroll.quorrabot.event.irc.complete",
         "me.gloriouseggroll.quorrabot.event.irc.message",
+        "me.gloriouseggroll.quorrabot.event.gamewisp",
         "me.gloriouseggroll.quorrabot.event.musicplayer"
     };
 

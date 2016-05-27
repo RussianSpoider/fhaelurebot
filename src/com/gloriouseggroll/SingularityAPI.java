@@ -54,7 +54,7 @@ public class SingularityAPI {
     private static final SingularityAPI instance = new SingularityAPI();
 
     private static final String apiURL = "https://singularity.gamewisp.com";
-    private static final String gwIdentifier = "4233a265e2fa9f17b53850da05b2c8aaab9a3a9";
+    private static final String gwIdentifier = "790f895a60b74cc09975b92f72e34b53b1f74ee";
 
     private Socket webSocket;
 
@@ -71,7 +71,7 @@ public class SingularityAPI {
     }
 
     public void StartService() {
-
+        
         TrustManager[] trustAllCerts = new TrustManager[] {
             new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -192,8 +192,9 @@ public class SingularityAPI {
                         return;
                     }
                     String username = jsonObject.getJSONObject("data").getJSONObject("subscriber").getJSONObject("usernames").getString("twitch");
+                    int tier = jsonObject.getJSONObject("data").getJSONObject("subscriber").getJSONObject("tier").getInt("level");
                     int months = jsonObject.getJSONObject("data").getInt("month_count");
-                    EventBus.instance().post(new GameWispAnniversaryEvent(username, months));
+                    EventBus.instance().post(new GameWispAnniversaryEvent(username, months, tier));
                 }
             });
 

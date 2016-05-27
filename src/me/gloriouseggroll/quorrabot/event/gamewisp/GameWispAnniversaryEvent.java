@@ -14,16 +14,19 @@ public class GameWispAnniversaryEvent extends GameWispEvent {
 
     private final String username;
     private final int months;
+    private final int tier;
 
-    public GameWispAnniversaryEvent(String username, int months) {
+    public GameWispAnniversaryEvent(String username, int months, int tier) {
         this.username = username;
         this.months = months;
+        this.tier = tier;
     }
 
-    public GameWispAnniversaryEvent(String username, int months, Channel channel) {
+    public GameWispAnniversaryEvent(String username, int months, int tier, Channel channel) {
         super(channel);
         this.username = username;
         this.months = months;
+        this.tier = tier;
     }
 
     public String getUsername() {
@@ -32,5 +35,9 @@ public class GameWispAnniversaryEvent extends GameWispEvent {
 
     public int getMonths() {
         return months;
+    }
+    
+    public int getTier() {
+        return tier;
     }
 }
