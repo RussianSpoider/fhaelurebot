@@ -23,6 +23,12 @@ $.writeToFile("var musicport = '" + musicport.toString() + "';","web/port.js", f
 $.snameshuffle = "";
 $.susershuffle = "";
 
+if($.song_shuffle==1) {
+    if($.inidb.GetKeyList('musicplayer_shuffle','')!=null) {
+        $.inidb.RemoveFile("musicplayer_shuffle");
+    }
+}
+
 if ($.currsongpath == null || isNaN($.currsongpath) || $.currsongpath < 0) {
     $.currsongpath = 'addons/youtubePlayer/currentsong.txt';
 }
@@ -60,7 +66,6 @@ if ($.song_shuffle == null || $.song_shuffle == "" || $.song_shuffle == 0) {
 }
 
 reloadPlaylist = function() {
-    $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
     $.parseDefault();
 }
 notSearchable = function(songid,songname, user, tags) {
@@ -254,13 +259,11 @@ function nextDefault() {
 
         if ($var.defaultplaylistretry < 3) {
             $var.defaultplaylistretry++;
-                if ($.fileExists("./addons/youtubePlayer/playlist.txt")) {
-                    $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
-                }
 		setTimeout(function(){
-                    if($.song_shuffle!=1) {
-			$var.defaultplaylistpos = 0;
+                    if ($.fileExists("./addons/youtubePlayer/playlist.txt")) {
+                        $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
                     }
+                    $var.defaultplaylistpos = 0;
                     next();
 		}, 3000);
         }
@@ -328,19 +331,18 @@ function next() {
             playlistpos = $.randRange(0, $var.defaultplaylist.length);
             var musicplayer_shuffle_keys = $.inidb.GetKeyList('musicplayer_shuffle', '');
 			if(musicplayer_shuffle_keys !=null) {
+                            if($.inidb.exists("musicplayer_shuffle", "played_" + playlistpos)) {
 				if(musicplayer_shuffle_keys.length >= $var.defaultplaylist.length) {
 					$.inidb.RemoveFile("musicplayer_shuffle");
 					$.inidb.set('musicplayer_shuffle', 'played_' + $var.defaultplaylistpos, $var.defaultplaylistpos);
-                                        next();
 				}
-				if($.inidb.exists("musicplayer_shuffle", "played_" + playlistpos)) {
-					next();
-				}
+                                next();
+                            }
 			}
 
             
             $var.defaultplaylistpos = playlistpos;
-			$.inidb.set('musicplayer_shuffle', 'played_' + $var.defaultplaylistpos, $var.defaultplaylistpos);
+            $.inidb.set('musicplayer_shuffle', 'played_' + $var.defaultplaylistpos, $var.defaultplaylistpos);
             nextDefault();
 
         } else {
@@ -642,7 +644,6 @@ $.on('command', function (event) {
             if ($var.currSong != null) {
                 var songurl = "https://www.youtube.com/watch?v=" + $var.currSong.song.getId();
                 $.musicplayer.stealSong(songurl);
-                $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
                 $.say($.lang.get("net.quorrabot.musicplayer.steal-song", $var.currSong.song.getName(), $var.currSong.user));
                 $.parseDefault();
                 return;
@@ -940,7 +941,6 @@ $.on('command', function (event) {
         if ($var.currSong != null) {
             var currsongurl = "https://www.youtube.com/watch?v=" + $var.currSong.song.getId();
             $.musicplayer.stealSong(currsongurl);
-            $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
             $.say($.lang.get("net.quorrabot.musicplayer.steal-song", $var.currSong.song.getName(), $var.currSong.user));
             $.parseDefault();
             return;
@@ -1050,11 +1050,6 @@ offlinePlayer = function() {setTimeout(function(){
 };
 offlinePlayer();
 
-if($.storing==1) {
-    $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
-    $.parseDefault();
-}
-
 $.on('musicPlayerCurrentVolume', function (event) {
     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.current-volume", parseInt(event.getVolume())));
     return;
@@ -1079,3 +1074,7 @@ chatRegister = function() {setTimeout(function(){
 },10*1000);
 };
 chatRegister();
+
+if($.storing==1) {
+    $.parseDefault();
+}
