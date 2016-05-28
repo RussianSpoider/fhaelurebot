@@ -106,6 +106,11 @@ class RequestGenerator
     {
         write(new WriteRequest("JOIN " + channel, session));
     }
+    
+    public void leave(String channel)
+    {
+        write(new WriteRequest("PART " + channel, session));
+    }
 
     /**
      * Join a password protected Channel

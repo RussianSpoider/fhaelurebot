@@ -85,6 +85,7 @@ public class Quorrabot implements Listener
 {
 
     public final String username;
+    public String hostedName;
     private final String oauth;
     private String apioauth;
     private String clientid;
@@ -339,6 +340,10 @@ public class Quorrabot implements Listener
     public Session getSession()
     {
         return session;
+    }
+    public Session getTceSession()
+    {
+        return tceSession;
     }
 
     public boolean isExiting()
@@ -1022,6 +1027,30 @@ public class Quorrabot implements Listener
         //Don't change this to postAsync. It cannot be processed in async or commands will be delayed
         EventBus.instance().post(new CommandEvent(sender, command, arguments));
     }
+    
+    public void hostEvent (String hostedName, String event) {
+            this.hostedName = hostedName;
+            if (channelName.toLowerCase().contains(","))
+            {
+                String[] c = channelName.toLowerCase().split(",");
+
+                for (String ch : c)
+                {
+                    tceSession.join("#" + ch);
+                }
+            } else
+            {
+                tceSession.join("#" + channelName.toLowerCase());
+            }
+            if(event.equalsIgnoreCase("host")) {
+                tceSession.sayChannel("/host " + hostedName.toLowerCase(), channel);
+            } else if(event.equalsIgnoreCase("unhost")) {
+                tceSession.sayChannel("/unhost", channel);
+            }
+            tceSession.leave("#" + channelName.toLowerCase()); 
+    }
+
+    
 
     private static void ini2sqlite(boolean delete)
     {

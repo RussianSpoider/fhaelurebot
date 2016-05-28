@@ -11,6 +11,12 @@ $.isOnline = function(channel) {
     return false;
 }
 
+$.hostEvent = function(hostedName, eventName) {
+    hostedName = hostedName;
+    eventName = eventName
+    $.twitch.HostEvent(hostedName, eventName);
+}
+
 $.getUserExists = function(user) {
     var exists = $.twitch.GetUser(user);
 
@@ -166,6 +172,33 @@ $.on('command', function(event) {
     if (command.equalsIgnoreCase("viewers")) {
         $.say($.lang.get("net.quorrabot.streamcommand.total-viewers", $.getViewers($.channelName)));
         return;
+    }
+    
+    if (command.equalsIgnoreCase("host")) {
+        if (!$.isAdmin(sender)) {
+            $.say($.getWhisperString(sender) + $.adminmsg);
+            return;	
+        }
+        if($.strlen(argsString) == 0 | !$.username.resolve(args[0])) {
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.streamcommand.host-channel-error-args"));
+            return;
+        }
+        
+        $.hostEvent(args[0].toLowerCase(),"host");
+        setTimeout(function(){
+            $.say("/me " + $.lang.get("net.quorrabot.streamcommand.host-set-success", $.username.resolve(args[0])));
+        }, 1000);
+    }
+    if (command.equalsIgnoreCase("unhost")) {
+        if (!$.isAdmin(sender)) {
+            $.say($.getWhisperString(sender) + $.adminmsg);
+            return;	
+        }
+
+        $.hostEvent("","unhost");
+        setTimeout(function(){
+            $.say("/me " + $.lang.get("net.quorrabot.streamcommand.unhost-set-success"));
+        }, 1000);
     }
 
     if (command.equalsIgnoreCase("game")) {
@@ -363,6 +396,7 @@ setTimeout(function(){
         $.registerChatCommand("./commands/streamCommands.js", "online", "admin");
         $.registerChatCommand("./commands/streamCommands.js", "game", "admin");
         $.registerChatCommand("./commands/streamCommands.js", "title", "admin");
+        $.registerChatCommand("./commands/streamCommands.js", "host", "admin");
         $.registerChatCommand("./commands/streamCommands.js", "commercial", "admin");
         $.registerChatCommand("./commands/streamCommands.js", "commercial help", "admin");
         $.registerChatCommand("./commands/streamCommands.js", "viewers");

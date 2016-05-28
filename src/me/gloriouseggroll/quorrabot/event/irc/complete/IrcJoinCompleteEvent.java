@@ -23,15 +23,23 @@ public class IrcJoinCompleteEvent extends IrcCompleteEvent
 {
 
     private final Channel channel;
+    public String sessionName = "";
 
     public IrcJoinCompleteEvent(Session session, Channel channel)
     {
         super(session);
         this.channel = channel;
+        if(session.getNick().equalsIgnoreCase(channel.getName().replace("#", ""))) {
+            sessionName = "tceSession";
+        }
     }
 
     public Channel getChannel()
     {
         return channel;
+    }
+    public String getSessionName()
+    {
+        return sessionName;
     }
 }

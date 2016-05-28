@@ -749,6 +749,10 @@ $.lang.data["net.quorrabot.streamcommand.manual-commercial-disabled"] = "Manual 
 $.lang.data["net.quorrabot.streamcommand.running-commercial"] = "Running a $1 second commercial!";
 $.lang.data["net.quorrabot.streamcommand.commercial-user-error"] = "You must enter a valid commercial length, wait 8 minutes between commercials, and can only run commercials when the stream is online! Valid lengths are 30, 60, 90, 120, 150, and 180 seconds";
 $.lang.data["net.quorrabot.streamcommand.commercial-api-error"] = "Failed to run a commercial. TwitchAPI must be having issues";
+$.lang.data["net.quorrabot.streamcommand.host-channel-error-args"] = "You have specified an invalid user name to host.";
+$.lang.data["net.quorrabot.streamcommand.host-set-success"] = "$1 is now being hosted!";
+$.lang.data["net.quorrabot.streamcommand.unhost-set-success"] = "You are no longer in host mode.";
+
 
 //rouletteCommand.js 
 $.lang.data["net.quorrabot.roulettecommand-Win1"] = "The trigger is pulled, and the revolver clicks. $1 has lived to survive roulette!";
