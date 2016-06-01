@@ -1,6 +1,6 @@
 var seconds = 0; 
 $.timer.addTimer("./commands/highlightCommand.js", "highlightcommand", true, function() {
-    if (!$.isOnline($.channelName)) {
+    if (!$.isOnline($.ownerName)) {
         seconds = 0;
         return;
     }
@@ -53,7 +53,7 @@ $.on('command', function (event) {
         
         if (argsString.isEmpty()) { 
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.highlightcommand.usage"));
-        } else if (!$.isOnline($.channelName)) {
+        } else if (!$.isOnline($.ownerName)) {
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.highlightcommand.error-stream-offline"));
         } else {
             var timestamp = $.getHighlight($.channelName);
