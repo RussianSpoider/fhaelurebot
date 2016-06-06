@@ -7,7 +7,7 @@
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPNOMODIFY" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPNOREPAIR" Value="1"/>
-    <ROW Property="ARPPRODUCTICON" Value="favicon_1.exe" Type="8"/>
+    <ROW Property="ARPPRODUCTICON" Value="QuorraBot.exe" Type="8"/>
     <ROW Property="ARPURLINFOABOUT" Value="http://www.quorrabot.com"/>
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:7"/>
     <ROW Property="Manufacturer" Value="http://www.quorrabot.com"/>
@@ -83,7 +83,7 @@
     <ROW File="commonsio2.4.jar" Component_="commonsio2.4.jar" FileName="COMMON~1.JAR|commons-io-2.4.jar" Attributes="0" SourcePath="lib\commons-io-2.4.jar" SelfReg="false" NextFile="commonslang33.3.2.jar"/>
     <ROW File="commonslang33.3.2.jar" Component_="commonsio2.4.jar" FileName="COMMON~2.JAR|commons-lang3-3.3.2.jar" Attributes="0" SourcePath="lib\commons-lang3-3.3.2.jar" SelfReg="false" NextFile="engine.ioclient0.7.0.jar"/>
     <ROW File="currentsong.txt" Component_="currentsong.txt" FileName="CURREN~1.TXT|currentsong.txt" Attributes="0" SourcePath="addons\youtubePlayer\currentsong.txt" SelfReg="false" NextFile="commonsio2.4.jar"/>
-    <ROW File="default.txt" Component_="currentsong.txt" FileName="default.txt" Attributes="0" SourcePath="addons\youtubePlayer\default.txt" SelfReg="false"/>
+    <ROW File="default.txt" Component_="currentsong.txt" FileName="default.txt" Attributes="0" SourcePath="addons\youtubePlayer\default.txt" SelfReg="false" NextFile="rhino1.7.7.1.jar"/>
     <ROW File="donationHandler.js" Component_="donationHandler.js" FileName="DONATI~1.JS|donationHandler.js" Attributes="0" SourcePath="scripts\handlers\donationHandler.js" SelfReg="false" NextFile="followHandler.js"/>
     <ROW File="engine.ioclient0.7.0.jar" Component_="commonsio2.4.jar" FileName="ENGINE~1.JAR|engine.io-client-0.7.0.jar" Attributes="0" SourcePath="lib\engine.io-client-0.7.0.jar" SelfReg="false" NextFile="guava18.0.jar"/>
     <ROW File="favicon.ico" Component_="app.js" FileName="favicon.ico" Attributes="0" SourcePath="web\favicon.ico" SelfReg="false" NextFile="index.html"/>
@@ -124,6 +124,7 @@
     <ROW File="raffleSystem.js" Component_="bankheistSystem.js" FileName="RAFFLE~1.JS|raffleSystem.js" Attributes="0" SourcePath="scripts\systems\raffleSystem.js" SelfReg="false" NextFile="raidSystem.js"/>
     <ROW File="raidSystem.js" Component_="bankheistSystem.js" FileName="RAIDSY~1.JS|raidSystem.js" Attributes="0" SourcePath="scripts\systems\raidSystem.js" SelfReg="false" NextFile="ticketraffleSystem.js"/>
     <ROW File="randomCommand.js" Component_="ballCommand.js" FileName="RANDOM~1.JS|randomCommand.js" Attributes="0" SourcePath="scripts\commands\randomCommand.js" SelfReg="false" NextFile="rollCommand.js"/>
+    <ROW File="rhino1.7.7.1.jar" Component_="commonsio2.4.jar" FileName="RHINO-~1.JAR|rhino-1.7.7.1.jar" Attributes="0" SourcePath="..\..\lib\rhino-1.7.7.1.jar" SelfReg="false"/>
     <ROW File="rollCommand.js" Component_="ballCommand.js" FileName="ROLLCO~1.JS|rollCommand.js" Attributes="0" SourcePath="scripts\commands\rollCommand.js" SelfReg="false" NextFile="rouletteCommand.js"/>
     <ROW File="rouletteCommand.js" Component_="ballCommand.js" FileName="ROULET~1.JS|rouletteCommand.js" Attributes="0" SourcePath="scripts\commands\rouletteCommand.js" SelfReg="false" NextFile="slotMachineCommand.js"/>
     <ROW File="rsocket.js" Component_="app.js" FileName="rsocket.js" Attributes="0" SourcePath="web\rsocket.js" SelfReg="false" NextFile="style.css"/>
@@ -211,7 +212,7 @@
     <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
-    <ROW Name="favicon_1.exe" SourcePath="C:\Users\Thomas\Downloads\favicon.ico" Index="0"/>
+    <ROW Name="QuorraBot.exe" SourcePath="..\..\favicon.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_STORE_LOCATION" Condition="(Not Installed) OR REINSTALL" Sequence="1501"/>
@@ -235,8 +236,8 @@
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
-    <ROW Shortcut="QuorraBot" Directory_="DesktopFolder" Name="QUORRA~1|QuorraBot" Component_="QuorraBot.exe" Target="[#QuorraBot.exe]" Description="Multipurpose twitch.tv chat bot" Hotkey="0" Icon_="favicon_1.exe" IconIndex="0" ShowCmd="1" WkDir="QuorraBot_Dir"/>
-    <ROW Shortcut="QuorraBot_1" Directory_="QuorraBot_1_Dir" Name="QUORRA~1|QuorraBot" Component_="QuorraBot.exe" Target="[#QuorraBot.exe]" Hotkey="0" Icon_="favicon_1.exe" IconIndex="0" ShowCmd="1" WkDir="QuorraBot_Dir"/>
+    <ROW Shortcut="QuorraBot" Directory_="DesktopFolder" Name="QUORRA~1|QuorraBot" Component_="QuorraBot.exe" Target="[#QuorraBot.exe]" Description="Multipurpose twitch.tv chat bot" Hotkey="0" Icon_="QuorraBot.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="QuorraBot_1" Directory_="QuorraBot_1_Dir" Name="QUORRA~1|QuorraBot" Component_="QuorraBot.exe" Target="[#QuorraBot.exe]" Description="Multipurpose twitch.tv chat bot" Hotkey="0" Icon_="QuorraBot.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>
