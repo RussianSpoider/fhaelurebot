@@ -339,7 +339,7 @@ $.autoHost = function() {
         }
         for (var i=$.AutoHost.AutoHostNum; i< $.num_host + 1; i++) {
             var channel = $.inidb.get('autoHost', 'host_' + i);
-            if($.isOnline(channel)){
+            if($.isOnline(channel) && !isChannelHosting($.channelName, channel)){
                 $.hostEvent(channel.toLowerCase(),"host");
                 setTimeout(function(){
                     $.say("/me " + $.lang.get("net.quorrabot.streamcommand.host-set-success", $.username.resolve(channel)));
@@ -357,3 +357,28 @@ $.autoHost = function() {
         $.inidb.set('autoHost', 'autohostnum', $.AutoHost.AutoHostNum);
     }
 };
+
+$.isChannelHosting = function(hostchannel, hostedchannel) {
+	var HttpResponse = Packages.com.gmt2001.HttpResponse;
+	var HttpRequest = Packages.com.gmt2001.HttpRequest;
+	var HashMap = Packages.java.util.HashMap;
+	var url = 'https://tmi.twitch.tv/hosts?include_logins=1&host=' + $.getChannelID(hostchannel)
+	var response = HttpRequest.getData(HttpRequest.RequestType.GET, url, "", new HashMap());
+	var is_hosting = response.content.indexOf('target_id');
+	
+	if(is_hosting == -1) {
+		return 0;
+        } else {
+            if(response.content.toString().toLowerCase().contains(hostedchannel.toLowerCase())) {
+		return 1;
+            } else {
+                return 0;
+            }
+        }
+}
+
+$.getChannelID = function(channel) {
+    var channelData = $.twitch.GetChannel(channel);
+    
+    return channelData.getInt("_id");
+}
