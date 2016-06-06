@@ -31,7 +31,7 @@ if($.firstrun) {
     $.say("The current time zone is '" + $.timeZone + "'.");
     $.say("To change it use '!timezone (timezone)'.");
     $.say("A list of time zones can be found here: ");
-    $.say("http://en.wikipedia.org/wiki/List_of_tz_database_time_zones.");
+    $.say("http://en.wikipedia.org/wiki/List_of_tz_database_time_zones");
     $.say("");
 }
 
