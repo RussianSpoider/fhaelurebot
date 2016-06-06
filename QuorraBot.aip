@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DOCUMENT Type="Advanced Installer" CreateVersion="13.0" version="13.0" Modules="simple" RootPath="dist\QuorraBot-1.12" Language="en" Id="{7F72B27F-48F5-4436-B8B7-341FBF5FC9EB}" Backup="false">
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
+    <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
+    <ROW Property="AI_UPGRADE" Value="No"/>
+    <ROW Property="ALLUSERS" Value="1" MultiBuildValue="DefaultBuild:3"/>
+    <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
+    <ROW Property="ARPNOMODIFY" MultiBuildValue="DefaultBuild:1"/>
+    <ROW Property="ARPNOREPAIR" Value="1"/>
+    <ROW Property="ARPPRODUCTICON" Value="favicon_1.exe" Type="8"/>
+    <ROW Property="ARPURLINFOABOUT" Value="http://www.quorrabot.com"/>
+    <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:7"/>
+    <ROW Property="Manufacturer" Value="http://www.quorrabot.com"/>
+    <ROW Property="ProductCode" Value="1033:{F3155DDD-1CE2-491E-907A-6F777BC6F106} " Type="16"/>
+    <ROW Property="ProductLanguage" Value="1033"/>
+    <ROW Property="ProductName" Value="QuorraBot"/>
+    <ROW Property="ProductVersion" Value="1.12.0" Type="32"/>
+    <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
+    <ROW Property="UpgradeCode" Value="{919A51FD-C5D4-4772-BD42-765770DC274D}"/>
+    <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsType9XDisplay" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40Display" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50Display" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5X" MultiBuildValue="DefaultBuild:Windows XP/2003 RTM, Windows XP/2003 SP1, Windows XP SP2 x86" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5XDisplay" MultiBuildValue="DefaultBuild:Windows XP/2003 RTM, Windows XP/2003 SP1, Windows XP SP2 x86" ValueLocId="-"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
+    <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
+    <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
+    <ROW Directory="ProgramFilesFolder" Directory_Parent="TARGETDIR" DefaultDir="PROGRA~1|ProgramFilesFolder" IsPseudoRoot="1"/>
+    <ROW Directory="ProgramMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="PROGRA~2|ProgramMenuFolder" IsPseudoRoot="1"/>
+    <ROW Directory="QuorraBot_1_Dir" Directory_Parent="ProgramMenuFolder" DefaultDir="QUORRA~1|QuorraBot"/>
+    <ROW Directory="QuorraBot_Dir" Directory_Parent="ProgramFilesFolder" DefaultDir="QUORRA~1|QuorraBot"/>
+    <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
+    <ROW Directory="addons_Dir" Directory_Parent="QuorraBot_Dir" DefaultDir="addons"/>
+    <ROW Directory="addonscripts_Dir" Directory_Parent="scripts_Dir" DefaultDir="ADDONS~1|addonscripts"/>
+    <ROW Directory="commands_Dir" Directory_Parent="scripts_Dir" DefaultDir="commands"/>
+    <ROW Directory="donationchecker_Dir" Directory_Parent="addons_Dir" DefaultDir="DONATI~1|donationchecker"/>
+    <ROW Directory="handlers_Dir" Directory_Parent="scripts_Dir" DefaultDir="handlers"/>
+    <ROW Directory="lang_Dir" Directory_Parent="scripts_Dir" DefaultDir="lang"/>
+    <ROW Directory="lib_Dir" Directory_Parent="QuorraBot_Dir" DefaultDir="lib"/>
+    <ROW Directory="scripts_Dir" Directory_Parent="QuorraBot_Dir" DefaultDir="scripts"/>
+    <ROW Directory="systems_Dir" Directory_Parent="scripts_Dir" DefaultDir="systems"/>
+    <ROW Directory="util_Dir" Directory_Parent="scripts_Dir" DefaultDir="util"/>
+    <ROW Directory="web_Dir" Directory_Parent="QuorraBot_Dir" DefaultDir="web"/>
+    <ROW Directory="youtubePlayer_Dir" Directory_Parent="addons_Dir" DefaultDir="YOUTUB~1|youtubePlayer"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
+    <ROW Component="ProductInformation" ComponentId="{22D0ABF7-EC3D-43A6-9FB2-8742386F1F75}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="QuorraBot" ComponentId="{D688C06F-B187-4A75-8869-19A774B609BB}" Directory_="QuorraBot_1_Dir" Attributes="0"/>
+    <ROW Component="QuorraBot.bat" ComponentId="{8D4CD9F0-99EC-41A9-B75C-6E17FD07DB7B}" Directory_="QuorraBot_Dir" Attributes="0" KeyPath="QuorraBot.bat" Type="0"/>
+    <ROW Component="QuorraBot.exe" ComponentId="{D1A54E60-5B3A-4E99-ACB5-F54528C39618}" Directory_="QuorraBot_Dir" Attributes="256" KeyPath="QuorraBot.exe"/>
+    <ROW Component="app.js" ComponentId="{AEFD853A-1E62-4BDB-96CE-5B2AA56CA429}" Directory_="web_Dir" Attributes="0" KeyPath="app.js" Type="0"/>
+    <ROW Component="ballCommand.js" ComponentId="{0B6D6A7A-F2B5-476B-9071-03FD133E5150}" Directory_="commands_Dir" Attributes="0" KeyPath="ballCommand.js" Type="0"/>
+    <ROW Component="bankheistSystem.js" ComponentId="{43C69B53-3C7D-48C6-B0AF-1618CB2E15FB}" Directory_="systems_Dir" Attributes="0" KeyPath="bankheistSystem.js" Type="0"/>
+    <ROW Component="chatModerator.js" ComponentId="{4CA22BC3-9E2D-4871-85B0-F3D439CBED33}" Directory_="util_Dir" Attributes="0" KeyPath="chatModerator.js" Type="0"/>
+    <ROW Component="commonsio2.4.jar" ComponentId="{C40A7352-93DD-42A5-BAA7-67AF5DF08108}" Directory_="lib_Dir" Attributes="0" KeyPath="commonsio2.4.jar" Type="0"/>
+    <ROW Component="currentsong.txt" ComponentId="{7C5D9EAB-E412-4548-906B-1B1B0E31A0FE}" Directory_="youtubePlayer_Dir" Attributes="0" KeyPath="currentsong.txt" Type="0"/>
+    <ROW Component="donationHandler.js" ComponentId="{603B7640-4477-4582-BA87-A74AF22E7316}" Directory_="handlers_Dir" Attributes="0" KeyPath="donationHandler.js" Type="0"/>
+    <ROW Component="gamewispHandler.js" ComponentId="{C691746E-EF58-4111-8DA6-D462DDA7DD8F}" Directory_="addonscripts_Dir" Attributes="0" KeyPath="gamewispHandler.js" Type="0"/>
+    <ROW Component="init.js" ComponentId="{36580C72-E9CA-4842-9C5A-BB04F61F6FCC}" Directory_="scripts_Dir" Attributes="0" KeyPath="init.js" Type="0"/>
+    <ROW Component="langenglish.js" ComponentId="{B5358F6F-5F0E-41CC-AD14-623617E53A09}" Directory_="lang_Dir" Attributes="0" KeyPath="langenglish.js" Type="0"/>
+    <ROW Component="latestdonation.txt" ComponentId="{414186C4-DD71-4F1E-9A26-6F4DC5C29F1F}" Directory_="donationchecker_Dir" Attributes="0" KeyPath="latestdonation.txt" Type="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="ProductInformation QuorraBot QuorraBot.bat QuorraBot.exe app.js ballCommand.js bankheistSystem.js chatModerator.js commonsio2.4.jar currentsong.txt donationHandler.js gamewispHandler.js init.js langenglish.js latestdonation.txt"/>
+    <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
+    <ROW File="QuorraBot.bat" Component_="QuorraBot.bat" FileName="QUORRA~1.BAT|QuorraBot.bat" Attributes="0" SourcePath="QuorraBot.bat" SelfReg="false" NextFile="QuorraBot.exe"/>
+    <ROW File="QuorraBot.exe" Component_="QuorraBot.exe" FileName="QUORRA~1.EXE|QuorraBot.exe" Attributes="0" SourcePath="QuorraBot.exe" SelfReg="false" NextFile="QuorraBot.jar" DigSign="true"/>
+    <ROW File="QuorraBot.jar" Component_="QuorraBot.bat" FileName="QUORRA~1.JAR|QuorraBot.jar" Attributes="0" SourcePath="QuorraBot.jar" SelfReg="false" NextFile="sinbin"/>
+    <ROW File="addCommand.js" Component_="ballCommand.js" FileName="ADDCOM~1.JS|addCommand.js" Attributes="0" SourcePath="scripts\commands\addCommand.js" SelfReg="false" NextFile="highlightCommand.js"/>
+    <ROW File="app.js" Component_="app.js" FileName="app.js" Attributes="0" SourcePath="web\app.js" SelfReg="false" NextFile="favicon.ico"/>
+    <ROW File="ballCommand.js" Component_="ballCommand.js" FileName="8BALLC~1.JS|8ballCommand.js" Attributes="0" SourcePath="scripts\commands\8ballCommand.js" SelfReg="false" NextFile="addCommand.js"/>
+    <ROW File="bankheistSystem.js" Component_="bankheistSystem.js" FileName="BANKHE~1.JS|bankheistSystem.js" Attributes="0" SourcePath="scripts\systems\bankheistSystem.js" SelfReg="false" NextFile="betSystem.js"/>
+    <ROW File="betSystem.js" Component_="bankheistSystem.js" FileName="BETSYS~1.JS|betSystem.js" Attributes="0" SourcePath="scripts\systems\betSystem.js" SelfReg="false" NextFile="bidSystem.js"/>
+    <ROW File="bidSystem.js" Component_="bankheistSystem.js" FileName="BIDSYS~1.JS|bidSystem.js" Attributes="0" SourcePath="scripts\systems\bidSystem.js" SelfReg="false" NextFile="greetingSystem.js"/>
+    <ROW File="chatModerator.js" Component_="chatModerator.js" FileName="CHATMO~1.JS|chatModerator.js" Attributes="0" SourcePath="scripts\util\chatModerator.js" SelfReg="false" NextFile="commandList.js"/>
+    <ROW File="commandList.js" Component_="chatModerator.js" FileName="COMMAN~1.JS|commandList.js" Attributes="0" SourcePath="scripts\util\commandList.js" SelfReg="false" NextFile="fileSystem.js"/>
+    <ROW File="commonsio2.4.jar" Component_="commonsio2.4.jar" FileName="COMMON~1.JAR|commons-io-2.4.jar" Attributes="0" SourcePath="lib\commons-io-2.4.jar" SelfReg="false" NextFile="commonslang33.3.2.jar"/>
+    <ROW File="commonslang33.3.2.jar" Component_="commonsio2.4.jar" FileName="COMMON~2.JAR|commons-lang3-3.3.2.jar" Attributes="0" SourcePath="lib\commons-lang3-3.3.2.jar" SelfReg="false" NextFile="engine.ioclient0.7.0.jar"/>
+    <ROW File="currentsong.txt" Component_="currentsong.txt" FileName="CURREN~1.TXT|currentsong.txt" Attributes="0" SourcePath="addons\youtubePlayer\currentsong.txt" SelfReg="false" NextFile="commonsio2.4.jar"/>
+    <ROW File="default.txt" Component_="currentsong.txt" FileName="default.txt" Attributes="0" SourcePath="addons\youtubePlayer\default.txt" SelfReg="false"/>
+    <ROW File="donationHandler.js" Component_="donationHandler.js" FileName="DONATI~1.JS|donationHandler.js" Attributes="0" SourcePath="scripts\handlers\donationHandler.js" SelfReg="false" NextFile="followHandler.js"/>
+    <ROW File="engine.ioclient0.7.0.jar" Component_="commonsio2.4.jar" FileName="ENGINE~1.JAR|engine.io-client-0.7.0.jar" Attributes="0" SourcePath="lib\engine.io-client-0.7.0.jar" SelfReg="false" NextFile="guava18.0.jar"/>
+    <ROW File="favicon.ico" Component_="app.js" FileName="favicon.ico" Attributes="0" SourcePath="web\favicon.ico" SelfReg="false" NextFile="index.html"/>
+    <ROW File="fileSystem.js" Component_="chatModerator.js" FileName="FILESY~1.JS|fileSystem.js" Attributes="0" SourcePath="scripts\util\fileSystem.js" SelfReg="false" NextFile="initialsettings.js"/>
+    <ROW File="followHandler.js" Component_="donationHandler.js" FileName="FOLLOW~1.JS|followHandler.js" Attributes="0" SourcePath="scripts\handlers\followHandler.js" SelfReg="false" NextFile="hostHandler.js"/>
+    <ROW File="gamewispHandler.js" Component_="gamewispHandler.js" FileName="GAMEWI~1.JS|gamewispHandler.js" Attributes="0" SourcePath="scripts\addonscripts\gamewispHandler.js" SelfReg="false" NextFile="twitterHandler.js"/>
+    <ROW File="greetingSystem.js" Component_="bankheistSystem.js" FileName="GREETI~1.JS|greetingSystem.js" Attributes="0" SourcePath="scripts\systems\greetingSystem.js" SelfReg="false" NextFile="levelQueueSystem.js"/>
+    <ROW File="guava18.0.jar" Component_="commonsio2.4.jar" FileName="GUAVA-~1.JAR|guava-18.0.jar" Attributes="0" SourcePath="lib\guava-18.0.jar" SelfReg="false" NextFile="jodatime2.4.jar"/>
+    <ROW File="highlightCommand.js" Component_="ballCommand.js" FileName="HIGHLI~1.JS|highlightCommand.js" Attributes="0" SourcePath="scripts\commands\highlightCommand.js" SelfReg="false" NextFile="killCommand.js"/>
+    <ROW File="hostHandler.js" Component_="donationHandler.js" FileName="HOSTHA~1.JS|hostHandler.js" Attributes="0" SourcePath="scripts\handlers\hostHandler.js" SelfReg="false" NextFile="noticeHandler.js"/>
+    <ROW File="index.html" Component_="app.js" FileName="INDEX~1.HTM|index.html" Attributes="0" SourcePath="web\index.html" SelfReg="false" NextFile="logo.png"/>
+    <ROW File="init.js" Component_="init.js" FileName="init.js" Attributes="0" SourcePath="scripts\init.js" SelfReg="false" NextFile="langenglish.js"/>
+    <ROW File="initialsettings.js" Component_="chatModerator.js" FileName="INITIA~1.JS|initialsettings.js" Attributes="0" SourcePath="scripts\util\initialsettings.js" SelfReg="false" NextFile="lang.js"/>
+    <ROW File="jodatime2.4.jar" Component_="commonsio2.4.jar" FileName="JODA-T~1.JAR|joda-time-2.4.jar" Attributes="0" SourcePath="lib\joda-time-2.4.jar" SelfReg="false" NextFile="okhttp3.3.0.jar"/>
+    <ROW File="killCommand.js" Component_="ballCommand.js" FileName="KILLCO~1.JS|killCommand.js" Attributes="0" SourcePath="scripts\commands\killCommand.js" SelfReg="false" NextFile="lastseenCommand.js"/>
+    <ROW File="lang.js" Component_="chatModerator.js" FileName="lang.js" Attributes="0" SourcePath="scripts\util\lang.js" SelfReg="false" NextFile="misc.js"/>
+    <ROW File="langenglish.js" Component_="langenglish.js" FileName="LANG-E~1.JS|lang-english.js" Attributes="0" SourcePath="scripts\lang\lang-english.js" SelfReg="false" NextFile="bankheistSystem.js"/>
+    <ROW File="lastseenCommand.js" Component_="ballCommand.js" FileName="LASTSE~1.JS|lastseenCommand.js" Attributes="0" SourcePath="scripts\commands\lastseenCommand.js" SelfReg="false" NextFile="marathonCommand.js"/>
+    <ROW File="latestdonation.txt" Component_="latestdonation.txt" FileName="LATEST~1.TXT|latestdonation.txt" Attributes="0" SourcePath="addons\donationchecker\latestdonation.txt" SelfReg="false" NextFile="currentsong.txt"/>
+    <ROW File="levelQueueSystem.js" Component_="bankheistSystem.js" FileName="LEVELQ~1.JS|levelQueueSystem.js" Attributes="0" SourcePath="scripts\systems\levelQueueSystem.js" SelfReg="false" NextFile="penaltySystem.js"/>
+    <ROW File="logo.png" Component_="app.js" FileName="logo.png" Attributes="0" SourcePath="web\logo.png" SelfReg="false" NextFile="port.js"/>
+    <ROW File="marathonCommand.js" Component_="ballCommand.js" FileName="MARATH~1.JS|marathonCommand.js" Attributes="0" SourcePath="scripts\commands\marathonCommand.js" SelfReg="false" NextFile="multiCommand.js"/>
+    <ROW File="misc.js" Component_="chatModerator.js" FileName="misc.js" Attributes="0" SourcePath="scripts\util\misc.js" SelfReg="false" NextFile="patternDetector.js"/>
+    <ROW File="multiCommand.js" Component_="ballCommand.js" FileName="MULTIC~1.JS|multiCommand.js" Attributes="0" SourcePath="scripts\commands\multiCommand.js" SelfReg="false" NextFile="quoteCommand.js"/>
+    <ROW File="noticeHandler.js" Component_="donationHandler.js" FileName="NOTICE~1.JS|noticeHandler.js" Attributes="0" SourcePath="scripts\handlers\noticeHandler.js" SelfReg="false" NextFile="phraseHandler.js"/>
+    <ROW File="okhttp3.3.0.jar" Component_="commonsio2.4.jar" FileName="OKHTTP~1.JAR|okhttp-3.3.0.jar" Attributes="0" SourcePath="lib\okhttp-3.3.0.jar" SelfReg="false" NextFile="okhttpws3.3.0.jar"/>
+    <ROW File="okhttpws3.3.0.jar" Component_="commonsio2.4.jar" FileName="OKHTTP~2.JAR|okhttp-ws-3.3.0.jar" Attributes="0" SourcePath="lib\okhttp-ws-3.3.0.jar" SelfReg="false" NextFile="okio1.6.0.jar"/>
+    <ROW File="okio1.6.0.jar" Component_="commonsio2.4.jar" FileName="OKIO-1~1.JAR|okio-1.6.0.jar" Attributes="0" SourcePath="lib\okio-1.6.0.jar" SelfReg="false" NextFile="socket.ioclient.0.7.0.jar"/>
+    <ROW File="patternDetector.js" Component_="chatModerator.js" FileName="PATTER~1.JS|patternDetector.js" Attributes="0" SourcePath="scripts\util\patternDetector.js" SelfReg="false" NextFile="permissions.js"/>
+    <ROW File="penaltySystem.js" Component_="bankheistSystem.js" FileName="PENALT~1.JS|penaltySystem.js" Attributes="0" SourcePath="scripts\systems\penaltySystem.js" SelfReg="false" NextFile="pointSystem.js"/>
+    <ROW File="permissions.js" Component_="chatModerator.js" FileName="PERMIS~1.JS|permissions.js" Attributes="0" SourcePath="scripts\util\permissions.js" SelfReg="false" NextFile="upgrade.js"/>
+    <ROW File="phraseHandler.js" Component_="donationHandler.js" FileName="PHRASE~1.JS|phraseHandler.js" Attributes="0" SourcePath="scripts\handlers\phraseHandler.js" SelfReg="false" NextFile="subscribeHandler.js"/>
+    <ROW File="pointSystem.js" Component_="bankheistSystem.js" FileName="POINTS~1.JS|pointSystem.js" Attributes="0" SourcePath="scripts\systems\pointSystem.js" SelfReg="false" NextFile="pollSystem.js"/>
+    <ROW File="pollSystem.js" Component_="bankheistSystem.js" FileName="POLLSY~1.JS|pollSystem.js" Attributes="0" SourcePath="scripts\systems\pollSystem.js" SelfReg="false" NextFile="queueSystem.js"/>
+    <ROW File="port.js" Component_="app.js" FileName="port.js" Attributes="0" SourcePath="web\port.js" SelfReg="false" NextFile="rsocket.js"/>
+    <ROW File="queueSystem.js" Component_="bankheistSystem.js" FileName="QUEUES~1.JS|queueSystem.js" Attributes="0" SourcePath="scripts\systems\queueSystem.js" SelfReg="false" NextFile="raffleSystem.js"/>
+    <ROW File="quoteCommand.js" Component_="ballCommand.js" FileName="QUOTEC~1.JS|quoteCommand.js" Attributes="0" SourcePath="scripts\commands\quoteCommand.js" SelfReg="false" NextFile="randomCommand.js"/>
+    <ROW File="raffleSystem.js" Component_="bankheistSystem.js" FileName="RAFFLE~1.JS|raffleSystem.js" Attributes="0" SourcePath="scripts\systems\raffleSystem.js" SelfReg="false" NextFile="raidSystem.js"/>
+    <ROW File="raidSystem.js" Component_="bankheistSystem.js" FileName="RAIDSY~1.JS|raidSystem.js" Attributes="0" SourcePath="scripts\systems\raidSystem.js" SelfReg="false" NextFile="ticketraffleSystem.js"/>
+    <ROW File="randomCommand.js" Component_="ballCommand.js" FileName="RANDOM~1.JS|randomCommand.js" Attributes="0" SourcePath="scripts\commands\randomCommand.js" SelfReg="false" NextFile="rollCommand.js"/>
+    <ROW File="rollCommand.js" Component_="ballCommand.js" FileName="ROLLCO~1.JS|rollCommand.js" Attributes="0" SourcePath="scripts\commands\rollCommand.js" SelfReg="false" NextFile="rouletteCommand.js"/>
+    <ROW File="rouletteCommand.js" Component_="ballCommand.js" FileName="ROULET~1.JS|rouletteCommand.js" Attributes="0" SourcePath="scripts\commands\rouletteCommand.js" SelfReg="false" NextFile="slotMachineCommand.js"/>
+    <ROW File="rsocket.js" Component_="app.js" FileName="rsocket.js" Attributes="0" SourcePath="web\rsocket.js" SelfReg="false" NextFile="style.css"/>
+    <ROW File="sinbin" Component_="QuorraBot.bat" FileName="sinbin" Attributes="0" SourcePath="sinbin" SelfReg="false" NextFile="latestdonation.txt"/>
+    <ROW File="slotMachineCommand.js" Component_="ballCommand.js" FileName="SLOTMA~1.JS|slotMachineCommand.js" Attributes="0" SourcePath="scripts\commands\slotMachineCommand.js" SelfReg="false" NextFile="streamCommands.js"/>
+    <ROW File="socket.ioclient.0.7.0.jar" Component_="commonsio2.4.jar" FileName="SOCKET~1.JAR|socket.io-client.0.7.0.jar" Attributes="0" SourcePath="lib\socket.io-client.0.7.0.jar" SelfReg="false" NextFile="sqlitejdbc3.9.1.jar"/>
+    <ROW File="sqlitejdbc3.9.1.jar" Component_="commonsio2.4.jar" FileName="SQLITE~1.JAR|sqlite-jdbc-3.9.1.jar" Attributes="0" SourcePath="lib\sqlite-jdbc-3.9.1.jar" SelfReg="false" NextFile="twitter4jcore4.0.4.jar"/>
+    <ROW File="streamCommands.js" Component_="ballCommand.js" FileName="STREAM~1.JS|streamCommands.js" Attributes="0" SourcePath="scripts\commands\streamCommands.js" SelfReg="false" NextFile="top10Command.js"/>
+    <ROW File="style.css" Component_="app.js" FileName="style.css" Attributes="0" SourcePath="web\style.css" SelfReg="false" NextFile="default.txt"/>
+    <ROW File="subscribeHandler.js" Component_="donationHandler.js" FileName="SUBSCR~1.JS|subscribeHandler.js" Attributes="0" SourcePath="scripts\handlers\subscribeHandler.js" SelfReg="false" NextFile="init.js"/>
+    <ROW File="ticketSystem.js" Component_="bankheistSystem.js" FileName="TICKET~2.JS|ticketSystem.js" Attributes="0" SourcePath="scripts\systems\ticketSystem.js" SelfReg="false" NextFile="timeSystem.js"/>
+    <ROW File="ticketraffleSystem.js" Component_="bankheistSystem.js" FileName="TICKET~1.JS|ticketraffleSystem.js" Attributes="0" SourcePath="scripts\systems\ticketraffleSystem.js" SelfReg="false" NextFile="ticketSystem.js"/>
+    <ROW File="timeSystem.js" Component_="bankheistSystem.js" FileName="TIMESY~1.JS|timeSystem.js" Attributes="0" SourcePath="scripts\systems\timeSystem.js" SelfReg="false" NextFile="chatModerator.js"/>
+    <ROW File="top10Command.js" Component_="ballCommand.js" FileName="TOP10C~1.JS|top10Command.js" Attributes="0" SourcePath="scripts\commands\top10Command.js" SelfReg="false" NextFile="donationHandler.js"/>
+    <ROW File="twitter4jcore4.0.4.jar" Component_="commonsio2.4.jar" FileName="TWITTE~1.JAR|twitter4j-core-4.0.4.jar" Attributes="0" SourcePath="lib\twitter4j-core-4.0.4.jar" SelfReg="false" NextFile="gamewispHandler.js"/>
+    <ROW File="twitterHandler.js" Component_="gamewispHandler.js" FileName="TWITTE~1.JS|twitterHandler.js" Attributes="0" SourcePath="scripts\addonscripts\twitterHandler.js" SelfReg="false" NextFile="youtubePlayer.js"/>
+    <ROW File="upgrade.js" Component_="chatModerator.js" FileName="upgrade.js" Attributes="0" SourcePath="scripts\util\upgrade.js" SelfReg="false" NextFile="whisperSystem.js"/>
+    <ROW File="whisperSystem.js" Component_="chatModerator.js" FileName="WHISPE~1.JS|whisperSystem.js" Attributes="0" SourcePath="scripts\util\whisperSystem.js" SelfReg="false" NextFile="app.js"/>
+    <ROW File="youtubePlayer.js" Component_="gamewispHandler.js" FileName="YOUTUB~1.JS|youtubePlayer.js" Attributes="0" SourcePath="scripts\addonscripts\youtubePlayer.js" SelfReg="false" NextFile="ballCommand.js"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="..\.." PackageFileName="QuorraBot-Setup" Languages="en" InstallationType="4" UseLargeSchema="true"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.CacheComponent">
+    <ATTRIBUTE name="Enable" value="false"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
+    <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
+    <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.FragmentComponent">
+    <ROW Fragment="CommonUI.aip" Path="&lt;AI_FRAGS&gt;CommonUI.aip"/>
+    <ROW Fragment="FolderDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\FolderDlg.aip"/>
+    <ROW Fragment="MaintenanceTypeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceTypeDlg.aip"/>
+    <ROW Fragment="MaintenanceWelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceWelcomeDlg.aip"/>
+    <ROW Fragment="SequenceDialogs.aip" Path="&lt;AI_THEMES&gt;classic\fragments\SequenceDialogs.aip"/>
+    <ROW Fragment="Sequences.aip" Path="&lt;AI_FRAGS&gt;Sequences.aip"/>
+    <ROW Fragment="StaticUIStrings.aip" Path="&lt;AI_FRAGS&gt;StaticUIStrings.aip"/>
+    <ROW Fragment="UI.aip" Path="&lt;AI_THEMES&gt;classic\fragments\UI.aip"/>
+    <ROW Fragment="Validation.aip" Path="&lt;AI_FRAGS&gt;Validation.aip"/>
+    <ROW Fragment="VerifyRemoveDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRemoveDlg.aip"/>
+    <ROW Fragment="VerifyRepairDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRepairDlg.aip"/>
+    <ROW Fragment="WelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\WelcomeDlg.aip"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiBinaryComponent">
+    <ROW Name="aicustact.dll" SourcePath="&lt;AI_CUSTACTS&gt;aicustact.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
+    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="FolderDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="FolderDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="MaintenanceWelcomeDlg" Control_="Next" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="99"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_MAINT" Ordering="198"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="202"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_INSTALL" Ordering="197"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_MAINT" Ordering="101"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="ChangeButton" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="501"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceWelcomeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RemoveButton" Event="NewDialog" Argument="VerifyRemoveDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RepairButton" Event="NewDialog" Argument="VerifyRepairDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="1"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Repair" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="399" Options="1"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Remove" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="299" Options="1"/>
+    <ROW Dialog_="PatchWelcomeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_PATCH" Ordering="201"/>
+    <ROW Dialog_="ResumeDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_RESUME" Ordering="299"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_PATCH" Ordering="199"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="PatchWelcomeDlg" Condition="AI_PATCH" Ordering="203"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCreateFolderComponent">
+    <ROW Directory_="QuorraBot_1_Dir" Component_="QuorraBot" ManualDelete="false"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
+    <ROW Action="AI_DpiContentScale" Type="1" Source="aicustact.dll" Target="DpiContentScale"/>
+    <ROW Action="AI_EnableDebugLog" Type="321" Source="aicustact.dll" Target="EnableDebugLog"/>
+    <ROW Action="AI_InstallModeCheck" Type="1" Source="aicustact.dll" Target="UpdateInstallMode" WithoutSeq="true"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Type="65" Source="aicustact.dll" Target="PrepareUpgrade"/>
+    <ROW Action="AI_ResolveKnownFolders" Type="1" Source="aicustact.dll" Target="AI_ResolveKnownFolders"/>
+    <ROW Action="AI_SHOW_LOG" Type="65" Source="aicustact.dll" Target="LaunchLogFile" WithoutSeq="true"/>
+    <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
+    <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]" MultiBuildTarget="DefaultBuild:[ProgramFilesFolder]\[ProductName]"/>
+    <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
+    <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="favicon_1.exe" SourcePath="C:\Users\Thomas\Downloads\favicon.ico" Index="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
+    <ROW Action="AI_STORE_LOCATION" Condition="(Not Installed) OR REINSTALL" Sequence="1501"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Condition="AI_UPGRADE=&quot;No&quot; AND (Not Installed)" Sequence="1399"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="52"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="51"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstallUISequenceComponent">
+    <ROW Action="AI_ResolveKnownFolders" Sequence="53"/>
+    <ROW Action="AI_DpiContentScale" Sequence="52"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="51"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiLaunchConditionsComponent">
+    <ROW Condition="(VersionNT &lt;&gt; 400)" Description="[ProductName] cannot be installed on [WindowsTypeNT40Display]." DescriptionLocId="AI.LaunchCondition.NoNT40" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT &lt;&gt; 500)" Description="[ProductName] cannot be installed on [WindowsTypeNT50Display]." DescriptionLocId="AI.LaunchCondition.NoNT50" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT64 OR ((VersionNT &lt;&gt; 501) OR (ServicePackLevel = 3))) AND ((VersionNT &lt;&gt; 502) OR (ServicePackLevel = 2))" Description="[ProductName] cannot be installed on [WindowsTypeNT5XDisplay]." DescriptionLocId="AI.LaunchCondition.NoNT5X" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="VersionNT" Description="[ProductName] cannot be installed on [WindowsType9XDisplay]." DescriptionLocId="AI.LaunchCondition.No9X" IsPredefined="true" Builds="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiRegsComponent">
+    <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>
+    <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
+    <ROW Shortcut="QuorraBot" Directory_="DesktopFolder" Name="QUORRA~1|QuorraBot" Component_="QuorraBot.exe" Target="[#QuorraBot.exe]" Description="Multipurpose twitch.tv chat bot" Hotkey="0" Icon_="favicon_1.exe" IconIndex="0" ShowCmd="1" WkDir="QuorraBot_Dir"/>
+    <ROW Shortcut="QuorraBot_1" Directory_="QuorraBot_1_Dir" Name="QUORRA~1|QuorraBot" Component_="QuorraBot.exe" Target="[#QuorraBot.exe]" Hotkey="0" Icon_="favicon_1.exe" IconIndex="0" ShowCmd="1" WkDir="QuorraBot_Dir"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
+    <ATTRIBUTE name="UsedTheme" value="classic"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiUpgradeComponent">
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMin="0.0.1" VersionMax="[|ProductVersion]" Attributes="257" ActionProperty="OLDPRODUCTS"/>
+  </COMPONENT>
+</DOCUMENT>

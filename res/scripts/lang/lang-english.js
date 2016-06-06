@@ -479,6 +479,13 @@ $.lang.data["net.quorrabot.hosthandler.host-list-error"] = "No one is currently 
 $.lang.data["net.quorrabot.hosthandler.current-host-message"] = "The current new hoster message is: $1";		
 $.lang.data["net.quorrabot.hosthandler.host-message-usage"] = "To change it use '!hostmessage (message)'. You can also add the string '(name)' to put the hosters name";		
 $.lang.data["net.quorrabot.hosthandler.host-message-set-success"] = "New host message set!";
+$.lang.data["net.quorrabot.hosthandler.autohost.not-exist"] = "Channel $1 doesn't exist.";
+$.lang.data["net.quorrabot.hosthandler.autohost.already-exists"] = "Channel $1 is already in the auto-host list.";
+$.lang.data["net.quorrabot.hosthandler.autohost.add-success"] = "Channel $1 has been added to the auto-host list. Total users on the list: $2.";
+$.lang.data["net.quorrabot.hosthandler.autohost.remove-success"] = "Channel $1 has been removed from the auto-host list. Total users on the list: $2.";
+$.lang.data["net.quorrabot.hosthandler.autohost.enabled"] = "Autohost has now been enabled";
+$.lang.data["net.quorrabot.hosthandler.autohost.disabled"] = "Autohost has now been disabled";
+
 
 //donationHandler.js 
 $.lang.data["net.quorrabot.donationhandler.current-file-path"] = "Current tip alert file path is: $1";
@@ -979,3 +986,7 @@ $.lang.data["net.quorrabot.twitterhandler.auto-stream-tweet-enabled"] = "Stream 
 $.lang.data["net.quorrabot.twitterhandler.auto-stream-tweet-disabled"] = "Stream title and game will no longer be tweeted when stream goes live.";
 $.lang.data["net.quorrabot.twitterhandler.tweet-successful"] = "Tweet sent successfully.";
 
+//gamewispHandler.js
+$.lang.data["net.quorrabot.gamewisphandler.benefits"] = "/me $1 has just subscribed to $2 via GameWisp2!";
+$.lang.data["net.quorrabot.gamewisphandler.subscribe"] = "/me $1 has just subscribed to Tier $2 via GameWisp!";
+$.lang.data["net.quorrabot.gamewisphandler.anniversary"] = "/me $1 has just resubscribed to Tier $2 via GameWisp! They have been subscribed for $3 months in total!";

@@ -88,7 +88,7 @@ auxiliary.show.customizer.message=<message>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>
                 <package-root>src</package-root>
-                <classpath mode="compile">lib/commons-io-2.4.jar;lib/rhino-1.7.7.jar;lib/joda-time-2.4.jar;lib/guava-18.0.jar;lib/commons-lang3-3.3.2.jar;lib/java_websocket.jar;lib/sqlite-jdbc-3.9.1.jar;lib/twitter4j-core-4.0.4.jar;lib/engine.io-client-0.7.0.jar;lib/okhttp-3.3.0.jar;lib/okhttp-ws-3.3.0.jar;lib/okio-1.6.0.jar;lib/socket.io-client.0.7.0.jar</classpath>
+                <classpath mode="compile">lib/commons-io-2.4.jar;lib/joda-time-2.4.jar;lib/guava-18.0.jar;lib/commons-lang3-3.3.2.jar;lib/sqlite-jdbc-3.9.1.jar;lib/twitter4j-core-4.0.4.jar;lib/engine.io-client-0.7.0.jar;lib/okhttp-3.3.0.jar;lib/okhttp-ws-3.3.0.jar;lib/okio-1.6.0.jar;lib/socket.io-client.0.7.0.jar</classpath>
                 <built-to>dist/build/QuorraBot.jar</built-to>
                 <source-level>1.7</source-level>
             </compilation-unit>

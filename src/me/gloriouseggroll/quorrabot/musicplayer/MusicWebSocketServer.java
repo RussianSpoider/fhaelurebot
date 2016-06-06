@@ -91,7 +91,7 @@ public class MusicWebSocketServer extends WebSocketServer
         try
         {
             this.stop(2000);
-        } catch (IOException | InterruptedException ex)
+        } catch (InterruptedException ex)
         {
             com.gmt2001.Console.err.printStackTrace(ex);
         }
@@ -204,15 +204,6 @@ public class MusicWebSocketServer extends WebSocketServer
         }
     }
 
-    public void onWebsocketClosing(WebSocket ws, int code, String reason, boolean remote)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void onWebsocketCloseInitiated(WebSocket ws, int code, String reason)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     public InetSocketAddress getLocalSocketAddress(WebSocket conn)
     {

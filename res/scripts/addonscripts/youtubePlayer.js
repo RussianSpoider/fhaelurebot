@@ -1,4 +1,4 @@
-$var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
+$var.defaultplaylist = $.readFile("./addons/youtubePlayer/default.txt");
 $var.defaultplaylistpos = 0;
 $var.songqueue = [];
 $var.requestusers = {};
@@ -22,6 +22,12 @@ var musicport = parseInt($.baseport) + 1;
 $.writeToFile("var musicport = '" + musicport.toString() + "';","web/port.js", false);
 $.snameshuffle = "";
 $.susershuffle = "";
+
+if ($.fileExists("./addons/youtubePlayer/playlist.txt")) {
+    $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
+} else if ($.fileExists("./addons/youtubePlayer/default.txt")) {
+    $var.defaultplaylist = $.readFile("./addons/youtubePlayer/default.txt");
+}
 
 if($.song_shuffle==1) {
     if($.inidb.GetKeyList('musicplayer_shuffle','')!=null) {
@@ -65,9 +71,6 @@ if ($.song_shuffle == null || $.song_shuffle == "" || $.song_shuffle == 0) {
     $.song_shuffle = 0;
 }
 
-reloadPlaylist = function() {
-    $.parseDefault();
-}
 notSearchable = function(songid,songname, user, tags) {
                     this.id = songid;
                     this.name = songname;
@@ -262,6 +265,8 @@ function nextDefault() {
 		setTimeout(function(){
                     if ($.fileExists("./addons/youtubePlayer/playlist.txt")) {
                         $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
+                    } else if ($.fileExists("./addons/youtubePlayer/default.txt")) {
+                        $var.defaultplaylist = $.readFile("./addons/youtubePlayer/default.txt");
                     }
                     $var.defaultplaylistpos = 0;
                     next();
@@ -517,7 +522,6 @@ $.on('command', function (event) {
             if ($.storing == 2) {
                 $.storing = 1;
                 $.inidb.set('settings', 'song_storing', $.storing.toString());
-                $.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.musicplayer.song-storing"));
                 return;
             } else {
@@ -609,14 +613,20 @@ $.on('command', function (event) {
             return;
         }
         
-        if (action.equalsIgnoreCase("reloadplaylist")) {
+        if (action.equalsIgnoreCase("reload")) {
             if (!$.isAdmin(sender)) {
                 $.say($.getWhisperString(sender) + $.adminmsg);
                 return;
             }
-
-            reloadPlaylist();
+            
+            if ($.fileExists("./addons/youtubePlayer/playlist.txt")) {
+                $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
+            } else if ($.fileExists("./addons/youtubePlayer/default.txt")) {
+                $var.defaultplaylist = $.readFile("./addons/youtubePlayer/default.txt");
+            }
+            parseDefault();
             $.parseSongQueue();
+            next();
         }
 
         if (action.equalsIgnoreCase("config")) {
@@ -769,7 +779,7 @@ $.on('command', function (event) {
             $.say($.lang.get("net.quorrabot.musicplayer.song-requested-success", video.name, sender));
             //playlist add and parse code here:
             $.writeToFile("https://www.youtube.com/watch?v=" + video.id,"./addons/youtubePlayer/playlist.txt", true);
-            reloadPlaylist();
+            parseDefault();
         }
     }
 
@@ -802,7 +812,7 @@ $.on('command', function (event) {
                             $.writeToFile("https://www.youtube.com/watch?v=" + new Song($var.defaultplaylist[n]).getId(),"./addons/youtubePlayer/playlist.txt", true);
                         }
                     }
-                    reloadPlaylist();
+                    parseDefault();
                     return;
                 } else {
                     $.say($.getWhisperString(sender) + $.modmsg);

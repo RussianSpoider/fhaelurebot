@@ -2,6 +2,10 @@ $.hostreward = parseInt($.inidb.get('settings', 'hostreward'));
 $.hosttimeout = parseInt($.inidb.get('settings', 'hosttimeout'));
 $.hostMessage = ($.inidb.get('settings', 'hostmessage') ? $.inidb.get('settings', 'hostmessage') : $.lang.get("net.quorrabot.hosthandler.default-host-welcome-message"));
 
+$.AutoHost = {
+    AutoHostToggle: (parseInt($.inidb.get('autoHost', 'autoHost_toggle')) ? parseInt($.inidb.get('autoHost', 'autoHost_toggle')) : '0'),
+}
+
 if ($.hostlist == null || $.hostlist == undefined) {
     $.hostlist = new Array();
 }
@@ -70,6 +74,124 @@ $.on('command', function (event) {
     var argsString = event.getArguments().trim();
     var args = event.getArgs();
 
+    if (command.equalsIgnoreCase('addhost') && args.length > 0) {
+        if (!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modmsg);
+            return;
+        }
+                $.num_host = parseInt($.inidb.get('autoHost', 'host_num'));
+                if(isNaN($.num_host) || $.num_host == null) {
+                    $.inidb.set('autoHost','host_num',0);
+
+                    $.num_host = 0;
+                }
+		var id = argsString.toLowerCase();
+		if(!$.getUserExists(argsString))
+		{
+			$.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.not-exist", argsString));
+			return;
+		}
+		
+		if ($.num_host > 0) {
+			for (i = 0; i < $.num_host; i++) {
+				if($.inidb.get('autoHost', 'host_' + i) == id)
+				{
+					$.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.already-exists", $.username.resolve(argsString)));
+					return;
+				}
+			}
+		}
+        $.inidb.incr('autoHost', 'host_num', 1);
+        $.inidb.set('autoHost', 'host_' + ($.num_host + 1), argsString.toLowerCase());
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.add-success", $.username.resolve(argsString), ($.num_host + 1).toString()));
+    }
+    if (command.equalsIgnoreCase('delhost') && args.length > 0) {
+        if (!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modmsg);
+            return;
+        }
+                $.num_host = parseInt($.inidb.get('autoHost', 'host_num'));
+                if(isNaN($.num_host) || $.num_host == null) {
+                    $.inidb.set('autoHost','host_num',0);
+
+                    $.num_host = 0;
+                }
+		var id = argsString.toLowerCase();
+		
+		if ( isNaN(id)) {
+			if ($.num_host > 0) {
+				for (i = 0; i < $.num_host; i++) {
+					if($.inidb.get('autoHost', 'host_' + i) == id)
+					{
+						id = i;
+						break;
+					}
+				}
+			}
+		}
+		
+        if ($.num_host > 0) {
+            for (i = 0; i < $.num_host; i++) {
+                if (i > parseInt(id)) {
+                    $.inidb.set('autoHost', 'host_' + (i - 1), $.inidb.get('autoHost', 'host_' + i));
+                }
+            }
+        }
+        if ($.num_host > 0) {
+            $.inidb.decr('autoHost', 'host_num', 1);
+        }
+        
+        $.inidb.del('autoHost', 'host_' + $.num_host);
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.remove-success", $.username.resolve(argsString), ($.num_host - 1).toString()));
+    }
+    
+    if (command.equalsIgnoreCase('listautohosts')) {
+        if (!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modmsg);
+            return;
+        }
+                $.num_host = parseInt($.inidb.get('autoHost', 'host_num'));
+                if(isNaN($.num_host) || $.num_host == null) {
+                    $.inidb.set('autoHost','host_num',0);
+                    $.num_host = 0;
+                }
+		var first = 1;
+		
+		if ($.num_host > 0) {
+			var channels = [];
+			for (i = 0; i < $.num_host; i++) {
+				channels.push($.inidb.get('autoHost', 'host_' + (i+ 1)));
+			}
+			
+			for (i = 0; i < channels.length; i++) {
+				if(first == 1)
+				{
+					first = 0;
+					$.say('Hostlist: (AutoHost Status: ' + $.AutoHost.AutoHostToggle + ')');
+				}
+
+				$.say($.username.resolve(channels[i]) + ' (http://twitch.tv/' + channels[i] + ')');
+			}
+		}
+    }
+    
+    if (command.equalsIgnoreCase('autohosttoggle')) {
+        if (!$.isModv3(sender, event.getTags())) {
+            $.say($.getWhisperString(sender) + $.modmsg);
+            return;
+        }
+		if($.AutoHost.AutoHostToggle == '0') {
+			$.inidb.set('autoHost', 'autoHost_toggle', '1');
+			$.AutoHost.AutoHostToggle = '1';
+			$.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.enabled"));
+		} else {
+			$.inidb.set('autoHost', 'autoHost_toggle', '0');
+			$.AutoHost.AutoHostToggle = '0';
+			$.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.disabled"));   
+		}
+		return;
+    }
+    
     if (command.equalsIgnoreCase("hostreward")) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
@@ -185,6 +307,30 @@ $.on('command', function (event) {
 });
 setTimeout(function () {
     if ($.moduleEnabled('./handlers/hostHandler.js')) {
+	if($.AutoHost.AutoHostToggle == 1)
+        {
+			$.timer.addTimer('./handlers/hostHandler.js', 'autoHost', true, function () {
+				if (!$.isOnline($.channelName) &&
+					!isChannelHosting($.channelName))
+				{
+					for (i = 0; i < $.num_host; i++) {
+						var channel = $.inidb.get('autoHost', 'host_' + (i + 1));
+						if($.isOnline(channel))
+						{
+							$.hostEvent(channel.toLowerCase(),"host");
+                                                        setTimeout(function(){
+                                                            $.say("/me " + $.lang.get("net.quorrabot.streamcommand.host-set-success", $.username.resolve(channel)));
+                                                        }, 1000);
+							break;
+						}
+					}
+				}
+			}, 10 * 1000);
+	}
+        $.registerChatCommand('./handlers/hostHandler.js', 'addhost', 'admin');
+        $.registerChatCommand('./handlers/hostHandler.js', 'delhost', 'admin');
+        $.registerChatCommand('./handlers/hostHandler.js', 'listautohosts', 'admin');
+        $.registerChatCommand('./handlers/hostHandler.js', 'autohosttoggle', 'admin');
         $.registerChatCommand("./handlers/hostHandler.js", "hostmessage", "admin");
         $.registerChatCommand("./handlers/hostHandler.js", "hostreward", "admin");
         $.registerChatCommand("./handlers/hostHandler.js", "hosttime", "admin");
@@ -192,3 +338,23 @@ setTimeout(function () {
         $.registerChatCommand("./handlers/hostHandler.js", "hostlist");
     }
 }, 10 * 1000);
+
+$.isChannelHosting = function(channel) {
+	var HttpResponse = Packages.com.gmt2001.HttpResponse;
+	var HttpRequest = Packages.com.gmt2001.HttpRequest;
+	var HashMap = Packages.java.util.HashMap;
+	var url = 'https://tmi.twitch.tv/hosts?include_logins=1&host=' + $.getChannelID(channel)
+	var response = HttpRequest.getData(HttpRequest.RequestType.GET, url, "", new HashMap());
+	var is_hosting = response.content.indexOf('target_id');
+	
+	if(is_hosting == -1)
+		return 0;
+	else
+		return 1;
+}
+
+$.getChannelID = function(channel) {
+    var channelData = $.twitch.GetChannel(channel);
+    
+    return channelData.getInt("_id");
+}

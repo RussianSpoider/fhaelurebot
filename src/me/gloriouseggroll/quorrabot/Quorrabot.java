@@ -508,7 +508,7 @@ public class Quorrabot implements Listener
         }
 
         com.gmt2001.Console.out.print("[SHUTDOWN] Waiting for running scripts to finish...");
-        /*try
+       /* try
         {
             for (int i = 10; i > 0; i--)
             {
