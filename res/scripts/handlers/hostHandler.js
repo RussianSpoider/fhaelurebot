@@ -325,7 +325,7 @@ setTimeout(function () {
 						}
 					}
 				}
-			}, 10 * 1000);
+			}, 600 * 1000);
 	}
         $.registerChatCommand('./handlers/hostHandler.js', 'addhost', 'admin');
         $.registerChatCommand('./handlers/hostHandler.js', 'delhost', 'admin');
