@@ -485,6 +485,8 @@ $.lang.data["net.quorrabot.hosthandler.autohost.add-success"] = "Channel $1 has 
 $.lang.data["net.quorrabot.hosthandler.autohost.remove-success"] = "Channel $1 has been removed from the auto-host list. Total users on the list: $2.";
 $.lang.data["net.quorrabot.hosthandler.autohost.enabled"] = "Autohost has now been enabled";
 $.lang.data["net.quorrabot.hosthandler.autohost.disabled"] = "Autohost has now been disabled";
+$.lang.data["net.quorrabot.hosthandler.autohost.time-specify"] = "You must specify a time for auto-hosting. Minimum is 10 minutes. Set to 0 to host users until they are offline.";
+$.lang.data["net.quorrabot.hosthandler.autohost.time-set-success"] = "Autohost timer now set to host a user every $1 minute(s).";
 
 
 //donationHandler.js 
