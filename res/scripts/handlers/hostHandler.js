@@ -194,7 +194,11 @@ $.on('command', function (event) {
             if(parseInt(args[0]) >= 10 || parseInt(args[0]) == 0) {
                 $.inidb.set('autoHost', 'autoHost_time', args[0]);
                 $.AutoHost.AutoHostTime = parseInt(args[0]);
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.time-set-success", args[0]));
+                if(parseInt(args[0]) == 0) {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.time-disabled"));
+                } else {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.time-set-success", args[0]));
+                }
             } else {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost.time-specify"));
             }
