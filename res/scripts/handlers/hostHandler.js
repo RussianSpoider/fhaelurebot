@@ -10,6 +10,8 @@ $.AutoHost = {
     AutoHostTime: (parseInt($.inidb.get('autoHost', 'autoHost_time')) ? parseInt($.inidb.get('autoHost', 'autoHost_time')) : '0'),
 }
 
+$.inidb.set('autoHost','autoHost_time', $.AutoHost.AutoHostTime);
+
 if ($.hostlist == null || $.hostlist == undefined) {
     $.hostlist = new Array();
 }
@@ -358,7 +360,7 @@ setTimeout(function () {
 }, 10 * 1000);
 
 $.autoHost = function() {
-    if (!$.isOnline($.channelName) && $.ishosting == 0) {
+    if (!$.isOnline($.channelName)) {
         $.AutoHost.AutoHostNum = parseInt($.inidb.get('autoHost', 'autohostnum'));
         $.num_host = parseInt($.inidb.get('autoHost', 'host_num'));
         if($.AutoHost.AutoHostNum ==null || $.AutoHost.AutoHostNum ==undefined || isNaN($.AutoHost.AutoHostNum) || $.num_host < $.AutoHost.AutoHostNum) {
@@ -384,6 +386,10 @@ $.autoHost = function() {
             $.AutoHost.AutoHostNum++;
             $.inidb.set('autoHost', 'autohostnum', $.AutoHost.AutoHostNum);
         }
+        if($.num_host < $.AutoHost.AutoHostNum) {
+            $.AutoHost.AutoHostNum = 1;
+        }
+        $.inidb.set('autoHost', 'autohostnum', $.AutoHost.AutoHostNum);
     } else {
         if($.isOnline($.channelName) && $.ishosting == 1) {
             $.hostEvent(channel.toLowerCase(),"unhost"); 
@@ -394,7 +400,7 @@ $.autoHost = function() {
 };
 
 $.isChannelHosting = function(hostchannel, hostedchannel, previoushost) {
-        $.AutoHost.AutoHostTime = (parseInt($.inidb.get('autoHost', 'autoHost_time')) ? parseInt($.inidb.get('autoHost', 'autoHost_time')) : '0');
+        $.AutoHost.AutoHostTime = parseInt($.inidb.get('autoHost', 'autoHost_time'));
 	var HttpRequest = Packages.com.gmt2001.HttpRequest;
 	var HashMap = Packages.java.util.HashMap;
 	var url = 'https://tmi.twitch.tv/hosts?include_logins=1&host=' + $.getChannelID(hostchannel)
@@ -432,10 +438,10 @@ $.isChannelHosting = function(hostchannel, hostedchannel, previoushost) {
                 } 
             }
         }
-}
+};
 
 $.getChannelID = function(channel) {
     var channelData = $.twitch.GetChannel(channel);
     
     return channelData.getInt("_id");
-}
+};
