@@ -44,7 +44,8 @@ $.betSystem = {
 
     function resetBet() {
         $.betSystem.betPot = 0;
-        $.betSystem.betTotal = 0;
+        $.betSystem.betWinRatio = 0;
+        $.betSystem.totalBets = 0;
         $.betSystem.betWinners = '';
         $.betSystem.betOptions = [];
         $.betSystem.betTable = [];
@@ -56,7 +57,8 @@ $.betSystem = {
             betWinPercent = 0,
             betPointsWon = 0,
             betWinners = '',
-            betTotal = 0,
+            betWinRatio = 0,
+            totalBets = 0,
             bet,
             a = 0,
             i;
@@ -82,43 +84,14 @@ $.betSystem = {
         for (i in $.betSystem.betTable) {
             bet = $.betSystem.betTable[i];
             if (bet.option.equalsIgnoreCase(betWinning)) {
-                betTotal = bet.amount;
+                betWinRatio++;
             }
+            totalBets++;
         }
+        
+        var betChance = Math.round(totalBets / betWinRatio);
 
-        for (i in $.betSystem.betTable) {
-            a++;
-            bet = $.betSystem.betTable[i];
-            if (bet.option.equalsIgnoreCase(betWinning)) {
-                betPointsWon = ($.betSystem.betPot / betTotal);
-                if (betPointsWon > 0) {
-                    if (betWinners.length > 0) {
-                        betWinners += ', ';
-                    }
-                    betWinners += i;
-                }
-            }
-        }
-
-        /**
-         * Disable for now.  Needs to have a different value for
-         * betMinimum, right now this is the minimum amount, not
-         * minimum users. Could set a default through a set command
-         * and perhaps override with !bet open min=num option option
-         * 
-         * if (a < betMinimum) {
-         *   for (i in betTable) {
-         *     bet = betTable[i];
-         *     $.inidb.incr('points', i, bet.amount);
-         *   }
-         *
-         *   $.say($.lang.get('net.quorrabot.betsystem.not.enough.ppl'));
-         *   resetBet();
-         *   return;
-         * }
-         **/
-
-        if (betTotal == 0) {
+        if (betChance == 0) {
             $.say($.lang.get('net.quorrabot.betsystem.closed.404', betWinning));
             resetBet();
             return;
@@ -133,20 +106,29 @@ $.betSystem = {
             resetBet();
             return;
         }
-
+        
+        var winAmount = 0;
+        var winnerString = "";
+        
         for (i in $.betSystem.betTable) {
             bet = $.betSystem.betTable[i];
             if (bet.option.equalsIgnoreCase(betWinning)) {
-                betWinPercent = (bet.amount / betTotal);
-                $.inidb.incr('points', i, ($.betSystem.betPot * betWinPercent));
+                winAmount = bet.amount + (bet.amount * betChance);
+                if (winAmount > 0) {
+                    if (betWinners.length > 0) {
+                        betWinners += ', ';
+                        winnerString += ', ';
+                    }
+                    betWinners += i;
+                    winnerString += i + " [+" + winAmount + "]";
+                }
             }
         }
 
         // For the Panel
-        $.inidb.set('betresults', 'winners', betWinners);
-        $.inidb.set('betresults', 'amount', ($.betSystem.betPot * betWinPercent));
-
-        $.say($.lang.get('net.quorrabot.betsystem.closed', betWinning, $.getPointsString($.betSystem.betPot * betWinPercent)));
+        $.inidb.set('betresults', 'winners', winnerString);
+        betChance = betChance * 100;
+        $.say($.lang.get('net.quorrabot.betsystem.closed', betWinning, betChance.toString(), winnerString));
         resetBet();
     };
 
@@ -163,7 +145,10 @@ $.betSystem = {
          * @commandpath bet - Performs bet operations.
          */
         if (command.equalsIgnoreCase('bet')) {
-            if (!action) {
+            if (!action && !$.isModv3(sender, event.getTags())) {
+                $.say($.getWhisperString(sender) + $.modmsg);
+                return;
+            } else if (!action) {
                 $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.command.usage'));
                 return;
             }

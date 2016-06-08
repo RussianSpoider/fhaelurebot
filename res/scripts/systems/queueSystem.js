@@ -7,11 +7,6 @@ if ($.play_limit == "" || $.play_limit == null) {
     $.inidb.set("settings","play_limit","");
 }
 
-$.play_cost = $.inidb.get("pricecom", "letmeplay");
-if ($.play_cost == "" || $.play_cost == null) {
-    $.play_cost = 5; //amount of times a player can queue
-    $.inidb.set("pricecom", "letmeplay", "");
-}
 
 function PlayRequest(user, gametag) {
     this.user = user;
@@ -59,12 +54,6 @@ $.on('command', function (event) {
     
     if (command.equalsIgnoreCase("letmeplay")) {
         if (args[0] != null) {
-            if ($.play_cost != null) {
-                if (points < parseInt($.play_cost)) {
-                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.queueSystem.error-need-more-points", $.pointname));
-                    return;
-                }                  
-            }
 
             var gametag = args[0];
             $.playrequest = new PlayRequest(username, gametag);

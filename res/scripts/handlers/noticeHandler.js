@@ -7,6 +7,14 @@ $.Notice = {
     NoticeTimers: $.inidb.GetKeyList('notice_timers', '') ? $.inidb.GetKeyList('notice_timers', '') : '',
 }
 
+$.notices = [];
+for(var i=0;i<$.Notice.NumberOfNotices;i++) {
+    var m = $.inidb.get('notices', 'message_' + i);
+    if(m!=null) {
+        $.notices.push(m);
+    }
+}
+
 
 $.Notice.reloadNotices = function () {
     var keys = $.inidb.GetKeyList('notices', '');
@@ -21,6 +29,13 @@ $.Notice.reloadNotices = function () {
         count++;
     }
     $.inidb.RemoveFile('tempnotices');
+    $.notices = [];
+    for(var i=0;i<$.Notice.NumberOfNotices;i++) {
+        var m = $.inidb.get('notices', 'message_' + i);
+        if(m!=null) {
+            $.notices.push(m);
+        }
+    }
 };
 
 $.on('ircChannelMessage', function (event) {
@@ -104,11 +119,11 @@ $.on('command', function (event) {
             if (args.length < 2) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-get-usage", $.Notice.NumberOfNotices));
                 return;
-            } else if (!$.inidb.exists('notices', 'message_' + args[1])) {
+            } else if ($.notices[args[1]]==null) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-error-notice-404"));
                 return;
             } else {
-                $.say($.inidb.get('notices', 'message_' + args[1]));
+                $.say($.notices[args[1]]);
                 return;
             }
         } 
@@ -117,12 +132,13 @@ $.on('command', function (event) {
             if (args.length < 2) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-edit-usage", $.Notice.NumberOfNotices));
                 return;
-            } else if (!$.inidb.exists('notices', 'message_' + args[1])) {
+            } else if ($.notices[args[1]]==null) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-error-notice-404"));
                 return;
             } else {
                 var message = argsString.substring(argsString.indexOf(action) + action.length() + 3);
                 $.inidb.set('notices', 'message_' + args[1], message);
+                $.Notice.reloadNotices();
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-edit-success"));
                 return;
             }
@@ -131,7 +147,7 @@ $.on('command', function (event) {
             if (args.length < 3) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-timer-usage", $.Notice.NumberOfNotices));
                 return;
-            } else if (!$.inidb.exists('notices', 'message_' + args[1])) {
+            } else if ($.notices[args[1]]==null) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-error-notice-404"));
                 return;
             } else {
@@ -180,15 +196,16 @@ $.on('command', function (event) {
                 var message = argsString.substring(argsString.indexOf(action) + action.length() + 1);
                 $.inidb.set('notices', 'message_' + $.Notice.NumberOfNotices, message);
                 $.Notice.NumberOfNotices++;
+                $.Notice.reloadNotices();
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-add-success"));
                 return;
             }
         } 
         if (action.equalsIgnoreCase('send')) {
             if (args[1]==null) {
-                $.SendNotice("");
+                $.SendNotice();
                 return;
-            } else if (!$.inidb.exists('notices', 'message_' + args[1])) {
+            } else if ($.notices[args[1]]==null) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.noticehandler.notice-error-notice-404"));
                 return;
             } else {
@@ -214,14 +231,11 @@ $.SendNotice = function (number) {
     var CommandEvent = Packages.me.gloriouseggroll.quorrabot.event.command.CommandEvent;
     var notice = "";
 
-    if(!isNaN(noticenum)) {
+    if(noticenum!=null && !isNaN(noticenum)) {
         notice = $.inidb.get('notices', 'message_' + noticenum); 
     } else {
-        noticenum = $.randRange(0, $.Notice.NumberOfNotices - 1);
-        while($.inidb.exists('notice_timers', 'message_' + noticenum)) {
-            noticenum = $.randRange(0, $.Notice.NumberOfNotices - 1);
-        }
-        notice = $.inidb.get('notices', 'message_' + noticenum);
+        noticenum = $.randRange(0, $.notices.length);
+        notice = $.notices[noticenum];
     }
     var noticeList = $.inidb.GetKeyList('notices', '');
 
