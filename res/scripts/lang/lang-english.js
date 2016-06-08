@@ -358,7 +358,7 @@ $.lang.data["net.quorrabot.betsystem.err.option.404"] = "That bet option does no
 $.lang.data["net.quorrabot.betsystem.not.enough.ppl"] = "Bet is now closed! No enough people entered and peoples points have been refunded.";
 $.lang.data["net.quorrabot.betsystem.closed.404"] = "Bet closed! No one entered or bet on option ($1).";
 $.lang.data["net.quorrabot.betsystem.err.points.refunded"] = "Bet closed! Everyone wagered the same option. All points have been refunded.";
-$.lang.data["net.quorrabot.betsystem.closed"] = "Bet closed! Winning option: $1. Win chance: $2% Payouts: $3!";
+$.lang.data["net.quorrabot.betsystem.closed"] = "Bet closed! Winning option: $1. Win/Lose Ratio: $2 Payouts: $3!";
 $.lang.data["net.quorrabot.betsystem.set.min.usage"] = "Usage: !bet setminimum (amount)";
 $.lang.data["net.quorrabot.betsystem.set.min"] = "bet minimum set to $1 $2";
 $.lang.data["net.quorrabot.betsystem.set.max.usage"] = "Usage: !bet setmaximum (amount)";
@@ -368,7 +368,7 @@ $.lang.data["net.quorrabot.betsystem.bet.err.less"] = "You can not bet less then
 $.lang.data["net.quorrabot.betsystem.bet.err.more"] = "You can not bet more then $1";
 $.lang.data["net.quorrabot.betsystem.err.points"] = "You don\'t have that many $1 to bet.";
 $.lang.data["net.quorrabot.betsystem.err.voted"] = "You already voted.";
-$.lang.data["net.quorrabot.betsystem.bet.updated"] = "Bet updated! $1 wagers $2 on $3! New pot $4";
+$.lang.data["net.quorrabot.betsystem.bet.updated"] = "Bet updated! $1 wagers $2 on $3!";
 
 // top10Command.js
 $.lang.data["net.quorrabot.top10.points-disabled"] = "You can not use this command while the points module is disabled.";

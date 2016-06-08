@@ -3,6 +3,8 @@ $.betSystem = {
     betMaximum: ($.inidb.get('betsettings', 'betmaximum') ? $.inidb.get('betsettings', 'betmaximum') : 1000),
     time: 0,
     betStatus: false,
+    betWinRatio: 0,
+    betLoseRatio: 0,
     betPot: 0,
     betOptions: [],
     betTable: [],
@@ -44,8 +46,9 @@ $.betSystem = {
 
     function resetBet() {
         $.betSystem.betPot = 0;
+        $.betSystem.betTotal = 0;
         $.betSystem.betWinRatio = 0;
-        $.betSystem.totalBets = 0;
+        $.betSystem.betLoseRatio = 0;
         $.betSystem.betWinners = '';
         $.betSystem.betOptions = [];
         $.betSystem.betTable = [];
@@ -57,8 +60,7 @@ $.betSystem = {
             betWinPercent = 0,
             betPointsWon = 0,
             betWinners = '',
-            betWinRatio = 0,
-            totalBets = 0,
+            betTotal = 0,
             bet,
             a = 0,
             i;
@@ -84,18 +86,46 @@ $.betSystem = {
         for (i in $.betSystem.betTable) {
             bet = $.betSystem.betTable[i];
             if (bet.option.equalsIgnoreCase(betWinning)) {
-                betWinRatio++;
+                betTotal = bet.amount;
             }
-            totalBets++;
         }
-        
-        var betChance = Math.round(totalBets / betWinRatio);
 
-        if (betChance == 0) {
+        for (i in $.betSystem.betTable) {
+            a++;
+            bet = $.betSystem.betTable[i];
+            if (bet.option.equalsIgnoreCase(betWinning)) {
+                $.betSystem.betWinRatio++;
+            } else {
+                $.betSystem.betLoseRatio++;
+            }
+        }
+
+        /**
+         * Disable for now.  Needs to have a different value for
+         * betMinimum, right now this is the minimum amount, not
+         * minimum users. Could set a default through a set command
+         * and perhaps override with !bet open min=num option option
+         * 
+         * if (a < betMinimum) {
+         *   for (i in betTable) {
+         *     bet = betTable[i];
+         *     $.inidb.incr('points', i, bet.amount);
+         *   }
+         *
+         *   $.say($.lang.get('net.quorrabot.betsystem.not.enough.ppl'));
+         *   resetBet();
+         *   return;
+         * }
+         **/
+		 
+        var betMultiplier = Math.round($.betSystem.betLoseRatio / $.betSystem.betWinRatio);
+
+        if (betTotal == 0) {
             $.say($.lang.get('net.quorrabot.betsystem.closed.404', betWinning));
             resetBet();
             return;
         }
+		
 
         if ($.betSystem.betPot <= 0) {
             for (i in $.betSystem.betTable) {
@@ -106,29 +136,28 @@ $.betSystem = {
             resetBet();
             return;
         }
-        
+		
         var winAmount = 0;
         var winnerString = "";
-        
+
         for (i in $.betSystem.betTable) {
             bet = $.betSystem.betTable[i];
             if (bet.option.equalsIgnoreCase(betWinning)) {
-                winAmount = bet.amount + (bet.amount * betChance);
+                winAmount = bet.amount + (bet.amount * betMultiplier);
                 if (winAmount > 0) {
                     if (betWinners.length > 0) {
                         betWinners += ', ';
                         winnerString += ', ';
                     }
-                    betWinners += i;
-                    winnerString += i + " [+" + winAmount + "]";
+                    betWinners += $.username.resolve(i);
+                    winnerString += $.username.resolve(i) + " [+" + winAmount + "]";
                 }
             }
         }
 
         // For the Panel
         $.inidb.set('betresults', 'winners', winnerString);
-        betChance = betChance * 100;
-        $.say($.lang.get('net.quorrabot.betsystem.closed', betWinning, betChance.toString(), winnerString));
+        $.say($.lang.get('net.quorrabot.betsystem.closed', betWinning, $.betSystem.betWinRatio.toString() + "/" + $.betSystem.betLoseRatio.toString(), winnerString));
         resetBet();
     };
 
@@ -145,10 +174,7 @@ $.betSystem = {
          * @commandpath bet - Performs bet operations.
          */
         if (command.equalsIgnoreCase('bet')) {
-            if (!action && !$.isModv3(sender, event.getTags())) {
-                $.say($.getWhisperString(sender) + $.modmsg);
-                return;
-            } else if (!action) {
+            if (!action) {
                 $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.command.usage'));
                 return;
             }
@@ -281,7 +307,7 @@ $.betSystem = {
                     option: betOption
                 };
 
-                $.say($.lang.get('net.quorrabot.betsystem.bet.updated', $.username.resolve(sender), $.getPointsString(betWager), betOption, $.getPointsString($.betSystem.betPot)));
+                $.say($.lang.get('net.quorrabot.betsystem.bet.updated', $.username.resolve(sender), $.getPointsString(betWager), betOption));
             }
         }
     });
