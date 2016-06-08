@@ -396,7 +396,7 @@ $.autoHost = function() {
         $.inidb.set('autoHost', 'autohostnum', $.AutoHost.AutoHostNum);
     } else {
         if($.isOnline($.channelName) && $.ishosting == 1) {
-            $.hostEvent(channel.toLowerCase(),"unhost"); 
+            $.hostEvent($.channelName.toLowerCase(),"unhost"); 
             $.ishosting = 0;
             $.inidb.set('autoHost', 'isHosting', 0);
         }
