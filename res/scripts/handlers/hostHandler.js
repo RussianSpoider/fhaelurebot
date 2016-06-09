@@ -411,7 +411,7 @@ $.isChannelHosting = function(hostchannel, hostedchannel, previoushost) {
 	var response = HttpRequest.getData(HttpRequest.RequestType.GET, url, "", new HashMap());
 	var is_hosting = response.content.indexOf('target_id');
 	
-	if(is_hosting == -1) {
+	if(is_hosting == -1 || response == null) {
 		return false;
         } else {
             $.ishosting = 1;
