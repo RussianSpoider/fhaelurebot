@@ -900,7 +900,7 @@ public class Quorrabot implements Listener
                 data += "oauth=" + oauth + "\r\n";
                 data += "apioauth=" + apioauth + "\r\n";
                 data += "clientid=" + clientid + "\r\n";
-                data += "channel=" + channel.getName().replace("#", "") + "\r\n";
+                data += "channel=" + channelName + "\r\n";
                 data += "owner=" + ownerName + "\r\n";
                 data += "baseport=" + baseport + "\r\n";
                 data += "hostname=" + hostname + "\r\n";
@@ -1676,7 +1676,7 @@ public class Quorrabot implements Listener
             data += "oauth=" + oauth + "\r\n";
             data += "apioauth=" + apioauth + "\r\n";
             data += "clientid=" + clientid + "\r\n";
-            data += "channel=" + channel + "\r\n";
+            data += "channel=" + channelName + "\r\n";
             data += "owner=" + ownerName + "\r\n";
             data += "baseport=" + baseport + "\r\n";
             data += "hostname=" + hostname + "\r\n";
