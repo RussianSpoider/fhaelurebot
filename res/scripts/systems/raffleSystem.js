@@ -64,12 +64,15 @@ $.enterRaffle = function(user, message) {
         }
     
         $.raffleEntrants.push(user);
+        $.inidb.set('raffles', 'players', $.raffleEntrants); //let's make sure that the players database is updated as soon as an entry is created (if the raffle ends it's just going to wipe this and replace it with it's running array)
+        $.inidb.set('raffles', 'entries', $.raffleEntrants.length); //Hey, while we're at it we can update this count at the same time.
         return 1;
     } else {
         return 2;
     }
 }
 
+//This is the beast of raffle let there be comments to explain this whole thing
 $.on('command', function (event) {
     var sender = event.getSender().toLowerCase();
     var username = $.username.resolve(sender, event.getTags());
@@ -85,12 +88,16 @@ $.on('command', function (event) {
             args[number] = args[number].replace(/"/g, "");
         }
     }
-
+	
+	//What to do when we see "!raffle" in chat
     if(command.equalsIgnoreCase("raffle")) {
         if (args.length >= 1) {
+	        //create variable 'action' with the first value that comes after !raffle
             var action = args[0];
-
+			
+			//what to do if "!raffle start" or "!raffle new" or "!raffle run" is issued
             if (action.equalsIgnoreCase("start") || action.equalsIgnoreCase("new") || action.equalsIgnoreCase("run")) {
+                //check to see if PointSystem is enable & that Points are enabled in settings table
                 if ($.moduleEnabled("./systems/pointSystem.js") && $.inidb.get("settings", "permTogglePoints") == "true") {
                     if (!$.isModv3(sender, event.getTags())) {
                         $.say($.getWhisperString(sender) + $.modmsg);
@@ -104,11 +111,12 @@ $.on('command', function (event) {
                         return;
                     }
                 }
-
+				//If the raffle is already running, you can't go running another raffle. so we will tell the command sender as such
                 if ($.raffleRunning == 1) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.start-error-running"));
                     return;
                 } else {
+	            //The raffle isn't running, so we can start a new raffle! And set some variables
                     $.raffleTime = new Date();
                     $.raffleMonth = $.raffleTime.getMonth() + 1;
                     $.raffleDay = $.raffleTime.getDate();
@@ -127,57 +135,75 @@ $.on('command', function (event) {
                     $.raffleAutoCloseTimer = 0;
 
                     var i = 1;
-
+					//we are going to use our variable integer to go through the arguments in order
+					//This is done this way in order to be able to ignore arguments that aren't issues
+					//so in this case we are looking to see if "!raffle start -followers" is set
                     if (args[i] != null && args[i] != undefined && (args[i].equalsIgnoreCase("-followers") || args[i].equalsIgnoreCase("-followed") || args[i].equalsIgnoreCase("-follow"))) {
                         $.raffleFollowers = 1;
                         i++;
                     }
+                    //now we are going to see if "!raffle start -followers REWARD" or "!raffle start REWARD" is set
                     if (args[i] != null && args[i] != undefined && args[i].trim() != "") {
                         $.raffleReward = args[i];
                         i++;
                     }
+                    //now we are going to see if "!raffle start REWARD PRICE" is set
+                    //we're also ensuring that the pointSystem module is enabled
                     if ($.moduleEnabled("./systems/pointSystem.js") && args[i] != null && args[i] != undefined && !isNaN(args[i])) {
                         $.rafflePrice = parseInt(args[i]);
                         i++;
                     }
+                    //now we're going to set the keyword
                     if (args[i] != null && args[i] != undefined && args[i].trim() != "") {
                         if (args[i] == "!raffle") {
+	                        //allows !raffle to be the keyword
                             $.raffleKeyword = args[i];
                             i++;
                         } else if(args[i].startsWith('!')) {
                             if ($.moduleEnabled("./systems/pointSystem.js")) {
+	                            //You can't use ! in keywords (as it conflicts with other commands) - show structure with points
                                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.start-error-invalid-points"));
                                 return;
                             } else {
+	                            //You can't user ! in keywords - show structure without points
                                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.start-error-invalid-default"));
                                 return;
                             }
                         } else {
+	                        //Set the raffle keyword
                             $.raffleKeyword = args[i];
                             i++;
                         }
                     }
-
+					//now we are going to see if a timer argument is issued
                     if (args[i] != null && args[i] != undefined && !isNaN(args[i])) {
+                        //Set Raffle's auto close timer
                         $.raffleAutoCloseTimer = parseInt(args[i]);
                         i++;
                     }
 
+					//now lets handle the auto timer section
                     if ($.raffleAutoCloseTimer > 0) {
+                        //Tell users that this is an auto closing raffle
                         setTimeout(function(){
                             $.say($.lang.get("net.quorrabot.rafflesystem.auto-close", $.raffleAutoCloseTimer));
                             return;
                         }, 1000);
+                        //Remind users that raffle is an auto closing raffle
                         $.timer.addTimer("./systems/raffleSystem.js", "rraffle", true, function() {
                             $.timer.clearTimer("./systems/raffleSystem.js", "rraffle", true);
                             $.say($.lang.get("net.quorrabot.rafflesystem.auto-close2", ($.raffleAutoCloseTimer / 2)));
                             return;
                         }, ($.raffleAutoCloseTimer * 60 * 1000) / 2);
-
+						//End the raffle
                         $.timer.addTimer("./systems/raffleSystem.js", "raffle", true, function() {
                             $.timer.clearTimer("./systems/raffleSystem.js", "raffle", true);
+                            
+                            //set raffle to off state
                             $.raffleRunning = 0;
-
+                            $.inidb.set('raffles', 'running', $.raffleRunning);
+							
+							//notify that raffle closed with no entries, and no winners
                             if ($.raffleEntrants.length == 0) {
                                 $.say($.lang.get("net.quorrabot.rafflesystem.close-success-noentries"));
                                 return;
@@ -185,39 +211,51 @@ $.on('command', function (event) {
                             
                             var i = 0;
                             
+                            //Select a winner
                             do {
                                 if (i > ($.raffleEntrants.length * 2)) {
                                     $.winnerUsername = null;
                                     break;
                                 }
                                 
+                                //Randomly select a winner front entrants
                                 $.winnerUsername = $.raffleEntrants[$.randRange(1, $.raffleEntrants.length) - 1];
+                                
+                                //Check to see if winner is a follower
                                 $.winnerFollows = $.inidb.get('followed', $.winnerUsername.toLowerCase());
                                 
                                 if ($.raffleFollowers && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows == "1")){
                                     $.winnerFollowsCheck = $.twitch.GetUserFollowsChannel($.winnerUsername.toLowerCase(), $.channelName);
-                                    
+                                    //check that follower is indeed following on twitch
                                     if ($.winnerFollowsCheck.getInt("_http") == 200) {
+                                        //yay they are a follower
                                         $.winnerFollows = "1";
                                     }
                                 }
                                 
                                 i++;
+                            
+                            
                             } while ($.raffleFollowers == 1 && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows != "1"));
                             
+                            //if all entrants aren't followers and you have followers required, tell them nobody has won
                             if ($.winnerUsername == null) {
                                 $.say($.lang.get("net.quorrabot.rafflesystem.close-success-nofollow"));
                                 return;
                             }
-
+							
+							//Announce the winner (no points as reward)
                             if ($.raffleMode == 0) {
                                 $.say($.lang.get("net.quorrabot.rafflesystem.close-success-default", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
-                            } else {
+                            } 
+                            //announce the winner and deliver the points
+                            else {
+	                            //add points to winning user
                                 $.inidb.incr('points', $.winnerUsername.toLowerCase(), $.raffleReward);
-
+								//announce winner
                                 $.say($.lang.get("net.quorrabot.rafflesystem.close-success-points", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
                             }
-
+							//update database with the raffle details
                             $.inidb.set('raffles', 'reward', $.raffleReward);
                             $.inidb.set('raffles', 'winner', $.winnerUsername);
                             $.inidb.set('raffles', 'price', $.rafflePrice);
@@ -227,9 +265,10 @@ $.on('command', function (event) {
                             $.inidb.set('raffles', 'entries', $.raffleEntrants.length);
                             $.inidb.set('raffles', 'players', $.raffleEntrants);
                             $.inidb.set('raffles', 'date', $.raffleDateString);
+                            $.inidb.set('raffles', 'running', $.raffleRunning);
                         }, $.raffleAutoCloseTimer * 60 * 1000);
                     }
-
+					//if the Raffle Reward is not set, notify sender of proper usage
                     if ($.raffleReward == "") {
                         if ($.moduleEnabled("./systems/pointSystem.js")) {
                             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.start-usage-points"));
@@ -239,6 +278,7 @@ $.on('command', function (event) {
                             return;
                         }
                     } else {
+	                   //notify room that raffle is running
                         if ($.moduleEnabled("./systems/pointSystem.js")) {
                             if ($.raffleFollowers == 1 && $.rafflePrice > 0) {
                                 $.say($.lang.get("net.quorrabot.rafflesystem.start-success-followers-price", $.getRewardString($.raffleReward), $.getPointsString($.rafflePrice), $.raffleKeyword));
@@ -257,9 +297,10 @@ $.on('command', function (event) {
                             }
                         }
                     }
-
+					//Raffle is now running
                     $.raffleRunning = 1;
 
+					//Update database with new raffle details
                     $.inidb.set('raffles', 'reward', $.raffleReward);
                     $.inidb.set('raffles', 'winner', $.winnerUsername);
                     $.inidb.set('raffles', 'price', $.rafflePrice);
@@ -267,31 +308,38 @@ $.on('command', function (event) {
                     $.inidb.set('raffles', 'follow', $.raffleFollowers);
                     $.inidb.set('raffles', 'keyword', $.raffleKeyword);
                     $.inidb.set('raffles', 'date', $.raffleDateString);
+                    $.inidb.set('raffles', 'running', $.raffleRunning);
                 }
+            //now to handle if !raffle is ended by sender using "!raffle close" or "!raffle stop" or "!raffle end" or "!raffle draw"
             } else if (action.equalsIgnoreCase("close") || action.equalsIgnoreCase("stop") || action.equalsIgnoreCase("end") || action.equalsIgnoreCase("draw")) {
                 if (!$.isModv3(sender, event.getTags())) {
                     $.say($.getWhisperString(sender) + $.modmsg);
                     return;
                 }
+                
+                //Set some raffle variables
 
                 $.raffleTime = new Date();
                 $.raffleMonth = $.raffleTime.getMonth() + 1;
                 $.raffleDay = $.raffleTime.getDate();
                 $.raffleYear = $.raffleTime.getFullYear();
                 $.raffleDateString = $.raffleMonth + "/" + $.raffleDay + "/" + $.raffleYear;
-     
+				
+				//you can't close a raffle if it's not running
                 if ($.raffleRunning == 0) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.close-error-notrunning"));
                     return;
                 } else {
-
+	                
+	                //clear and end Auto Timers (seeing as you are ending the raffle manually)
                     if ($.raffleAutoCloseTimer > 0) {
                         $.timer.clearTimer("./systems/raffleSystem.js", "rraffle", true);
                         $.timer.clearTimer("./systems/raffleSystem.js", "raffle", true);
                     }
-                    
+                    //Set raffle to off state
                     $.raffleRunning = 0;
-
+					
+					//If there are not entrants let the room know
                     if ($.raffleEntrants.length == 0) {
                         $.say($.lang.get("net.quorrabot.rafflesystem.close-success-noentries"));
                         return;
@@ -304,13 +352,14 @@ $.on('command', function (event) {
                             $.winnerUsername = null;
                             break;
                         }
-                        
+                        //randomly select a winner
                         $.winnerUsername = $.raffleEntrants[$.randRange(1, $.raffleEntrants.length) - 1];
                         
                         if ($.raffleFollowers && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows == "1")){
                             $.winnerFollowsCheck = $.twitch.GetUserFollowsChannel($.winnerUsername.toLowerCase(), $.channelName);
-                            
+                            //Check to see if winner is a follower
                             if ($.winnerFollowsCheck.getInt("_http") == 200) {
+	                            //yay they are a follower (this is repeated we can probably create an object for this)
                                 $.winnerFollows = "1";
                             }
                         }
@@ -318,19 +367,26 @@ $.on('command', function (event) {
                         i++;
                     } while ($.raffleFollowers == 1 && ($.winnerFollows == null || $.winnerFollows == undefined || $.winnerFollows != "1"));
                     
+                    //Close but no followers (when followers are required)
                     if ($.winnerUsername == null) {
                         $.say($.lang.get("net.quorrabot.rafflesystem.close-success-nofollow"));
                         return;
                     }
-
+					
+					//Announce raffle winner
                     if ($.raffleMode == 0) {
                         $.say($.lang.get("net.quorrabot.rafflesystem.close-success-default", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
-                    } else {
+                    } 
+                    //Announce raffle winner and deliver point rewards
+                    else {
+	                    //increase winner's points record in db
                         $.inidb.incr('points', $.winnerUsername.toLowerCase(), $.raffleReward);
-
+						
+						//announce winner
                         $.say($.lang.get("net.quorrabot.rafflesystem.close-success-points", $.username.resolve($.winnerUsername), $.getRewardString($.raffleReward)));
                     }
-
+					
+					//update databases
                     $.inidb.set('raffles', 'reward', $.raffleReward);
                     $.inidb.set('raffles', 'winner', $.winnerUsername);
                     $.inidb.set('raffles', 'price', $.rafflePrice);
@@ -340,7 +396,54 @@ $.on('command', function (event) {
                     $.inidb.set('raffles', 'entries', $.raffleEntrants.length);
                     $.inidb.set('raffles', 'players', $.raffleEntrants);
                     $.inidb.set('raffles', 'date', $.raffleDateString);
+                    $.inidb.set('raffles', 'running', $.raffleRunning);
                 }
+                
+                //Let's create a resume command that will let us resume a previously opened raffle due to a bot crash, closure or power outage
+            } else if (action.equalsIgnoreCase("resume")){
+	            if (!$.isModv3(sender, event.getTags())) {
+		            $.say($.getWhisperString(sender) + $.modmsg);
+		            return;
+	            }
+	            if ($.raffleRunning == 0 || $.raffleRunning == undefined || $.raffleRunning == null || $.raffleRunning == "") {
+		          //check to see if a raffle has been left in on state in database
+		          $.raffleStoredAsRunning = parseInt($.inidb.get('raffles', 'running'));
+		          
+		          if ($.raffleStoredAsRunning == 1) {
+			          //let's load in our raffle variables from db
+					  
+					  //for Raffle Entries I am not able to do a .split() and store the winning results back into
+			          $.raffleEntrantsSTR = $.inidb.get('raffles', 'players').split(',');
+			          $.raffleEntrants = [];
+			          for(i = 0 ; i < $.raffleEntrantsSTR.length; i++){
+				          rafflePlayer = $.raffleEntrantsSTR[i]
+				          $.raffleEntrants.push(rafflePlayer);
+			          }
+			          
+			          $.raffleKeyword = $.inidb.get('raffles', 'keyword');
+			          $.raffleReward = $.inidb.get('raffles', 'reward');
+			          $.raffleDateString = $.inidb.get('raffles', 'date');
+			          $.rafflePrice = parseInt($.inidb.get('raffles', 'price'));
+					  $.raffleMode = parseInt($.inidb.get('raffles', 'mode'));
+					  $.raffleFollowers = parseInt($.inidb.get('raffles', 'follow'));
+				
+					  //Raffle is now running
+					  $.raffleRunning = 1;
+			          
+			          //Tell the sender that the raffle has been resumed
+			          
+			          $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.resume-success"));
+			          return;
+			          
+		          } else {
+			          //can't resume a raffle if it's not running
+			          $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.resume-error-notstoredrunning"));
+			          return;
+		          }
+	            } else {
+		            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.rafflesystem.resume-error-running"));
+		            return;
+	            }   
             } else if (action.equalsIgnoreCase("repick") || action.equalsIgnoreCase("redraw")) {
                 if (!$.isModv3(sender, event.getTags())) {
                     $.say($.getWhisperString(sender) + $.modmsg);
