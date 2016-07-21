@@ -272,6 +272,27 @@ public class IrcEventHandler implements IRCEventListener
                 eventBus.postAsync(new IrcPrivateMessageEvent(session, "jtv", ((NoticeEvent) event).getNoticeMessage(), ((NoticeEvent) event).tags()));
                 break;
             case DEFAULT:
+            if (event.command().equalsIgnoreCase("USERNOTICE")) {
+                Map<String, String> ceventTags = event.tags();
+                String username = "";
+                String system_msg = "";
+                String months = "";
+
+                // Captures the user defined message, we using aren't this yet, but adding the code for it.
+                // Note that Twitch sends \s as spaces and this would need to be transformed to spaces.
+                //
+                if (ceventTags.containsKey("system-msg")) {
+                    system_msg = ceventTags.get("system-msg");
+                }
+                if (ceventTags.containsKey("login")) {
+                    username = ceventTags.get("login");
+                }
+                if (ceventTags.containsKey("msg-param-months")) {
+                    months = ceventTags.get("msg-param-months");
+                }
+                eventBus.post(new IrcPrivateMessageEvent(session, "twitchnotify", username + " just subscribed for " + months + " months in a row!", ceventTags));
+            }
+
                 if (event.command().equalsIgnoreCase("USERSTATE"))
                 {
                     Map<String, String> ceventTags = event.tags();
