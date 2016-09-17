@@ -1,4 +1,3 @@
-
 if ($.commandList == null || $.commandList == undefined) {
     $.commandList = new Array();
 }
@@ -47,7 +46,7 @@ $.registerChatCommand = function(script, command, group) {
 $.unregisterChatCommand = function(command) {
     for (var i = 0; i < $.commandList.length; i++) {
         if ($.commandList[i][1].equalsIgnoreCase(command)) {
-            commandList.splice(i, 1);
+            $.commandList.splice(i, 1);
             break;
         }
     }
