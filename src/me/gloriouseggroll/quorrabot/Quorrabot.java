@@ -441,8 +441,8 @@ public class Quorrabot implements Listener
 
         Script.global.defineProperty("inidb", dataStoreObj, 0);
         Script.global.defineProperty("tempdb", TempStore.instance(), 0);
-        Script.global.defineProperty("username", UsernameCache.instance(), 0);
         Script.global.defineProperty("twitch", TwitchAPIv3.instance(), 0);
+        Script.global.defineProperty("username", UsernameCache.instance(), 0);
         Script.global.defineProperty("followers", followersCache, 0);
         Script.global.defineProperty("hosts", hostCache, 0);
         Script.global.defineProperty("subscribers", subscribersCache, 0);

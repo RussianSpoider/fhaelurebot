@@ -88,6 +88,8 @@ public class TwitchAPIv3
             {
                 url += "?utcnow=" + System.currentTimeMillis();
             }
+            
+            //url += "&client_id=" + clientid;
 
             URL u = new URL(url);
             HttpsURLConnection c = (HttpsURLConnection) u.openConnection();
@@ -105,8 +107,10 @@ public class TwitchAPIv3
             if (!clientid.isEmpty())
             {
                 c.addRequestProperty("Client-ID", clientid);
+            } else {
+                c.addRequestProperty("Client-ID", "pcaalhorck7ryamyg6ijd5rtnls5pjl");
             }
-
+            
             if (!oauth.isEmpty())
             {
                 c.addRequestProperty("Authorization", "OAuth " + oauth);

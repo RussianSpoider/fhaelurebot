@@ -75,12 +75,15 @@ notSearchable = function(songid,songname, user, tags) {
                     this.id = songid;
                     this.name = songname;
                     this.length = 0;
-                    $.say($.getWhisperString(user) + $.lang.get("net.quorrabot.musicplayer.song-request-error", songid));
-                    if ($.inidb.exists("pricecom", "addsong") && parseInt($.inidb.get("pricecom", "addsong"))> 0 ){
-                        if(!$.isModv3(user, tags)){
+                    if(user == null) {
+                        this.user = $.botowner;
+                    }
+                    $.say($.getWhisperString(this.user) + $.lang.get("net.quorrabot.musicplayer.song-request-error", songid));
+                    if ($.inidb.exists("pricecom", "addsong") && parseInt($.inidb.get("pricecom", "addsong"))> 0){
+                        if(!$.isModv3(this.user, tags)){
                             var cost = $.inidb.get("pricecom", "addsong");
-                            $.say($.getWhisperString(user) + $.lang.get("net.quorrabot.musicplayer.command-cost", $.getPointsString(cost), $.username.resolve(user, tags), songid));
-                            $.inidb.incr("points", user.toLowerCase(), cost);
+                            $.say($.getWhisperString(this.user) + $.lang.get("net.quorrabot.musicplayer.command-cost", $.getPointsString(cost), $.username.resolve(this.user), songid));
+                            $.inidb.incr("points", this.user.toLowerCase(), cost);
                             $.inidb.SaveAll();
                         }
                     }
@@ -91,7 +94,6 @@ function Song(name, user, tags) {
     this.tags = tags;
     if (name==null || name=="") return;
         var data = $.youtube.SearchForVideo(name);
-        
         while(data[0].length()<11 && data[1]!="No Search Results Found"){
             data = $.youtube.SearchForVideo(name);
         }
@@ -100,14 +102,9 @@ function Song(name, user, tags) {
         this.length = 1;
         if(data[1]=="Video Marked Private" | data[1]=="No Search Results Found") {
             notSearchable(this.id, this.name, this.user, this.tags);
-            if(this.user!=null) {
-                return;
-            }
-        }
-        
-        if(data[0]=="") {
-            notSearchable(name, "", this.user, this.tags);
-            return;
+            //if(this.user!=null) {
+                //return;
+            //}
         }
 
                     
@@ -122,7 +119,7 @@ function Song(name, user, tags) {
         }
         if(ldata[0]==0 && ldata[1]==0 && ldata[2]==0) {
             notSearchable(this.id, name, this.user, this.tags);
-            return;
+            //return;
         }
         this.length = ldata[2];
         return this.length;
@@ -193,7 +190,6 @@ $.parseDefault = function parseDefault() {
             $.song = new Song($var.defaultplaylist[i]);
             $.songname = $.song.getName();
             $.songid = $.song.getId();
-                
             if ($.titles==1){
                 $.songurl = '<div style="width: 150px; float: left;" class="playlistid"><a href="https://www.youtube.com/watch?v=' + $.songid + '" target="new">' + $.songid + '</a></div><div style="float: left;" class="playlistname"> ' + i.toString() + ". " + $.songname + "</div></br>";
                 $.writeToFile($.songurl, $.storepath + "default.html", true);
@@ -296,11 +292,15 @@ function nextDefault() {
             $var.defaultplaylistpos = 0;
         }
 
+
         s.play();
 
         $var.prevSong = $.currSong;
         $var.currSong = s;
         $var.playChoice = false;
+        if($.snameshuffle=="Video Marked Private" | $.snameshuffle=="No Search Results Found") {
+            next();
+        }
 
     } else {
         $var.currSong = null;
@@ -317,6 +317,7 @@ function next() {
     var s = new Song(null);
     
     if ($var.songqueue.length > 0) {
+        
         s = $var.songqueue.shift();
         s.play();
         name = s.song.getName();

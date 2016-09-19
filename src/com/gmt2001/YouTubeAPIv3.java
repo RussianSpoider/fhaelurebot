@@ -370,12 +370,13 @@ public class YouTubeAPIv3
 
                     return new String[]
                     {
-                        "", "", ""
+                        q, "", ""
                     };
                 }
             }
         } else
         {
+            String qOrig = q;
             q = q.replaceAll("[^a-zA-Z0-9 ]", "");
             q = q.replace(" ", "%20");
 
@@ -394,7 +395,7 @@ public class YouTubeAPIv3
 
                         return new String[]
                         {
-                            q, "No Search Results Found", ""
+                            qOrig, "No Search Results Found", ""
                         };
                     }
 
@@ -424,7 +425,7 @@ public class YouTubeAPIv3
 
                         return new String[]
                         {
-                            "", "", ""
+                            q, "", ""
                         };
                     }
                 } else
@@ -436,7 +437,7 @@ public class YouTubeAPIv3
 
                     return new String[]
                     {
-                        "", "", ""
+                        q, "", ""
                     };
                 }
             } else
@@ -448,7 +449,7 @@ public class YouTubeAPIv3
 
                 return new String[]
                 {
-                    "", "", ""
+                    q, "", ""
                 };
             }
         }
@@ -460,7 +461,7 @@ public class YouTubeAPIv3
 
         return new String[]
         {
-            "", "", ""
+            q, "", ""
         };
     }
 
