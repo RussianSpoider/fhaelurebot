@@ -155,7 +155,7 @@ public class Quorrabot implements Listener
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
         com.gmt2001.Console.out.println();
-        com.gmt2001.Console.out.println("QuorraBot Core 1.12 04/28/2016");
+        com.gmt2001.Console.out.println("QuorraBot Core 1.13 09/18/2016");
         com.gmt2001.Console.out.println("Build revision: " + RepoVersion.getRepoVersion());
         com.gmt2001.Console.out.println("www.quorrabot.com");
         com.gmt2001.Console.out.println();
@@ -1684,8 +1684,8 @@ public class Quorrabot implements Listener
             data += "msglimit30=" + msglimit30 + "\r\n";
             data += "datastore=" + datastore + "\r\n";
             data += "youtubekey=" + youtubekey + "\r\n";
-            data += "gamewispauth=" + gamewispauth + "\r\n";
-            data += "gamewisprefresh=" + gamewisprefresh + "\r\n";
+            data += "gamewispauth=" + newTokens[0] + "\r\n";
+            data += "gamewisprefresh=" + newTokens[1] + "\r\n";
             data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
             data += "lastfmuser=" + lastfmuser + "\r\n";
             data += "tpetoken=" + tpetoken + "\r\n";            
