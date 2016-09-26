@@ -20,11 +20,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 -->
 
-<project basedir="." default="dist">
+<project name="QuorraBot" basedir="." default="dist">
 
     <property environment="env" />
     <property name="project.base.dir" value="." />
-    <property name="name" value="QuorraBot" />
     <property name="version" value="1.13" />
     <property name="java.class.path" value="" />
     <property name="src" value="${project.base.dir}/src" />
@@ -32,11 +31,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <property name="build" value="${project.base.dir}/build" />
     <property name="classes" value="${build}/classes" />
     <property name="dist" value="${project.base.dir}/dist" />
-    <property name="versionfolder" value="${dist}/${name}-${version}" />
-    <property name="version.name" value="${name}-${version}" />
+    <property name="versionfolder" value="${dist}/${ant.project.name}-${version}" />
+    <property name="version.name" value="${ant.project.name}-${version}" />
     <property name="build.dir" value="${dist}/build" />
     <property name="res.dir" value="${build.dir}" />
     <property name="lib.dir" value="${build.dir}/lib" />
+    
+    <tstamp>
+        <format property="NOW" pattern="MMM dd yyyy HH:mm:ss zzz" timezone="America/New_York" />
+    </tstamp>
+    
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="**/*.jar" />
     </path>
@@ -46,6 +50,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             <include name="*.jar" />
         </fileset>
     </path>
+    
+    <condition property="nightly_build" value="${nightly}" else="not_nightly">
+        <and>
+            <isset property="nightly" />
+            <length string="${nightly}" trim="yes" length="0" when="greater" />
+        </and>
+    </condition>
     
     <available file=".git" type="dir" property="git.present"/>
 
@@ -78,14 +89,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                 <length string="${git.revision}" trim="yes" length="0" when="greater"/>
             </and>
         </condition>
-        <echo>Building revision ${repository.version}</echo>
     </target>
 
     <target depends="init,git.revision" name="pre.compile">
-        <replace
+        <echo>${ant.project.name} Version ${version} (${repository.version}) (${nightly_build})</echo>
+        <replaceregexp
             file="${src}/me/gloriouseggroll/quorrabot/RepoVersion.java"
-            token="@repository.version@"
-            value="${repository.version}" />
+            match="repoVersion = &quot;(.*)&quot;;"
+            replace="repoVersion = &quot;${repository.version}&quot;;" />
+        <replaceregexp
+            file="${src}/me/gloriouseggroll/quorrabot/RepoVersion.java"
+            match="nightlyBuild = &quot;(.*)&quot;;"
+            replace="nightlyBuild = &quot;${nightly_build}&quot;;" />
+        <replaceregexp
+            file="${src}/me/gloriouseggroll/quorrabot/RepoVersion.java"
+            match="quorraBotVersion = &quot;(.*)&quot;;"
+            replace="quorraBotVersion = &quot;${version}&quot;;" />
     </target>
 
     <target depends="pre.compile" name="compile.src">
@@ -111,24 +130,34 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     </target>
     
     <target name="post.compile">
-        <replace
+        <replaceregexp
             file="${src}/me/gloriouseggroll/quorrabot/RepoVersion.java"
-            token="${repository.version}"
-            value="@repository.version@" />
+            match="repoVersion = &quot;(.*)&quot;;"
+            replace="repoVersion = &quot;@repository.version@&quot;;" />
+        <replaceregexp
+            file="${src}/me/gloriouseggroll/quorrabot/RepoVersion.java"
+            match="nightlyBuild = &quot;(.*)&quot;;"
+            replace="nightlyBuild = &quot;@nightly.build@&quot;;" />
+        <replaceregexp
+            file="${src}/me/gloriouseggroll/quorrabot/RepoVersion.java"
+            match="quorraBotVersion = &quot;(.*)&quot;;"
+            replace="quorraBotVersion = &quot;@quorrabot.version@&quot;;" />
     </target>
 
-    <target depends="compile.src,post.compile" name="jar">
-        <jar destfile="${build.dir}/QuorraBot.jar">
+    <target depends="compile.src,post.compile,git.revision" name="jar">
+        <jar destfile="${build.dir}/${ant.project.name}.jar">
             <fileset dir="${classes}" />
             <manifest>
-                <attribute name="Bundle-Name" value="${project.name}" />           
-                <attribute name="Bundle-Version" value="${version.num}" />
+                <attribute name="Bundle-Name" value="${ant.project.name}" />
+                <attribute name="Bundle-Version" value="${version}" />
+                <attribute name="Bundle-Revision" value="${git.revision}" />
                 <attribute name="Bundle-Date" value="${NOW}" />
-                <attribute name="Implementation-Title" value="${project.name}" />
-                <attribute name="Implementation-Version" value="${version.num}" />
+                <attribute name="Implementation-Title" value="${ant.project.name}" />
+                <attribute name="Implementation-Version" value="${version}" />
+                <attribute name="Implementation-Revision" value="${git.revision}" />
                 <attribute name="Implementation-URL" value="http://www.quorrabot.com" />
                 <attribute name="Class-Path" value="${mf.classpath}" />
-                <attribute name="Main-Class" value="me.gloriouseggroll.quorrabot.Main" />
+                <attribute name="Main-Class" value="me.gloriouseggroll.quorrabot.Quorrabot" />
             </manifest>
         </jar>
         <mkdir dir="${lib.dir}" />
@@ -151,7 +180,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <java fork="true" classname="me.gloriouseggroll.quorrabot.QuorraBot" dir="${build.dir}">
             <classpath>
                 <path refid="classpath" />
-                <path location="${build.dir}/QuorraBot.jar" />
+                <path location="${build.dir}/${ant.project.name}.jar" />
             </classpath>
         </java>
     </target>

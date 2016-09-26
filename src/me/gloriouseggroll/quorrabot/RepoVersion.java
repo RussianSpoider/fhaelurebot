@@ -16,17 +16,25 @@
  */
 package me.gloriouseggroll.quorrabot;
 
-public class RepoVersion
-{
 
+public class RepoVersion {
+
+    private static final String quorraBotVersion = "@quorrabot.version@";
     private static final String repoVersion = "@repository.version@";
+    private static final String nightlyBuild = "@nightly.build@";
 
-    private RepoVersion()
-    {
+    private RepoVersion() {
     }
 
-    public static String getRepoVersion()
-    {
+    public static String getQuorraBotVersion() {
+        return quorraBotVersion;
+    }
+
+    public static String getRepoVersion() {
         return repoVersion;
+    }
+
+    public static String getNightlyBuild() {
+        return nightlyBuild;
     }
 }

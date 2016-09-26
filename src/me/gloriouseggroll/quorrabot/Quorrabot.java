@@ -158,6 +158,30 @@ public class Quorrabot implements Listener
     {
         return instance;
     }
+    
+    public String repoVersion() {
+        return RepoVersion.getRepoVersion();
+    }
+    
+    public Boolean isNightly() {
+        return RepoVersion.getNightlyBuild().equals("nightly_build");
+    }
+    
+    public String botVersion() {
+	if (isNightly()) {
+		return "QuorraBot Version: " + RepoVersion.getQuorraBotVersion() + " - Nightly Build";
+	}
+	return "QuorraBot Version: " + RepoVersion.getQuorraBotVersion();
+    }
+    
+    public String botRevision() {
+	return "Build Revision: " + repoVersion();
+    }
+
+    
+    public String getBotInfo() {
+	return botVersion() + " (Revision: " + repoVersion() + ")";
+    }
 
     public Quorrabot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh, 
@@ -168,8 +192,8 @@ public class Quorrabot implements Listener
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
         com.gmt2001.Console.out.println();
-        com.gmt2001.Console.out.println("QuorraBot Core 1.13 09/18/2016");
-        com.gmt2001.Console.out.println("Build revision: " + RepoVersion.getRepoVersion());
+        com.gmt2001.Console.out.println(botVersion());
+        com.gmt2001.Console.out.println(botRevision());
         com.gmt2001.Console.out.println("www.quorrabot.com");
         com.gmt2001.Console.out.println();
         com.gmt2001.Console.out.println("The working directory is: " + System.getProperty("user.dir"));
@@ -289,15 +313,8 @@ public class Quorrabot implements Listener
             this.msglimit30 = 18.75;
         }
 
-        if (datastore.equalsIgnoreCase("TempStore"))
-        {
-            dataStoreObj = TempStore.instance();
-        }
-        else if (datastore.equalsIgnoreCase("sqlitestore"))
-        {
-            dataStoreObj = SqliteStore.instance();
-        }
-        else if (datastore.equalsIgnoreCase("IniStore"))
+
+        if (datastore.equalsIgnoreCase("IniStore"))
         {
             dataStoreObj = IniStore.instance();
         } else if (datastore.equalsIgnoreCase("mysqlstore")) {
@@ -307,26 +324,27 @@ public class Quorrabot implements Listener
 			} else {
 				this.mySqlConn = "jdbc:mariadb://" + this.mySqlHost + ":" + this.mySqlPort + "/" + this.mySqlName;
 			}
+                        com.gmt2001.Console.out.println(this.mySqlConn);
+                        com.gmt2001.Console.out.println(this.mySqlUser);
+                        com.gmt2001.Console.out.println(this.mySqlPass);
 			/** Check to see if we can create a connection */
 			if (dataStoreObj.CreateConnection(this.mySqlConn, this.mySqlUser, this.mySqlPass) == null) {
 				com.gmt2001.Console.out.println("Could not create a connection with MySql. QuorraBot now shutting down...");
                                 System.exit(0);
                         }
+                        
                         if (IniStore.instance().GetFileList().length > 0) {
                             ini2MySql(true);
                         } else if (SqliteStore.instance().GetFileList().length > 0) {
                             sqlite2MySql();
-                        }
-                        
-                        
+                        }    
         } else
         {
             dataStoreObj = SqliteStore.instance();
-        }
-
-        if (datastore.isEmpty() && IniStore.instance().GetFileList().length > 0 && SqliteStore.instance().GetFileList().length == 0)
-        {
-            ini2sqlite(true);
+            if (datastore.isEmpty() && IniStore.instance().GetFileList().length > 0 && SqliteStore.instance().GetFileList().length == 0)
+            {
+                ini2sqlite(true);
+            }
         }
 
         this.init();
