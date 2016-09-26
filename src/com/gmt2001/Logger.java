@@ -16,71 +16,142 @@
  */
 package com.gmt2001;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.ArrayList;
+import java.lang.ArrayIndexOutOfBoundsException;
+import me.gloriouseggroll.quorrabot.Quorrabot;
 
-public class Logger implements Runnable
-{
+public class Logger implements Runnable {
 
     private static final Logger instance = new Logger();
     private boolean isRunning = false;
     private boolean disposed = false;
     private final ArrayList<LogItem> queue;
 
+    private FileOutputStream fosCore = null;
+    private FileOutputStream fosError = null;
+    private FileOutputStream fosDebug = null;
+    private PrintStream psCore = null;
+    private PrintStream psError = null;
+    private PrintStream psDebug = null;
+    private String curLogTimestamp = "";
+
     @Override
     @SuppressWarnings("SleepWhileInLoop")
-    public void run()
-    {
+    public void run() {
         this.isRunning = true;
 
-        while (!disposed)
-        {
-            if (!queue.isEmpty())
-            {
-                try
-                {
-                    try (FileOutputStream fos = new FileOutputStream("stdio.txt", true))
-                    {
-                        PrintStream ps = new PrintStream(fos);
+        if (!new File ("./logs/").exists()) {
+          new File ("./logs/").mkdirs();
+        }
+        if (!new File ("./logs/core").exists()) {
+          new File ("./logs/core/").mkdirs();
+        }
+        if (!new File ("./logs/core-error").exists()) {
+          new File ("./logs/core-error/").mkdirs();
+        }
+        if (!new File ("./logs/core-debug").exists()) {
+          new File ("./logs/core-debug/").mkdirs();
+        }
 
-                        if (queue.size() > 0)
-                        {
-                            LogItem i = queue.remove(0);
+        while (!disposed) {
+            if (!queue.isEmpty()) {
 
-                            switch (i.t)
-                            {
-                                case Output:
-                                    ps.println(">>" + i.s);
-                                    break;
-                                case Input:
-                                    ps.println("<<" + i.s);
-                                    break;
-                                case Error:
-                                    ps.println("!!" + i.s);
-                                    break;
-                                default:
-                                    ps.println();
-                                    break;
+                SimpleDateFormat datefmt = new SimpleDateFormat("dd-MM-yyyy");
+                datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+                String timestamp = datefmt.format(new Date());
+
+                // New date, close all open streams.  Java spec says that closing the PrintStream closes the
+                // underlying streams automatically (FileOutputStream).
+                if (!timestamp.equals(this.curLogTimestamp)) {
+                    if (this.psCore != null) {
+                        this.psCore.close();
+                        this.psCore = null;
+                    }
+                    if (psError != null) {
+                        this.psError.close();
+                        this.psError = null;
+                    }
+                    if (this.psDebug != null) {
+                        this.psDebug.close();
+                        this.psDebug = null;
+                    }
+                    this.curLogTimestamp = timestamp;
+                }
+
+                try {
+                  
+                    if (queue.size() > 0) {
+                        LogItem i = queue.remove(0);
+
+                        switch (i.t) {
+                        case Output:
+                            if (this.psCore == null) {
+                                this.fosCore = new FileOutputStream("./logs/core/" + timestamp + ".txt", true);
+                                this.psCore = new PrintStream(this.fosCore);
                             }
+                            this.psCore.println(i.s);
+                            this.psCore.flush();
+                            break;
+
+                        case Input:
+                            if (this.psCore == null) {
+                                this.fosCore = new FileOutputStream("./logs/core/" + timestamp + ".txt", true);
+                                this.psCore = new PrintStream(this.fosCore);
+                            }
+                            this.psCore.println(i.s);
+                            this.psCore.flush();
+                            break;
+
+                        case Error:
+                            if (this.psError == null) {
+                                this.fosError = new FileOutputStream("./logs/core-error/" + timestamp + ".txt", true);
+                                this.psError = new PrintStream(this.fosError);
+                            }
+                            this.psError.println(i.s);
+                            this.psError.flush();
+                            break;
+
+                        case Debug:
+                            if (this.psDebug == null) {
+                                this.fosDebug = new FileOutputStream("./logs/core-debug/" + timestamp + ".txt", true);
+                                this.psDebug = new PrintStream(this.fosDebug);
+                            }
+                            this.psDebug.println(i.s);
+                            this.psDebug.flush();
+                            break;
+
+                        default:
+                            if (this.psCore == null) {
+                                this.fosCore = new FileOutputStream("./logs/core/" + timestamp + ".txt", true);
+                                this.psCore = new PrintStream(this.fosCore);
+                            } 
+                            this.psCore.println(i.s);
+                            this.psCore.flush();
+                            break;
                         }
                     }
-                } catch (FileNotFoundException ex)
-                {
+                } catch (FileNotFoundException ex) {
                     ex.printStackTrace(System.err);
-                } catch (IOException ex)
-                {
+                } catch (SecurityException ex) {
                     ex.printStackTrace(System.err);
-                }
-            } else
-            {
-                try
-                {
+                } catch (ArrayIndexOutOfBoundsException ex) {
+                    /* At shutdown queue.remove(0) throws an exception sometimes, it is expected, do not clutter the console/error logs. */
+                } 
+            } else {
+                try {
                     Thread.sleep(500);
-                } catch (InterruptedException ex)
-                {
+                } catch (InterruptedException ex) {
                     ex.printStackTrace(System.err);
                 }
             }
@@ -88,52 +159,67 @@ public class Logger implements Runnable
     }
 
     @Override
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         super.finalize();
 
         this.disposed = true;
     }
 
-    private class LogItem
-    {
+    private class LogItem {
 
         public LogType t;
         public String s;
 
-        public LogItem(LogType t, String s)
-        {
+        public LogItem(LogType t, String s) {
             this.t = t;
             this.s = s;
         }
     }
 
-    public enum LogType
-    {
+    public enum LogType {
 
         Output,
         Input,
         Error,
-        Blank
+        Debug,
+        
     }
 
-    public static Logger instance()
-    {
-        if (!instance.isRunning)
-        {
+    public static Logger instance() {
+        if (!instance.isRunning) {
             (new Thread(instance)).start();
         }
 
         return instance;
     }
 
-    private Logger()
-    {
+    private Logger() {
         this.queue = new ArrayList<>();
     }
 
-    public void log(LogType t, String s)
-    {
-        this.queue.add(new LogItem(t, s));
+    public void log(LogType t, String s) {
+        try {
+            this.queue.add(new LogItem(t, s));
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            /* At shutdown this throws an exception. */
+        }
     }
+
+    public String logTimestamp() {
+        SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss.SSS z");
+        datefmt.setTimeZone(TimeZone.getTimeZone(Quorrabot.instance().timeZone));
+        return datefmt.format(new Date());
+    }
+    
+    public String setTimeZone(String timezone) {
+        SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss.SSS z");
+        datefmt.setTimeZone(TimeZone.getTimeZone(timezone));
+        Quorrabot.instance().botSetTimeZone(timezone);
+        return datefmt.format(new Date());
+    }
+    
+    public String getTimeZone() {
+        return Quorrabot.instance().timeZone;
+    }
+
 }

@@ -19,8 +19,10 @@ package me.gloriouseggroll.quorrabot;
 import com.gmt2001.DataStore;
 import com.gmt2001.IniStore;
 import com.gmt2001.SqliteStore;
+import com.gmt2001.MySQLStore;
 import com.gmt2001.TempStore;
 import com.gmt2001.TwitchAPIv3;
+import com.gmt2001.Logger;
 import com.gloriouseggroll.DonationHandlerAPI;
 import com.gloriouseggroll.LastFMAPI;
 import com.gloriouseggroll.TwitterAPI;
@@ -98,6 +100,7 @@ public class Quorrabot implements Listener
     private int baseport;
     private double msglimit30;
     private String datastore;
+    
     private String datastoreconfig;
     private String youtubekey;
     private String twitchalertstoken;
@@ -109,10 +112,10 @@ public class Quorrabot implements Listener
     private String streamtipid;
     private boolean webenable;
     private boolean musicenable;
-	private boolean usehttps;
-	private String keystorepath;
-	private String keystorepassword;
-	private String keypassword;
+    private boolean usehttps;
+    private String keystorepath;
+    private String keystorepassword;
+    private String keypassword;
     private String channelStatus;
     private DataStore dataStoreObj;
     private SecureRandom rng;
@@ -142,6 +145,14 @@ public class Quorrabot implements Listener
     private boolean exiting = false;
     private Thread t;
     private static Quorrabot instance;
+    public static String timeZone = "America/New_York";
+    
+    private String mySqlConn;
+    private String mySqlHost;
+    private String mySqlPort;
+    private String mySqlName;
+    private String mySqlUser;
+    private String mySqlPass;
 
     public static Quorrabot instance()
     {
@@ -149,8 +160,10 @@ public class Quorrabot implements Listener
     }
 
     public Quorrabot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
-            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh, String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken, String streamtipid, boolean webenable,
-            boolean musicenable, boolean usehttps, String keystorepath, String keystorepassword, String keypassword)
+            String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh, 
+            String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String timeZone, String streamtiptoken, 
+            String streamtipid, String mySqlHost, String mySqlPort, String mySqlConn, String mySqlPass, String mySqlUser, 
+            String mySqlName, boolean webenable, boolean musicenable, boolean usehttps, String keystorepath, String keystorepassword, String keypassword)
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
@@ -173,6 +186,13 @@ public class Quorrabot implements Listener
         this.datastore = datastore;
         this.datastoreconfig = datastoreconfig;
         this.youtubekey = youtubekey;
+	if (!timeZone.isEmpty()) {
+            this.timeZone = timeZone;
+            Logger.instance().setTimeZone(timeZone);
+	} else {
+            this.timeZone = "America/New_York";
+	}
+        
         if (!youtubekey.isEmpty())
         {
             YouTubeAPIv3.instance().SetAPIKey(youtubekey);
@@ -209,6 +229,20 @@ public class Quorrabot implements Listener
         if (!twittertoken.isEmpty() || !twittertokensecret.isEmpty())
         {
             TwitterAPI.instance().loadAccessToken(twittertoken,twittertokensecret);
+        }
+        
+        this.mySqlName = mySqlName;
+	this.mySqlUser = mySqlUser;
+	this.mySqlPass = mySqlPass;
+	this.mySqlConn = mySqlConn;
+	this.mySqlHost = mySqlHost;
+	this.mySqlPort = mySqlPort;
+        
+	if (!timeZone.isEmpty()) {
+            this.timeZone = timeZone;
+            Logger.instance().setTimeZone(timeZone);
+	} else {
+            this.timeZone = "America/New_York";
         }
 
         this.webenable = webenable;
@@ -258,9 +292,33 @@ public class Quorrabot implements Listener
         if (datastore.equalsIgnoreCase("TempStore"))
         {
             dataStoreObj = TempStore.instance();
-        } else if (datastore.equalsIgnoreCase("IniStore"))
+        }
+        else if (datastore.equalsIgnoreCase("sqlitestore"))
+        {
+            dataStoreObj = SqliteStore.instance();
+        }
+        else if (datastore.equalsIgnoreCase("IniStore"))
         {
             dataStoreObj = IniStore.instance();
+        } else if (datastore.equalsIgnoreCase("mysqlstore")) {
+			dataStoreObj = MySQLStore.instance();
+			if (this.mySqlPort.isEmpty()) {
+				this.mySqlConn = "jdbc:mariadb://" + this.mySqlHost + "/" + this.mySqlName;
+			} else {
+				this.mySqlConn = "jdbc:mariadb://" + this.mySqlHost + ":" + this.mySqlPort + "/" + this.mySqlName;
+			}
+			/** Check to see if we can create a connection */
+			if (dataStoreObj.CreateConnection(this.mySqlConn, this.mySqlUser, this.mySqlPass) == null) {
+				com.gmt2001.Console.out.println("Could not create a connection with MySql. QuorraBot now shutting down...");
+                                System.exit(0);
+                        }
+                        if (IniStore.instance().GetFileList().length > 0) {
+                            ini2MySql(true);
+                        } else if (SqliteStore.instance().GetFileList().length > 0) {
+                            sqlite2MySql();
+                        }
+                        
+                        
         } else
         {
             dataStoreObj = SqliteStore.instance();
@@ -465,6 +523,7 @@ public class Quorrabot implements Listener
         Script.global.defineProperty("connmgr", connectionManager, 0);
         Script.global.defineProperty("tceconnmgr", tceConnectionManager, 0);
         Script.global.defineProperty("hostname", hostname, 0);
+        Script.global.defineProperty("logger", Logger.instance(), 0);
 
         t = new Thread(new Runnable()
         {
@@ -731,6 +790,61 @@ public class Quorrabot implements Listener
 
             changed = true;
         }
+        
+        if (message.equalsIgnoreCase("mysqlsetup")) {
+            try {
+                com.gmt2001.Console.out.println("");
+                com.gmt2001.Console.out.println("QuorraBot MySQL setup.");
+                com.gmt2001.Console.out.println("");
+
+                com.gmt2001.Console.out.print("Please enter your MySQL host name or IP: ");
+                String newHost = System.console().readLine().trim();
+                mySqlHost = newHost;
+
+                com.gmt2001.Console.out.print("Please enter your MySQL port: ");
+                String newPost = System.console().readLine().trim();
+                mySqlPort = newPost;
+
+                com.gmt2001.Console.out.print("Please enter your MySQL db name: ");
+                String newName = System.console().readLine().trim();
+                mySqlName = newName;
+
+                com.gmt2001.Console.out.print("Please enter a username for MySQL: ");
+                String newUser = System.console().readLine().trim();
+                mySqlUser = newUser;
+
+                com.gmt2001.Console.out.print("Please enter a password for MySQL: ");
+                String newPass = System.console().readLine().trim();
+                mySqlPass = newPass;
+
+                datastore = "MySQLStore";
+                
+                dataStoreObj = MySQLStore.instance();
+                
+			if (mySqlPort.isEmpty()) {
+				mySqlConn = "jdbc:mariadb://" + mySqlHost + "/" + mySqlName;
+			} else {
+				mySqlConn = "jdbc:mariadb://" + mySqlHost + ":" + mySqlPort + "/" + mySqlName;
+			}
+			/** Check to see if we can create a connection */
+			if (dataStoreObj.CreateConnection(mySqlConn, mySqlUser, mySqlPass) == null) {
+				com.gmt2001.Console.out.println("Could not create a connection with MySql. QuorraBot now shutting down...");
+                                System.exit(0);
+                        }
+
+                if (IniStore.instance().GetFileList().length > 0) {
+                            ini2MySql(true);
+                } else if (SqliteStore.instance().GetFileList().length > 0) {
+                            sqlite2MySql();
+                }
+                
+                com.gmt2001.Console.out.println("QuorraBot MySQL setup done.");
+
+                changed = true;
+            } catch (NullPointerException ex) {
+                com.gmt2001.Console.err.printStackTrace(ex);
+            }
+        }
 
         if (message.equals("clientid"))
         {
@@ -918,9 +1032,16 @@ public class Quorrabot implements Listener
                 data += "webenable=" + webenable + "\r\n";
                 data += "musicenable=" + musicenable + "\r\n";
                 data += "usehttps=" + usehttps + "\r\n";
+                data += "logtimezone=" + timeZone + "\r\n";
+                data += "mysqlhost=" + mySqlHost + "\r\n";
+                data += "mysqlport=" + mySqlPort + "\r\n";
+                data += "mysqlname=" + mySqlName + "\r\n";
+                data += "mysqluser=" + mySqlUser + "\r\n";
+                data += "mysqlpass=" + mySqlPass + "\r\n";
                 data += "keystorepath=" + keystorepath + "\r\n";
                 data += "keystorepassword=" + keystorepassword + "\r\n";
                 data += "keypassword=" + keypassword;
+                
 
                 Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
@@ -959,7 +1080,7 @@ public class Quorrabot implements Listener
 
         handleCommand(username, message);
     }
-
+    
     public void handleCommand(String sender, String commandString)
     {
         String command, arguments;
@@ -1050,16 +1171,134 @@ public class Quorrabot implements Listener
             tceSession.leave("#" + channelName.toLowerCase()); 
     }
 
-    
+    private void sqlite2MySql() {
+        com.gmt2001.Console.out.print("Performing SQLite to MySQL Conversion..\n.");
+        MySQLStore mysql = MySQLStore.instance();
+        SqliteStore sqlite = SqliteStore.instance();
+
+        File backupFile = new File("quorrabot.db.backup");
+        if (backupFile.exists()) {
+            com.gmt2001.Console.out.print("A quorrabot.db.backup file already exists. Please rename or remove this file first.");
+            com.gmt2001.Console.out.print("Exiting QuorraBot");
+            System.exit(0);
+        }
+
+        com.gmt2001.Console.out.print("Wiping Existing MySQL Tables...\n");
+        String[] deltables = mysql.GetFileList();
+        for (String table : deltables) {
+            mysql.RemoveFile(table);
+        }
+
+        com.gmt2001.Console.out.print("Converting SQLite to MySQL...\n");
+        String[] tables = sqlite.GetFileList();
+        for (String table : tables) {
+            com.gmt2001.Console.out.print("Converting Table: " + table + "\n");
+            String[] sections = sqlite.GetCategoryList(table);
+            for (String section : sections) {
+                String[] keys = sqlite.GetKeyList(table, section);
+                for (String key : keys) {
+                    String value = sqlite.GetString(table, section, key);
+                    mysql.SetString(table, section, key, value);
+                }
+            }
+        }
+        sqlite.CloseConnection();
+        com.gmt2001.Console.out.print("Finished Converting Tables.\n");
+        com.gmt2001.Console.out.print("Moving quorrabot.db to quorrabot.db.backup\n");
+
+        try {
+            FileUtils.moveFile(new java.io.File("quorrabot.db"), new java.io.File("quorrabot.db.backup"));
+        } catch (IOException ex) {
+            com.gmt2001.Console.err.println("Failed to move quorrabot.db to quorrabot.db.backup: " + ex.getMessage());
+        }
+        com.gmt2001.Console.out.print("SQLite to MySQL Conversion is Complete");
+    }
+
+    private void ini2MySql(Boolean delete) {
+        com.gmt2001.Console.out.print("Performing INI to MySQL Conversion...\n");
+        IniStore ini = IniStore.instance();
+        MySQLStore mysql = MySQLStore.instance();
+
+        com.gmt2001.Console.out.print("Wiping Existing MySQL Tables...\n");
+        String[] deltables = mysql.GetFileList();
+        for (String table : deltables) {
+            mysql.RemoveFile(table);
+        }
+
+        com.gmt2001.Console.out.print("Converting IniStore to MySQL...\n");
+        String[] files = ini.GetFileList();
+        int i = 0;
+        String str;
+        int maxlen = 0;
+        int num;
+        for (String file : files) {
+            str = " " + i + " / " + files.length;
+            num = maxlen - str.length();
+            for (int n = 0; n < num; n++) {
+                str += " ";
+            }
+            maxlen = Math.max(maxlen, str.length());
+            com.gmt2001.Console.out.print("\rConverting File: " + file + "\n");
+            mysql.AddFile(file);
+
+            String[] sections = ini.GetCategoryList(file);
+            int b = 0;
+            for (String section : sections) {
+                str = " " + i + " / " + files.length
+                      + " [" + b + " / " + sections.length + "]";
+                num = maxlen - str.length();
+                for (int n = 0; n < num; n++) {
+                    str += " ";
+                }
+                maxlen = Math.max(maxlen, str.length());
+
+                String[] keys = ini.GetKeyList(file, section);
+                int k = 0;
+                for (String key : keys) {
+                    str = " " + i + " / " + files.length
+                          + " [" + b + " / " + sections.length + "] <" + k + " / " + keys.length + ">";
+                    num = maxlen - str.length();
+                    for (int n = 0; n < num; n++) {
+                        str += " ";
+                    }
+                    maxlen = Math.max(maxlen, str.length());
+
+                    String value = ini.GetString(file, section, key);
+                    mysql.SetString(file, section, key, value);
+                    k++;
+                }
+                b++;
+            }
+            i++;
+        }
+
+        str = "";
+        for (i = 0; i < maxlen - 4; i++) {
+            str += " ";
+        }
+        com.gmt2001.Console.out.print("\rConversion from IniStore to MySQL is Complete" + str + "\n");
+
+        if (delete) {
+            com.gmt2001.Console.out.print("Deleting IniStore folder...\n");
+            for (String file : files) {
+                ini.RemoveFile(file);
+            }
+
+            File f = new File("./inistore");
+            if (f.delete()) {
+                com.gmt2001.Console.out.print("Process is Done");
+            }
+        }
+    }
 
     private static void ini2sqlite(boolean delete)
     {
-        com.gmt2001.Console.out.print(">>Initializing...");
+        com.gmt2001.Console.out.print(">>Initializing...\n");
         IniStore ini = IniStore.instance();
         SqliteStore sqlite = SqliteStore.instance();
         com.gmt2001.Console.out.println("done");
 
-        com.gmt2001.Console.out.print(">>Wiping existing SqliteStore...");
+        com.gmt2001.Console.out.print(">>Wiping existing SqliteStore...\n");
         String[] deltables = sqlite.GetFileList();
         for (String table : deltables)
         {
@@ -1067,7 +1306,7 @@ public class Quorrabot implements Listener
         }
         com.gmt2001.Console.out.println("done");
 
-        com.gmt2001.Console.out.print(">>Copying IniStore to SqliteStore...");
+        com.gmt2001.Console.out.print(">>Copying IniStore to SqliteStore...\n");
         String[] files = ini.GetFileList();
         int i = 0;
         String str;
@@ -1176,6 +1415,13 @@ public class Quorrabot implements Listener
         String keystorepath = "";
         String keystorepassword = "";
         String keypassword = "";
+        String timeZone = "";
+	String mySqlConn = "";
+	String mySqlHost = "";
+	String mySqlPort = "";
+	String mySqlName = "";
+	String mySqlUser = "";
+	String mySqlPass = "";
 
         boolean changed = false;
 
@@ -1188,6 +1434,11 @@ public class Quorrabot implements Listener
 
                 for (String line : lines)
                 {
+                    
+                    if (line.startsWith("logtimezone=") && line.length() >= 15) {
+                        timeZone = line.substring(12);
+                    }
+                    
                     if (line.startsWith("user=") && line.length() > 8)
                     {
                         user = line.substring(5);
@@ -1223,6 +1474,21 @@ public class Quorrabot implements Listener
                     if (line.startsWith("port=") && line.length() > 6)
                     {
                         port = Integer.parseInt(line.substring(5));
+                    }
+                    if (line.startsWith("mysqlhost=") && line.length() > 11) {
+                        mySqlHost = line.substring(10);
+                    }
+                    if (line.startsWith("mysqlport=") && line.length() > 11) {
+                        mySqlPort = line.substring(10);
+                    }
+                    if (line.startsWith("mysqlname=") && line.length() > 11) {
+                        mySqlName = line.substring(10);
+                    }
+                    if (line.startsWith("mysqluser=") && line.length() > 11) {
+                        mySqlUser = line.substring(10);
+                    }
+                    if (line.startsWith("mysqlpass=") && line.length() > 11) {
+                        mySqlPass = line.substring(10);
                     }
                     if (line.startsWith("msglimit30=") && line.length() > 12)
                     {
@@ -1410,6 +1676,37 @@ public class Quorrabot implements Listener
                         changed = true;
                     }
                 }
+                if (arg.startsWith("mysqlhost=") && arg.length() > 11) {
+                    if (!mySqlHost.equals(arg.substring(10))) {
+                        mySqlHost = arg.substring(10);
+                        changed = true;
+                    }
+                }
+                if (arg.startsWith("mysqlport=") && arg.length() > 11) {
+                    if (!mySqlPort.equals(arg.substring(10))) {
+                        mySqlPort = arg.substring(10);
+                        changed = true;
+                    }
+                }
+                if (arg.startsWith("mysqlname=") && arg.length() > 11) {
+                    if (!mySqlName.equals(arg.substring(10))) {
+                        mySqlName = arg.substring(10);
+                        changed = true;
+                    }
+                }
+                if (arg.startsWith("mysqluser=") && arg.length() > 11) {
+                    if (!mySqlUser.equals(arg.substring(14))) {
+                        mySqlUser = arg.substring(10);
+                        changed = true;
+                    }
+                }
+                if (arg.startsWith("mysqlpass=") && arg.length() > 11) {
+                    if (!mySqlPass.equals(arg.substring(10))) {
+                        mySqlPass = arg.substring(10);
+                        changed = true;
+                    }
+                }
+                
                 if (arg.toLowerCase().startsWith("clientid=") && arg.length() > 12)
                 {
                     if (!clientid.equals(arg.substring(9)))
@@ -1660,15 +1957,26 @@ public class Quorrabot implements Listener
             data += "webenable=" + webenable + "\r\n";
             data += "musicenable=" + musicenable + "\r\n";
             data += "usehttps=" + usehttps + "\r\n";
+            data += "logtimezone=" + timeZone + "\r\n";
+            data += "mysqlhost=" + mySqlHost + "\r\n";
+            data += "mysqlport=" + mySqlPort + "\r\n";
+            data += "mysqlname=" + mySqlName + "\r\n";
+            data += "mysqluser=" + mySqlUser + "\r\n";
+            data += "mysqlpass=" + mySqlPass + "\r\n";
             data += "keystorepath=" + keystorepath + "\r\n";
             data += "keystorepassword=" + keystorepassword + "\r\n";
             data += "keypassword=" + keypassword;
+
 
             Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
 
-        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken, lastfmuser, tpetoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, keystorepassword, keypassword);
+        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, 
+                msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken, 
+                mySqlHost, mySqlPort, mySqlConn, mySqlPass, mySqlUser, mySqlName, lastfmuser, tpetoken, twittertoken, 
+                twittertokensecret, timeZone, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, 
+                keystorepassword, keypassword);
     }
     public void updateGameWispTokens(String[] newTokens) {
             String data = "";
@@ -1696,6 +2004,12 @@ public class Quorrabot implements Listener
             data += "webenable=" + webenable + "\r\n";
             data += "musicenable=" + musicenable + "\r\n";
             data += "usehttps=" + usehttps + "\r\n";
+            data += "logtimezone=" + timeZone + "\r\n";
+            data += "mysqlhost=" + mySqlHost + "\r\n";
+            data += "mysqlport=" + mySqlPort + "\r\n";
+            data += "mysqlname=" + mySqlName + "\r\n";
+            data += "mysqluser=" + mySqlUser + "\r\n";
+            data += "mysqlpass=" + mySqlPass + "\r\n";
             data += "keystorepath=" + keystorepath + "\r\n";
             data += "keystorepassword=" + keystorepassword + "\r\n";
             data += "keypassword=" + keypassword;
@@ -1711,6 +2025,53 @@ public class Quorrabot implements Listener
 
         SingularityAPI.instance().setAccessToken(gamewispauth);
         
+    }
+    
+    public void botSetTimeZone(String timezone) {
+            String data = "";
+            data += "user=" + username + "\r\n";
+            data += "oauth=" + oauth + "\r\n";
+            data += "apioauth=" + apioauth + "\r\n";
+            data += "clientid=" + clientid + "\r\n";
+            data += "channel=" + channelName + "\r\n";
+            data += "owner=" + ownerName + "\r\n";
+            data += "baseport=" + baseport + "\r\n";
+            data += "hostname=" + hostname + "\r\n";
+            data += "port=" + port + "\r\n";
+            data += "msglimit30=" + msglimit30 + "\r\n";
+            data += "datastore=" + datastore + "\r\n";
+            data += "youtubekey=" + youtubekey + "\r\n";
+            data += "gamewispauth=" + gamewispauth + "\r\n";
+            data += "gamewisprefresh=" + gamewisprefresh + "\r\n";
+            data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
+            data += "lastfmuser=" + lastfmuser + "\r\n";
+            data += "tpetoken=" + tpetoken + "\r\n";            
+            data += "twittertoken=" + twittertoken + "\r\n";
+            data += "twittertokensecret=" + twittertokensecret + "\r\n";
+            data += "streamtiptoken=" + streamtiptoken + "\r\n";
+            data += "streamtipid=" + streamtipid + "\r\n";
+            data += "webenable=" + webenable + "\r\n";
+            data += "musicenable=" + musicenable + "\r\n";
+            data += "usehttps=" + usehttps + "\r\n";
+            data += "logtimezone=" + timezone + "\r\n";
+            data += "mysqlhost=" + mySqlHost + "\r\n";
+            data += "mysqlport=" + mySqlPort + "\r\n";
+            data += "mysqlname=" + mySqlName + "\r\n";
+            data += "mysqluser=" + mySqlUser + "\r\n";
+            data += "mysqlpass=" + mySqlPass + "\r\n";
+            data += "keystorepath=" + keystorepath + "\r\n";
+            data += "keystorepassword=" + keystorepassword + "\r\n";
+            data += "keypassword=" + keypassword;
+            
+            timeZone = timezone;
+        try {
+            Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
+                        StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+            com.gmt2001.Console.out.println("Timezone has been updated.");
+        } catch (IOException ex) {
+            com.gmt2001.Console.err.println("!!!! CRITICAL !!!! Failed to update timezone in botlogin.txt! Must manually add!");
+            com.gmt2001.Console.err.println("!!!! CRITICAL !!!! logtimezone = " + timezone);
+        }
     }
     
     public void doRefreshGameWispToken() {

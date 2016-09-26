@@ -28,34 +28,24 @@ import me.gloriouseggroll.quorrabot.Quorrabot;
  *
  * @author Gary Tekulsky
  */
-public class in
-{
+public class in {
 
     private static final in instance = new in();
     private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public static in instance()
-    {
+    public static in instance() {
         return instance;
     }
 
-    private in()
-    {
+    private in() {
     }
 
-    public static String readLine() throws Exception
-    {
+    public static String readLine() throws Exception {
         String s = br.readLine();
 
-        if (Quorrabot.enableDebugging)
-        {
-            SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss");
-            datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-            String timestamp = datefmt.format(new Date());
-
-            Logger.instance().log(Logger.LogType.Input, timestamp + "Z " + s);
-            Logger.instance().log(Logger.LogType.Blank, "");
+        if (Quorrabot.enableDebugging) {
+            Logger.instance().log(Logger.LogType.Input, "[" + logTimestamp.log() + "] " + s);
+            Logger.instance().log(Logger.LogType.Input, "");
         }
 
         return s;

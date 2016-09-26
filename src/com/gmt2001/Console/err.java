@@ -24,74 +24,88 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import me.gloriouseggroll.quorrabot.Quorrabot;
 /**
  *
  * @author Gary Tekulsky
  */
-public class err
-{
+public class err {
 
     private static final err instance = new err();
 
-    public static err instance()
-    {
+    public static err instance() {
         return instance;
     }
 
-    private err()
-    {
+    private err() {
     }
 
-    public static void print(Object o)
-    {
-        System.err.print(o);
+    public static void print(Object o) {
+        String stackInfo = "";
+        String fullClassName = Thread.currentThread().getStackTrace()[2].getClassName();
+        String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
+        String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+        String fileName = Thread.currentThread().getStackTrace()[2].getFileName();
+        int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
+        stackInfo = "[" +  methodName + "()@" + fileName + ":" + lineNumber + "] ";
 
-        SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss");
-        datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        String timestamp = datefmt.format(new Date());
-
-        Logger.instance().log(Logger.LogType.Error, timestamp + "Z " + o.toString());
+        Logger.instance().log(Logger.LogType.Error, "[" + logTimestamp.log() + "] " + stackInfo + o.toString());
+        System.err.print("[" + logTimestamp.log() + "] [ERROR] " + stackInfo + o);
     }
 
-    public static void println()
-    {
+    public static void println() {
         System.err.println();
     }
 
-    public static void println(Object o)
-    {
-        System.err.println(o);
-
-        SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss");
-        datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        String timestamp = datefmt.format(new Date());
-
-        Logger.instance().log(Logger.LogType.Error, timestamp + "Z " + o.toString());
-        Logger.instance().log(Logger.LogType.Blank, "");
+    public static void printlnRhino(Object o) {
+        // Do not write to a log file as the JS Rhino files already do this. //
+        System.out.println("[" + logTimestamp.log() + "] [ERROR] " + o);
     }
 
-    public static void printStackTrace(Throwable e)
-    {
-        e.printStackTrace(System.err);
+    public static void println(Object o) {
+        String stackInfo = "";
+        String fullClassName = Thread.currentThread().getStackTrace()[2].getClassName();
+        String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
+        String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+        String fileName = Thread.currentThread().getStackTrace()[2].getFileName();
+        int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
+        stackInfo = "[" +  methodName + "()@" + fileName + ":" + lineNumber + "] ";
 
+        Logger.instance().log(Logger.LogType.Error, "[" + logTimestamp.log() + "] " + stackInfo + o.toString());
+        Logger.instance().log(Logger.LogType.Error, "");
+        System.err.println("[" + logTimestamp.log() + "] [ERROR] " + stackInfo + o);
+    }
+
+    public static void println(Object o, Boolean logOnly) {
+        String stackInfo = "";
+        String fullClassName = Thread.currentThread().getStackTrace()[2].getClassName();
+        String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
+        String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+        String fileName = Thread.currentThread().getStackTrace()[2].getFileName();
+        int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
+        stackInfo = "[" +  methodName + "()@" + fileName + ":" + lineNumber + "] ";
+
+        Logger.instance().log(Logger.LogType.Error, "[" + logTimestamp.log() + "] " + stackInfo + o.toString());
+        Logger.instance().log(Logger.LogType.Error, "");
+        if (!logOnly) {
+            System.err.println("[" + logTimestamp.log() + "] [ERROR] " + stackInfo + o);
+        }
+    }
+
+    public static void printStackTrace(Throwable e) {
+        if (Quorrabot.enableDebugging) {
+            e.printStackTrace(System.err);
+        }
         logStackTrace(e);
     }
 
-    public static void logStackTrace(Throwable e)
-    {
+    public static void logStackTrace(Throwable e) {
         Writer trace = new StringWriter();
         PrintWriter ptrace = new PrintWriter(trace);
 
         e.printStackTrace(ptrace);
 
-        SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss");
-        datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        String timestamp = datefmt.format(new Date());
-
-        Logger.instance().log(Logger.LogType.Error, timestamp + "Z " + trace.toString());
-        Logger.instance().log(Logger.LogType.Blank, "");
+        Logger.instance().log(Logger.LogType.Error, "[" + logTimestamp.log() + "] " + trace.toString());
+        Logger.instance().log(Logger.LogType.Error, "");
     }
 }

@@ -15,7 +15,8 @@ if ($.timePromoteHours == undefined || $.timePromoteHours == null || isNaN($.tim
 }
 
 if ($.timeZone == undefined || $.timeZone == null || $.timeZone.isEmpty()) {
-    $.timeZone = "America/New_York";
+    $.timeZone = $.logger.getTimeZone();
+    $.inidb.set("timezone", "timezone", $.timeZone);
 }
 
 if ($.timeOffline == undefined || $.timeOffline == null || $.timeOffline.isEmpty()) {
@@ -104,6 +105,7 @@ $.validateTimezone = function (timezone) {
 $.setTimezone = function (timezone) { 
     if (validateTimezone(timezone)) {
         $.inidb.set("timezone", "timezone", timezone);
+        $.logger.setTimeZone(timezone);
         $.timeZone = $.inidb.get('timezone', 'timezone');
 
         return true;

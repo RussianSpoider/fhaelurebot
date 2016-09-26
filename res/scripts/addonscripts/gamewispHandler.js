@@ -19,6 +19,7 @@ $.on('gameWispSubscribe', function(event) {
         if ($.SubscribeHandler.SubReward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
             $.inidb.incr('points', username, $.SubscribeHandler.SubReward);
         }
+        
         $.say($.lang.get("net.quorrabot.gamewisphandler.subscribe", resolvename, tier));
 });
 

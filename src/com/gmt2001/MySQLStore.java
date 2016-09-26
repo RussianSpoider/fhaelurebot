@@ -1,3 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.gmt2001;
 
 import java.io.File;
@@ -6,127 +16,56 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import org.apache.commons.io.FileUtils;
-import org.sqlite.SQLiteConfig;
+
+import me.gloriouseggroll.quorrabot.Quorrabot;
 
 /**
  *
  * @author gmt2001
  */
-public class SqliteStore extends DataStore {
+public class MySQLStore extends DataStore {
 
-    private String dbname = "quorrabot.db";
-    private int cache_size = -50000;
-    private boolean safe_write = false;
-    private boolean journal = true;
-    private Connection connection = null;
-    private static final SqliteStore instance = new SqliteStore();
+    private static Connection connection = null;
+    private static final MySQLStore instance = new MySQLStore();
+
+    private String db = "";
+    private String user = "";
+    private String pass = "";
     private int autoCommitCtr = 0;
 
-    public static SqliteStore instance() {
+    public static MySQLStore instance() {
         return instance;
     }
 
-    private SqliteStore() {
+    private MySQLStore() {
         try {
-            Class.forName("org.sqlite.JDBC");
+            Class.forName("org.mariadb.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
-            com.gmt2001.Console.err.printStackTrace(ex);
+            com.gmt2001.Console.err.println(ex.getMessage());
+        } catch (Exception ex) {
+            com.gmt2001.Console.err.println(ex.getMessage());
         }
-
-        Object o[] = LoadConfigReal("");
-
-        dbname = (String) o[0];
-        cache_size = (int) o[1];
-        safe_write = (boolean) o[2];
-        journal = (boolean) o[3];
-        connection = (Connection) o[4];
     }
 
     @Override
-    public void LoadConfig(String configStr) {
-        Object o[] = LoadConfigReal(configStr);
-
-        dbname = (String) o[0];
-        cache_size = (int) o[1];
-        safe_write = (boolean) o[2];
-        journal = (boolean) o[3];
-        connection = (Connection) o[4];
-    }
-
-    private static Object[] LoadConfigReal(String configStr) {
-        if (configStr.isEmpty()) {
-            configStr = "sqlite3config.txt";
-        }
-
-        String dbname = "quorrabot.db";
-        int cache_size = -50000;
-        boolean safe_write = false;
-        boolean journal = true;
-        Connection connection = null;
-
+    public Connection CreateConnection(String db, String user, String pass) {
+        this.db = db;
+        this.user = user;
+        this.pass = pass;
         try {
-            File f = new File("./" + configStr);
-
-            if (f.exists()) {
-                String data = FileUtils.readFileToString(new File("./" + configStr));
-                String[] lines = data.replaceAll("\\r", "").split("\\n");
-
-                for (String line : lines) {
-                    if (line.startsWith("dbname=") && line.length() > 8) {
-                        dbname = line.substring(7);
-                    }
-                    if (line.startsWith("cachesize=") && line.length() > 11) {
-                        cache_size = Integer.parseInt(line.substring(10));
-                    }
-                    if (line.startsWith("safewrite=") && line.length() > 11) {
-                        safe_write = line.substring(10).equalsIgnoreCase("true") || line.substring(10).equalsIgnoreCase("1");
-                    }
-                    if (line.startsWith("journal=") && line.length() > 9) {
-                        journal = line.substring(8).equalsIgnoreCase("true");
-                    }
-                }
-
-                connection = CreateConnection(dbname, cache_size, safe_write, journal, true);
-            }
-        } catch (IOException ex) {
-            com.gmt2001.Console.err.printStackTrace(ex);
-        }
-
-        return new Object[] {
-                   dbname, cache_size, safe_write, journal, connection
-               };
-    }
-
-    private static Connection CreateConnection(String dbname, int cache_size, boolean safe_write, boolean journal, boolean autocommit) {
-        Connection connection = null;
-
-        try {
-            SQLiteConfig config = new SQLiteConfig();
-            config.setCacheSize(cache_size);
-            config.setSynchronous(safe_write ? SQLiteConfig.SynchronousMode.FULL : SQLiteConfig.SynchronousMode.NORMAL);
-            config.setTempStore(SQLiteConfig.TempStore.MEMORY);
-            config.setJournalMode(journal ? SQLiteConfig.JournalMode.TRUNCATE : SQLiteConfig.JournalMode.OFF);
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbname.replaceAll("\\\\", "/"), config.toProperties());
-            connection.setAutoCommit(autocommit);
+            connection = DriverManager.getConnection(db, user, pass);
+            connection.setAutoCommit(getAutoCommitCtr() == 0);
+            com.gmt2001.Console.out.println("Connected to MySQL");
+            return connection;
         } catch (SQLException ex) {
-            com.gmt2001.Console.err.printStackTrace(ex);
-        }
-
-        return connection;
-    }
-
-    public void CloseConnection() {
-        try {
-            if (connection != null) {
-                connection.close();
-                connection = null;
-            }
-        } catch (SQLException ex) {
-           com.gmt2001.Console.err.printStackTrace(ex);
+            com.gmt2001.Console.err.println("Failure to Connect to MySQL: " + ex.getMessage());
+            return null;
         }
     }
 
@@ -148,7 +87,7 @@ public class SqliteStore extends DataStore {
     private void CheckConnection() {
         try {
             if (connection == null || connection.isClosed() || !connection.isValid(10)) {
-                connection = CreateConnection(dbname, cache_size, safe_write, journal, getAutoCommitCtr() == 0);
+                connection = CreateConnection(db, user, pass);
             }
         } catch (SQLException ex) {
             com.gmt2001.Console.err.printStackTrace(ex);
@@ -165,7 +104,7 @@ public class SqliteStore extends DataStore {
             try (Statement statement = connection.createStatement()) {
                 statement.setQueryTimeout(10);
 
-                statement.executeUpdate("CREATE TABLE quorrabot_" + fName + " (section string, variable string, value string);");
+                statement.executeUpdate("CREATE TABLE quorrabot_" + fName + " (section LONGTEXT, variable varchar(255) NOT NULL, value LONGTEXT, PRIMARY KEY (variable));");
             } catch (SQLException ex) {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }
@@ -233,8 +172,8 @@ public class SqliteStore extends DataStore {
         try (Statement statement = connection.createStatement()) {
             statement.setQueryTimeout(10);
 
-            try (ResultSet rs = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='quorrabot_" + fName + "';")) {
-
+            DatabaseMetaData md = connection.getMetaData();
+            try (ResultSet rs = md.getTables(null, null, "quorrabot_" + fName, null)) {
                 return rs.next();
             }
         } catch (SQLException ex) {
@@ -251,14 +190,12 @@ public class SqliteStore extends DataStore {
         try (Statement statement = connection.createStatement()) {
             statement.setQueryTimeout(10);
 
-            try (ResultSet rs = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'quorrabot_%';")) {
-
+            DatabaseMetaData md = connection.getMetaData();
+            try (ResultSet rs = md.getTables(null, null, "%", null)) {
                 ArrayList<String> s = new ArrayList<>();
-
                 while (rs.next()) {
-                    s.add(rs.getString("name").substring(10));
+                    s.add(rs.getString(3));
                 }
-
                 return s.toArray(new String[s.size()]);
             }
         } catch (SQLException ex) {
@@ -532,9 +469,10 @@ public class SqliteStore extends DataStore {
             } else {
                 incrAutoCommitCtr();
                 connection.setAutoCommit(mode);
+                com.gmt2001.Console.debug.println(getAutoCommitCtr());
             }
         } catch (SQLException ex) {
-            com.gmt2001.Console.debug.println("SQLite commit was attempted too early, will perform later.");
+            com.gmt2001.Console.debug.println("MySQL commit was attempted too early, will perform later.");
         }
     }
 

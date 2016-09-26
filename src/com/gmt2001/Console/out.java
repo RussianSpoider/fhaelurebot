@@ -27,46 +27,35 @@ import me.gloriouseggroll.quorrabot.Quorrabot;
  *
  * @author Gary Tekulsky
  */
-public class out
-{
+public class out {
 
     private static final out instance = new out();
 
-    public static out instance()
-    {
+    public static out instance() {
         return instance;
     }
 
-    private out()
-    {
+    private out() {
     }
 
-    public static void print(Object o)
-    {
-        if (Quorrabot.enableDebugging)
-        {
-            String datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss").format(Calendar.getInstance().getTime());
-            Logger.instance().log(Logger.LogType.Output, datefmt + "Z " + o.toString());
+    public static void print(Object o) {
+        if (Quorrabot.enableDebugging) {
+            Logger.instance().log(Logger.LogType.Output, "[" + logTimestamp.log() + "] " + o.toString());
         }
 
         System.out.print(o);
     }
 
-    public static void println()
-    {
+    public static void println() {
         System.out.println();
     }
 
-    public static void println(Object o)
-    {
-        String datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss").format(Calendar.getInstance().getTime());
-
-        if (Quorrabot.enableDebugging)
-        {
-            Logger.instance().log(Logger.LogType.Output, datefmt + "Z " + o.toString());
-            Logger.instance().log(Logger.LogType.Blank, "");
+    public static void println(Object o) {
+        if (Quorrabot.enableDebugging) {
+            Logger.instance().log(Logger.LogType.Output, "[" + logTimestamp.log() + "] " + o.toString());
+            Logger.instance().log(Logger.LogType.Output, "");
         }
 
-        System.out.println("[" + datefmt + "] " + o);
+        System.out.println("[" + logTimestamp.log() + "] " + o);
     }
 }
