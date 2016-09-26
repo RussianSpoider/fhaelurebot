@@ -22,6 +22,7 @@ public class RepoVersion {
     private static final String quorraBotVersion = "@quorrabot.version@";
     private static final String repoVersion = "@repository.version@";
     private static final String nightlyBuild = "@nightly.build@";
+    private static final String timeStamp = "@timestamp@";
 
     private RepoVersion() {
     }
@@ -36,5 +37,9 @@ public class RepoVersion {
 
     public static String getNightlyBuild() {
         return nightlyBuild;
+    }
+    
+    public static String getTimeStamp() {
+        return timeStamp;
     }
 }

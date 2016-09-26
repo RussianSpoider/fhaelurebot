@@ -212,7 +212,6 @@ public class Quorrabot implements Listener
         this.youtubekey = youtubekey;
 	if (!timeZone.isEmpty()) {
             this.timeZone = timeZone;
-            Logger.instance().setTimeZone(timeZone);
 	} else {
             this.timeZone = "America/New_York";
 	}
@@ -255,16 +254,9 @@ public class Quorrabot implements Listener
             TwitterAPI.instance().loadAccessToken(twittertoken,twittertokensecret);
         }
         
-        this.mySqlName = mySqlName;
-	this.mySqlUser = mySqlUser;
-	this.mySqlPass = mySqlPass;
-	this.mySqlConn = mySqlConn;
-	this.mySqlHost = mySqlHost;
-	this.mySqlPort = mySqlPort;
         
 	if (!timeZone.isEmpty()) {
             this.timeZone = timeZone;
-            Logger.instance().setTimeZone(timeZone);
 	} else {
             this.timeZone = "America/New_York";
         }
@@ -313,6 +305,12 @@ public class Quorrabot implements Listener
             this.msglimit30 = 18.75;
         }
 
+        this.mySqlName = mySqlName;
+	this.mySqlUser = mySqlUser;
+	this.mySqlPass = mySqlPass;
+	this.mySqlConn = mySqlConn;
+	this.mySqlHost = mySqlHost;
+	this.mySqlPort = mySqlPort;
 
         if (datastore.equalsIgnoreCase("IniStore"))
         {
@@ -324,6 +322,9 @@ public class Quorrabot implements Listener
 			} else {
 				this.mySqlConn = "jdbc:mariadb://" + this.mySqlHost + ":" + this.mySqlPort + "/" + this.mySqlName;
 			}
+                        com.gmt2001.Console.out.println(this.mySqlConn);
+                        com.gmt2001.Console.out.println(this.mySqlUser);
+                        com.gmt2001.Console.out.println(this.mySqlPass);
                         com.gmt2001.Console.out.println(this.mySqlConn);
                         com.gmt2001.Console.out.println(this.mySqlUser);
                         com.gmt2001.Console.out.println(this.mySqlPass);
@@ -1493,21 +1494,6 @@ public class Quorrabot implements Listener
                     {
                         port = Integer.parseInt(line.substring(5));
                     }
-                    if (line.startsWith("mysqlhost=") && line.length() > 11) {
-                        mySqlHost = line.substring(10);
-                    }
-                    if (line.startsWith("mysqlport=") && line.length() > 11) {
-                        mySqlPort = line.substring(10);
-                    }
-                    if (line.startsWith("mysqlname=") && line.length() > 11) {
-                        mySqlName = line.substring(10);
-                    }
-                    if (line.startsWith("mysqluser=") && line.length() > 11) {
-                        mySqlUser = line.substring(10);
-                    }
-                    if (line.startsWith("mysqlpass=") && line.length() > 11) {
-                        mySqlPass = line.substring(10);
-                    }
                     if (line.startsWith("msglimit30=") && line.length() > 12)
                     {
                         msglimit30 = Double.parseDouble(line.substring(11));
@@ -1565,6 +1551,21 @@ public class Quorrabot implements Listener
                     if (line.startsWith("usehttps=") && line.length() > 10)
                     {
                         usehttps = Boolean.valueOf(line.substring(9));
+                    }
+                    if (line.startsWith("mysqlhost=") && line.length() > 11) {
+                        mySqlHost = line.substring(10);
+                    }
+                    if (line.startsWith("mysqlport=") && line.length() > 11) {
+                        mySqlPort = line.substring(10);
+                    }
+                    if (line.startsWith("mysqlname=") && line.length() > 11) {
+                        mySqlName = line.substring(10);
+                    }
+                    if (line.startsWith("mysqluser=") && line.length() > 11) {
+                        mySqlUser = line.substring(10);
+                    }
+                    if (line.startsWith("mysqlpass=") && line.length() > 11) {
+                        mySqlPass = line.substring(10);
                     }
                     if (line.startsWith("keystorepath=") && line.length() > 14)
                     {
@@ -1694,31 +1695,31 @@ public class Quorrabot implements Listener
                         changed = true;
                     }
                 }
-                if (arg.startsWith("mysqlhost=") && arg.length() > 11) {
+                if (arg.toLowerCase().startsWith("mysqlhost=") && arg.length() > 11) {
                     if (!mySqlHost.equals(arg.substring(10))) {
                         mySqlHost = arg.substring(10);
                         changed = true;
                     }
                 }
-                if (arg.startsWith("mysqlport=") && arg.length() > 11) {
+                if (arg.toLowerCase().startsWith("mysqlport=") && arg.length() > 11) {
                     if (!mySqlPort.equals(arg.substring(10))) {
                         mySqlPort = arg.substring(10);
                         changed = true;
                     }
                 }
-                if (arg.startsWith("mysqlname=") && arg.length() > 11) {
+                if (arg.toLowerCase().startsWith("mysqlname=") && arg.length() > 11) {
                     if (!mySqlName.equals(arg.substring(10))) {
                         mySqlName = arg.substring(10);
                         changed = true;
                     }
                 }
-                if (arg.startsWith("mysqluser=") && arg.length() > 11) {
+                if (arg.toLowerCase().startsWith("mysqluser=") && arg.length() > 11) {
                     if (!mySqlUser.equals(arg.substring(14))) {
                         mySqlUser = arg.substring(10);
                         changed = true;
                     }
                 }
-                if (arg.startsWith("mysqlpass=") && arg.length() > 11) {
+                if (arg.toLowerCase().startsWith("mysqlpass=") && arg.length() > 11) {
                     if (!mySqlPass.equals(arg.substring(10))) {
                         mySqlPass = arg.substring(10);
                         changed = true;
