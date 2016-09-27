@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
     <property environment="env" />
     <property name="project.base.dir" value="." />
-    <property name="version" value="1.13" />
+    <property name="version" value="1.14" />
     <property name="java.class.path" value="" />
     <property name="src" value="${project.base.dir}/src" />
     <property name="reference" value="${project.base.dir}/lib" />
@@ -104,7 +104,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <replaceregexp
             file="${src}/me/gloriouseggroll/quorrabot/RepoVersion.java"
             match="quorraBotVersion = &quot;(.*)&quot;;"
-            replace="quorraBotVersion = &quot;${version}&quot;;" />
+            replace="quorraBotVersion = &quot;${version} ${NOW}&quot;;" />
     </target>
 
     <target depends="pre.compile" name="compile.src">
@@ -158,6 +158,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                 <attribute name="Implementation-URL" value="http://www.quorrabot.com" />
                 <attribute name="Class-Path" value="${mf.classpath}" />
                 <attribute name="Main-Class" value="me.gloriouseggroll.quorrabot.Quorrabot" />
+                <attribute name="Built-Date" value="${NOW}"/>
             </manifest>
         </jar>
         <mkdir dir="${lib.dir}" />

@@ -68,7 +68,7 @@ public class Logger implements Runnable {
             if (!queue.isEmpty()) {
 
                 SimpleDateFormat datefmt = new SimpleDateFormat("dd-MM-yyyy");
-                datefmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+                datefmt.setTimeZone(TimeZone.getTimeZone("EDT"));
                 String timestamp = datefmt.format(new Date());
 
                 // New date, close all open streams.  Java spec says that closing the PrintStream closes the

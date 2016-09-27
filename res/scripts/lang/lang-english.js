@@ -994,5 +994,5 @@ $.lang.data["net.quorrabot.twitterhandler.tweet-successful"] = "Tweet sent succe
 
 //gamewispHandler.js
 $.lang.data["net.quorrabot.gamewisphandler.benefits"] = "/me $1 has just subscribed to $2 via GameWisp2!";
-$.lang.data["net.quorrabot.gamewisphandler.subscribe"] = "/me $1 has just subscribed to Tier $2 via GameWisp!";
-$.lang.data["net.quorrabot.gamewisphandler.anniversary"] = "/me $1 has just resubscribed to Tier $2 via GameWisp! They have been subscribed for $3 months in total!";
+$.lang.data["net.quorrabot.gamewisphandler.subscribe"] = "/me $1 has just subscribed to Tier $2 via GameWisp! Their all time sub count is $3 months!";
+$.lang.data["net.quorrabot.gamewisphandler.anniversary"] = "/me $1 has just resubscribed to Tier $2 via GameWisp! Their all time sub count is $3 months!";

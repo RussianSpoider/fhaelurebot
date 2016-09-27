@@ -192,6 +192,9 @@ setTimeout(function(){
                                 } else {
                                     $.say($.lang.get("net.quorrabot.donationhandler.new-donation", $.tadonator, $.taamount));
                                 }
+                                if($.username.resolve($.tadonator)) {
+                                    $.inidb.set("donationlist",$.tadonator.toString().toLowerCase(),$.taamount);
+                                }
                             }
                         } else {
                             $.say($.lang.get("net.quorrabot.donationhandler.new-donation-text", $.readFile($.DonationHandler.CheckerStorePath)));

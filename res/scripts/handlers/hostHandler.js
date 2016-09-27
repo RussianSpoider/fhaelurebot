@@ -32,12 +32,7 @@ $.isHostUser = function (user) {
 
 $.on('twitchHosted', function (event) {
     var username = $.username.resolve(event.getHoster());
-    var group = $.inidb.get('group', username.toLowerCase());
     var s = $.hostMessage;
-
-    if (group == null) {
-        group = 'Viewer';
-    }
 
     if ($.announceHosts && $.moduleEnabled("./handlers/hostHandler.js") && ($.hostlist[username.toLowerCase()] == null || $.hostlist[username.toLowerCase()] == undefined || $.hostlist[username.toLowerCase()] < System.currentTimeMillis())) {
         
@@ -52,6 +47,13 @@ $.on('twitchHosted', function (event) {
     $.hostlist[username.toLowerCase()] = System.currentTimeMillis() + $.hosttimeout;
 
     $.hostlist.push(username.toLowerCase());
+    
+    if(!$.inidb.exists("hostslist",username.toLowerCase())) {
+        $.inidb.set("hostslist",username.toLowerCase(), 1);
+    } else {
+        var hostcount = parseInt($.inidb.get("hostslist", username.toLowerCase()));
+        $.inidb.set("hostslist",username.toLowerCase(), hostcount++);
+    }
 });
 
 $.on('twitchUnhosted', function (event) {

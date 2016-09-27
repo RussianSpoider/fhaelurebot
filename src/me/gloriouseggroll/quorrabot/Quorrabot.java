@@ -145,7 +145,7 @@ public class Quorrabot implements Listener
     private boolean exiting = false;
     private Thread t;
     private static Quorrabot instance;
-    public static String timeZone = "America/New_York";
+    public static String timeZone = "EDT";
     
     private String mySqlConn;
     private String mySqlHost;
@@ -185,9 +185,9 @@ public class Quorrabot implements Listener
 
     public Quorrabot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh, 
-            String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String timeZone, String streamtiptoken, 
-            String streamtipid, String mySqlHost, String mySqlPort, String mySqlConn, String mySqlPass, String mySqlUser, 
-            String mySqlName, boolean webenable, boolean musicenable, boolean usehttps, String keystorepath, String keystorepassword, String keypassword)
+            String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken, 
+            String streamtipid, boolean webenable, boolean musicenable, boolean usehttps, String timeZone, String mySqlHost, String mySqlPort, String mySqlConn, 
+            String mySqlPass, String mySqlUser, String mySqlName, String keystorepath, String keystorepassword, String keypassword)
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
@@ -213,7 +213,7 @@ public class Quorrabot implements Listener
 	if (!timeZone.isEmpty()) {
             this.timeZone = timeZone;
 	} else {
-            this.timeZone = "America/New_York";
+            this.timeZone = "EDT";
 	}
         
         if (!youtubekey.isEmpty())
@@ -254,12 +254,13 @@ public class Quorrabot implements Listener
             TwitterAPI.instance().loadAccessToken(twittertoken,twittertokensecret);
         }
         
+        this.mySqlName = mySqlName;
+	this.mySqlUser = mySqlUser;
+	this.mySqlPass = mySqlPass;
+	this.mySqlConn = mySqlConn;
+	this.mySqlHost = mySqlHost;
+	this.mySqlPort = mySqlPort;
         
-	if (!timeZone.isEmpty()) {
-            this.timeZone = timeZone;
-	} else {
-            this.timeZone = "America/New_York";
-        }
 
         this.webenable = webenable;
         this.musicenable = musicenable;
@@ -305,13 +306,6 @@ public class Quorrabot implements Listener
             this.msglimit30 = 18.75;
         }
 
-        this.mySqlName = mySqlName;
-	this.mySqlUser = mySqlUser;
-	this.mySqlPass = mySqlPass;
-	this.mySqlConn = mySqlConn;
-	this.mySqlHost = mySqlHost;
-	this.mySqlPort = mySqlPort;
-
         if (datastore.equalsIgnoreCase("IniStore"))
         {
             dataStoreObj = IniStore.instance();
@@ -322,12 +316,7 @@ public class Quorrabot implements Listener
 			} else {
 				this.mySqlConn = "jdbc:mariadb://" + this.mySqlHost + ":" + this.mySqlPort + "/" + this.mySqlName;
 			}
-                        com.gmt2001.Console.out.println(this.mySqlConn);
-                        com.gmt2001.Console.out.println(this.mySqlUser);
-                        com.gmt2001.Console.out.println(this.mySqlPass);
-                        com.gmt2001.Console.out.println(this.mySqlConn);
-                        com.gmt2001.Console.out.println(this.mySqlUser);
-                        com.gmt2001.Console.out.println(this.mySqlPass);
+
 			/** Check to see if we can create a connection */
 			if (dataStoreObj.CreateConnection(this.mySqlConn, this.mySqlUser, this.mySqlPass) == null) {
 				com.gmt2001.Console.out.println("Could not create a connection with MySql. QuorraBot now shutting down...");
@@ -1552,19 +1541,24 @@ public class Quorrabot implements Listener
                     {
                         usehttps = Boolean.valueOf(line.substring(9));
                     }
-                    if (line.startsWith("mysqlhost=") && line.length() > 11) {
+                    if (line.startsWith("mysqlhost=") && line.length() > 11) 
+                    {
                         mySqlHost = line.substring(10);
                     }
-                    if (line.startsWith("mysqlport=") && line.length() > 11) {
+                    if (line.startsWith("mysqlport=") && line.length() > 11) 
+                    {
                         mySqlPort = line.substring(10);
                     }
-                    if (line.startsWith("mysqlname=") && line.length() > 11) {
+                    if (line.startsWith("mysqlname=") && line.length() > 11) 
+                    {
                         mySqlName = line.substring(10);
                     }
-                    if (line.startsWith("mysqluser=") && line.length() > 11) {
+                    if (line.startsWith("mysqluser=") && line.length() > 11) 
+                    {
                         mySqlUser = line.substring(10);
                     }
-                    if (line.startsWith("mysqlpass=") && line.length() > 11) {
+                    if (line.startsWith("mysqlpass=") && line.length() > 11) 
+                    {
                         mySqlPass = line.substring(10);
                     }
                     if (line.startsWith("keystorepath=") && line.length() > 14)
@@ -1993,8 +1987,8 @@ public class Quorrabot implements Listener
 
         Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, 
                 msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken, 
-                mySqlHost, mySqlPort, mySqlConn, mySqlPass, mySqlUser, mySqlName, lastfmuser, tpetoken, twittertoken, 
-                twittertokensecret, timeZone, streamtiptoken, streamtipid, webenable, musicenable, usehttps, keystorepath, 
+                lastfmuser, tpetoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid,
+                webenable, musicenable, usehttps, timeZone, mySqlHost, mySqlPort, mySqlConn, mySqlPass, mySqlUser, mySqlName, keystorepath, 
                 keystorepassword, keypassword);
     }
     public void updateGameWispTokens(String[] newTokens) {

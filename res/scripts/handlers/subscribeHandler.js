@@ -1,6 +1,6 @@
 $.SubscribeHandler = {
-    SubMessage: ($.inidb.get('settings', 'subscribemessage') ? $.inidb.get('settings', 'subscribemessage') : '(name) just subscribed!'),
-    ReSubMessage: ($.inidb.get('settings', 'resubscribemessage') ? $.inidb.get('settings', 'resubscribemessage') : '(name) just subscribed for (months) months in a row!'),
+    SubMessage: ($.inidb.get('settings', 'subscribemessage') ? $.inidb.get('settings', 'subscribemessage') : '(name) just subscribed! Their all time sub count is (months) months!'),
+    ReSubMessage: ($.inidb.get('settings', 'resubscribemessage') ? $.inidb.get('settings', 'resubscribemessage') : '(name) just resubscribed! Their all time sub count is (months) months!'),
     SubWelcomeToggle: ($.inidb.get('settings', 'sub_announce') ? $.inidb.get('settings', 'sub_announce') : "true"),
     SubReward: (parseInt($.inidb.get('settings', 'subscribereward')) ? parseInt($.inidb.get('settings', 'subscribereward')) : 0),
     AutoSubModeTimer: (parseInt($.inidb.get('settings', 'submodeautotimer')) ? parseInt($.inidb.get('settings', 'submodeautotimer')) : 0),
@@ -146,7 +146,31 @@ $.on('ircPrivateMessage', function (event) {
     if (message.contains('just subscribed!') && sender.equalsIgnoreCase('twitchnotify')) {
         if ($.SubscribeHandler.SubWelcomeToggle=="true") {
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
+            var months = 0;
+            var twmonths = 0;
+            
             s = $.replaceAll(s, '(name)', sub);
+            
+            $.inidb.set('twitchsubslist', sub, '1');
+        
+            //log gw subs count
+            if(!$.inidb.exists("twitchsubscount",sub)) {
+                $.inidb.set("twitchsubscount",sub, '1');
+            } else {
+                var twsubcount = parseInt($.inidb.get("twitchsubscount", sub));
+                twmonths += twsubcount;
+                $.inidb.set("twitchsubscount",sub, twmonths);
+            }
+        
+            if(!$.inidb.exists("subscount",sub)) {
+                $.inidb.set("subscount",sub, '1');
+            } else {
+                var subcount = parseInt($.inidb.get("subscount", sub));
+                months += subcount;
+                $.inidb.set("subscount",sub, months);
+            }
+            
+            s = $.replaceAll(r, '(months)', months);
             $.say("/me " + s);
             return;
         }
@@ -154,9 +178,32 @@ $.on('ircPrivateMessage', function (event) {
         if ($.SubscribeHandler.SubWelcomeToggle=="true") {
             var months = message.substring( message.indexOf("months") - 3, message.indexOf("months") - 1 ).toString();
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
+            var twmonths = 0;
+
+            $.inidb.set('twitchsubslist', sub, '1');
+        
+            //log gw subs count
+            if(!$.inidb.exists("twitchsubscount",sub)) {
+                $.inidb.set("twitchsubscount",sub, '1');
+            } else {
+                var twsubcount = parseInt($.inidb.get("twitchsubscount", sub));
+                twmonths += twsubcount;
+                $.inidb.set("twitchsubscount",sub, twmonths);
+            }
+        
+            if(!$.inidb.exists("subscount",sub)) {
+                $.inidb.set("subscount",sub, '1');
+            } else {
+                var subcount = parseInt($.inidb.get("subscount", sub));
+                months += subcount;
+                $.inidb.set("subscount",sub, months);
+            }
+            
+            
             r = $.replaceAll(r, '(name)', sub);
             r = $.replaceAll(r, '(months)', months);
             r = $.replaceAll(r, '(reward)', $.SubscribeHandler.SubReward); 
+            
             $.say("/me " + r);
             return;
         }

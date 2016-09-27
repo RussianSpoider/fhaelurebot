@@ -35,7 +35,11 @@ $.isCaster = function (user) {
 };
 
 $.isAdmin = function (user) {
-    return $.getUserGroupId(user) <= 1 || $.isCaster(user) || $.isBot(user);
+    if($.getUserGroupId(user)!=null) {
+        return $.getUserGroupId(user) <= 1 || $.isCaster(user) || $.isBot(user);
+    } else {
+        return $.isCaster(user) || $.isBot(user);
+    }
 };
 
 $.isMod = function (user) {
@@ -43,7 +47,11 @@ $.isMod = function (user) {
 };
 
 $.isModv3 = function (user, tags) {
-    return $.isAdmin(user) || (tags != null && tags != "{}" && tags.get("user-type").equalsIgnoreCase("mod")) || $.isMod(user);
+    if(tags != null && tags != "{}" && tags != "") {
+        return $.isAdmin(user) || tags.get("user-type").equalsIgnoreCase("mod") || $.isMod(user);
+    } else {
+        return $.isAdmin(user) || $.isMod(user);
+    }
 };
 
 $.isSub = function (user) {
@@ -53,12 +61,20 @@ $.isSub = function (user) {
             return true;
         }
     }
+    
+    if($.isGameWispSub(user)) {
+        return true;
+    }
 
     return false;
 };
 
 $.isSubv3 = function (user, tags) {
-    return (tags != null && tags != "{}" && tags.get("subscriber").equalsIgnoreCase("1")) || $.isSub(user);
+    if(tags != null && tags != "{}" && tags != "") {
+        return (tags != null && tags != "{}" && tags.get("subscriber").equalsIgnoreCase("1")) || $.isSub(user);
+    } else {
+        return $.isSub(user);
+    }
 };
 
 $.isTurbo = function (user, tags) {
@@ -66,7 +82,7 @@ $.isTurbo = function (user, tags) {
 };
 
 $.isDonator = function (user) {
-    return $.getUserGroupId(user) == 4;
+    return $.inidb.get("donationlist",user) == true;
 };
 
 $.isHoster = function (user) {
@@ -93,13 +109,36 @@ $.hasGroupByName = function (user, name) {
     return $.hasGroupById(user, $.getGroupIdByName(name));
 };
 
+$.checkDynamicGroup = function (user) {
+    user = $.username.resolve(user).toLowerCase();
+    var group = 7;
+    
+    //we don't use isMod or isModv3 here because we are skipping $.isAdmin (which is included in both)
+    //we skip isAdmin because this check is for dynamic groups which do not utilize the group table
+    
+    if ($.hasModeO(user) || $.hasModList(user)) {
+        group = 2;
+    } else if ($.isSub(user)) {
+        group = 3;
+    } else if ($.isDonator(user)) {
+        group = 4;
+    } else if ($.isHoster(user)) {
+        group = 5;
+    }
+    return group;
+}
+
+
 $.getUserGroupId = function (user) {
     user = $.username.resolve(user);
     var group = $.inidb.get('group', user.toLowerCase());
-    if (group == null)
-        group = 7;
-    else
+    if (group == null) {
+            group = $.checkDynamicGroup(user);
+    } else if($.checkDynamicGroup(user)!=7) {
+            group = $.checkDynamicGroup(user);
+    } else {
         group = parseInt(group);
+    }
     return group;
 };
 
@@ -110,17 +149,17 @@ $.getUserGroupName = function (user) {
     else if($.isAdmin(user)) {
         return "Administrator";
     }
-    else if($.isModv3(user)) {
+    else if($.isMod(user)) {
         return "Moderator";
     }
-    else if($.isSubv3(user)) {
+    else if($.isSub(user)) {
         return "Subscriber";
-    }
-    else if($.isHoster(user)) {
-        return "Hoster";
     }
     else if($.isDonator(user)) {
         return "Donator";
+    }
+    else if($.isHoster(user)) {
+        return "Hoster";
     }
     else if($.isReg(user)) {
         return "Regular";
