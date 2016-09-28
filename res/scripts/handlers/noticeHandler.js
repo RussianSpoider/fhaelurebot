@@ -243,7 +243,6 @@ $.SendNotice = function (number) {
         noticenum = $.Notice.NTimerCount;
         notice = $.notices[noticenum];
         $.Notice.NTimerCount++;
-        $.println(noticenum);
     }
     var noticeList = $.inidb.GetKeyList('notices', '');
 
