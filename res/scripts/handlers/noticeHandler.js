@@ -236,15 +236,14 @@ $.SendNotice = function (number) {
         notice = $.inidb.get('notices', 'message_' + noticenum); 
     } else {
         if($.Notice.NTimerCount > 0) {
-            $.Notice.NTimerCount++;
-            noticenum = $.Notice.NTimerCount;
-        } else if ($.Notice.NTimerCount > $.notices.length) {
-            $.Notice.NTimerCount = 0;
-            noticenum = 0;
-        } else {
-            noticenum = 0;
+            if($.Notice.NTimerCount >= $.notices.length){
+                $.Notice.NTimerCount = 0;
+            }
         }
+        noticenum = $.Notice.NTimerCount;
         notice = $.notices[noticenum];
+        $.Notice.NTimerCount++;
+        $.println(noticenum);
     }
     var noticeList = $.inidb.GetKeyList('notices', '');
 
