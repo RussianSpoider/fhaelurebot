@@ -4,6 +4,7 @@ $.Notice = {
     NoticeToggle: $.inidb.get('settings', 'noticetoggle') ? $.inidb.get('settings', 'noticetoggle') : "true",
     NumberOfNotices: (parseInt($.inidb.GetKeyList('notices', '').length)) ? (parseInt($.inidb.GetKeyList('notices', '').length)) : 0,
     MessageCount: 0,
+    NTimerCount: 0,
     NoticeTimers: $.inidb.GetKeyList('notice_timers', '') ? $.inidb.GetKeyList('notice_timers', '') : '',
 }
 
@@ -234,7 +235,15 @@ $.SendNotice = function (number) {
     if(noticenum!=null && !isNaN(noticenum)) {
         notice = $.inidb.get('notices', 'message_' + noticenum); 
     } else {
-        noticenum = $.randRange(0, $.notices.length);
+        if($.Notice.NTimerCount > 0) {
+            $.Notice.NTimerCount++;
+            noticenum = $.Notice.NTimerCount;
+        } else if ($.Notice.NTimerCount > $.notices.length) {
+            $.Notice.NTimerCount = 0;
+            noticenum = 0;
+        } else {
+            noticenum = 0;
+        }
         notice = $.notices[noticenum];
     }
     var noticeList = $.inidb.GetKeyList('notices', '');
