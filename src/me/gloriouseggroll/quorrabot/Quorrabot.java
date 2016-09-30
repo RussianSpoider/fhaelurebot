@@ -1180,7 +1180,7 @@ public class Quorrabot implements Listener
     }
 
     private void sqlite2MySql() {
-        com.gmt2001.Console.out.print("Performing SQLite to MySQL Conversion..\n.");
+        com.gmt2001.Console.out.print("Performing SQLite to MySQL Conversion...\n");
         MySQLStore mysql = MySQLStore.instance();
         SqliteStore sqlite = SqliteStore.instance();
 
