@@ -134,7 +134,7 @@ $.getUserGroupId = function (user) {
     var group = $.inidb.get('group', user.toLowerCase());
     if (group == null) {
             group = $.checkDynamicGroup(user);
-    } else if($.checkDynamicGroup(user)!=7) {
+    } else if(group > 1) {
             group = $.checkDynamicGroup(user);
     } else {
         group = parseInt(group);
@@ -143,29 +143,7 @@ $.getUserGroupId = function (user) {
 };
 
 $.getUserGroupName = function (user) {
-    if($.isCaster(user)) {
-        return "Caster";
-    }
-    else if($.isAdmin(user)) {
-        return "Administrator";
-    }
-    else if($.isMod(user)) {
-        return "Moderator";
-    }
-    else if($.isSub(user)) {
-        return "Subscriber";
-    }
-    else if($.isDonator(user)) {
-        return "Donator";
-    }
-    else if($.isHoster(user)) {
-        return "Hoster";
-    }
-    else if($.isReg(user)) {
-        return "Regular";
-    } else {
-        return $.getGroupNameById($.getUserGroupId(user));
-    }
+    return $.getGroupNameById($.getUserGroupId(user));
 };
 
 $.setUserGroupById = function (user, id) {
