@@ -1183,10 +1183,11 @@ public class Quorrabot implements Listener
         com.gmt2001.Console.out.print("Performing SQLite to MySQL Conversion...\n");
         MySQLStore mysql = MySQLStore.instance();
         SqliteStore sqlite = SqliteStore.instance();
+        String dbname = SqliteStore.instance().getDbName();
 
-        File backupFile = new File("quorrabot.db.backup");
+        File backupFile = new File(dbname + ".backup");
         if (backupFile.exists()) {
-            com.gmt2001.Console.out.print("A quorrabot.db.backup file already exists. Please rename or remove this file first.");
+            com.gmt2001.Console.out.print("A " + dbname + ".backup file already exists. Please rename or remove this file first.");
             com.gmt2001.Console.out.print("Exiting QuorraBot");
             System.exit(0);
         }
@@ -1212,12 +1213,12 @@ public class Quorrabot implements Listener
         }
         sqlite.CloseConnection();
         com.gmt2001.Console.out.print("Finished Converting Tables.\n");
-        com.gmt2001.Console.out.print("Moving quorrabot.db to quorrabot.db.backup\n");
+        com.gmt2001.Console.out.print("Moving " + dbname + " to " + dbname + ".backup\n");
 
         try {
-            FileUtils.moveFile(new java.io.File("quorrabot.db"), new java.io.File("quorrabot.db.backup"));
+            FileUtils.moveFile(new java.io.File(dbname), new java.io.File(dbname + ".backup"));
         } catch (IOException ex) {
-            com.gmt2001.Console.err.println("Failed to move quorrabot.db to quorrabot.db.backup: " + ex.getMessage());
+            com.gmt2001.Console.err.println("Failed to move " + dbname + " to " + dbname + ".backup: " + ex.getMessage());
         }
         com.gmt2001.Console.out.print("SQLite to MySQL Conversion is Complete");
     }

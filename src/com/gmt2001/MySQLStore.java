@@ -34,7 +34,8 @@ public class MySQLStore extends DataStore {
     private static Connection connection = null;
     private static final MySQLStore instance = new MySQLStore();
 
-    private String db = "";
+    private String db = "quorrabot.db";
+    private String dbprefix = "quorrabot_";
     private String user = "";
     private String pass = "";
     private int autoCommitCtr = 0;
@@ -56,6 +57,7 @@ public class MySQLStore extends DataStore {
     @Override
     public Connection CreateConnection(String db, String user, String pass) {
         this.db = db;
+        this.dbprefix = "quorrabot_";
         this.user = user;
         this.pass = pass;
         try {
@@ -104,7 +106,7 @@ public class MySQLStore extends DataStore {
             try (Statement statement = connection.createStatement()) {
                 statement.setQueryTimeout(10);
 
-                statement.executeUpdate("CREATE TABLE quorrabot_" + fName + " (section LONGTEXT, variable varchar(255) NOT NULL, value LONGTEXT, PRIMARY KEY (variable));");
+                statement.executeUpdate("CREATE TABLE " + dbprefix + fName + " (section LONGTEXT, variable varchar(255) NOT NULL, value LONGTEXT, PRIMARY KEY (variable));");
             } catch (SQLException ex) {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }
@@ -118,7 +120,7 @@ public class MySQLStore extends DataStore {
         fName = validateFname(fName);
 
         if (FileExists(fName)) {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM quorrabot_" + fName + " WHERE section=? AND variable=?;")) {
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " + dbprefix + fName + " WHERE section=? AND variable=?;")) {
                 statement.setQueryTimeout(10);
                 statement.setString(1, section);
                 statement.setString(2, key);
@@ -136,7 +138,7 @@ public class MySQLStore extends DataStore {
         fName = validateFname(fName);
 
         if (FileExists(fName)) {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM quorrabot_" + fName + " WHERE section=?;")) {
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " + dbprefix + fName + " WHERE section=?;")) {
                 statement.setQueryTimeout(10);
                 statement.setString(1, section);
                 statement.executeUpdate();
@@ -156,7 +158,7 @@ public class MySQLStore extends DataStore {
             try (Statement statement = connection.createStatement()) {
                 statement.setQueryTimeout(10);
 
-                statement.executeUpdate("DROP TABLE quorrabot_" + fName + ";");
+                statement.executeUpdate("DROP TABLE " + dbprefix + fName + ";");
             } catch (SQLException ex) {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }
@@ -173,7 +175,7 @@ public class MySQLStore extends DataStore {
             statement.setQueryTimeout(10);
 
             DatabaseMetaData md = connection.getMetaData();
-            try (ResultSet rs = md.getTables(null, null, "quorrabot_" + fName, null)) {
+            try (ResultSet rs = md.getTables(null, null, "" + dbprefix + fName, null)) {
                 return rs.next();
             }
         } catch (SQLException ex) {
@@ -216,7 +218,7 @@ public class MySQLStore extends DataStore {
             try (Statement statement = connection.createStatement()) {
                 statement.setQueryTimeout(10);
 
-                try (ResultSet rs = statement.executeQuery("SELECT section FROM quorrabot_" + fName + " GROUP BY section;")) {
+                try (ResultSet rs = statement.executeQuery("SELECT section FROM " + dbprefix + fName + " GROUP BY section;")) {
 
                     ArrayList<String> s = new ArrayList<>();
 
@@ -243,7 +245,7 @@ public class MySQLStore extends DataStore {
 
         if (FileExists(fName)) {
             if (section.length() > 0) {
-                try (PreparedStatement statement = connection.prepareStatement("SELECT variable FROM quorrabot_" + fName + " WHERE section=?;")) {
+                try (PreparedStatement statement = connection.prepareStatement("SELECT variable FROM " + dbprefix + fName + " WHERE section=?;")) {
                     statement.setQueryTimeout(10);
                     statement.setString(1, section);
     
@@ -261,7 +263,7 @@ public class MySQLStore extends DataStore {
                     com.gmt2001.Console.err.printStackTrace(ex);
                 }
             } else {
-                try (PreparedStatement statement = connection.prepareStatement("SELECT variable FROM quorrabot_" + fName + ";")) {
+                try (PreparedStatement statement = connection.prepareStatement("SELECT variable FROM " + dbprefix + fName + ";")) {
                     statement.setQueryTimeout(10);
 
                     try (ResultSet rs = statement.executeQuery()) {
@@ -295,7 +297,7 @@ public class MySQLStore extends DataStore {
         }
 
         if (section.length() > 0) {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM quorrabot_" + fName + " WHERE section=? AND variable=?;")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM " + dbprefix + fName + " WHERE section=? AND variable=?;")) {
                 statement.setQueryTimeout(10);
                 statement.setString(1, section);
                 statement.setString(2, key);
@@ -310,7 +312,7 @@ public class MySQLStore extends DataStore {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }
        } else {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM quorrabot_" + fName + " WHERE variable=?;")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM " + dbprefix + fName + " WHERE variable=?;")) {
                 statement.setQueryTimeout(10);
                 statement.setString(1, key);
     
@@ -341,7 +343,7 @@ public class MySQLStore extends DataStore {
         }
 
         if (section.length() > 0) {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM quorrabot_" + fName + " WHERE section=? AND variable=?;")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM " + dbprefix + fName + " WHERE section=? AND variable=?;")) {
                 statement.setQueryTimeout(10);
                 statement.setString(1, section);
                 statement.setString(2, key);
@@ -356,7 +358,7 @@ public class MySQLStore extends DataStore {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }
         } else {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM quorrabot_" + fName + " WHERE variable=?;")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM " + dbprefix + fName + " WHERE variable=?;")) {
                 statement.setQueryTimeout(10);
                 statement.setString(1, key);
 
@@ -384,7 +386,7 @@ public class MySQLStore extends DataStore {
         setAutoCommit(false);
 
         try {
-            try (PreparedStatement statement = connection.prepareStatement("REPLACE INTO quorrabot_" + fName + " (value, section, variable) values(?, ?, ?);")) {
+            try (PreparedStatement statement = connection.prepareStatement("REPLACE INTO " + dbprefix + fName + " (value, section, variable) values(?, ?, ?);")) {
                 statement.setQueryTimeout(10);
                 for (int idx = 0; idx < keys.length; idx++) {
                     statement.setString(1, values[idx]);
@@ -419,7 +421,7 @@ public class MySQLStore extends DataStore {
 
         try {
             if (HasKey(fName, section, key)) {
-                try (PreparedStatement statement = connection.prepareStatement("UPDATE quorrabot_" + fName + " SET value=? WHERE section=? AND variable=?;")) {
+                try (PreparedStatement statement = connection.prepareStatement("UPDATE " + dbprefix + fName + " SET value=? WHERE section=? AND variable=?;")) {
                     statement.setQueryTimeout(10);
                     statement.setString(1, value);
                     statement.setString(2, section);
@@ -427,7 +429,7 @@ public class MySQLStore extends DataStore {
                     statement.executeUpdate();
                 }
             } else {
-                try (PreparedStatement statement = connection.prepareStatement("INSERT INTO quorrabot_" + fName + " values(?, ?, ?);")) {
+                try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " + dbprefix + fName + " values(?, ?, ?);")) {
                     statement.setQueryTimeout(10);
                     statement.setString(1, section);
                     statement.setString(2, key);
@@ -447,7 +449,7 @@ public class MySQLStore extends DataStore {
         for (String tableName : tableNames) {
             tableName = validateFname(tableName);
             com.gmt2001.Console.out.println("    Indexing Table: " + tableName);
-            try (PreparedStatement statement = connection.prepareStatement("CREATE INDEX IF NOT EXISTS " + tableName + "_idx on quorrabot_" + tableName + " (variable);")) {
+            try (PreparedStatement statement = connection.prepareStatement("CREATE INDEX IF NOT EXISTS " + tableName + "_idx on " + dbprefix + tableName + " (variable);")) {
                 statement.execute();
             } catch (SQLException ex) {
                 com.gmt2001.Console.err.printStackTrace(ex);
