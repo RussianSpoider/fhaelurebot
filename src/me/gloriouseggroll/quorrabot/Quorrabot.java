@@ -965,6 +965,12 @@ public class Quorrabot implements Listener
             changed = true;
         }
         
+        if (message.equals("testgwrefresh")) {
+            com.gmt2001.Console.out.println("[CONSOLE] Executing testgwrefresh");
+            updateGameWispTokens(GameWispAPI.instance().refreshToken());
+            changed = true;
+        }
+        
         if (message.equals("testgwsub")) {
             com.gmt2001.Console.out.println("[CONSOLE] Executing testgwsub");
             EventBus.instance().post(new GameWispSubscribeEvent(this.username, 1));
@@ -1031,6 +1037,8 @@ public class Quorrabot implements Listener
                 data += "datastore=" + datastore + "\r\n";
                 data += "youtubekey=" + youtubekey + "\r\n";
                 data += "twitchalertstoken=" + twitchalertstoken + "\r\n";
+                data += "gamewispauth=" + gamewispauth + "\r\n";
+                data += "gamewisprefresh=" + gamewisprefresh + "\r\n";
                 data += "lastfmuser=" + lastfmuser + "\r\n";
                 data += "tpetoken=" + tpetoken + "\r\n";
                 data += "twittertoken=" + twittertoken + "\r\n";                
@@ -1638,8 +1646,8 @@ public class Quorrabot implements Listener
                     com.gmt2001.Console.out.println("msglimit30='" + msglimit30 + "'");
                     com.gmt2001.Console.out.println("datastore='" + datastore + "'");
                     com.gmt2001.Console.out.println("youtubekey='" + youtubekey + "'");
-                    com.gmt2001.Console.out.println("gamewispauth=" + gamewispauth);
-                    com.gmt2001.Console.out.println("gamewisprefresh=" + gamewisprefresh);
+                    com.gmt2001.Console.out.println("gamewispauth=" + gamewispauth + "'");
+                    com.gmt2001.Console.out.println("gamewisprefresh=" + gamewisprefresh + "'");
                     com.gmt2001.Console.out.println("twitchalertstoken='" + twitchalertstoken + "'");
                     com.gmt2001.Console.out.println("lastfmuser='" + lastfmuser + "'");
                     com.gmt2001.Console.out.println("tpetoken='" + tpetoken + "'");

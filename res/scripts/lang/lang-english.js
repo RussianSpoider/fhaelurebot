@@ -474,23 +474,11 @@ $.lang.data["net.quorrabot.hosthandler.host-reward-current-and-usage"] = "The cu
 $.lang.data["net.quorrabot.hosthandler.host-reward-error"] = "Please put a valid reward greater than or equal to 0!";
 $.lang.data["net.quorrabot.hosthandler.host-reward-set-success"] = "New hoster reward set!";
 $.lang.data["net.quorrabot.hosthandler.host-count"] = "This channel is currently being hosted by $1 channels!";
-$.lang.data["net.quorrabot.hosthandler.host-timeout-time"] = "Host timeout duration is currently set to: $1 minutes!";
-$.lang.data["net.quorrabot.hosthandler.host-timeout-time-error"] = "Host timeout duration can't be less than 30 minutes!";
-$.lang.data["net.quorrabot.hosthandler.host-timeout-time-set"] = "Host timeout duration is now set to: $1 minutes!";
 $.lang.data["net.quorrabot.hosthandler.host-list"] = "This channel is currently being hosted by the hosting $1 channels: $2";
 $.lang.data["net.quorrabot.hosthandler.host-list-error"] = "No one is currently hosting this channel.";
 $.lang.data["net.quorrabot.hosthandler.current-host-message"] = "The current new hoster message is: $1";		
 $.lang.data["net.quorrabot.hosthandler.host-message-usage"] = "To change it use '!hostmessage (message)'. You can also add the string '(name)' to put the hosters name";		
 $.lang.data["net.quorrabot.hosthandler.host-message-set-success"] = "New host message set!";
-$.lang.data["net.quorrabot.hosthandler.autohost.not-exist"] = "Channel $1 doesn't exist.";
-$.lang.data["net.quorrabot.hosthandler.autohost.already-exists"] = "Channel $1 is already in the auto-host list.";
-$.lang.data["net.quorrabot.hosthandler.autohost.add-success"] = "Channel $1 has been added to the auto-host list. Total users on the list: $2.";
-$.lang.data["net.quorrabot.hosthandler.autohost.remove-success"] = "Channel $1 has been removed from the auto-host list. Total users on the list: $2.";
-$.lang.data["net.quorrabot.hosthandler.autohost.enabled"] = "Autohost has now been enabled";
-$.lang.data["net.quorrabot.hosthandler.autohost.disabled"] = "Autohost has now been disabled";
-$.lang.data["net.quorrabot.hosthandler.autohost.time-specify"] = "You must specify a time for auto-hosting. Minimum is 10 minutes. Set to 0 to host users until they are offline.";
-$.lang.data["net.quorrabot.hosthandler.autohost.time-set-success"] = "Auto-host timer now set to host a streamer every $1 minute(s).";
-$.lang.data["net.quorrabot.hosthandler.autohost.time-disabled"] = "Auto-host timer now disabled. Streamers will now be hosted by the bot until they go offline.";
 
 
 //donationHandler.js 

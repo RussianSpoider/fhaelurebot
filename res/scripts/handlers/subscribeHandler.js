@@ -145,6 +145,7 @@ $.on('ircPrivateMessage', function (event) {
 
     if (message.contains('just subscribed') && sender.equalsIgnoreCase('twitchnotify')) {
         if ($.SubscribeHandler.SubWelcomeToggle=="true") {
+            $.println(message);
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
             var months = 0;
             var twmonths = 0;
