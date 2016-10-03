@@ -597,5 +597,21 @@ public class TwitchAPIv3
     public JSONObject GetChatServer(String channel) {
         return GetData(request_type.GET, "https://tmi.twitch.tv/servers?channel=" + channel, false);
     }
+    /**
+     * Returns a username when given an Oauth.
+     *
+     * @param   String      Oauth to check with.
+     * @return  String      The name of the user or null to indicate that there was an error.
+     */
+    public String GetUserFromOauth(String userOauth) {
+        JSONObject jsonInput = GetData(request_type.GET, base_url, "", userOauth, false);
+        if (jsonInput.has("token")) {
+            if (jsonInput.getJSONObject("token").has("user_name")) {
+                com.gmt2001.Console.out.println("username = " + jsonInput.getJSONObject("token").getString("user_name"));
+                return jsonInput.getJSONObject("token").getString("user_name");
+            }
+        }
+        return null;
+    }
     
 }

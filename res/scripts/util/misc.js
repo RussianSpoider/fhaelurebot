@@ -566,6 +566,55 @@ $.strlen = function (str) {
         }
     }
 };
+$.getSetIniDbBoolean = function(fileName, key, defaultValue) {
+        if ($.inidb.exists(fileName, key)) {
+            return ($.inidb.get(fileName, key) == 'true');
+        } else {
+            $.inidb.set(fileName, key, defaultValue.toString());
+            return (defaultValue);
+        }
+};
+
+$.paginateArray = function(array, langKey, sep, whisper, sender, display_page) {
+        var idx,
+            output = '',
+            maxlen,
+            pageCount = 0;
+
+        if (display_page === undefined) {
+            display_page = 0;
+        }
+
+        maxlen = 440 - $.lang.get(langKey).length;
+        for (idx in array) {
+            output += array[idx];
+            if (output.length >= maxlen) {
+                pageCount++;
+                if (display_page === 0 || display_page === pageCount) {
+                    if (whisper) {
+                        $.say($.getWhisperString(sender) + $.lang.get(langKey, output));
+                    } else {
+                        $.say($.lang.get(langKey, output));
+                    }
+                }
+                output = '';
+            } else {
+                if (idx < array.length - 1) {
+                    output += sep;
+                }
+            }
+        }
+        pageCount++;
+        if (display_page === 0 || display_page === pageCount) {
+            if (whisper) {
+                $.say($.getWhisperString(sender) + $.lang.get(langKey, output));
+            } else {
+                $.say($.lang.get(langKey, output));
+            }
+        }
+        return pageCount;
+}
+
 
 $.trueRandElement = function (arr) {
     if (arr == null)

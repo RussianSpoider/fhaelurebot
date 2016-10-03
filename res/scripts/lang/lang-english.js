@@ -984,3 +984,21 @@ $.lang.data["net.quorrabot.twitterhandler.tweet-successful"] = "Tweet sent succe
 $.lang.data["net.quorrabot.gamewisphandler.benefits"] = "/me $1 has just subscribed to $2 via GameWisp2!";
 $.lang.data["net.quorrabot.gamewisphandler.subscribe"] = "/me $1 has just subscribed to Tier $2 via GameWisp! Their all time sub count is $3 months!";
 $.lang.data["net.quorrabot.gamewisphandler.anniversary"] = "/me $1 has just resubscribed to Tier $2 via GameWisp! Their all time sub count is $3 months!";
+
+//soundBoardSystem.js
+$.lang.data["net.quorrabot.soundboard.usage"] = "usage: !soundboard [play / list / customcommand / togglemessages]";
+$.lang.data["net.quorrabot.soundboard.play.usage"] = "usage: !soundboard play [sound_hook]";
+$.lang.data["net.quorrabot.soundboard.play.404"] = "soundboard does not exist: $1";
+$.lang.data["net.quorrabot.soundboard.play.success"] = "Sent audio hook: $1";
+$.lang.data["net.quorrabot.soundboard.list"] = "Sound Clips: $1";
+$.lang.data["net.quorrabot.soundboard.list.total"] = "Total Pages: $1";
+$.lang.data["net.quorrabot.soundboard.toggle"] = "audio messages have been set to $1.";
+$.lang.data["net.quorrabot.soundboard.customcommand.usage"] = "Usage: !soundboard customcommand [add / remove] [command] [sound name]";
+$.lang.data["net.quorrabot.soundboard.customcommand.add.usage"] = "Usage: !soundboard customcommand add [command] [sound name]";
+$.lang.data["net.quorrabot.soundboard.customcommand.add.error.exists"] = "that command already exists or it is a alias.";
+$.lang.data["net.quorrabot.soundboard.customcommand.add.list"] = "command !$1 will now give a list of all the audio hook commands.";
+$.lang.data["net.quorrabot.soundboard.customcommand.add.error.fx.null"] = "that audio hook does not exist. Use: \"!soundboard list\" to see the audio list.";
+$.lang.data["net.quorrabot.soundboard.customcommand.add.success"] = "command !$1 will now trigger the audio hook $2!";
+$.lang.data["net.quorrabot.soundboard.customcommand.remove.usage"] = "Usage: !soundboard customcommand remove [command]";
+$.lang.data["net.quorrabot.soundboard.customcommand.remove.error.404"] = "that command does not exists.";
+$.lang.data["net.quorrabot.soundboard.customcommand.remove.success"] = "command !$1 has been removed.";

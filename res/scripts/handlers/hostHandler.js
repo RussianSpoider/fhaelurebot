@@ -6,6 +6,9 @@ if ($.hostreward == null || $.hostreward == undefined || isNaN($.hostreward)) {
     $.hostreward = 0;
 }
 
+$.isHostUser = function (user) {
+    return $.array.contains($.hostlist, user.toLowerCase());
+}
 
 $.on('twitchHosted', function (event) {
     var username = $.username.resolve(event.getHoster());

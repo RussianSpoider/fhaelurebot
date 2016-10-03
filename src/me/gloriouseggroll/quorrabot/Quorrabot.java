@@ -28,6 +28,7 @@ import com.gloriouseggroll.LastFMAPI;
 import com.gloriouseggroll.TwitterAPI;
 import com.gloriouseggroll.SingularityAPI;
 import com.gloriouseggroll.GameWispAPI;
+import com.gloriouseggroll.SoundBoard;
 import com.gmt2001.YouTubeAPIv3;
 import com.google.common.eventbus.Subscribe;
 import de.simeonf.EventWebSocketSecureServer;
@@ -90,6 +91,8 @@ public class Quorrabot implements Listener
     public String hostedName;
     private final String oauth;
     private String apioauth;
+    private String soundboardauth;
+    private String soundboardauthread;
     private String clientid;
     private final String channelName;
     private final String ownerName;
@@ -136,6 +139,7 @@ public class Quorrabot implements Listener
     private MusicWebSocketServer musicsocketserver;
     private HTTPServer httpserver;
     private EventWebSocketServer eventsocketserver;
+    private SoundBoard soundBoard;
     private ConsoleInputListener cil;
     private static final boolean debugD = false;
     public static boolean enableDebugging = false;
@@ -187,7 +191,7 @@ public class Quorrabot implements Listener
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh, 
             String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken, 
             String streamtipid, boolean webenable, boolean musicenable, boolean usehttps, String timeZone, String mySqlHost, String mySqlPort, String mySqlConn, 
-            String mySqlPass, String mySqlUser, String mySqlName, String keystorepath, String keystorepassword, String keypassword)
+            String mySqlPass, String mySqlUser, String mySqlName, String keystorepath, String keystorepassword, String keypassword, String soundboardauth, String soundboardauthread)
     {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
@@ -268,6 +272,8 @@ public class Quorrabot implements Listener
         this.keystorepath = keystorepath;
         this.keystorepassword = keystorepassword;
         this.keypassword = keypassword;
+	this.soundboardauth = soundboardauth;
+	this.soundboardauthread = soundboardauthread;
 
         this.profile = new Profile(username.toLowerCase());
         this.tceProfile = new Profile(channel.toLowerCase());
@@ -402,6 +408,11 @@ public class Quorrabot implements Listener
     {
         return dataStoreObj;
     }
+    
+    public String getBotName() {
+	return username;
+    }
+    
 
     public Session getSession()
     {
@@ -485,6 +496,12 @@ public class Quorrabot implements Listener
             com.gmt2001.Console.out.println("EventSocketServer accepting connections on port " + eventport);
             EventBus.instance().register(eventsocketserver);
             
+    	    /** Set up the panel socket server */
+    	    soundBoard = new SoundBoard((baseport + 4), soundboardauth, soundboardauthread);
+    	    /** Start the panel socket server */
+    	    soundBoard.start();
+    	    com.gmt2001.Console.out.println("SoundBoard accepting connections on port: " + (baseport + 4));
+            
             if (gamewispauth.length() > 0) {
                 GameWispAPI.instance().SetAccessToken(gamewispauth);
                 GameWispAPI.instance().SetRefreshToken(gamewisprefresh);
@@ -531,6 +548,7 @@ public class Quorrabot implements Listener
         Script.global.defineProperty("connmgr", connectionManager, 0);
         Script.global.defineProperty("tceconnmgr", tceConnectionManager, 0);
         Script.global.defineProperty("hostname", hostname, 0);
+        Script.global.defineProperty("soundboard", soundBoard, 0);
         Script.global.defineProperty("logger", Logger.instance(), 0);
 
         t = new Thread(new Runnable()
@@ -1028,6 +1046,8 @@ public class Quorrabot implements Listener
                 data += "oauth=" + oauth + "\r\n";
                 data += "apioauth=" + apioauth + "\r\n";
                 data += "clientid=" + clientid + "\r\n";
+                data += "webauth=" + soundboardauth + "\r\n";
+                data += "webauthro=" + soundboardauthread + "\r\n";
                 data += "channel=" + channelName + "\r\n";
                 data += "owner=" + ownerName + "\r\n";
                 data += "baseport=" + baseport + "\r\n";
@@ -1407,6 +1427,8 @@ public class Quorrabot implements Listener
         String user = "";
         String oauth = "";
         String apioauth = "";
+	String soundboardauth = "";
+	String soundboardauthread = "";
         String clientid = "";
         String channel = "";
         String owner = "";
@@ -1582,13 +1604,31 @@ public class Quorrabot implements Listener
                     {
                         keypassword = line.substring(12);
                     }
+                    if (line.startsWith("webauth=") && line.length() > 11) {
+                        soundboardauth = line.substring(8);
+                    }
+                    if (line.startsWith("webauthro=") && line.length() > 13) {
+                        soundboardauthread = line.substring(10);
+                    }
                 }
             }
         } catch (IOException ex)
         {
             com.gmt2001.Console.err.printStackTrace(ex);
         }
-
+        
+        /** Check to see if there's a soundboardauth set */
+        if (soundboardauth.isEmpty()) {
+            soundboardauth = generateWebAuth();
+            com.gmt2001.Console.debug.println("New webauth key has been generated for botlogin.txt");
+            changed = true;
+        }
+        /** Check to see if there's a soundboardauthread set */
+        if (soundboardauthread.isEmpty()) {
+            soundboardauthread = generateWebAuth();
+            com.gmt2001.Console.debug.println("New webauth read-only key has been generated for botlogin.txt");
+            changed = true;
+        }
 
         try {
             if(user.isEmpty()) {
@@ -1959,6 +1999,8 @@ public class Quorrabot implements Listener
             data += "oauth=" + oauth + "\r\n";
             data += "apioauth=" + apioauth + "\r\n";
             data += "clientid=" + clientid + "\r\n";
+            data += "webauth=" + soundboardauth + "\r\n";
+            data += "webauthro=" + soundboardauthread + "\r\n";
             data += "channel=" + channel + "\r\n";
             data += "owner=" + owner + "\r\n";
             data += "baseport=" + baseport + "\r\n";
@@ -1998,13 +2040,15 @@ public class Quorrabot implements Listener
                 msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken, 
                 lastfmuser, tpetoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid,
                 webenable, musicenable, usehttps, timeZone, mySqlHost, mySqlPort, mySqlConn, mySqlPass, mySqlUser, mySqlName, keystorepath, 
-                keystorepassword, keypassword);
+                keystorepassword, keypassword, soundboardauth, soundboardauthread);
     }
     public void updateGameWispTokens(String[] newTokens) {
             String data = "";
             data += "user=" + username + "\r\n";
             data += "oauth=" + oauth + "\r\n";
             data += "apioauth=" + apioauth + "\r\n";
+            data += "webauth=" + soundboardauth + "\r\n";
+            data += "webauthro=" + soundboardauthread + "\r\n";
             data += "clientid=" + clientid + "\r\n";
             data += "channel=" + channelName + "\r\n";
             data += "owner=" + ownerName + "\r\n";
@@ -2054,6 +2098,8 @@ public class Quorrabot implements Listener
             data += "user=" + username + "\r\n";
             data += "oauth=" + oauth + "\r\n";
             data += "apioauth=" + apioauth + "\r\n";
+            data += "webauth=" + soundboardauth + "\r\n";
+            data += "webauthro=" + soundboardauthread + "\r\n";
             data += "clientid=" + clientid + "\r\n";
             data += "channel=" + channelName + "\r\n";
             data += "owner=" + ownerName + "\r\n";
@@ -2094,6 +2140,18 @@ public class Quorrabot implements Listener
             com.gmt2001.Console.err.println("!!!! CRITICAL !!!! Failed to update timezone in botlogin.txt! Must manually add!");
             com.gmt2001.Console.err.println("!!!! CRITICAL !!!! logtimezone = " + timezone);
         }
+    }
+    private static String generateWebAuth() {
+        String randomAllowed = "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        char[] randomChars = randomAllowed.toCharArray();
+        char[] randomBuffer;
+
+        randomBuffer = new char[30];
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < randomBuffer.length; i++) {
+           randomBuffer[i] = randomChars[random.nextInt(randomChars.length)];
+        }
+        return new String(randomBuffer);
     }
     
     public void doRefreshGameWispToken() {
