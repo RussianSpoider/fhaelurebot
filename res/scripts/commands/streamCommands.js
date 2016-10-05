@@ -19,7 +19,6 @@ $.hostEvent = function(hostedName, eventName) {
 
 $.getUserExists = function(user) {
     var exists = $.twitch.GetUser(user);
-
     if (exists.getInt('_http') != 200) {
         return false;
     } else {

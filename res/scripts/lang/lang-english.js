@@ -1002,3 +1002,9 @@ $.lang.data["net.quorrabot.soundboard.customcommand.add.success"] = "command !$1
 $.lang.data["net.quorrabot.soundboard.customcommand.remove.usage"] = "Usage: !soundboard customcommand remove [command]";
 $.lang.data["net.quorrabot.soundboard.customcommand.remove.error.404"] = "that command does not exists.";
 $.lang.data["net.quorrabot.soundboard.customcommand.remove.success"] = "command !$1 has been removed.";
+
+//consoleCommand.js
+$.lang.data["net.quorrabot.consolecommand.consolemessage"] = "(caster) is currently playing on (console).";
+$.lang.data["net.quorrabot.consolecommand.consolemsg-set"] = "The current console message has been set to $1.";
+$.lang.data["net.quorrabot.consolecommand.console-set"] = "The current console being used has been set to $1";
+$.lang.data["net.quorrabot.consolecommand.console-others-set"] = "The streamer's additional consoles have been set to: $1";

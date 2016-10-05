@@ -296,6 +296,9 @@ $.on('command', function (event) {
         if (messageCommand.contains('(points)')) {
             messageCommand = $.replaceAll(messageCommand, '(points)', $.getPointsString(parseInt($.inidb.get("points", sender))));
         } 
+        if (messageCommand.contains('(caster)')) {
+            messageCommand = $.replaceAll(messageCommand, '(caster)', $.username.resolve($.channelName));
+        }
         if (messageCommand.contains('(touser)')) {
             if(args.length > 0) {
                 if(args[0].contains('@')) {
@@ -341,7 +344,16 @@ $.on('command', function (event) {
         } 
         if (messageCommand.contains('(z_stroke)')) {
             messageCommand = $.replaceAll(messageCommand, '(z_stroke)', java.lang.Character.toString(java.lang.Character.toChars(0x01B6)[0]));
-        } 
+        }
+        if (messageCommand.contains('(console)')) {
+            messageCommand = $.replaceAll(messageCommand, '(console)', $.username.resolve($.channelName));
+        }
+        if (messageCommand.contains('(otherconsoles)')) {
+            messageCommand = $.replaceAll(messageCommand, '(otherconsoles)', $.ConsoleCommand.OtherConsoles);
+        }
+        if (messageCommand.contains('(urlencode')) {
+            messageCommand = $.urlEncode(messageCommand, argsString);
+        }
         if (messageCommand.contains('(customapi')) {
             messageCommand = $.customAPI(messageCommand,command,args,sender);
         }
@@ -363,7 +375,7 @@ $.on('command', function (event) {
             }
             messageCommand = $.replaceAll(messageCommand, '(code)', text);
         }
-
+        
         $.say(messageCommand);
     }
 
@@ -435,6 +447,23 @@ $.on('command', function (event) {
     }
 });
 
+$.urlEncode = function(message, argsString) {
+        var encoder = Packages.java.net.URLEncoder;
+        var encodedurl = "";
+        var urlencodeportion = "";
+        if(message.contains('(urlencode $1)')) {
+            urlencodeportion = '(urlencode $1)';
+            encodedurl = encoder.encode(argsString);
+        } else {
+            var urlencodestart = message.substring(message.indexOf("(urlencode "),message.length());
+            urlencodeportion = message.substring(message.indexOf("(urlencode "),urlencodestart.indexOf(")"));
+            encodedurl = encoder.encode(urlencodestart.substring(urlencodestart.indexOf(" " + 1), urlencodestart.indexOf(")")));
+        }
+        message = message.replace(urlencodeportion, encodedurl);
+        $.println("4. " + message);
+        return message;
+}
+
 $.getCustomAPIValue = function(url) {
 	var HttpResponse = Packages.com.gmt2001.HttpResponse;
 	var HttpRequest = Packages.com.gmt2001.HttpRequest;
@@ -462,7 +491,7 @@ $.customAPI = function(message, command, args, sender) {
         var reCustomAPI = new RegExp(/\(customapi\s([\w\W:\/\$\=\?\&]+)\)/), // URL[1]
             reCustomAPIJson = new RegExp(/\(customapi ([\w\.:\/\$=\?\&]+)\s([\w\W]+)\)/), // URL[1], JSONmatch[2..n]
             reCustomAPITextTag = new RegExp(/{([\w\W]+)}/);
-            
+
         $.customAPIParseArgs = function(regExCheck) {
             if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
                 var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1,message.length());

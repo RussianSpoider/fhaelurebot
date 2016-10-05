@@ -104,7 +104,7 @@ public class TwitchAPIv3
                 c.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             }
 
-            if (!clientid.isEmpty())
+            if (!this.clientid.isEmpty())
             {
                 c.addRequestProperty("Client-ID", clientid);
             } else {
