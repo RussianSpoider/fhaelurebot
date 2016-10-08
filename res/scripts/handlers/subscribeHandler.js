@@ -146,6 +146,7 @@ $.on('ircPrivateMessage', function (event) {
     if (message.contains('just subscribed') && sender.equalsIgnoreCase('twitchnotify')) {
         if ($.SubscribeHandler.SubWelcomeToggle=="true") {
             $.println(message);
+            $.logEvent(message);
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
             var months = 0;
             var twmonths = 0;
@@ -177,6 +178,8 @@ $.on('ircPrivateMessage', function (event) {
         }
     } else if (message.contains('months in a row!') && sender.equalsIgnoreCase('twitchnotify')) {
         if ($.SubscribeHandler.SubWelcomeToggle=="true") {
+            $.println(message);
+            $.logEvent(message);
             var months = message.substring( message.indexOf("months") - 3, message.indexOf("months") - 1 ).toString();
             var sub = message.substring(0, message.indexOf(" ", 1)).toString();
             var twmonths = 0;
