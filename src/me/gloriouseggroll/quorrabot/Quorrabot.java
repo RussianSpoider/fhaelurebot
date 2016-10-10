@@ -497,10 +497,10 @@ public class Quorrabot implements Listener
             EventBus.instance().register(eventsocketserver);
             
     	    /** Set up the panel socket server */
-    	    soundBoard = new SoundBoard((baseport + 4), soundboardauth, soundboardauthread);
+    	    //soundBoard = new SoundBoard((baseport + 4), soundboardauth, soundboardauthread);
     	    /** Start the panel socket server */
-    	    soundBoard.start();
-    	    com.gmt2001.Console.out.println("SoundBoard accepting connections on port: " + (baseport + 4));
+    	    //soundBoard.start();
+    	    //com.gmt2001.Console.out.println("SoundBoard accepting connections on port: " + (baseport + 4));
             
             if (gamewispauth.length() > 0) {
                 GameWispAPI.instance().SetAccessToken(gamewispauth);
@@ -1136,7 +1136,29 @@ public class Quorrabot implements Listener
         {
             dataStoreObj.SaveAll(true);
         }
-
+        
+        //used for testing sub notifications
+        
+        /*if (command.equalsIgnoreCase("primetest"))
+        {
+            EventBus.instance().post(new IrcPrivateMessageEvent(session, "twitchnotify", "TEST just subscribed with Twitch Prime!"));
+        }
+        if (command.equalsIgnoreCase("subtest"))
+        {
+            EventBus.instance().post(new IrcPrivateMessageEvent(session, "twitchnotify", "TEST just subscribed!"));
+        }
+        if (command.equalsIgnoreCase("resubtest"))
+        {
+            EventBus.instance().post(new IrcPrivateMessageEvent(session, "twitchnotify", "TEST just subscribed for 1 months in a row!"));
+        }*/
+        
+        //used for testing host notifications
+        
+        /*if (command.equalsIgnoreCase("hosttest"))
+        {
+            EventBus.instance().post(new TwitchHostedEvent("rewtbot", channel)); 
+        }*/
+        
         if (command.equalsIgnoreCase("d"))
         {
             if (debugD)
@@ -1184,8 +1206,8 @@ public class Quorrabot implements Listener
         //Don't change this to postAsync. It cannot be processed in async or commands will be delayed
         EventBus.instance().post(new CommandEvent(sender, command, arguments));
     }
-    
-    public void hostEvent (String hostedName, String event) {
+    //previously used in auto-hosting, disabled since replaced by twitch auto-host
+    /*public void hostEvent (String hostedName, String event) {
             this.hostedName = hostedName;
             if (channelName.toLowerCase().contains(","))
             {
@@ -1205,7 +1227,7 @@ public class Quorrabot implements Listener
                 tceSession.sayChannel("/unhost", channel);
             }
             tceSession.leave("#" + channelName.toLowerCase()); 
-    }
+    }*/
 
     private void sqlite2MySql() {
         com.gmt2001.Console.out.print("Performing SQLite to MySQL Conversion...\n");

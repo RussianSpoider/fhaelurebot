@@ -480,7 +480,6 @@ $.lang.data["net.quorrabot.hosthandler.current-host-message"] = "The current new
 $.lang.data["net.quorrabot.hosthandler.host-message-usage"] = "To change it use '!hostmessage (message)'. You can also add the string '(name)' to put the hosters name";		
 $.lang.data["net.quorrabot.hosthandler.host-message-set-success"] = "New host message set!";
 
-
 //donationHandler.js 
 $.lang.data["net.quorrabot.donationhandler.current-file-path"] = "Current tip alert file path is: $1";
 $.lang.data["net.quorrabot.donationhandler.new-file-path-set"] = "File path for tip alert has been set!";

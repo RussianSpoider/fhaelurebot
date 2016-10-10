@@ -135,7 +135,9 @@ $.getUserGroupId = function (user) {
     if (group == null) {
             group = $.checkDynamicGroup(user);
     } else if(group > 1) {
+        if($.checkDynamicGroup(user) < group) {
             group = $.checkDynamicGroup(user);
+        }
     } else {
         group = parseInt(group);
     }

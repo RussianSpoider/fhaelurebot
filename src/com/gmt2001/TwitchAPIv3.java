@@ -269,10 +269,11 @@ public class TwitchAPIv3
         this.clientid = clientid;
     }
     
-    public void HostEvent(String hostedName, String event)
+    //disabled, this was previously used in an autohost script, but has since been replaced by twitch's autohost feature
+    /*public void HostEvent(String hostedName, String event)
     {
         me.gloriouseggroll.quorrabot.Quorrabot.instance().hostEvent(hostedName, event);
-    }
+    }*/
 
     /**
      * Sets the Twitch API OAuth header

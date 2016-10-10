@@ -139,77 +139,68 @@ $.on('command', function (event) {
 
 $.on('ircPrivateMessage', function (event) {
     var sender = event.getSender();
-    var message = event.getMessage();
+    var message = event.getMessage().toString();
     var s = $.SubscribeHandler.SubMessage;
     var r = $.SubscribeHandler.ReSubMessage;
+    var sub = message.substring(0, message.indexOf(" "));
+    var twmonths = 0;
 
-    if (message.contains('just subscribed') && sender.equalsIgnoreCase('twitchnotify')) {
-        if ($.SubscribeHandler.SubWelcomeToggle=="true") {
-            $.println(message);
-            $.logEvent(message);
-            var sub = message.substring(0, message.indexOf(" ", 1)).toString();
-            var months = 0;
-            var twmonths = 0;
-            
-            s = $.replaceAll(s, '(name)', sub);
-            
-            $.inidb.set('twitchsubslist', sub, '1');
+    if (message.contains('just subscribed') && sender.equalsIgnoreCase('twitchnotify') && $.SubscribeHandler.SubWelcomeToggle=="true") {
+        $.logEvent("subscribeHandler.js",0, message);
+        if(message.contains('subscribed!') || message.contains('Prime!')) {
+                var months = 0;
+                        
+                $.inidb.set('twitchsubslist', sub, '1');
         
-            //log gw subs count
-            if(!$.inidb.exists("twitchsubscount",sub)) {
-                $.inidb.set("twitchsubscount",sub, '1');
-            } else {
-                var twsubcount = parseInt($.inidb.get("twitchsubscount", sub));
-                twmonths += twsubcount;
-                $.inidb.set("twitchsubscount",sub, twmonths);
-            }
+                //log gw subs count
+                if(!$.inidb.exists("twitchsubscount",sub)) {
+                    $.inidb.set("twitchsubscount",sub, '1');
+                } else {
+                    var twsubcount = parseInt($.inidb.get("twitchsubscount", sub));
+                    twmonths += twsubcount;
+                    $.inidb.set("twitchsubscount",sub, twmonths);
+                }
         
-            if(!$.inidb.exists("subscount",sub)) {
-                $.inidb.set("subscount",sub, '1');
-            } else {
-                var subcount = parseInt($.inidb.get("subscount", sub));
-                months += subcount;
-                $.inidb.set("subscount",sub, months);
-            }
-            
-            s = $.replaceAll(r, '(months)', months);
-            $.say("/me " + s);
-            return;
-        }
-    } else if (message.contains('months in a row!') && sender.equalsIgnoreCase('twitchnotify')) {
-        if ($.SubscribeHandler.SubWelcomeToggle=="true") {
-            $.println(message);
-            $.logEvent(message);
-            var months = message.substring( message.indexOf("months") - 3, message.indexOf("months") - 1 ).toString();
-            var sub = message.substring(0, message.indexOf(" ", 1)).toString();
-            var twmonths = 0;
+                if(!$.inidb.exists("subscount",sub)) {
+                    $.inidb.set("subscount",sub, '1');
+                } else {
+                    var subcount = parseInt($.inidb.get("subscount", sub));
+                    months += subcount;
+                    $.inidb.set("subscount",sub, months);
+                }
+                s = $.replaceAll(s, '(name)', sub);
+                s = $.replaceAll(s, '(reward)', $.SubscribeHandler.SubReward); 
+                $.say("/me " + s);
+                return;
+        } else if (message.contains('months in a row!')){
+                var months = message.substring(message.indexOf("for") + 4, message.indexOf("months") - 1 );
 
-            $.inidb.set('twitchsubslist', sub, '1');
+                $.inidb.set('twitchsubslist', sub, '1');
         
-            //log gw subs count
-            if(!$.inidb.exists("twitchsubscount",sub)) {
-                $.inidb.set("twitchsubscount",sub, '1');
-            } else {
-                var twsubcount = parseInt($.inidb.get("twitchsubscount", sub));
-                twmonths += twsubcount;
-                $.inidb.set("twitchsubscount",sub, twmonths);
-            }
+                //log gw subs count
+                if(!$.inidb.exists("twitchsubscount",sub)) {
+                    $.inidb.set("twitchsubscount",sub, '1');
+                } else {
+                    var twsubcount = parseInt($.inidb.get("twitchsubscount", sub));
+                    twmonths += twsubcount;
+                    $.inidb.set("twitchsubscount",sub, twmonths);
+                }
         
-            if(!$.inidb.exists("subscount",sub)) {
-                $.inidb.set("subscount",sub, '1');
-            } else {
-                var subcount = parseInt($.inidb.get("subscount", sub));
-                months += subcount;
-                $.inidb.set("subscount",sub, months);
-            }
+                if(!$.inidb.exists("subscount",sub)) {
+                    $.inidb.set("subscount",sub, '1');
+                } else {
+                    var subcount = parseInt($.inidb.get("subscount", sub));
+                    months += subcount;
+                    $.inidb.set("subscount",sub, months);
+                }
             
             
-            r = $.replaceAll(r, '(name)', sub);
-            r = $.replaceAll(r, '(months)', months);
-            r = $.replaceAll(r, '(reward)', $.SubscribeHandler.SubReward); 
+                r = $.replaceAll(r, '(name)', sub);
+                r = $.replaceAll(r, '(months)', months);
+                r = $.replaceAll(r, '(reward)', $.SubscribeHandler.SubReward); 
             
-            $.say("/me " + r);
-            return;
+                $.say("/me " + r);
+                return;
         }
     }
 });
