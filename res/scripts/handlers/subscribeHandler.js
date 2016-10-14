@@ -142,7 +142,7 @@ $.on('ircPrivateMessage', function (event) {
     var message = event.getMessage().toString();
     var s = $.SubscribeHandler.SubMessage;
     var r = $.SubscribeHandler.ReSubMessage;
-    var sub = message.substring(0, message.indexOf(" "));
+    var sub = $.username.resolve(message.substring(0, message.indexOf(" ")));
     var twmonths = 0;
 
     if (message.contains('just subscribed') && sender.equalsIgnoreCase('twitchnotify') && $.SubscribeHandler.SubWelcomeToggle=="true") {
