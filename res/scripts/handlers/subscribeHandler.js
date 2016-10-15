@@ -1,5 +1,5 @@
 $.SubscribeHandler = {
-    SubMessage: ($.inidb.get('settings', 'subscribemessage') ? $.inidb.get('settings', 'subscribemessage') : '(name) just subscribed! Their all time sub count is (months) months!'),
+    SubMessage: ($.inidb.get('settings', 'subscribemessage') ? $.inidb.get('settings', 'subscribemessage') : '(name) just subscribed!'),
     ReSubMessage: ($.inidb.get('settings', 'resubscribemessage') ? $.inidb.get('settings', 'resubscribemessage') : '(name) just resubscribed! Their all time sub count is (months) months!'),
     SubWelcomeToggle: ($.inidb.get('settings', 'sub_announce') ? $.inidb.get('settings', 'sub_announce') : "true"),
     SubReward: (parseInt($.inidb.get('settings', 'subscribereward')) ? parseInt($.inidb.get('settings', 'subscribereward')) : 0),
