@@ -460,7 +460,6 @@ $.urlEncode = function(message, argsString) {
             encodedurl = encoder.encode(urlencodestart.substring(urlencodestart.indexOf(" " + 1), urlencodestart.indexOf(")")));
         }
         message = message.replace(urlencodeportion, encodedurl);
-        $.println("4. " + message);
         return message;
 }
 
