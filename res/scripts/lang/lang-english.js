@@ -509,6 +509,8 @@ $.lang.data["net.quorrabot.subscribeHandler.auto-submode-timer-usage"] = "Usage:
 $.lang.data["net.quorrabot.subscribeHandler.auto-submode-timer-off"] = "Automated subs only mode enabled!";
 $.lang.data["net.quorrabot.subscribeHandler.auto-submode-timer-404"] = "The minimum auto submode interval allowed is 30 minutes.";
 $.lang.data["net.quorrabot.subscribeHandler.auto-sub-mode-imterval-set"] = "Auto submode interval set! This will only work while the stream is online.";
+$.lang.data["net.quorrabot.subscribeHandler.first-message"] = "(name) just subscribed!";
+$.lang.data["net.quorrabot.subscribeHandler.resub-message"] = "(name) just resubscribed! Their all time sub count is (months) months!";
 
 //8ballCommand.js
 $.lang.data["net.quorrabot.8ballCommand.proper-usage"] = "ask the magic-8ball a question with !8ball";
