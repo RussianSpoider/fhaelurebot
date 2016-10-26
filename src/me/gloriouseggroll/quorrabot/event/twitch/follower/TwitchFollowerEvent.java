@@ -17,46 +17,40 @@
 package me.gloriouseggroll.quorrabot.event.twitch.follower;
 
 import me.gloriouseggroll.quorrabot.event.twitch.TwitchEvent;
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public abstract class TwitchFollowerEvent extends TwitchEvent
-{
+
+public abstract class TwitchFollowerEvent extends TwitchEvent {
 
     private final String follower;
     private final Type type;
 
-    public enum Type
-    {
+    public enum Type {
 
         FOLLOW,
         UNFOLLOW;
     }
 
-    protected TwitchFollowerEvent(String follower, Type type)
-    {
+    protected TwitchFollowerEvent(String follower, Type type) {
         this.follower = follower;
         this.type = type;
     }
 
-    protected TwitchFollowerEvent(String follower, Type type, Channel channel)
-    {
+    protected TwitchFollowerEvent(String follower, Type type, Channel channel) {
         super(channel);
         this.follower = follower;
         this.type = type;
     }
 
-    public String getFollower()
-    {
+    public String getFollower() {
         return follower;
     }
 
-    public Type getType()
-    {
+    public Type getType() {
         return type;
     }
 
-    public String toEventSocket()
-    {
-    	return this.getFollower() + "|" + this.getType();
+    public String toEventSocket() {
+        return this.getFollower() + "|" + this.getType();
     }
 }

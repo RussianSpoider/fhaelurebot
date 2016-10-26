@@ -16,18 +16,16 @@
  */
 package me.gloriouseggroll.quorrabot.event.twitch.follower;
 
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
 public class TwitchUnfollowEvent extends TwitchFollowerEvent
 {
 
-    public TwitchUnfollowEvent(String follower)
-    {
+    public TwitchUnfollowEvent(String follower) {
         super(follower, Type.UNFOLLOW);
     }
 
-    public TwitchUnfollowEvent(String follower, Channel channel)
-    {
+    public TwitchUnfollowEvent(String follower, Channel channel) {
         super(follower, Type.UNFOLLOW, channel);
     }
 }

@@ -16,8 +16,8 @@
  */
 package me.gloriouseggroll.quorrabot.event.irc.complete;
 
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
-import me.gloriouseggroll.quorrabot.jerklib.Session;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
 public class IrcJoinCompleteEvent extends IrcCompleteEvent
 {
@@ -29,9 +29,6 @@ public class IrcJoinCompleteEvent extends IrcCompleteEvent
     {
         super(session);
         this.channel = channel;
-        if(session.getNick().equalsIgnoreCase(channel.getName().replace("#", ""))) {
-            sessionName = "tceSession";
-        }
     }
 
     public Channel getChannel()

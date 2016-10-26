@@ -61,18 +61,16 @@ import me.gloriouseggroll.quorrabot.event.Listener;
 import me.gloriouseggroll.quorrabot.event.command.CommandEvent;
 import me.gloriouseggroll.quorrabot.event.console.ConsoleInputEvent;
 import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelUserModeEvent;
-import me.gloriouseggroll.quorrabot.event.irc.complete.IrcConnectCompleteEvent;
 import me.gloriouseggroll.quorrabot.event.irc.complete.IrcJoinCompleteEvent;
 import me.gloriouseggroll.quorrabot.event.irc.message.IrcChannelMessageEvent;
 import me.gloriouseggroll.quorrabot.event.irc.message.IrcPrivateMessageEvent;
-import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispChangeEvent;
-import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispBenefitsEvent;
 import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispSubscribeEvent;
 import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispAnniversaryEvent;
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
-import me.gloriouseggroll.quorrabot.jerklib.ConnectionManager;
-import me.gloriouseggroll.quorrabot.jerklib.Profile;
-import me.gloriouseggroll.quorrabot.jerklib.Session;
+import me.gloriouseggroll.quorrabot.event.twitch.follower.TwitchFollowEvent;
+import me.gloriouseggroll.quorrabot.event.twitch.host.TwitchHostedEvent;
+
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Session;
 import me.gloriouseggroll.quorrabot.musicplayer.MusicWebSocketServer;
 import me.gloriouseggroll.quorrabot.script.Script;
 import me.gloriouseggroll.quorrabot.script.ScriptApi;
@@ -81,27 +79,26 @@ import me.gloriouseggroll.quorrabot.script.ScriptManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import me.gloriouseggroll.quorrabot.event.EventBus;
-import me.gloriouseggroll.quorrabot.event.twitch.host.TwitchHostedEvent;
 
 
 public class Quorrabot implements Listener
 {
 
     public final String username;
+    private String channelName;
     public String hostedName;
     private final String oauth;
     private String apioauth;
     private String soundboardauth;
     private String soundboardauthread;
     private String clientid;
-    private final String channelName;
     private final String ownerName;
     private final String hostname;
     private String gamewispauth;
     private String gamewisprefresh;
     private int port;
     private int baseport;
-    private double msglimit30;
+    private static double msglimit30;
     private String datastore;
     
     private String datastoreconfig;
@@ -124,14 +121,11 @@ public class Quorrabot implements Listener
     private SecureRandom rng;
     private TreeMap<String, Integer> pollResults;
     private TreeSet<String> voters;
-    private Profile profile;
-    private Profile tceProfile;
-    private ConnectionManager connectionManager;
-    private ConnectionManager tceConnectionManager;
-    private final Session session;
-    public static Session tceSession;    
+    private Session session;
     private Channel channel;
-    private final HashMap<String, Channel> channels;
+    private static HashMap<String, Channel> channels;
+    private static HashMap<String, Session> sessions;
+    private static HashMap<String, String> apiOAuths;
     private FollowersCache followersCache;
     private ChannelHostCache hostCache;
     private SubscribersCache subscribersCache;
@@ -150,6 +144,8 @@ public class Quorrabot implements Listener
     private Thread t;
     private static Quorrabot instance;
     public static String timeZone = "EDT";
+    public static Boolean webSocketIRCAB = false;
+    private Boolean joined = false;
     
     private String mySqlConn;
     private String mySqlHost;
@@ -187,7 +183,7 @@ public class Quorrabot implements Listener
 	return botVersion() + " (Revision: " + repoVersion() + ")";
     }
 
-    public Quorrabot(String username, String oauth, String apioauth, String clientid, String channel, String owner, int baseport,
+    public Quorrabot(String username, String oauth, String apioauth, String clientid,  String channelName, String owner, int baseport,
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh, 
             String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken, 
             String streamtipid, boolean webenable, boolean musicenable, boolean usehttps, String timeZone, String mySqlHost, String mySqlPort, String mySqlConn, 
@@ -208,8 +204,8 @@ public class Quorrabot implements Listener
         this.username = username;
         this.oauth = oauth;
         this.apioauth = apioauth;
-        this.channelName = channel;
         this.ownerName = owner;
+        this.channelName = channelName.toLowerCase();
         this.baseport = baseport;
         this.datastore = datastore;
         this.datastoreconfig = datastoreconfig;
@@ -258,6 +254,12 @@ public class Quorrabot implements Listener
             TwitterAPI.instance().loadAccessToken(twittertoken,twittertokensecret);
         }
         
+	if (msglimit30 != 0) {
+		Quorrabot.msglimit30 = msglimit30;
+	} else {
+		Quorrabot.msglimit30 = 18.75;
+	}
+        
         this.mySqlName = mySqlName;
 	this.mySqlUser = mySqlUser;
 	this.mySqlPass = mySqlPass;
@@ -275,10 +277,6 @@ public class Quorrabot implements Listener
 	this.soundboardauth = soundboardauth;
 	this.soundboardauthread = soundboardauthread;
 
-        this.profile = new Profile(username.toLowerCase());
-        this.tceProfile = new Profile(channel.toLowerCase());
-        this.connectionManager = new ConnectionManager(profile);
-        this.tceConnectionManager = new ConnectionManager(tceProfile);
         
         if (clientid.length() == 0)
         {
@@ -287,6 +285,15 @@ public class Quorrabot implements Listener
         {
             this.clientid = clientid;
         }
+        
+	/** Create a map for multiple channels. */
+	channels = new HashMap<>();
+
+	/** Create a map for multiple sessions. */
+	sessions = new HashMap<>();
+
+	/** Create a map for multiple oauth tokens. */
+	apiOAuths = new HashMap<>();
 
         rng = new SecureRandom();
         pollResults = new TreeMap<>();
@@ -342,61 +349,34 @@ public class Quorrabot implements Listener
                 ini2sqlite(true);
             }
         }
+        TwitchAPIv3.instance().SetClientID(this.clientid);
+        TwitchAPIv3.instance().SetOAuth(apioauth);
 
         this.init();
+        
+        this.channel = Channel.instance(this.channelName, this.username, this.oauth, EventBus.instance());
 
-        /*
-         * try { Thread.sleep(3000); } catch (InterruptedException ex) { }
-         */
         if (SystemUtils.IS_OS_LINUX && !interactive)
         {
             try
             {
                 java.lang.management.RuntimeMXBean runtime = java.lang.management.ManagementFactory.getRuntimeMXBean();
-                /*
-                 * java.lang.reflect.Field jvm =
-                 * runtime.getClass().getDeclaredField("jvm");
-                 * jvm.setAccessible(true); sun.management.VMManagement mgmt =
-                 * (sun.management.VMManagement) jvm.get(runtime);
-                 * java.lang.reflect.Method pid_method =
-                 * mgmt.getClass().getDeclaredMethod("getProcessId");
-                 * pid_method.setAccessible(true);
-                 *
-                 * int pid = (Integer) pid_method.invoke(mgmt);
-                 */
                 int pid = Integer.parseInt(runtime.getName().split("@")[0]);
 
-                //int pid = Integer.parseInt( ( new File("/proc/self")).getCanonicalFile().getName() ); 
                 File f = new File("/var/run/QuorraBot." + this.username.toLowerCase() + ".pid");
 
                 try (FileOutputStream fs = new FileOutputStream(f, false))
                 {
                     PrintStream ps = new PrintStream(fs);
-
                     ps.print(pid);
                 }
-
                 f.deleteOnExit();
-            } catch (/*
-                     * NoSuchFieldException | IllegalAccessException |
-                     * NoSuchMethodException |
-                     * java.lang.reflect.InvocationTargetException |
-                     */SecurityException | IllegalArgumentException | IOException ex)
+            } catch (SecurityException | IllegalArgumentException | IOException ex)
             {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }
         }
 
-        channels = new HashMap<>();
- 
-        this.session = connectionManager.requestConnection(this.hostname, this.port, oauth);
-
-        TwitchChatEventHandler(apioauth, this.tceConnectionManager);
-
-        TwitchAPIv3.instance().SetClientID(this.clientid);
-        TwitchAPIv3.instance().SetOAuth(apioauth);
-
-        this.session.addIRCEventListener(new IrcEventHandler());
     }
     
     public static void setDebugging(boolean debug)
@@ -414,47 +394,87 @@ public class Quorrabot implements Listener
     }
     
 
-    public Session getSession()
-    {
-        return session;
-    }
-    public Session getTceSession()
-    {
-        return tceSession;
-    }
-
     public boolean isExiting()
     {
         return exiting;
     }
 
-    public Channel getChannel()
-    {
-        return channel;
+	/**
+	 * Give's you the channel for that channelName.
+	 *
+	 * @return {channel}
+	 */
+	public Channel getChannel() {
+		return channels.get(this.channelName);
+	}
+
+	/**
+	 * Give's you the channel for that channelName.
+	 *
+	 * @param {string} channelName
+	 * @return {channel}
+	 */
+	public static Channel getChannel(String channelName) {
+		return channels.get(channelName);
+	}
+
+	/**
+	 * Give's you the session for that channel.
+	 *
+	 * @return {session}
+	 */
+	public Session getSession() {
+		return sessions.get(this.channelName);
+	}
+
+	/**
+	 * Give's you the session for that channel.
+	 *
+	 * @param {string} channelName
+	 * @return {session}
+	 */
+	public static Session getSession(String channelName) {
+		return sessions.get(channelName);
+	}
+
+	/**
+	 * Give's you the api oauth for that channel.
+	 *
+	 * @param {string} channelName
+	 * @return {string}
+	 */
+	public static String getOAuth(String channelName) {
+		return apiOAuths.get(channelName);
+	}
+        
+    public static long getMessageInterval() {
+        return (long) ((30.0 / msglimit30) * 1000);
+    }
+    
+    public static void addChannel(String channelName, Channel channel) {
+    	if (!channels.containsKey(channelName)) {
+    		channels.put(channelName, channel);
+    	}
     }
 
-    public long getMessageInterval()
-    {
-        return (long) ((30.0 / this.msglimit30) * 1000);
+    /**
+	 * Adds a session to the sessions array for multiple channels.
+	 *
+	 * @param {string} channelName
+	 * @param {session} session
+	 */
+    public static void addSession(String channelName, Session session) {
+    	if (!sessions.containsKey(channelName)) {
+    		sessions.put(channelName, session);
+    	}
     }
-
-    public Channel getChannel(String channelName)
-    {
-        return channels.get(channelName);
-    }
+    
 
     public HashMap<String, Channel> getChannels()
     {
         return channels;
     }
     
-    private void TwitchChatEventHandler(String oauth, ConnectionManager connManager)
-    {
-        int ceport = 6667;
-
-        tceSession = connManager.requestConnection(hostname, ceport, apioauth);
-        tceSession.addIRCEventListener(new IrcEventHandler());
-    }
 
     public final void init()
     {
@@ -480,7 +500,6 @@ public class Quorrabot implements Listener
             }
             webenabled = true;
             httpserver.start();
-            com.gmt2001.Console.out.println("HTTP server accepting connections on port " + baseport);
             
             if (musicenable)
             {
@@ -531,7 +550,7 @@ public class Quorrabot implements Listener
         Script.global.defineProperty("subscribers", subscribersCache, 0);
         Script.global.defineProperty("channelUsers", channelUsersCache, 0);
         Script.global.defineProperty("botName", username, 0);
-        Script.global.defineProperty("channelName", channelName, 0);
+        Script.global.defineProperty("channelName", channel, 0);
         Script.global.defineProperty("channels", channels, 0);
         Script.global.defineProperty("ownerName", ownerName, 0);
         Script.global.defineProperty("channelStatus", channelStatus, 0);
@@ -545,8 +564,6 @@ public class Quorrabot implements Listener
         Script.global.defineProperty("twitter", TwitterAPI.instance(), 0);
         Script.global.defineProperty("pollResults", pollResults, 0);
         Script.global.defineProperty("pollVoters", voters, 0);
-        Script.global.defineProperty("connmgr", connectionManager, 0);
-        Script.global.defineProperty("tceconnmgr", tceConnectionManager, 0);
         Script.global.defineProperty("hostname", hostname, 0);
         Script.global.defineProperty("soundboard", soundBoard, 0);
         Script.global.defineProperty("logger", Logger.instance(), 0);
@@ -574,6 +591,7 @@ public class Quorrabot implements Listener
     @SuppressWarnings("SleepWhileInLoop")
     public void onExit()
     {
+        Quorrabot.getSession(this.channelName).setAllowSendMessages(false);
         com.gmt2001.Console.out.println("[SHUTDOWN] Bot shutting down...");
 
         com.gmt2001.Console.out.println("[SHUTDOWN] Stopping event & message dispatching...");
@@ -627,60 +645,47 @@ public class Quorrabot implements Listener
         com.gmt2001.Console.out.println("[SHUTDOWN] Saving data...");
         dataStoreObj.SaveAll(true);
 
-        com.gmt2001.Console.out.println("[SHUTDOWN] Disconnecting from Twitch IRC...");
-        connectionManager.quit();
-        tceConnectionManager.quit();
-
         com.gmt2001.Console.out.println("[SHUTDOWN] Waiting for JVM to exit...");
     }
 
-    @Subscribe
-    public void onIRCConnectComplete(IrcConnectCompleteEvent event)
-    {
-        if (event.getSession().equals(this.session))
-        {
-            this.session.sayRaw("CAP REQ :twitch.tv/tags");
-            this.session.sayRaw("CAP REQ :twitch.tv/commands");
-            this.session.sayRaw("CAP REQ :twitch.tv/membership");
-
-            if (channelName.toLowerCase().contains(","))
-            {
-                String[] c = channelName.toLowerCase().split(",");
-
-                for (String ch : c)
-                {
-                    this.session.join("#" + ch);
-                }
-            } else
-            {
-                this.session.join("#" + channelName.toLowerCase());
-            }
-        }
-
-        if(event.getSession().equals(tceSession))
-        {
-            tceSession.sayRaw("CAP REQ :twitch.tv/tags");
-            tceSession.sayRaw("CAP REQ :twitch.tv/commands");
-            tceSession.sayRaw("CAP REQ :twitch.tv/membership");
-        }
-
-        //com.gmt2001.Console.out.println("Connected to server\nJoining channel #" + channelName.toLowerCase());
-    }
 
     @Subscribe
     public void onIRCJoinComplete(IrcJoinCompleteEvent event)
     {
-        this.channel = event.getChannel();
+    	/* Check if the bot already joined once. */
+    	if (joined) {
+    		return;
+    	}
 
-        this.channels.put(this.channel.getName(), this.channel);
+    	joined = true;
+
+        this.channelName = event.getChannel().getName();
+    	this.session = event.getSession();
+        
+    	/** Add the channel/session in the array for later use */
+    	Quorrabot.addChannel(this.channelName, event.getChannel());
+    	Quorrabot.addSession(this.channelName, this.session);
 
         //com.gmt2001.Console.out.println("Joined channel: " + event.getChannel().getName());
-        session.sayChannel(this.channel, ".mods");
+        event.getSession().saySilent(".mods");
+        event.getSession().startTimers();
 
-        this.followersCache = FollowersCache.instance(this.channel.getName().toLowerCase());
-        this.hostCache = ChannelHostCache.instance(this.channel.getName().toLowerCase());
-        this.subscribersCache = SubscribersCache.instance(this.channel.getName().toLowerCase());
-        //this.channelUsersCache = ChannelUsersCache.instance(this.channel.getName().toLowerCase());
+        this.followersCache = FollowersCache.instance(this.channelName);
+        this.hostCache = ChannelHostCache.instance(this.channelName);
+        this.subscribersCache = SubscribersCache.instance(this.channelName);
+        this.channelUsersCache = ChannelUsersCache.instance(this.channelName);
+        
+        /** Export these to the $. api for the scripts to use */
+        Script.global.defineProperty("followers", this.followersCache, 0);
+        Script.global.defineProperty("hosts", this.hostCache, 0);
+        Script.global.defineProperty("subscribers", this.subscribersCache, 0);
+        Script.global.defineProperty("channelUsers", this.channelUsersCache, 0);
+        
+        /** Make all these to null because they are useless with multiple channels */
+        this.followersCache = null;
+        this.hostCache = null;
+        this.subscribersCache = null;
+        this.channelUsersCache = null;
     }
 
     @Subscribe
@@ -689,16 +694,14 @@ public class Quorrabot implements Listener
         if (event.getSender().equalsIgnoreCase("jtv"))
         {
             String message = event.getMessage().toLowerCase();
-
             if (message.startsWith("the moderators of this room are: "))
             {
-                String[] spl = message.substring(33).split(", ");
-
-                for (String spl1 : spl)
+                String[] moderators = message.substring(33).split(", ");
+                for (String moderator : moderators)
                 {
-                    if (spl1.equalsIgnoreCase(this.username))
+                    if (moderator.equalsIgnoreCase(this.username))
                     {
-                        channel.setAllowSendMessages(true);
+                        event.getSession().setAllowSendMessages(true);
                     }
                 }
             }
@@ -706,12 +709,12 @@ public class Quorrabot implements Listener
             if (message.contains("is now hosting you"))
             {
                 String hoster = message.substring(0, message.indexOf(" ", 1)).toString();
-                EventBus.instance().post(new TwitchHostedEvent(hoster, channel));    
+                EventBus.instance().postAsync(new TwitchHostedEvent(hoster, Quorrabot.getChannel(event.getChannel().getName()))); 
             }
         }
         if (!event.getSender().equalsIgnoreCase("jtv") && !event.getSender().equalsIgnoreCase("twitchnotify"))
         {
-            if(event.getMessage().startsWith("!") && event.getSession()==session) {
+            if(event.getMessage().startsWith("!")) {
                 String command;
                 String argsString;
                 if(event.getMessage().indexOf(" ")==-1) {
@@ -744,13 +747,13 @@ public class Quorrabot implements Listener
 
             if (message.startsWith("the moderators of this room are: "))
             {
-                String[] spl = message.substring(33).split(", ");
+                String[] moderators = message.substring(33).split(", ");
 
-                for (String spl1 : spl)
+                for (String moderator : moderators)
                 {
-                    if (spl1.equalsIgnoreCase(this.username))
+                    if (moderator.equalsIgnoreCase(this.username))
                     {
-                        channel.setAllowSendMessages(true);
+                        event.getSession().setAllowSendMessages(true);
                     }
                 }
             }
@@ -760,16 +763,15 @@ public class Quorrabot implements Listener
     @Subscribe
     public void onIRCChannelUserMode(IrcChannelUserModeEvent event)
     {
-        if (event.getUser().equalsIgnoreCase(username) && event.getMode().equalsIgnoreCase("o")
-                && this.channel != null && event.getChannel().getName().equalsIgnoreCase(channel.getName()))
-        {
-            if (!event.getAdd())
-            {
-                session.sayChannel(this.channel, ".mods");
-            }
-
-            channel.setAllowSendMessages(event.getAdd());
-        }
+    	/** Check to see if Twitch sent a mode event for the bot name */
+    	if (event.getUser().equalsIgnoreCase(this.username) && event.getMode().equalsIgnoreCase("o")) {
+    		/** Did we get mod? if not try .mods again */
+    		if (!event.getAdd()) {
+    			event.getSession().saySilent(".mods");
+    		}
+    		/** Allow the bot to sends message to this session */
+    		event.getSession().setAllowSendMessages(event.getAdd());
+    	}
     }
 
     @Subscribe
@@ -784,6 +786,34 @@ public class Quorrabot implements Listener
         if (message.equals("debugon"))
         {
             Quorrabot.setDebugging(true);
+        }
+        
+         //used for testing notifications
+        
+        if (message.equalsIgnoreCase("subtest"))
+            
+        {
+            String randomUser = generateRandomString(10);
+            EventBus.instance().postAsync(new IrcPrivateMessageEvent(Quorrabot.getSession(this.channelName), "twitchnotify", randomUser + " just subscribed!"));
+
+
+        }
+        if (message.equalsIgnoreCase("resubtest"))
+        {
+            String randomUser = generateRandomString(10);
+            EventBus.instance().postAsync(new IrcPrivateMessageEvent(Quorrabot.getSession(this.channelName), "twitchnotify", randomUser + " just subscribed for 10 months in a row!"));
+
+        }
+        if (message.equalsIgnoreCase("followtest"))
+        {
+            String randomUser = generateRandomString(10);
+            EventBus.instance().postAsync(new TwitchFollowEvent(randomUser, Quorrabot.getChannel(this.channelName))); 
+        }
+        
+        if (message.equalsIgnoreCase("hosttest"))
+        {
+            String randomUser = generateRandomString(10);
+            EventBus.instance().postAsync(new TwitchHostedEvent(randomUser, Quorrabot.getChannel(this.channelName))); 
         }
 
         if (message.equals("debugoff"))
@@ -1048,8 +1078,8 @@ public class Quorrabot implements Listener
                 data += "clientid=" + clientid + "\r\n";
                 data += "webauth=" + soundboardauth + "\r\n";
                 data += "webauthro=" + soundboardauthread + "\r\n";
-                data += "channel=" + channelName + "\r\n";
                 data += "owner=" + ownerName + "\r\n";
+                data += "channel=" + channelName + "\r\n";
                 data += "baseport=" + baseport + "\r\n";
                 data += "hostname=" + hostname + "\r\n";
                 data += "port=" + port + "\r\n";
@@ -1137,27 +1167,6 @@ public class Quorrabot implements Listener
             dataStoreObj.SaveAll(true);
         }
         
-        //used for testing sub notifications
-        
-        /*if (command.equalsIgnoreCase("primetest"))
-        {
-            EventBus.instance().post(new IrcPrivateMessageEvent(session, "twitchnotify", "TEST just subscribed with Twitch Prime!"));
-        }
-        if (command.equalsIgnoreCase("subtest"))
-        {
-            EventBus.instance().post(new IrcPrivateMessageEvent(session, "twitchnotify", "TEST just subscribed!"));
-        }
-        if (command.equalsIgnoreCase("resubtest"))
-        {
-            EventBus.instance().post(new IrcPrivateMessageEvent(session, "twitchnotify", "TEST just subscribed for 1 months in a row!"));
-        }*/
-        
-        //used for testing host notifications
-        
-        /*if (command.equalsIgnoreCase("hosttest"))
-        {
-            EventBus.instance().post(new TwitchHostedEvent("rewtbot", channel)); 
-        }*/
         
         if (command.equalsIgnoreCase("d"))
         {
@@ -1449,15 +1458,15 @@ public class Quorrabot implements Listener
         String user = "";
         String oauth = "";
         String apioauth = "";
+        String channelName = "";
 	String soundboardauth = "";
 	String soundboardauthread = "";
         String clientid = "";
-        String channel = "";
         String owner = "";
         String hostname = "";
         int baseport = 25300;
         int port = 0;
-        double msglimit30 = 0;
+        double msglimit30 = 18.75;
         String datastore = "";
         String datastoreconfig = "";
         String youtubekey = "";
@@ -1499,7 +1508,9 @@ public class Quorrabot implements Listener
                     if (line.startsWith("logtimezone=") && line.length() >= 15) {
                         timeZone = line.substring(12);
                     }
-                    
+                    if (line.startsWith("websocketircab")) {
+                        Quorrabot.webSocketIRCAB = true;
+                    }
                     if (line.startsWith("user=") && line.length() > 8)
                     {
                         user = line.substring(5);
@@ -1518,7 +1529,7 @@ public class Quorrabot implements Listener
                     }
                     if (line.startsWith("channel=") && line.length() > 11)
                     {
-                        channel = line.substring(8);
+                        channelName = line.substring(8);
                     }
                     if (line.startsWith("owner=") && line.length() > 9)
                     {
@@ -1651,6 +1662,8 @@ public class Quorrabot implements Listener
             com.gmt2001.Console.debug.println("New webauth read-only key has been generated for botlogin.txt");
             changed = true;
         }
+        
+        
 
         try {
             if(user.isEmpty()) {
@@ -1665,9 +1678,9 @@ public class Quorrabot implements Listener
                 oauth = System.console().readLine().trim();
                 changed = true;
             }
-            if(channel.isEmpty()) {
-                com.gmt2001.Console.out.print("Please enter the name of the twitch channel the bot should join (not the link, just the name): ");
-                channel = System.console().readLine().trim().toLowerCase();
+            if(channelName.isEmpty()) {
+                com.gmt2001.Console.out.print("Please enter the name of the twitch channel the bot should join (not the url, just the name): ");
+                channelName = System.console().readLine().trim().toLowerCase();
                 changed = true;
             }
             if(apioauth.isEmpty()) {
@@ -1685,7 +1698,7 @@ public class Quorrabot implements Listener
 
         if (owner.isEmpty())
         {
-            owner = channel;
+            owner = channelName;
 
             changed = true;
         }
@@ -1700,7 +1713,7 @@ public class Quorrabot implements Listener
                     com.gmt2001.Console.out.println("oauth='" + oauth + "'");
                     com.gmt2001.Console.out.println("apioauth='" + apioauth + "'");
                     com.gmt2001.Console.out.println("clientid='" + clientid + "'");
-                    com.gmt2001.Console.out.println("channel='" + channel + "'");
+                    com.gmt2001.Console.out.println("channel='" + channelName + "'");
                     com.gmt2001.Console.out.println("owner='" + owner + "'");
                     com.gmt2001.Console.out.println("baseport='" + baseport + "'");
                     com.gmt2001.Console.out.println("hostname='" + hostname + "'");
@@ -1801,9 +1814,9 @@ public class Quorrabot implements Listener
                 }
                 if (arg.toLowerCase().startsWith("channel=") && arg.length() > 11)
                 {
-                    if (!channel.equals(arg.substring(8)))
+                    if (!channelName.equals(arg.substring(8)))
                     {
-                        channel = arg.substring(8).toLowerCase();
+                        channelName = arg.substring(8).toLowerCase();
                         changed = true;
                     }
                 }
@@ -2023,7 +2036,7 @@ public class Quorrabot implements Listener
             data += "clientid=" + clientid + "\r\n";
             data += "webauth=" + soundboardauth + "\r\n";
             data += "webauthro=" + soundboardauthread + "\r\n";
-            data += "channel=" + channel + "\r\n";
+            data += "channel=" + channelName + "\r\n";
             data += "owner=" + owner + "\r\n";
             data += "baseport=" + baseport + "\r\n";
             data += "hostname=" + hostname + "\r\n";
@@ -2058,7 +2071,7 @@ public class Quorrabot implements Listener
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
 
-        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channel, owner, baseport, hostname, port, 
+        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channelName, owner, baseport, hostname, port, 
                 msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken, 
                 lastfmuser, tpetoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid,
                 webenable, musicenable, usehttps, timeZone, mySqlHost, mySqlPort, mySqlConn, mySqlPass, mySqlUser, mySqlName, keystorepath, 
@@ -2169,6 +2182,20 @@ public class Quorrabot implements Listener
         char[] randomBuffer;
 
         randomBuffer = new char[30];
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < randomBuffer.length; i++) {
+           randomBuffer[i] = randomChars[random.nextInt(randomChars.length)];
+        }
+        return new String(randomBuffer);
+    }
+    
+    /** gen a random string */
+    private static String generateRandomString(int length) {
+        String randomAllowed = "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        char[] randomChars = randomAllowed.toCharArray();
+        char[] randomBuffer;
+
+        randomBuffer = new char[length];
         SecureRandom random = new SecureRandom();
         for (int i = 0; i < randomBuffer.length; i++) {
            randomBuffer[i] = randomChars[random.nextInt(randomChars.length)];

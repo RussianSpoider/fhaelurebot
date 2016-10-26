@@ -100,7 +100,7 @@ $.on('command', function (event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.error-quote-usage"));
                 return;
             }
-            var message = argsString.substring(argsString.indexOf(" ") + 1, argsString.length());
+            var message = argsString.substring($.findIndex(argsString) + 1, argsString.length());
             $.inidb.set('quotes', 'quote_' + $.QuoteCommand.getTotalQuotes, message + quoteInfo);
             $.QuoteCommand.getTotalQuotes++;
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.quote-add-success", $.QuoteCommand.getTotalQuotes));

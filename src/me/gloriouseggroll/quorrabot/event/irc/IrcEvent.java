@@ -17,7 +17,7 @@
 package me.gloriouseggroll.quorrabot.event.irc;
 
 import me.gloriouseggroll.quorrabot.event.Event;
-import me.gloriouseggroll.quorrabot.jerklib.Session;
+import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
 public abstract class IrcEvent extends Event
 {

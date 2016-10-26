@@ -65,9 +65,9 @@ $.modeo = false;
 
 $api.on($script, 'ircJoinComplete', function (event) {
     $.connected = true;
-    if(event.getSessionName()!="tceSession") {
-        $.channel = event.getChannel();
-    }
+    $.channel = event.getChannel();
+    $.channelName = event.getChannel().getName();
+    $.session = event.getSession();
 });
 
 $api.on($script, 'ircChannelUserMode', function (event) {
@@ -555,8 +555,8 @@ $api.on($script, 'ircConnectComplete', function (event) {
     $.hook.call('ircConnectComplete', event, true);
 });
 
-$api.on($script, 'ircJoinComplete', function (event) {
-    $.hook.call('ircJoinComplete', event, true);
+$api.on($script, 'ircChannelJoinUpdate', function (event) {
+    $.hook.call('ircChannelJoinUpdate', event, true);
 });
 
 $api.on($script, 'gameWispChange', function(event) {

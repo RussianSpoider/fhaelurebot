@@ -16,6 +16,11 @@
  */
 package me.gloriouseggroll.quorrabot.cache;
 
+import me.gloriouseggroll.quorrabot.Quorrabot;
+import me.gloriouseggroll.quorrabot.event.EventBus;
+import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelJoinEvent;
+import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelJoinUpdateEvent;
+import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelLeaveEvent;
 import com.gmt2001.TwitchAPIv3;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -27,17 +32,14 @@ import java.util.Map.Entry;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ChannelUsersCache implements Runnable
-{
+public class ChannelUsersCache implements Runnable {
 
     private static final Map<String, ChannelUsersCache> instances = Maps.newHashMap();
 
-    public static ChannelUsersCache instance(String channel)
-    {
+    public static ChannelUsersCache instance(String channel) {
         ChannelUsersCache instance = instances.get(channel);
 
-        if (instance == null)
-        {
+        if (instance == null) {
             instance = new ChannelUsersCache(channel);
 
             instances.put(channel, instance);
@@ -54,12 +56,11 @@ public class ChannelUsersCache implements Runnable
     private Date lastFail = new Date();
     private int numfail = 0;
     private boolean killed = false;
+    private boolean firstTime = true;
 
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
-    private ChannelUsersCache(String channel)
-    {
-        if (channel.startsWith("#"))
-        {
+    private ChannelUsersCache(String channel) {
+        if (channel.startsWith("#")) {
             channel = channel.substring(1);
         }
 
@@ -72,55 +73,40 @@ public class ChannelUsersCache implements Runnable
         updateThread.start();
     }
 
-    public boolean is(String username)
-    {
+    public boolean is(String username) {
         return cache.containsKey(username);
     }
 
-    public String get(String username)
-    {
+    public String get(String username) {
         return cache.get(username);
     }
 
-    public int count()
-    {
+    public int count() {
         return cache.size();
     }
 
     @Override
     @SuppressWarnings("SleepWhileInLoop")
-    public void run()
-    {
-        try
-        {
+    public void run() {
+        try {
             Thread.sleep(30 * 1000);
-        } catch (InterruptedException e)
-        {
-            com.gmt2001.Console.out.println("ChannelUsersCache.run>>Failed to initial sleep: [InterruptedException] " + e.getMessage());
-            com.gmt2001.Console.err.logStackTrace(e);
+        } catch (InterruptedException e) {
+            com.gmt2001.Console.debug.println("ChannelUsersCache.run: Failed to initial sleep: [InterruptedException] " + e.getMessage());
         }
 
-        while (!killed)
-        {
-            try
-            {
-                try
-                {
-                    if (new Date().after(timeoutExpire))
-                    {
+        while (!killed) {
+            try {
+                try {
+                    if (new Date().after(timeoutExpire)) {
                         this.updateCache();
                     }
-                } catch (Exception e)
-                {
-                    if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]"))
-                    {
+                } catch (Exception e) {
+                    if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) {
                         Calendar c = Calendar.getInstance();
 
-                        if (lastFail.after(new Date()))
-                        {
+                        if (lastFail.after(new Date())) {
                             numfail++;
-                        } else
-                        {
+                        } else {
                             numfail = 1;
                         }
 
@@ -128,41 +114,36 @@ public class ChannelUsersCache implements Runnable
 
                         lastFail = c.getTime();
 
-                        if (numfail >= 5)
-                        {
+                        if (numfail >= 5) {
                             timeoutExpire = c.getTime();
                         }
                     }
 
-                    com.gmt2001.Console.out.println("ChannelUsersCache.run>>Failed to update users: " + e.getMessage());
-                    com.gmt2001.Console.err.logStackTrace(e);
+                    com.gmt2001.Console.debug.println("ChannelUsersCache.run: Failed to update users: " + e.getMessage());
                 }
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 com.gmt2001.Console.err.printStackTrace(e);
             }
 
-            try
-            {
-                Thread.sleep(30 * 1000);
-            } catch (InterruptedException e)
-            {
-                com.gmt2001.Console.out.println("ChannelUsersCache.run>>Failed to sleep: [InterruptedException] " + e.getMessage());
-                com.gmt2001.Console.err.logStackTrace(e);
+            try {
+                if (firstTime) {
+                    Thread.sleep(30 * 1000);      // Failed to fetch during startup, sleep 30 seconds.
+                } else {
+                    Thread.sleep(60 * 60 * 1000); // Success on the iniital pull, now once an hour.
+                }
+            } catch (InterruptedException e) {
+                com.gmt2001.Console.debug.println("ChannelUsersCache.run: Failed to sleep: [InterruptedException] " + e.getMessage());
             }
         }
     }
 
-    private void updateCache() throws Exception
-    {
+    private void updateCache() throws Exception {
         Map<String, String> newCache = Maps.newHashMap();
 
         JSONObject j = TwitchAPIv3.instance().GetChatUsers(channel);
 
-        if (j.getBoolean("_success"))
-        {
-            if (j.getInt("_http") == 200)
-            {
+        if (j.getBoolean("_success")) {
+            if (j.getInt("_http") == 200) {
                 JSONObject users = j.getJSONObject("chatters");
 
                 JSONArray mods = users.getJSONArray("moderators");
@@ -171,59 +152,44 @@ public class ChannelUsersCache implements Runnable
                 JSONArray global_mods = users.getJSONArray("global_mods");
                 JSONArray viewers = users.getJSONArray("viewers");
 
-                for (int i = 0; i < mods.length(); i++)
-                {
+                for (int i = 0; i < mods.length(); i++) {
                     newCache.put(mods.getString(i), "mod");
                 }
 
-                for (int i = 0; i < staff.length(); i++)
-                {
+                for (int i = 0; i < staff.length(); i++) {
                     newCache.put(staff.getString(i), "staff");
                 }
 
-                for (int i = 0; i < admins.length(); i++)
-                {
+                for (int i = 0; i < admins.length(); i++) {
                     newCache.put(admins.getString(i), "admin");
                 }
 
-                for (int i = 0; i < global_mods.length(); i++)
-                {
+                for (int i = 0; i < global_mods.length(); i++) {
                     newCache.put(admins.getString(i), "global_mod");
                 }
 
-                for (int i = 0; i < viewers.length(); i++)
-                {
+                for (int i = 0; i < viewers.length(); i++) {
                     newCache.put(viewers.getString(i), "viewer");
                 }
-            } else
-            {
-                try
-                {
-                    throw new Exception("[HTTPErrorException] HTTP " + j.getString("error") + ". req="
-                            + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                            + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
-                } catch (Exception e)
-                {
-                    com.gmt2001.Console.out.println("ChannelUsersCache.updateCache>>Failed to update users: " + e.getMessage());
-                    com.gmt2001.Console.err.logStackTrace(e);
+            } else {
+                try {
+                    throw new Exception("[HTTPErrorException] HTTP " + j.getInt("_http") + ". req="
+                                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+                } catch (Exception e) {
+                    com.gmt2001.Console.debug.println("ChannelUsersCache.updateCache: Failed to update users: " + e.getMessage());
                 }
             }
-        } else
-        {
-            try
-            {
+        } else {
+            try {
                 throw new Exception("[" + j.getString("_exception") + "] " + j.getString("_exceptionMessage"));
-            } catch (Exception e)
-            {
-                if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]"))
-                {
+            } catch (Exception e) {
+                if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) {
                     Calendar c = Calendar.getInstance();
 
-                    if (lastFail.after(new Date()))
-                    {
+                    if (lastFail.after(new Date())) {
                         numfail++;
-                    } else
-                    {
+                    } else {
                         numfail = 1;
                     }
 
@@ -231,71 +197,53 @@ public class ChannelUsersCache implements Runnable
 
                     lastFail = c.getTime();
 
-                    if (numfail >= 5)
-                    {
+                    if (numfail >= 5) {
                         timeoutExpire = c.getTime();
                     }
                 }
 
-                com.gmt2001.Console.out.println("ChannelUsersCache.updateCache>>Failed to update users: " + e.getMessage());
-                com.gmt2001.Console.err.logStackTrace(e);
+                com.gmt2001.Console.debug.println("ChannelUsersCache.updateCache: Failed to update users: " + e.getMessage());
             }
         }
 
-        List<String> join = Lists.newArrayList();
-        List<String> part = Lists.newArrayList();
+        if (newCache.size() > 0) {
+            List<String> join = Lists.newArrayList();
+            List<String> part = Lists.newArrayList();
 
-        for (String key : newCache.keySet())
-        {
-            if (cache == null || !cache.containsKey(key))
-            {
-                join.add(key);
-            }
-        }
-
-        if (cache != null)
-        {
-            for (String key : cache.keySet())
-            {
-                if (!newCache.containsKey(key))
-                {
-                    part.add(key);
+            for (String key : newCache.keySet()) {
+                if (this.cache == null || !this.cache.containsKey(key)) {
+                    join.add(key);
                 }
             }
+
+            if (this.cache != null) {
+                for (String key : this.cache.keySet()) {
+                    if (!newCache.containsKey(key)) {
+                        part.add(key);
+                    }
+                }
+            }
+
+            this.cache = newCache;
+
+            firstTime = false;
         }
-
-        this.cache = newCache;
-
-        /*
-         * for (String joined : join) { EventBus.instance().post(new
-         * IrcChannelJoinEvent(QuorraBot.instance().getSession(),
-         * QuorraBot.instance().getChannel(this.channel), joined)); }
-         *
-         * for (String parted : part) { EventBus.instance().post(new
-         * IrcChannelLeaveEvent(QuorraBot.instance().getSession(),
-         * QuorraBot.instance().getChannel(this.channel), parted, "Left")); }
-         */
     }
 
-    public void setCache(Map<String, String> cache)
-    {
+    public void setCache(Map<String, String> cache) {
         this.cache = cache;
     }
 
-    public Map<String, String> getCache()
-    {
+    public Map<String, String> getCache() {
         return cache;
     }
 
-    public void kill()
-    {
+    public void kill() {
         killed = true;
     }
 
-    public static void killall()
-    {
-        for (Entry<String, ChannelUsersCache> instance : instances.entrySet())
-        {
+    public static void killall() {
+        for (Entry<String, ChannelUsersCache> instance : instances.entrySet()) {
             instance.getValue().kill();
         }
     }

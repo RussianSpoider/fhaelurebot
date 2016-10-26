@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import me.gloriouseggroll.quorrabot.Quorrabot;
 import me.gloriouseggroll.quorrabot.event.Event;
 import me.gloriouseggroll.quorrabot.event.Listener;
@@ -67,7 +68,25 @@ public class ScriptEventManager implements Listener
         }
     }
     private final List<EventHandlerEntry> entries = Lists.newCopyOnWriteArrayList();
+    private final ConcurrentHashMap<String,EventHandlerEntry> hashEntries = new ConcurrentHashMap<String,EventHandlerEntry>();
 
+    public void runDirect(Event event) {
+        if (Quorrabot.instance().isExiting()) {
+            return;
+        }
+
+        try {
+            EventHandlerEntry entry = hashEntries.get(event.getClass().getName());
+            if (entry != null) {
+                entry.handler.handle(event);
+                com.gmt2001.Console.debug.println("Dispatched runDirect event " + entry.eventClass.getName());
+            }
+        } catch (Exception e) {
+            com.gmt2001.Console.err.println("Failed to dispatch runDirect event " + event.getClass().getName());
+            com.gmt2001.Console.err.printStackTrace(e);
+        }
+    }
+    
     @Subscribe
     public void onEvent(Event event)
     {

@@ -25,13 +25,11 @@ import java.util.Map;
 import me.gloriouseggroll.quorrabot.Quorrabot;
 import org.json.JSONObject;
 
-public class UsernameCache
-{
+public class UsernameCache {
 
     private static final UsernameCache instance = new UsernameCache();
 
-    public static UsernameCache instance()
-    {
+    public static UsernameCache instance() {
         return instance;
     }
 
@@ -40,80 +38,62 @@ public class UsernameCache
     private Date lastFail = new Date();
     private int numfail = 0;
 
-    private UsernameCache()
-    {
+    private UsernameCache() {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
 
-    public String resolve(String username)
-    {
+    public String resolve(String username) {
         return resolve(username, new HashMap<String, String>());
     }
 
-    public String resolve(String username, Map<String, String> tags)
-    {
+    public String resolve(String username, Map<String, String> tags) {
         String lusername = username.toLowerCase();
 
-        if (cache.containsKey(lusername))
-        {
+        if (cache.containsKey(lusername)) {
             return cache.get(lusername);
-        } else
-        {
-            if (tags.containsKey("display-name") && tags.get("display-name").equalsIgnoreCase(lusername))
-            {
+        } else {
+            if (tags.containsKey("display-name") && tags.get("display-name").equalsIgnoreCase(lusername)) {
                 cache.put(lusername, tags.get("display-name"));
-
-                if (Quorrabot.enableDebugging)
-                {
-                    com.gmt2001.Console.out.println(">>UsernameCache detected using v3: " + tags.get("display-name"));
-                }
-
                 return tags.get("display-name");
             }
 
-            if (username.equalsIgnoreCase("jtv") || username.equalsIgnoreCase("twitchnotify") || new Date().before(timeoutExpire))
-            {
+            if (username.equalsIgnoreCase("jtv") || username.equalsIgnoreCase("twitchnotify") || new Date().before(timeoutExpire)) {
                 return username;
             }
 
-            try
-            {
+            try {
                 JSONObject user = TwitchAPIv3.instance().GetUser(lusername);
 
-                if (user.getBoolean("_success"))
-                {
-                    if (user.getInt("_http") == 200)
-                    {
-                        String displayName = user.getString("display_name");
+                if (user.getBoolean("_success")) {
+                    if (user.getInt("_http") == 200) {
+                        String displayName = user.getString("display_name").replaceAll("\\\\s", " ");
                         cache.put(lusername, displayName);
 
                         return displayName;
-                    } else
-                    {
-                        try
-                        {
-                            throw new Exception("[HTTPErrorException] HTTP " + user.getInt("status") + " " + user.getString("error") + ". req="
-                                    + user.getString("_type") + " " + user.getString("_url") + " " + user.getString("_post") + "   "
-                                    + (user.has("message") && !user.isNull("message") ? "message=" + user.getString("message") : "content=" + user.getString("_content")));
-                        } catch (Exception e)
-                        {
-                            com.gmt2001.Console.out.println("UsernameCache.updateCache>>Failed to get username: " + e.getMessage());
-                            com.gmt2001.Console.err.logStackTrace(e);
-
-                            return username;
+                    } else {
+                        if (user.getInt("_http") == 404 && user.has("message") && !user.isNull("message")) {
+                            if (user.getString("message").endsWith("does not exist")) {
+                                com.gmt2001.Console.debug.println("UsernameCache.updateCache: " + user.getString("message"));
+                                return username;
+                            }
                         }
+                        try {
+                            throw new Exception("[HTTPErrorException] HTTP " + user.getInt("_http") + " " + user.getString("error") + ". req="
+                                                + user.getString("_type") + " " + user.getString("_url") + " " + user.getString("_post") + "   "
+                                                + (user.has("message") && !user.isNull("message") ? "message=" + user.getString("message") : "content=" + user.getString("_content")));
+                        } catch (Exception e) {
+                              com.gmt2001.Console.debug.println("UsernameCache.updateCache: Failed to get username: " + e.getMessage());
+                              return username;
+                        }
+                        
                     }
-                } else
-                {
-                    if (user.getString("_exception").equalsIgnoreCase("SocketTimeoutException") || user.getString("_exception").equalsIgnoreCase("IOException"))
-                    {
+                } else {
+                    if (user.getString("_exception").equalsIgnoreCase("SocketTimeoutException") || user.getString("_exception").equalsIgnoreCase("IOException")) {
                         Calendar c = Calendar.getInstance();
 
-                        if (lastFail.after(new Date()))
-                        {
+                        if (lastFail.after(new Date())) {
                             numfail++;
-                        } else
-                        {
+                        } else {
                             numfail = 1;
                         }
 
@@ -121,18 +101,25 @@ public class UsernameCache
 
                         lastFail = c.getTime();
 
-                        if (numfail >= 5)
-                        {
+                        if (numfail >= 5) {
                             timeoutExpire = c.getTime();
                         }
                     }
 
                     return username;
                 }
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 com.gmt2001.Console.err.printStackTrace(e);
                 return username;
+            }
+            
+        }
+    }
+
+    public void addUser(String userName, String displayName) {
+        if (displayName.length() > 0) {
+            if (!cache.containsKey(userName)) {
+                cache.put(userName, displayName.replaceAll("\\\\s", " "));
             }
         }
     }

@@ -508,7 +508,7 @@ $.lang.data["net.quorrabot.subscribeHandler.sub-count"] = "There are currently $
 $.lang.data["net.quorrabot.subscribeHandler.auto-submode-timer-usage"] = "Usage: !autosubmodetimer (interval) - set the interval to 0 to disable.";
 $.lang.data["net.quorrabot.subscribeHandler.auto-submode-timer-off"] = "Automated subs only mode enabled!";
 $.lang.data["net.quorrabot.subscribeHandler.auto-submode-timer-404"] = "The minimum auto submode interval allowed is 30 minutes.";
-$.lang.data["net.quorrabot.subscribeHandler.auto-sub-mode-imterval-set"] = "Auto submode interval set! This will only work while the stream is online.";
+$.lang.data["net.quorrabot.subscribeHandler.auto-sub-mode-interval-set"] = "Auto submode interval set! This will only work while the stream is online.";
 $.lang.data["net.quorrabot.subscribeHandler.first-message"] = "(name) just subscribed!";
 $.lang.data["net.quorrabot.subscribeHandler.resub-message"] = "(name) just resubscribed! Their all time sub count is (months) months!";
 

@@ -17,46 +17,58 @@
 package me.gloriouseggroll.quorrabot.event.twitch.host;
 
 import me.gloriouseggroll.quorrabot.event.twitch.TwitchEvent;
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
 public abstract class TwitchHostEvent extends TwitchEvent
 {
 
     private final String hoster;
     private final Type type;
+    private final int users;
 
-    public enum Type
-    {
+    public enum Type {
 
         HOST,
         UNHOST;
     }
 
-    protected TwitchHostEvent(String hoster, Type type)
-    {
+    protected TwitchHostEvent(String hoster, Type type) {
         this.hoster = hoster;
         this.type = type;
+        this.users = 0;
+    }
+    protected TwitchHostEvent(String hoster, Type type, int users) {
+        this.hoster = hoster;
+        this.type = type;
+        this.users = users;
     }
 
-    protected TwitchHostEvent(String hoster, Type type, Channel channel)
-    {
+    protected TwitchHostEvent(String hoster, Type type, Channel channel) {
         super(channel);
         this.hoster = hoster;
         this.type = type;
+        this.users = 0;
+    }
+    protected TwitchHostEvent(String hoster, Type type, int users, Channel channel) {
+        super(channel);
+        this.hoster = hoster;
+        this.type = type;
+        this.users = users;
     }
 
-    public String getHoster()
-    {
+    public String getHoster() {
         return hoster;
     }
 
-    public Type getType()
-    {
+    public Type getType() {
         return type;
     }
 
-    public String toEventSocket()
-    {
-    	return this.getHoster() + "|" + this.getType();
+    public int getUsers() {
+        return users;
+    }
+
+    public String toEventSocket() {
+        return this.getHoster() + "|" + this.getType();
     }
 }

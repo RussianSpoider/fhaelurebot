@@ -17,7 +17,7 @@
 package me.gloriouseggroll.quorrabot.event.twitch;
 
 import me.gloriouseggroll.quorrabot.event.Event;
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
 public class TwitchEvent extends Event
 {

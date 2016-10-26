@@ -424,7 +424,7 @@ $.on('command', function (event) {
     var username = $.username.resolve(sender, event.getTags());
     var command = event.getCommand();
     var argsString = event.getArguments().trim();
-    var argsString2 = argsString.substring(argsString.indexOf(" ") + 1, argsString.length());
+    var argsString2 = argsString.substring($.findIndex(argsString) + 1, argsString.length());
     var args;
     var song;
     var id;

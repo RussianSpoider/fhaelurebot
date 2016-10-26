@@ -21,7 +21,6 @@ $.isHostUser = function (user) {
 }
 
 $.on('twitchHosted', function (event) {
-$.println(event.getHoster());
     var username = $.username.resolve(event.getHoster());
     var s = $.hostMessage;
 

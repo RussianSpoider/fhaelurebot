@@ -41,45 +41,27 @@ $.isJSON = function isJSON(data) {
 }
 
 $.say = function (s) {
-    var str = String(s);
-    var i = str.indexOf("<");
-
-    while (i >= 0) {
-        var s1 = "";
-        var s2 = "";
-
-        if (!str.substring(i, i + 2).equalsIgnoreCase("<3")) {
-            if (i > 0) {
-                s1 = str.substring(0, i);
-            }
-
-            if (i < $.strlen(str)) {
-                s2 = str.substring(i + 1);
-            }
-
-            str = s1 + "< " + s2;
+    if ($.session !== null) {
+        $.logChat($.botname, s);
+        if (s.startsWith('.')) {
+            $.session.say(s);
         }
 
-        i = str.indexOf("<", i + 1);
-    }
-
-    str = $.replaceAll(str, '<  ', '< ');
-
-    $.println(str);
-
-    if ($.connected) {
-        $.logChat($.botname, str);
-
+        if (s.startsWith('@') && s.endsWith(',')) {
+            return;
+        }
+        if (!s.startsWith('.')) {
         if (!$.inidb.exists("settings", "response_@all") || $.inidb.get("settings", "response_@all").equalsIgnoreCase("1")
-                || str.equals($.lang.get("net.quorrabot.misc.response-disable")) == true || str.indexOf(".timeout ") != -1 || str.indexOf(".ban ") != -1
-                || str.indexOf(".unban ") != -1 || str.equalsIgnoreCase(".clear") || str.equalsIgnoreCase(".mods")) {
-            var whispercheck = str.substring(0,3);
+                || s.equals($.lang.get("net.quorrabot.misc.response-disable")) == true || s.indexOf(".timeout ") != -1 || s.indexOf(".ban ") != -1
+                || s.indexOf(".unban ") != -1 || s.equalsIgnoreCase(".clear") || s.equalsIgnoreCase(".mods")) {
+            var whispercheck = s.substring(0,3);
             if(whispercheck.equalsIgnoreCase("/w ")) {
                 sleep(1000);
-                $.channel.say(str);
+                $.session.say(s);
             } else {
-                $.channel.say(str);
+                $.session.say(s);
             }
+        }
         }
     }
 }
@@ -624,6 +606,18 @@ $.trueRandElement = function (arr) {
 
 $.trueRand = function (max) {
     return $.trueRandRange(0, max);
+}
+
+$.findIndex = function (string) {
+    if(string.indexOf(" ")== -1) {
+        if(string.length()==0) {
+            return 0;
+        } else {
+            return string.length();
+        }
+    } else {
+        return string.indexOf(" ");
+    }
 }
 
 $.trueRandRange = function (min, max) {

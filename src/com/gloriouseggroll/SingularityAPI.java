@@ -110,6 +110,8 @@ public class SingularityAPI {
                 public void call(Object... args) {
                     JSONObject jsonObject = new JSONObject(args[0].toString());
                     com.gmt2001.Console.err.println("SingularityWS: Authorization Failed: " + jsonObject.getString("message"));
+                    com.gmt2001.Console.err.println("Token: " + AccessToken + " Session ID: " + SessionID + " Client ID: " + gwIdentifier);
+                    
                 }
             });
 

@@ -32,16 +32,13 @@ import me.gloriouseggroll.quorrabot.event.twitch.follower.TwitchUnfollowEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class FollowersCache implements Runnable
-{
+public class FollowersCache implements Runnable {
 
     private static final Map<String, FollowersCache> instances = Maps.newHashMap();
 
-    public static FollowersCache instance(String channel)
-    {
+    public static FollowersCache instance(String channel) {
         FollowersCache instance = instances.get(channel);
-        if (instance == null)
-        {
+        if (instance == null) {
             instance = new FollowersCache(channel);
 
             instances.put(channel, instance);
@@ -64,10 +61,8 @@ public class FollowersCache implements Runnable
     private boolean killed = false;
 
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
-    private FollowersCache(String channel)
-    {
-        if (channel.startsWith("#"))
-        {
+    private FollowersCache(String channel) {
+        if (channel.startsWith("#")) {
             channel = channel.substring(1);
         }
 
@@ -80,89 +75,68 @@ public class FollowersCache implements Runnable
         updateThread.start();
     }
 
-    public int quickUpdate(String channel) throws Exception
-    {
+    public int quickUpdate(String channel) throws Exception {
         JSONObject j = TwitchAPIv3.instance().GetChannelFollows(channel, 100, 0, false);
 
-        if (j.getBoolean("_success"))
-        {
-            if (j.getInt("_http") == 200)
-            {
+        if (j.getBoolean("_success")) {
+            if (j.getInt("_http") == 200) {
                 int i = j.getInt("_total");
 
                 Map<String, JSONObject> newCache = Maps.newHashMap();
                 JSONArray followers = j.getJSONArray("follows");
 
-                for (int b = 0; b < followers.length(); b++)
-                {
+                for (int b = 0; b < followers.length(); b++) {
                     JSONObject follower = followers.getJSONObject(b);
                     newCache.put(follower.getJSONObject("user").getString("name"), follower);
                 }
 
-                for (String key : newCache.keySet())
-                {
-                    if (cache == null || !cache.containsKey(key))
-                    {
+                for (String key : newCache.keySet()) {
+                    if (cache == null || !cache.containsKey(key)) {
                         cache.put(key, newCache.get(key));
-                        //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
-                        EventBus.instance().post(new TwitchFollowEvent(key, Quorrabot.instance().getChannel("#" + this.channel)));
+                        EventBus.instance().post(new TwitchFollowEvent(key, Quorrabot.getChannel("#" + this.channel)));
                     }
                 }
 
                 this.count = cache.size();
 
                 return i;
-            } else
-            {
-                throw new Exception("[HTTPErrorException] HTTP " + j.getInt("status") + " " + j.getString("error") + ". req="
-                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+            } else {
+                throw new Exception("[HTTPErrorException] HTTP " + j.getInt("_http") + " " + j.getString("error") + ". req="
+                                    + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                                    + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
             }
-        } else
-        {
+        } else {
             throw new Exception("[" + j.getString("_exception") + "] " + j.getString("_exceptionMessage"));
         }
     }
 
-    public boolean is(String username)
-    {
+    public boolean is(String username) {
         return cache.containsKey(username);
     }
 
-    public JSONObject get(String username)
-    {
+    public JSONObject get(String username) {
         return cache.get(username);
     }
 
     @Override
     @SuppressWarnings("SleepWhileInLoop")
-    public void run()
-    {
-        try
-        {
+    public void run() {
+        try {
             Thread.sleep(30 * 1000);
-        } catch (InterruptedException e)
-        {
-            com.gmt2001.Console.out.println("FollowersCache.run>>Failed to initial sleep: [InterruptedException] " + e.getMessage());
-            com.gmt2001.Console.err.logStackTrace(e);
+        } catch (InterruptedException e) {
+            com.gmt2001.Console.debug.println("FollowersCache.run: Failed to initial sleep: [InterruptedException] " + e.getMessage());
         }
 
-        try
-        {
-            try
-            {
+        try {
+            try {
                 quickUpdate(channel);
-            } catch (Exception e)
-            {
-                if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]"))
-                {
+            } catch (Exception e) {
+                if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) {
                     Calendar c = Calendar.getInstance();
 
-                    if (lastFail.after(new Date()))
-                    {
+                    if (lastFail.after(new Date())) {
                         numfail++;
-                    } else
-                    {
+                    } else {
                         numfail = 1;
                     }
 
@@ -170,30 +144,23 @@ public class FollowersCache implements Runnable
 
                     lastFail = c.getTime();
 
-                    if (numfail >= 5)
-                    {
+                    if (numfail >= 5) {
                         timeoutExpire = c.getTime();
                     }
                 }
 
-                com.gmt2001.Console.out.println("FollowersCache.run>>Failed to update followers: " + e.getMessage());
-                com.gmt2001.Console.err.logStackTrace(e);
+                com.gmt2001.Console.debug.println("FollowersCache.run: Failed to update followers: " + e.getMessage());
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             com.gmt2001.Console.err.printStackTrace(e);
         }
-        //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
-        EventBus.instance().post(new TwitchFollowsInitializedEvent(Quorrabot.instance().getChannel("#" + this.channel)));
 
-        while (!killed)
-        {
-            try
-            {
-                try
-                {
-                    if (new Date().after(timeoutExpire))
-                    {
+        EventBus.instance().post(new TwitchFollowsInitializedEvent(Quorrabot.getChannel(this.channel)));
+
+        while (!killed) {
+            try {
+                try {
+                    if (new Date().after(timeoutExpire)) {
                         /*
                          * int newCount =
                          */
@@ -209,21 +176,17 @@ public class FollowersCache implements Runnable
                         /*
                          * if (firstUpdate) { firstUpdate = false;
                          * EventBus.instance().post(new
-                         * TwitchFollowsInitializedEvent(Quorrabot.instance().getChannel(this.channel)));
+                         * TwitchFollowsInitializedEvent(PhantomBot.getChannel(this.channel)));
                          * }
                          */
                     }
-                } catch (Exception e)
-                {
-                    if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]"))
-                    {
+                } catch (Exception e) {
+                    if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) {
                         Calendar c = Calendar.getInstance();
 
-                        if (lastFail.after(new Date()))
-                        {
+                        if (lastFail.after(new Date())) {
                             numfail++;
-                        } else
-                        {
+                        } else {
                             numfail = 1;
                         }
 
@@ -231,33 +194,26 @@ public class FollowersCache implements Runnable
 
                         lastFail = c.getTime();
 
-                        if (numfail >= 5)
-                        {
+                        if (numfail >= 5) {
                             timeoutExpire = c.getTime();
                         }
                     }
 
-                    com.gmt2001.Console.out.println("FollowersCache.run>>Failed to update followers: " + e.getMessage());
-                    com.gmt2001.Console.err.logStackTrace(e);
+                    com.gmt2001.Console.debug.println("FollowersCache.run: Failed to update followers: " + e.getMessage());
                 }
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 com.gmt2001.Console.err.printStackTrace(e);
             }
 
-            try
-            {
+            try {
                 Thread.sleep(30 * 1000);
-            } catch (InterruptedException e)
-            {
-                com.gmt2001.Console.out.println("FollowersCache.run>>Failed to sleep: [InterruptedException] " + e.getMessage());
-                com.gmt2001.Console.err.logStackTrace(e);
+            } catch (InterruptedException e) {
+                com.gmt2001.Console.debug.println("FollowersCache.run: Failed to sleep: [InterruptedException] " + e.getMessage());
             }
         }
     }
 
-    private void updateCache(int newCount) throws Exception
-    {
+    private void updateCache(int newCount) throws Exception {
         Map<String, JSONObject> newCache = Maps.newHashMap();
 
         final List<JSONObject> responses = Lists.newArrayList();
@@ -271,53 +227,38 @@ public class FollowersCache implements Runnable
 
         nextFull = c.getTime();
 
-        for (int i = 0; i < Math.ceil(newCount / 100.0); i++)
-        {
+        for (int i = 0; i < Math.ceil(newCount / 100.0); i++) {
             final int offset = i * 100;
-            Thread thread = new Thread()
-            {
+            Thread thread = new Thread() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     JSONObject j = TwitchAPIv3.instance().GetChannelFollows(channel, 100, offset, true);
 
-                    if (j.getBoolean("_success"))
-                    {
-                        if (j.getInt("_http") == 200)
-                        {
+                    if (j.getBoolean("_success")) {
+                        if (j.getInt("_http") == 200) {
                             responses.add(j);
 
-                        } else
-                        {
-                            try
-                            {
+                        } else {
+                            try {
                                 throw new Exception("[HTTPErrorException] HTTP " + j.getInt("status") + " " + j.getString("error") + ". req="
-                                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
-                            } catch (Exception e)
-                            {
-                                com.gmt2001.Console.out.println("FollowersCache.updateCache>>Failed to update followers: " + e.getMessage());
-                                com.gmt2001.Console.err.logStackTrace(e);
+                                                    + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                                                    + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+                            } catch (Exception e) {
+                                com.gmt2001.Console.debug.println("FollowersCache.updateCache: Failed to update followers: " + e.getMessage());
                             }
                         }
-                    } else
-                    {
-                        try
-                        {
+                    } else {
+                        try {
                             throw new Exception("[" + j.getString("_exception") + "] " + j.getString("_exceptionMessage"));
-                        } catch (Exception e)
-                        {
-                            if ((e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) && !hasFail)
-                            {
+                        } catch (Exception e) {
+                            if ((e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) && !hasFail) {
                                 hasFail = true;
 
                                 Calendar c = Calendar.getInstance();
 
-                                if (lastFail.after(new Date()))
-                                {
+                                if (lastFail.after(new Date())) {
                                     numfail++;
-                                } else
-                                {
+                                } else {
                                     numfail = 1;
                                 }
 
@@ -325,14 +266,12 @@ public class FollowersCache implements Runnable
 
                                 lastFail = c.getTime();
 
-                                if (numfail >= 5)
-                                {
+                                if (numfail >= 5) {
                                     timeoutExpire = c.getTime();
                                 }
                             }
 
-                            com.gmt2001.Console.out.println("FollowersCache.updateCache>>Failed to update followers: " + e.getMessage());
-                            com.gmt2001.Console.err.logStackTrace(e);
+                            com.gmt2001.Console.debug.println("FollowersCache.updateCache: Failed to update followers: " + e.getMessage());
                         }
                     }
                 }
@@ -341,22 +280,18 @@ public class FollowersCache implements Runnable
             thread.start();
         }
 
-        for (Thread thread : threads)
-        {
+        for (Thread thread : threads) {
             thread.join();
         }
 
-        for (JSONObject response : responses)
-        {
+        for (JSONObject response : responses) {
             JSONArray followers = response.getJSONArray("follows");
 
-            if (followers.length() == 0)
-            {
+            if (followers.length() == 0) {
                 break;
             }
 
-            for (int j = 0; j < followers.length(); j++)
-            {
+            for (int j = 0; j < followers.length(); j++) {
                 JSONObject follower = followers.getJSONObject(j);
                 newCache.put(follower.getJSONObject("user").getString("name"), follower);
             }
@@ -365,20 +300,15 @@ public class FollowersCache implements Runnable
         List<String> followers = Lists.newArrayList();
         List<String> unfollowers = Lists.newArrayList();
 
-        for (String key : newCache.keySet())
-        {
-            if (cache == null || !cache.containsKey(key))
-            {
+        for (String key : newCache.keySet()) {
+            if (cache == null || !cache.containsKey(key)) {
                 followers.add(key);
             }
         }
 
-        if (cache != null)
-        {
-            for (String key : cache.keySet())
-            {
-                if (!newCache.containsKey(key))
-                {
+        if (cache != null) {
+            for (String key : cache.keySet()) {
+                if (!newCache.containsKey(key)) {
                     unfollowers.add(key);
                 }
             }
@@ -387,50 +317,38 @@ public class FollowersCache implements Runnable
         this.cache = newCache;
         this.count = newCache.size();
 
-        for (String follower : followers)
-        {
-            //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
-            EventBus.instance().post(new TwitchFollowEvent(follower, Quorrabot.instance().getChannel("#" + this.channel)));
-        }
-
-        for (String follower : unfollowers)
-        {
-            //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
-            EventBus.instance().post(new TwitchUnfollowEvent(follower, Quorrabot.instance().getChannel("#" + this.channel)));
-        }
-
-        if (firstUpdate)
-        {
+        if (firstUpdate) {
             firstUpdate = false;
-            //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
-            EventBus.instance().post(new TwitchFollowsInitializedEvent(Quorrabot.instance().getChannel("#" + this.channel)));
+            EventBus.instance().post(new TwitchFollowsInitializedEvent(Quorrabot.getChannel(this.channel)));
+        }
+
+        for (String follower : followers) {
+            EventBus.instance().post(new TwitchFollowEvent(follower, Quorrabot.getChannel(this.channel)));
+        }
+
+        for (String follower : unfollowers) {
+            EventBus.instance().post(new TwitchUnfollowEvent(follower, Quorrabot.getChannel(this.channel)));
         }
     }
 
-    public void addFollower(String username)
-    {
+    public void addFollower(String username) {
         cache.put(username, null);
     }
 
-    public void setCache(Map<String, JSONObject> cache)
-    {
+    public void setCache(Map<String, JSONObject> cache) {
         this.cache = cache;
     }
 
-    public Map<String, JSONObject> getCache()
-    {
+    public Map<String, JSONObject> getCache() {
         return cache;
     }
 
-    public void kill()
-    {
+    public void kill() {
         killed = true;
     }
 
-    public static void killall()
-    {
-        for (Entry<String, FollowersCache> instance : instances.entrySet())
-        {
+    public static void killall() {
+        for (Entry<String, FollowersCache> instance : instances.entrySet()) {
             instance.getValue().kill();
         }
     }

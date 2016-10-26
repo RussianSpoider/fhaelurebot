@@ -17,8 +17,8 @@
 package me.gloriouseggroll.quorrabot.event.irc.message;
 
 import java.util.Map;
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
-import me.gloriouseggroll.quorrabot.jerklib.Session;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
 /**
  *

@@ -155,6 +155,13 @@ $.on('command', function(event) {
     }
 });
 
+
+
+setTimeout(function(){ 
+    if ($.moduleEnabled('./systems/penaltySystem.js')) {
+        $.registerChatCommand("./systems/penaltySystem.js", "penalty");
+    }
+    
 $.timer.addTimer("./systems/penaltySystem.js", "penaltySystem", true, function() {
     if (!$.moduleEnabled("./systems/pointSystem.js")) {
         return;
@@ -178,7 +185,7 @@ $.timer.addTimer("./systems/penaltySystem.js", "penaltySystem", true, function()
             $.penlastpointinterval = System.currentTimeMillis();
         }
     }
-
+    
     for (var i = 0; i < $.users.length; i++) {
         var nick = $.users[i][0].toLowerCase();
 
@@ -200,14 +207,9 @@ $.timer.addTimer("./systems/penaltySystem.js", "penaltySystem", true, function()
                 $.inidb.set('penalty', nick + "_pointscount", 0);
                 $.inidb.set('penalty', nick + "_threshold", 0);
 
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.penaltysystem.lifted", $.username.resolve(nick), $.getPointsString(penaltypoints)));
+                $.say($.getWhisperString(nick) + $.lang.get("net.quorrabot.penaltysystem.lifted", $.username.resolve(nick), $.getPointsString(penaltypoints)));
             }
         }
     }
 }, 1000);
-
-setTimeout(function(){ 
-    if ($.moduleEnabled('./systems/penaltySystem.js')) {
-        $.registerChatCommand("./systems/penaltySystem.js", "penalty");
-    }
 }, 10 * 1000);

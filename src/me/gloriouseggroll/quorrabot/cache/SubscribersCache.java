@@ -32,17 +32,14 @@ import me.gloriouseggroll.quorrabot.event.twitch.subscriber.TwitchUnsubscribeEve
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class SubscribersCache implements Runnable
-{
+public class SubscribersCache implements Runnable {
 
     private static final Map<String, SubscribersCache> instances = Maps.newHashMap();
-    private boolean run = false;
+    private boolean run = true;
 
-    public static SubscribersCache instance(String channel)
-    {
+    public static SubscribersCache instance(String channel) {
         SubscribersCache instance = instances.get(channel);
-        if (instance == null)
-        {
+        if (instance == null) {
             instance = new SubscribersCache(channel);
 
             instances.put(channel, instance);
@@ -54,7 +51,7 @@ public class SubscribersCache implements Runnable
 
     private Map<String, JSONObject> cache;
     private final String channel;
-    private int count;
+    private int count = -1;
     private final Thread updateThread;
     private boolean firstUpdate = true;
     private Date timeoutExpire = new Date();
@@ -63,10 +60,8 @@ public class SubscribersCache implements Runnable
     private boolean killed = false;
 
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
-    private SubscribersCache(String channel)
-    {
-        if (channel.startsWith("#"))
-        {
+    private SubscribersCache(String channel) {
+        if (channel.startsWith("#")) {
             channel = channel.substring(1);
         }
 
@@ -80,83 +75,70 @@ public class SubscribersCache implements Runnable
         updateThread.start();
     }
 
-    public int getCount(String channel) throws Exception
-    {
+    public int getCount(String channel) throws Exception {
         JSONObject j = TwitchAPIv3.instance().GetChannelSubscriptions(channel, 1, 0, false);
 
-        if (j.getBoolean("_success"))
-        {
-            if (j.getInt("_http") == 200)
-            {
+        if (j.getBoolean("_success")) {
+            if (j.getInt("_http") == 200) {
                 int i = j.getInt("_total");
 
                 return i;
-            } else
-            {
-                throw new Exception("[HTTPErrorException] HTTP " + j.getInt("status") + " " + j.getString("error") + ". req="
-                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+            } else if (j.getInt("_http") == 422) {
+                com.gmt2001.Console.debug.println("Twitch indicates that this account does not support subscribers. Disabling queries until next startup.");
+                return -1;
+            } else {
+                throw new Exception("[HTTPErrorException] HTTP " + j.getInt("_http") + " " + j.getString("error") + ". req="
+                                    + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                                    + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
             }
-        } else
-        {
+        } else {
             throw new Exception("[" + j.getString("_exception") + "] " + j.getString("_exceptionMessage"));
         }
     }
 
-    public boolean is(String username)
-    {
+    public boolean is(String username) {
         return cache.containsKey(username);
     }
 
-    public JSONObject get(String username)
-    {
+    public JSONObject get(String username) {
         return cache.get(username);
     }
 
-    public void doRun(boolean run)
-    {
+    public void doRun(boolean run) {
         this.run = run;
     }
 
     @Override
     @SuppressWarnings("SleepWhileInLoop")
-    public void run()
-    {
-        try
-        {
+    public void run() {
+        try {
             Thread.sleep(30 * 1000);
-        } catch (InterruptedException e)
-        {
-            com.gmt2001.Console.out.println("SubscribersCache.run>>Failed to initial sleep: [InterruptedException] " + e.getMessage());
-            com.gmt2001.Console.err.logStackTrace(e);
+        } catch (InterruptedException e) {
+            com.gmt2001.Console.debug.println("SubscribersCache.run: Failed to initial sleep: [InterruptedException] " + e.getMessage());
         }
 
-        while (!killed)
-        {
-            try
-            {
-                try
-                {
-                    if (new Date().after(timeoutExpire) && run && TwitchAPIv3.instance().HasOAuth())
-                    {
+        while (!killed) {
+            try {
+                try {
+                    if (new Date().after(timeoutExpire) && run && TwitchAPIv3.instance().HasOAuth()) {
                         int newCount = getCount(channel);
 
-                        if (new Date().after(timeoutExpire) && newCount != count)
-                        {
-                            this.updateCache(newCount);
+                        if (newCount == -1) {
+                            run = false;
+                        } else {
+                            if (new Date().after(timeoutExpire) && newCount != this.count) {
+                                this.updateCache(newCount);
+
+                            }
                         }
                     }
-                } catch (Exception e)
-                {
-                    if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]"))
-                    {
+                } catch (Exception e) {
+                    if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) {
                         Calendar c = Calendar.getInstance();
 
-                        if (lastFail.after(new Date()))
-                        {
+                        if (lastFail.after(new Date())) {
                             numfail++;
-                        } else
-                        {
+                        } else {
                             numfail = 1;
                         }
 
@@ -164,83 +146,63 @@ public class SubscribersCache implements Runnable
 
                         lastFail = c.getTime();
 
-                        if (numfail >= 5)
-                        {
+                        if (numfail >= 5) {
                             timeoutExpire = c.getTime();
                         }
                     }
 
-                    com.gmt2001.Console.out.println("SubscribersCache.run>>Failed to update subscribers: " + e.getMessage());
-                    com.gmt2001.Console.err.logStackTrace(e);
+                    com.gmt2001.Console.debug.println("SubscribersCache.run: Failed to update subscribers: " + e.getMessage());
                 }
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 com.gmt2001.Console.err.printStackTrace(e);
             }
 
-            try
-            {
-                Thread.sleep(30 * 1000);
-            } catch (InterruptedException e)
-            {
-                com.gmt2001.Console.out.println("SubscribersCache.run>>Failed to sleep: [InterruptedException] " + e.getMessage());
-                com.gmt2001.Console.err.logStackTrace(e);
+            try {
+                Thread.sleep(60 * 60 * 1000); // One hour. This pulls every sub from the Twitch API and is for refreshing old subs more than anything.
+            } catch (InterruptedException e) {
+                com.gmt2001.Console.debug.println("SubscribersCache.run: Failed to sleep: [InterruptedException] " + e.getMessage());
             }
         }
     }
 
-    private void updateCache(int newCount) throws Exception
-    {
+    private void updateCache(int newCount) throws Exception {
         Map<String, JSONObject> newCache = Maps.newHashMap();
 
         final List<JSONObject> responses = Lists.newArrayList();
         List<Thread> threads = Lists.newArrayList();
 
-        for (int i = 0; i < Math.ceil(newCount / 100.0); i++)
-        {
+        for (int i = 0; i < Math.ceil(newCount / 100.0); i++) {
             final int offset = i * 100;
-            Thread thread = new Thread()
-            {
+            Thread thread = new Thread() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     JSONObject j = TwitchAPIv3.instance().GetChannelSubscriptions(channel, 100, offset, true);
 
-                    if (j.getBoolean("_success"))
-                    {
-                        if (j.getInt("_http") == 200)
-                        {
+                    if (j.getBoolean("_success")) {
+                        if (j.getInt("_http") == 200) {
                             responses.add(j);
-
-                        } else
-                        {
-                            try
-                            {
-                                throw new Exception("[HTTPErrorException] HTTP " + j.getInt("status") + " " + j.getString("error") + ". req="
-                                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
-                            } catch (Exception e)
-                            {
-                                com.gmt2001.Console.out.println("SubscribersCache.updateCache>>Failed to update subscribers: " + e.getMessage());
-                                com.gmt2001.Console.err.logStackTrace(e);
+                        } else if (j.getInt("_http") == 422) {
+                            com.gmt2001.Console.debug.println("Twitch indicates that this account does not support subscribers. Disabling queries until next startup.");
+                            run = false;
+                        } else {
+                            try {
+                                throw new Exception("[HTTPErrorException] HTTP " + j.getInt("_http") + " " + j.getString("error") + ". req="
+                                                    + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                                                    + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+                            } catch (Exception e) {
+                                com.gmt2001.Console.debug.println("SubscribersCache.updateCache: Failed to update subscribers: " + e.getMessage());
                             }
                         }
-                    } else
-                    {
-                        try
-                        {
+                    } else {
+                        try {
                             throw new Exception("[" + j.getString("_exception") + "] " + j.getString("_exceptionMessage"));
-                        } catch (Exception e)
-                        {
-                            if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]"))
-                            {
+                        } catch (Exception e) {
+                            if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) {
                                 Calendar c = Calendar.getInstance();
 
-                                if (lastFail.after(new Date()))
-                                {
+                                if (lastFail.after(new Date())) {
                                     numfail++;
-                                } else
-                                {
+                                } else {
                                     numfail = 1;
                                 }
 
@@ -248,14 +210,12 @@ public class SubscribersCache implements Runnable
 
                                 lastFail = c.getTime();
 
-                                if (numfail >= 5)
-                                {
+                                if (numfail >= 5) {
                                     timeoutExpire = c.getTime();
                                 }
                             }
 
-                            com.gmt2001.Console.out.println("SubscribersCache.updateCache>>Failed to update subscribers: " + e.getMessage());
-                            com.gmt2001.Console.err.logStackTrace(e);
+                            com.gmt2001.Console.debug.println("SubscribersCache.updateCache: Failed to update subscribers: " + e.getMessage());
                         }
                     }
                 }
@@ -265,22 +225,18 @@ public class SubscribersCache implements Runnable
             thread.start();
         }
 
-        for (Thread thread : threads)
-        {
+        for (Thread thread : threads) {
             thread.join();
         }
 
-        for (JSONObject response : responses)
-        {
+        for (JSONObject response : responses) {
             JSONArray subscribers = response.getJSONArray("subscriptions");
 
-            if (subscribers.length() == 0)
-            {
+            if (subscribers.length() == 0) {
                 break;
             }
 
-            for (int j = 0; j < subscribers.length(); j++)
-            {
+            for (int j = 0; j < subscribers.length(); j++) {
                 JSONObject subscriber = subscribers.getJSONObject(j);
                 newCache.put(subscriber.getJSONObject("user").getString("name"), subscriber);
             }
@@ -289,20 +245,15 @@ public class SubscribersCache implements Runnable
         List<String> subscribers = Lists.newArrayList();
         List<String> unsubscribers = Lists.newArrayList();
 
-        for (String key : newCache.keySet())
-        {
-            if (cache == null || !cache.containsKey(key))
-            {
+        for (String key : newCache.keySet()) {
+            if (this.cache == null || !this.cache.containsKey(key)) {
                 subscribers.add(key);
             }
         }
 
-        if (cache != null)
-        {
-            for (String key : cache.keySet())
-            {
-                if (!newCache.containsKey(key))
-                {
+        if (this.cache != null) {
+            for (String key : this.cache.keySet()) {
+                if (!newCache.containsKey(key)) {
                     unsubscribers.add(key);
                 }
             }
@@ -311,50 +262,39 @@ public class SubscribersCache implements Runnable
         this.cache = newCache;
         this.count = newCache.size();
 
-        for (String subscriber : subscribers)
-        {
-            //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
-            EventBus.instance().post(new TwitchSubscribeEvent(subscriber, Quorrabot.instance().getChannel("#" + this.channel)));
-        }
-
-        for (String subscriber : unsubscribers)
-        {
-            //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
-            EventBus.instance().post(new TwitchUnsubscribeEvent(subscriber, Quorrabot.instance().getChannel("#" + this.channel)));
-        }
-
-        if (firstUpdate)
-        {
+        if (firstUpdate) {
             firstUpdate = false;
-            //dont change to postAsync, or it will load after the scripts, and the scripts will spam announcements
-            EventBus.instance().post(new TwitchSubscribesInitializedEvent(Quorrabot.instance().getChannel("#" + this.channel)));
+            EventBus.instance().post(new TwitchSubscribesInitializedEvent(Quorrabot.getChannel(this.channel)));
         }
+
+        for (String subscriber : subscribers) {
+            EventBus.instance().post(new TwitchSubscribeEvent(subscriber, Quorrabot.getChannel(this.channel)));
+        }
+
+        for (String subscriber : unsubscribers) {
+            EventBus.instance().post(new TwitchUnsubscribeEvent(subscriber, Quorrabot.getChannel(this.channel)));
+        }
+
     }
 
-    public void addSubscriber(String username)
-    {
+    public void addSubscriber(String username) {
         cache.put(username, null);
     }
 
-    public void setCache(Map<String, JSONObject> cache)
-    {
+    public void setCache(Map<String, JSONObject> cache) {
         this.cache = cache;
     }
 
-    public Map<String, JSONObject> getCache()
-    {
+    public Map<String, JSONObject> getCache() {
         return cache;
     }
 
-    public void kill()
-    {
+    public void kill() {
         killed = true;
     }
 
-    public static void killall()
-    {
-        for (Entry<String, SubscribersCache> instance : instances.entrySet())
-        {
+    public static void killall() {
+        for (Entry<String, SubscribersCache> instance : instances.entrySet()) {
             instance.getValue().kill();
         }
     }

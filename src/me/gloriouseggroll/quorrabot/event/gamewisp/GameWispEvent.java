@@ -6,7 +6,7 @@
 package me.gloriouseggroll.quorrabot.event.gamewisp;
 
 import me.gloriouseggroll.quorrabot.event.Event;
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
 /**
  *

@@ -17,17 +17,15 @@
 package me.gloriouseggroll.quorrabot.event.twitch.follower;
 
 import me.gloriouseggroll.quorrabot.event.twitch.TwitchEvent;
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
 public class TwitchFollowsInitializedEvent extends TwitchEvent
 {
 
-    public TwitchFollowsInitializedEvent()
-    {
+    public TwitchFollowsInitializedEvent() {
     }
 
-    public TwitchFollowsInitializedEvent(Channel channel)
-    {
+    public TwitchFollowsInitializedEvent(Channel channel) {
         super(channel);
     }
 }

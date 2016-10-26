@@ -17,17 +17,14 @@
 package me.gloriouseggroll.quorrabot.event.twitch.subscriber;
 
 import me.gloriouseggroll.quorrabot.event.twitch.TwitchEvent;
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
 public class TwitchSubscribesInitializedEvent extends TwitchEvent
 {
-
-    public TwitchSubscribesInitializedEvent()
-    {
+    public TwitchSubscribesInitializedEvent() {
     }
 
-    public TwitchSubscribesInitializedEvent(Channel channel)
-    {
+    public TwitchSubscribesInitializedEvent(Channel channel) {
         super(channel);
     }
 }

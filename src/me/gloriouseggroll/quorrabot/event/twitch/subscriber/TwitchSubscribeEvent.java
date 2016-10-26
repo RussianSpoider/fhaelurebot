@@ -16,18 +16,16 @@
  */
 package me.gloriouseggroll.quorrabot.event.twitch.subscriber;
 
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
 public class TwitchSubscribeEvent extends TwitchSubscriberEvent
 {
 
-    public TwitchSubscribeEvent(String subscriber)
-    {
+    public TwitchSubscribeEvent(String subscriber) {
         super(subscriber, Type.SUBSCRIBE);
     }
 
-    public TwitchSubscribeEvent(String subscriber, Channel channel)
-    {
+    public TwitchSubscribeEvent(String subscriber, Channel channel) {
         super(subscriber, Type.SUBSCRIBE, channel);
     }
 }

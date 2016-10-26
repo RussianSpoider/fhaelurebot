@@ -607,29 +607,6 @@ $.on('ircChannelMessage', function (event) {
     }
 });
 
-$.on('ircJoinComplete', function (event) {
-    var channel = event.getChannel();
-    var it = channel.getNicks().iterator();
-    var name;
-    var found = false;
-
-    $.lastjoinpart = System.currentTimeMillis();
-
-    while (it.hasNext() == true) {
-        name = it.next();
-
-        for (var i = 0; i < $.users.length; i++) {
-            if ($.users[i][0].equalsIgnoreCase(name)) {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            $.users.push(new Array(name, System.currentTimeMillis()));
-        }
-    }
-});
 
 $.on('ircChannelJoin', function (event) {
     var username = event.getUser().toLowerCase();

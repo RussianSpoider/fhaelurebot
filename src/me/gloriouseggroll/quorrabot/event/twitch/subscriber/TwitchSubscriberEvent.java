@@ -17,7 +17,7 @@
 package me.gloriouseggroll.quorrabot.event.twitch.subscriber;
 
 import me.gloriouseggroll.quorrabot.event.twitch.TwitchEvent;
-import me.gloriouseggroll.quorrabot.jerklib.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
 public abstract class TwitchSubscriberEvent extends TwitchEvent
 {
@@ -25,38 +25,32 @@ public abstract class TwitchSubscriberEvent extends TwitchEvent
     private final String subscriber;
     private final Type type;
 
-    public enum Type
-    {
+    public enum Type {
 
         SUBSCRIBE,
         UNSUBSCRIBE;
     }
 
-    protected TwitchSubscriberEvent(String subscriber, Type type)
-    {
+    protected TwitchSubscriberEvent(String subscriber, Type type) {
         this.subscriber = subscriber;
         this.type = type;
     }
 
-    protected TwitchSubscriberEvent(String subscriber, Type type, Channel channel)
-    {
+    protected TwitchSubscriberEvent(String subscriber, Type type, Channel channel) {
         super(channel);
         this.subscriber = subscriber;
         this.type = type;
     }
 
-    public String getSubscriber()
-    {
+    public String getSubscriber() {
         return subscriber;
     }
 
-    public Type getType()
-    {
+    public Type getType() {
         return type;
     }
 
-    public String toEventSocket()
-    {
-    	return this.getSubscriber() + "|" + this.getType();
+    public String toEventSocket() {
+        return this.getSubscriber() + "|" + this.getType();
     }
 }
