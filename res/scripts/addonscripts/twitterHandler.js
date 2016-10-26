@@ -64,8 +64,9 @@ setTimeout(function(){
             $.timer.addTimer("./addonscripts/twitterHandler.js", "twitterHandler", true, function () {
                 if ($.isOnline($.channelName)) {
                     if($.TwitterHandler.StreamTweeted == 0) {
-                        var lasttweet = $.twitter.getlast().toString();                    
-                        if(!lasttweet.toLowerCase().contains($.getStatus($.channelName).toLowerCase())) {
+                        var lasttweet = $.twitter.getlast().toString();
+                        var status = $.getStatus($.channelName);
+                        if(status!=null && !lasttweet.toLowerCase().contains(status.toLowerCase())) {
                             $.TwitterHandler.StreamTweeted = 1;
                             $.twitter.tweet($.getGame($.channelName) + " | " + $.getStatus($.channelName) + ": " + "twitch.tv/" + $.channelName.toLowerCase());
                         } else {

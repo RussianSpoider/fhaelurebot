@@ -550,7 +550,7 @@ public class Quorrabot implements Listener
         Script.global.defineProperty("subscribers", subscribersCache, 0);
         Script.global.defineProperty("channelUsers", channelUsersCache, 0);
         Script.global.defineProperty("botName", username, 0);
-        Script.global.defineProperty("channelName", channel, 0);
+        Script.global.defineProperty("channelName", channelName, 0);
         Script.global.defineProperty("channels", channels, 0);
         Script.global.defineProperty("ownerName", ownerName, 0);
         Script.global.defineProperty("channelStatus", channelStatus, 0);
@@ -795,7 +795,6 @@ public class Quorrabot implements Listener
         {
             String randomUser = generateRandomString(10);
             EventBus.instance().postAsync(new IrcPrivateMessageEvent(Quorrabot.getSession(this.channelName), "twitchnotify", randomUser + " just subscribed!"));
-
 
         }
         if (message.equalsIgnoreCase("resubtest"))

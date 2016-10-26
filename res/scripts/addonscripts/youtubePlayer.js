@@ -424,7 +424,10 @@ $.on('command', function (event) {
     var username = $.username.resolve(sender, event.getTags());
     var command = event.getCommand();
     var argsString = event.getArguments().trim();
-    var argsString2 = argsString.substring($.findIndex(argsString) + 1, argsString.length());
+    var argsString2 = "";
+    if(argsString.contains(" ")) {
+        argsString2 = argsString.substring(argsString.indexOf(argsString.split(" ")[1]), argsString.length());
+    }
     var args;
     var song;
     var id;
@@ -606,7 +609,7 @@ $.on('command', function (event) {
                 return;
             }
             if(args[1]!=null) {
-                $.currsongfile = argsString.substring(argsString.indexOf(args[1]), argsString.length());;
+                $.currsongfile = argsString.substring(argsString.indexOf(args[1]), argsString.length());
             }
             
             $.inidb.set('settings','currsongfile', $.currsongfile);

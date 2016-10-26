@@ -5,7 +5,10 @@ $.on('command', function (event) {
     var rnd = $.rand(num2);
     var killPerson = $.users[rnd][0];
     var argsString = event.getArguments().trim();
-    var argsString2 = argsString.substring($.findIndex(argsString) + 1, argsString.length());
+    var argsString2 = "";
+    if(argsString.contains(" ")) {
+        argsString2 = argsString.substring(argsString.indexOf(argsString.split(" ")[1]), argsString.length());
+    }
     var args = event.getArgs();
     var num_kills = parseInt($.inidb.get("kills", "num_kills"));
     var killNum = $.randRange(1, 100);

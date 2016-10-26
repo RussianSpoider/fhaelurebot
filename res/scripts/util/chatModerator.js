@@ -207,8 +207,10 @@ $.on('command', function(event) {
     var i;
     var lines;
     var found;
-    var phrase = argsString.substring(argsString.indexOf(" ") + 1, argsString.length());
-    
+    var phrase = "";
+    if(argsString.contains(" ")) {
+        phrase = argsString.substring(argsString.indexOf(argsString.split(" ")[1]), argsString.length());
+    }
     if (command.equalsIgnoreCase("chat") && username.equalsIgnoreCase($.botname)) {
         $.say(argsString);
     } else if (command.equalsIgnoreCase("autoban")) {

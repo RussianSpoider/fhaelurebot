@@ -188,11 +188,11 @@ $.on('command', function(event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-link-cleared"));
                 return;
             } else if (args[0].equalsIgnoreCase("schedule")) {
-                if (data.indexOf(" ") == -1 || $.strlen(data) < data.indexOf(" ") + 1) {
+                if (!data.contains(" ")) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.marathonCommand.marathon-sched-usage"));
                     return;
                 } else {
-                    var subcommand = data.substring(0, data.indexOf(" "));
+                    var subcommand = data.split(" ")[0];
                     data = data.substring(data.indexOf(subcommand) + $.strlen(subcommand) + 1);
                     
                     var cal = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone($.timezone));
@@ -211,8 +211,8 @@ $.on('command', function(event) {
                     if (subcommand.equalsIgnoreCase("delete") || subcommand.equalsIgnoreCase("remove")) {
                         var keys = $.inidb.GetKeyList("marathon", "");
                         
-                        dateS = data.substring(0, data.indexOf(" "));
-                        timeS = data.substring(data.indexOf(" ") + 1);
+                        dateS = data.substring(data.split(" ")[0]);
+                        timeS = data.substring(data.split(" ")[1]);
                     
                         if (!isNaN(dateS.substring(0, dateS.indexOf("/")))) {
                             month = java.lang.Integer.parseInt(dateS.substring(0, dateS.indexOf("/"))) - 1;
@@ -266,7 +266,10 @@ $.on('command', function(event) {
                         var count = 0;
                         
                         do {
-                            i = data.indexOf(" ");
+                            i = 0;
+                            if(data.contains(" ")) {
+                                i = data.indexOf(" ");
+                            }
                             name = data.substring(0, i);
                             
                             name = name.replace("(space)", " ");

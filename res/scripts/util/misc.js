@@ -608,18 +608,6 @@ $.trueRand = function (max) {
     return $.trueRandRange(0, max);
 }
 
-$.findIndex = function (string) {
-    if(string.indexOf(" ")== -1) {
-        if(string.length()==0) {
-            return 0;
-        } else {
-            return string.length();
-        }
-    } else {
-        return string.indexOf(" ");
-    }
-}
-
 $.trueRandRange = function (min, max) {
     if (min == max) {
         return min;

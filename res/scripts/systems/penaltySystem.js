@@ -160,7 +160,6 @@ $.on('command', function(event) {
 setTimeout(function(){ 
     if ($.moduleEnabled('./systems/penaltySystem.js')) {
         $.registerChatCommand("./systems/penaltySystem.js", "penalty");
-    }
     
 $.timer.addTimer("./systems/penaltySystem.js", "penaltySystem", true, function() {
     if (!$.moduleEnabled("./systems/pointSystem.js")) {
@@ -212,4 +211,6 @@ $.timer.addTimer("./systems/penaltySystem.js", "penaltySystem", true, function()
         }
     }
 }, 1000);
+    }
+
 }, 10 * 1000);

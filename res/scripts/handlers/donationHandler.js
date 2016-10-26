@@ -131,7 +131,7 @@ setTimeout(function(){
                     $.tadata = $.donationhandler.tpeGetChannelDonations();
                 }
                 
-                if($.tadata[0]=="" | $.tadata[1]=="" | $.tadata[3]=="") {
+                if($.tadata[0]=="" | $.tadata[1]=="" | $.tadata[3]=="" | $.tadata==null) {
                     return;
                 }
                 
@@ -192,7 +192,7 @@ setTimeout(function(){
                                 } else {
                                     $.say($.lang.get("net.quorrabot.donationhandler.new-donation", $.tadonator, $.taamount));
                                 }
-                                if($.username.resolve($.tadonator)) {
+                                if($.tadonator!=null && $.username.resolve($.tadonator)) {
                                     $.inidb.set("donationlist",$.tadonator.toString().toLowerCase(),$.taamount);
                                 }
                             }

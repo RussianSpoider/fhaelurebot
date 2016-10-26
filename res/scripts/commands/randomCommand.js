@@ -2,7 +2,10 @@ $.on('command', function (event) {
     var sender = event.getSender();
     var command = event.getCommand();
     var argsString = event.getArguments().trim();
-    var argsString2 = argsString.substring($.findIndex(argsString) + 1, argsString.length());
+    var argsString2 = "";
+    if(argsString.contains(" ")) {
+        argsString2 = argsString.substring(argsString.indexOf(argsString.split(" ")[1]), argsString.length());
+    }
     var args = event.getArgs();
     var num_randoms = parseInt($.inidb.get("random_num", "num_randoms"));
     var num;

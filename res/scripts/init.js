@@ -66,7 +66,6 @@ $.modeo = false;
 $api.on($script, 'ircJoinComplete', function (event) {
     $.connected = true;
     $.channel = event.getChannel();
-    $.channelName = event.getChannel().getName();
     $.session = event.getSession();
 });
 
