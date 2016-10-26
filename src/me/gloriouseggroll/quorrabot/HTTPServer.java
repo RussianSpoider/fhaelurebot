@@ -74,8 +74,6 @@ public class HTTPServer extends Thread {
             return;
         }
 
-        com.gmt2001.Console.out.println("HTTP server accepting connections on port: " + port);
-
         while (dorun) {
             try {
                 Socket conn = socket.accept();
