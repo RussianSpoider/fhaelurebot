@@ -29,52 +29,41 @@ import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 
 import me.gloriouseggroll.quorrabot.musicplayer.MusicWebSocketServer;
 
-
-public class MusicWebSocketSecureServer extends MusicWebSocketServer
-{
+public class MusicWebSocketSecureServer extends MusicWebSocketServer {
 
     private static MusicWebSocketSecureServer instance;
 
-    public static MusicWebSocketSecureServer instance()
-    {
+    public static MusicWebSocketSecureServer instance() {
         return instance;
     }
-    
-    public MusicWebSocketSecureServer(int port)
-    {
-    	this(port, null, null, null);
-	}
-    
-    public MusicWebSocketSecureServer(int port, String keystorepath, String keystorepassword, String keypassword)
-    {
-		super(port);
 
-    	try
-		{
-			SSLContext sslContext = SSLContext.getInstance("TLS");
-	
-	    	if (!keystorepath.equals(""))
-	    	{
-				KeyStore ks = KeyStore.getInstance("JKS");
-				ks.load(new FileInputStream(new File(keystorepath)), keystorepassword.toCharArray());
+    public MusicWebSocketSecureServer(int port) {
+        this(port, null, null, null);
+    }
 
-				KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-				kmf.init(ks, keypassword.toCharArray());
-				TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-				tmf.init(ks);
+    public MusicWebSocketSecureServer(int port, String keystorepath, String keystorepassword, String keypassword) {
+        super(port);
 
-				sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-	    	}
-			else
-			{
-				sslContext.init(null, null, null);
-			}
-	        this.setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
-		}
-    	catch(Exception e)
-		{
-	        com.gmt2001.Console.out.println("Secure EventSocketServer failed: " + e);
-	        e.printStackTrace();
-		}
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+
+            if (!keystorepath.equals("")) {
+                KeyStore ks = KeyStore.getInstance("JKS");
+                ks.load(new FileInputStream(new File(keystorepath)), keystorepassword.toCharArray());
+
+                KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf.init(ks, keypassword.toCharArray());
+                TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+                tmf.init(ks);
+
+                sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+            } else {
+                sslContext.init(null, null, null);
+            }
+            this.setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
+        } catch (Exception e) {
+            com.gmt2001.Console.out.println("Secure EventSocketServer failed: " + e);
+            e.printStackTrace();
+        }
     }
 }

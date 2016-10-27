@@ -40,30 +40,25 @@ import org.json.JSONObject;
  *
  * @author gmt2001
  */
-public class YouTubeAPIv3
-{
+public class YouTubeAPIv3 {
 
     private static final YouTubeAPIv3 instance = new YouTubeAPIv3();
     private String apikey = "AIzaSyD8n1WrvLI5wR2sBZBXg1XGlX0T88lykIk";
 
-    private enum request_type
-    {
+    private enum request_type {
 
         GET, POST, PUT, DELETE
     };
 
-    public static YouTubeAPIv3 instance()
-    {
+    public static YouTubeAPIv3 instance() {
         return instance;
     }
 
-    private YouTubeAPIv3()
-    {
+    private YouTubeAPIv3() {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
 
-    private JSONObject GetData(request_type type, String url)
-    {
+    private JSONObject GetData(request_type type, String url) {
         return GetData(type, url, "");
     }
 
@@ -71,8 +66,7 @@ public class YouTubeAPIv3
             {
                 "null", "SleepWhileInLoop", "UseSpecificCatch"
             })
-    private JSONObject GetData(request_type type, String url, String post)
-    {
+    private JSONObject GetData(request_type type, String url, String post) {
         Date start = new Date();
         Date preconnect = start;
         Date postconnect = start;
@@ -85,17 +79,11 @@ public class YouTubeAPIv3
         int responsecode = 0;
         long cl = 0;
 
-        try
-        {
-            if (url.contains("?") && !url.contains("oembed?"))
-            {
+        try {
+            if (url.contains("?") && !url.contains("oembed?")) {
                 url += "&utcnow=" + System.currentTimeMillis();
-            } else
-            {
-                if (!url.contains("oembed?"))
-                {
-                    url += "?utcnow=" + System.currentTimeMillis();
-                }
+            } else if (!url.contains("oembed?")) {
+                url += "?utcnow=" + System.currentTimeMillis();
             }
 
             URL u = new URL(url);
@@ -111,8 +99,7 @@ public class YouTubeAPIv3
             c.setRequestProperty("Content-Type", "application/json-rpc");
             c.setRequestProperty("Content-length", "0");
 
-            if (!post.isEmpty())
-            {
+            if (!post.isEmpty()) {
                 c.setDoOutput(true);
             }
 
@@ -120,10 +107,8 @@ public class YouTubeAPIv3
             c.connect();
             postconnect = new Date();
 
-            if (!post.isEmpty())
-            {
-                try (BufferedOutputStream o = new BufferedOutputStream(c.getOutputStream()))
-                {
+            if (!post.isEmpty()) {
+                try (BufferedOutputStream o = new BufferedOutputStream(c.getOutputStream())) {
                     IOUtils.write(post, o);
                 }
             }
@@ -132,11 +117,9 @@ public class YouTubeAPIv3
             cl = c.getContentLengthLong();
             responsecode = c.getResponseCode();
 
-            if (c.getResponseCode() == 200)
-            {
+            if (c.getResponseCode() == 200) {
                 i = new BufferedInputStream(c.getInputStream());
-            } else
-            {
+            } else {
                 i = new BufferedInputStream(c.getErrorStream());
             }
 
@@ -169,10 +152,8 @@ public class YouTubeAPIv3
             j.put("_exceptionMessage", "");
             j.put("_content", content);
             postjson = new Date();
-        } catch (JSONException ex)
-        {
-            if (ex.getMessage().contains("A JSONObject text must begin with"))
-            {
+        } catch (JSONException ex) {
+            if (ex.getMessage().contains("A JSONObject text must begin with")) {
                 j = new JSONObject("{}");
                 j.put("_success", true);
                 j.put("_type", type.name());
@@ -183,15 +164,12 @@ public class YouTubeAPIv3
                 j.put("_exception", "MalformedJSONData (HTTP " + responsecode + ")");
                 j.put("_exceptionMessage", "");
                 j.put("_content", rawcontent);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
-        } catch (NullPointerException ex)
-        {
+        } catch (NullPointerException ex) {
             com.gmt2001.Console.err.printStackTrace(ex);
-        } catch (MalformedURLException ex)
-        {
+        } catch (MalformedURLException ex) {
             j.put("_success", false);
             j.put("_type", type.name());
             j.put("_url", url);
@@ -202,15 +180,12 @@ public class YouTubeAPIv3
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (Quorrabot.enableDebugging)
-            {
+            if (Quorrabot.enableDebugging) {
                 com.gmt2001.Console.err.printStackTrace(ex);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
-        } catch (SocketTimeoutException ex)
-        {
+        } catch (SocketTimeoutException ex) {
             j.put("_success", false);
             j.put("_type", type.name());
             j.put("_url", url);
@@ -221,15 +196,12 @@ public class YouTubeAPIv3
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (Quorrabot.enableDebugging)
-            {
+            if (Quorrabot.enableDebugging) {
                 com.gmt2001.Console.err.printStackTrace(ex);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
-        } catch (IOException ex)
-        {
+        } catch (IOException ex) {
             j.put("_success", false);
             j.put("_type", type.name());
             j.put("_url", url);
@@ -240,15 +212,12 @@ public class YouTubeAPIv3
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (Quorrabot.enableDebugging)
-            {
+            if (Quorrabot.enableDebugging) {
                 com.gmt2001.Console.err.printStackTrace(ex);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             j.put("_success", false);
             j.put("_type", type.name());
             j.put("_url", url);
@@ -259,22 +228,17 @@ public class YouTubeAPIv3
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (Quorrabot.enableDebugging)
-            {
+            if (Quorrabot.enableDebugging) {
                 com.gmt2001.Console.err.printStackTrace(ex);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
         }
 
-        if (i != null)
-        {
-            try
-            {
+        if (i != null) {
+            try {
                 i.close();
-            } catch (IOException ex)
-            {
+            } catch (IOException ex) {
                 j.put("_success", false);
                 j.put("_type", type.name());
                 j.put("_url", url);
@@ -285,18 +249,15 @@ public class YouTubeAPIv3
                 j.put("_exceptionMessage", ex.getMessage());
                 j.put("_content", "");
 
-                if (Quorrabot.enableDebugging)
-                {
+                if (Quorrabot.enableDebugging) {
                     com.gmt2001.Console.err.printStackTrace(ex);
-                } else
-                {
+                } else {
                     com.gmt2001.Console.err.logStackTrace(ex);
                 }
             }
         }
 
-        if (Quorrabot.enableDebugging)
-        {
+        if (Quorrabot.enableDebugging) {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetData Timers " + (preconnect.getTime() - start.getTime()) + " "
                     + (postconnect.getTime() - start.getTime()) + " " + (prejson.getTime() - start.getTime()) + " "
                     + (postjson.getTime() - start.getTime()) + " " + start.toString() + " " + postjson.toString());
@@ -308,178 +269,137 @@ public class YouTubeAPIv3
         return j;
     }
 
-    public void SetAPIKey(String apikey)
-    {
+    public void SetAPIKey(String apikey) {
         this.apikey = apikey;
     }
 
-    public String[] SearchForVideo(String q)
-    {
-        if (Quorrabot.enableDebugging)
-        {
+    public String[] SearchForVideo(String q) {
+        if (Quorrabot.enableDebugging) {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo Start q=" + q);
         }
 
-        if (q.contains("v=") | q.contains("?v="))
-        {
+        if (q.contains("v=") | q.contains("?v=")) {
             q = q.substring(q.indexOf("v=") + 2, q.indexOf("v=") + 13);
         }
         Pattern pattern = Pattern.compile(".*(?:youtu.be\\/|v\\/|u\\/\\w\\/|embed\\/|watch\\?v=)([^#\\&\\?^\\s]*).*");
         Matcher matcher = pattern.matcher(q);
 
-        if (matcher.matches())
-        {
+        if (matcher.matches()) {
             q = matcher.group(1);
         }
 
         JSONObject j = GetData(request_type.GET, "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=" + q + "&format=json");
-        if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found"))
-        {
-            if (j.toString().contains("Unauthorized"))
-            {
-                if (Quorrabot.enableDebugging)
-                {
+        if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found")) {
+            if (j.toString().contains("Unauthorized")) {
+                if (Quorrabot.enableDebugging) {
                     com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Private");
                 }
 
-                return new String[]
-                {
+                return new String[]{
                     q, "Video Marked Private", ""
                 };
             }
-            if (j.getInt("_http") == 200)
-            {
-                try
-                {
-                    if (Quorrabot.enableDebugging)
-                    {
+            if (j.getInt("_http") == 200) {
+                try {
+                    if (Quorrabot.enableDebugging) {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Success");
                     }
 
                     String a = j.getString("title");
-                    return new String[]
-                    {
+                    return new String[]{
                         q, a, ""
                     };
-                } catch (Exception e)
-                {
-                    if (Quorrabot.enableDebugging)
-                    {
+                } catch (Exception e) {
+                    if (Quorrabot.enableDebugging) {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo Exception");
                     }
 
-                    return new String[]
-                    {
+                    return new String[]{
                         q, "", ""
                     };
                 }
             }
-        } else
-        {
+        } else {
             String qOrig = q;
             q = q.replaceAll("[^a-zA-Z0-9 ]", "");
             q = q.replace(" ", "%20");
 
             JSONObject j2 = GetData(request_type.GET, "https://www.googleapis.com/youtube/v3/search?q=" + q + "&key=" + apikey + "&type=video&part=snippet&maxResults=1");
-            if (j2.getBoolean("_success"))
-            {
-                if (j2.getInt("_http") == 200)
-                {
+            if (j2.getBoolean("_success")) {
+                if (j2.getInt("_http") == 200) {
                     JSONObject pageInfo = j2.getJSONObject("pageInfo");
-                    if (pageInfo.getInt("totalResults") == 0)
-                    {
-                        if (Quorrabot.enableDebugging)
-                        {
+                    if (pageInfo.getInt("totalResults") == 0) {
+                        if (Quorrabot.enableDebugging) {
                             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End No Results");
                         }
 
-                        return new String[]
-                        {
+                        return new String[]{
                             qOrig, "No Search Results Found", ""
                         };
                     }
 
                     JSONArray a = j2.getJSONArray("items");
-                    if (a.length() > 0)
-                    {
+                    if (a.length() > 0) {
                         JSONObject it = a.getJSONObject(0);
 
                         JSONObject id = it.getJSONObject("id");
                         JSONObject sn = it.getJSONObject("snippet");
 
-                        if (Quorrabot.enableDebugging)
-                        {
+                        if (Quorrabot.enableDebugging) {
                             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Success2");
                         }
 
-                        return new String[]
-                        {
+                        return new String[]{
                             id.getString("videoId"), sn.getString("title"), sn.getString("channelTitle")
                         };
-                    } else
-                    {
-                        if (Quorrabot.enableDebugging)
-                        {
+                    } else {
+                        if (Quorrabot.enableDebugging) {
                             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Fail");
                         }
 
-                        return new String[]
-                        {
+                        return new String[]{
                             q, "", ""
                         };
                     }
-                } else
-                {
-                    if (Quorrabot.enableDebugging)
-                    {
+                } else {
+                    if (Quorrabot.enableDebugging) {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Fail2");
                     }
 
-                    return new String[]
-                    {
+                    return new String[]{
                         q, "", ""
                     };
                 }
-            } else
-            {
-                if (Quorrabot.enableDebugging)
-                {
+            } else {
+                if (Quorrabot.enableDebugging) {
                     com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Fail3");
                 }
 
-                return new String[]
-                {
+                return new String[]{
                     q, "", ""
                 };
             }
         }
 
-        if (Quorrabot.enableDebugging)
-        {
+        if (Quorrabot.enableDebugging) {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.SearchForVideo End Fail4");
         }
 
-        return new String[]
-        {
+        return new String[]{
             q, "", ""
         };
     }
 
-    public int[] GetVideoLength(String id)
-    {
-        if (Quorrabot.enableDebugging)
-        {
+    public int[] GetVideoLength(String id) {
+        if (Quorrabot.enableDebugging) {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Start id=" + id);
         }
 
         JSONObject j = GetData(request_type.GET, "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + apikey + "&part=contentDetails");
-        if (j.getBoolean("_success"))
-        {
-            if (j.getInt("_http") == 200)
-            {
+        if (j.getBoolean("_success")) {
+            if (j.getInt("_http") == 200) {
                 JSONArray a = j.getJSONArray("items");
-                if (a.length() > 0)
-                {
+                if (a.length() > 0) {
                     JSONObject i = a.getJSONObject(0);
 
                     JSONObject cd = i.getJSONObject("contentDetails");
@@ -513,48 +433,38 @@ public class YouTubeAPIv3
                      *
                      * s = Integer.parseInt(d.substring(0, d.indexOf("S")));
                      */
-                    if (Quorrabot.enableDebugging)
-                    {
+                    if (Quorrabot.enableDebugging) {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Success");
                     }
 
-                    return new int[]
-                    {
+                    return new int[]{
                         h, m, s
                     };
-                } else
-                {
-                    if (Quorrabot.enableDebugging)
-                    {
+                } else {
+                    if (Quorrabot.enableDebugging) {
                         com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Fail");
                     }
 
-                    return new int[]
-                    {
+                    return new int[]{
                         0, 0, 0
                     };
                 }
-            } else
-            {
-                if (Quorrabot.enableDebugging)
-                {
+            } else {
+                if (Quorrabot.enableDebugging) {
                     com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Fail2");
                 }
 
-                return new int[]
-                {
+                return new int[]{
                     0, 0, 0
                 };
             }
         }
 
-        if (Quorrabot.enableDebugging)
-        {
+        if (Quorrabot.enableDebugging) {
             com.gmt2001.Console.out.println(">>>[DEBUG] YouTubeAPIv3.GetVideoLength Fail3");
         }
 
-        return new int[]
-        {
+        return new int[]{
             0, 0, 0
         };
     }

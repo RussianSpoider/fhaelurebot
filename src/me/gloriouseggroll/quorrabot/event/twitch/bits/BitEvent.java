@@ -22,24 +22,24 @@ import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
 public class BitEvent extends Event {
 
-	private final Channel channel;
-	private final Session session;
+    private final Channel channel;
+    private final Session session;
 
-	protected BitEvent() {
-		this.channel = null;
-		this.session = null;
-	}
+    protected BitEvent() {
+        this.channel = null;
+        this.session = null;
+    }
 
-	protected BitEvent(Channel channel, Session session) {
-		this.channel = channel;
-		this.session = session;
-	}
+    protected BitEvent(Channel channel, Session session) {
+        this.channel = channel;
+        this.session = session;
+    }
 
-	public Channel getChannel() {
-		return this.channel;
-	}
+    public Channel getChannel() {
+        return this.channel;
+    }
 
-	public Session getSession() {
-		return this.session;
-	}
+    public Session getSession() {
+        return this.session;
+    }
 }

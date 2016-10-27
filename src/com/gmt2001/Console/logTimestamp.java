@@ -23,6 +23,7 @@ import java.util.TimeZone;
 import me.gloriouseggroll.quorrabot.Quorrabot;
 
 public class logTimestamp {
+
     public static String log() {
         SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss.SSS z");
         datefmt.setTimeZone(TimeZone.getTimeZone(Quorrabot.instance().timeZone));

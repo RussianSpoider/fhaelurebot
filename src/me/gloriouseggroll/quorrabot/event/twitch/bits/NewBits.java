@@ -21,10 +21,10 @@ import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
 public class NewBits extends BitEvent {
 
-	private final String username;
+    private final String username;
     private final String bits;
 
-	public NewBits(String username, String bits) {
+    public NewBits(String username, String bits) {
         this.username = username;
         this.bits = bits;
     }

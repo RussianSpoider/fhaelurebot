@@ -19,18 +19,15 @@ package me.gloriouseggroll.quorrabot.event.irc;
 import me.gloriouseggroll.quorrabot.event.Event;
 import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
-public abstract class IrcEvent extends Event
-{
+public abstract class IrcEvent extends Event {
 
     private final Session session;
 
-    protected IrcEvent(Session session)
-    {
+    protected IrcEvent(Session session) {
         this.session = session;
     }
 
-    public Session getSession()
-    {
+    public Session getSession() {
         return session;
     }
 }

@@ -18,15 +18,12 @@ package me.gloriouseggroll.quorrabot.event.musicplayer;
 
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class MusicPlayerDisconnectEvent extends MusicPlayerEvent
-{
+public class MusicPlayerDisconnectEvent extends MusicPlayerEvent {
 
-    public MusicPlayerDisconnectEvent()
-    {
+    public MusicPlayerDisconnectEvent() {
     }
 
-    public MusicPlayerDisconnectEvent(Channel channel)
-    {
+    public MusicPlayerDisconnectEvent(Channel channel) {
         super(channel);
     }
 }

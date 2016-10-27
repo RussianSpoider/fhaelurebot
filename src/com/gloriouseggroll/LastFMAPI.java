@@ -30,43 +30,40 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import me.gloriouseggroll.quorrabot.Quorrabot;
+
 /**
  *
  * @author Thomas
  */
 public class LastFMAPI {
+
     private static final LastFMAPI instance = new LastFMAPI();
     private static String lfm_access_token = "e467b42b6dd3cbdae38a206491ef366f";
     private static final String lfm_base_url = "https://ws.audioscrobbler.com/2.0/?method=";
     private static String lfm_username = "";
-    
-    private enum request_type
-    {
+
+    private enum request_type {
 
         GET, POST, PUT, DELETE
     };
-        
-    public static LastFMAPI instance()
-    {
+
+    public static LastFMAPI instance() {
         return instance;
     }
-    
-    private LastFMAPI()
-    {
+
+    private LastFMAPI() {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
-        
-    private JSONObject GetData(request_type type, String url)
-    {
+
+    private JSONObject GetData(request_type type, String url) {
         return GetData(type, url, "");
     }
-    
+
     @SuppressWarnings(
             {
                 "null", "SleepWhileInLoop", "UseSpecificCatch"
             })
-    private JSONObject GetData(request_type type, String url, String post)
-    {
+    private JSONObject GetData(request_type type, String url, String post) {
         Date start = new Date();
         Date preconnect = start;
         Date postconnect = start;
@@ -79,8 +76,7 @@ public class LastFMAPI {
         int responsecode = 0;
         long cl = 0;
 
-        try
-        {
+        try {
 
             URL u = new URL(url);
             HttpsURLConnection c = (HttpsURLConnection) u.openConnection();
@@ -95,8 +91,7 @@ public class LastFMAPI {
             c.setRequestProperty("Content-Type", "application/json-rpc");
             c.setRequestProperty("Content-length", "0");
 
-            if (!post.isEmpty())
-            {
+            if (!post.isEmpty()) {
                 c.setDoOutput(true);
             }
 
@@ -104,10 +99,8 @@ public class LastFMAPI {
             c.connect();
             postconnect = new Date();
 
-            if (!post.isEmpty())
-            {
-                try (BufferedOutputStream o = new BufferedOutputStream(c.getOutputStream()))
-                {
+            if (!post.isEmpty()) {
+                try (BufferedOutputStream o = new BufferedOutputStream(c.getOutputStream())) {
                     IOUtils.write(post, o);
                 }
             }
@@ -116,11 +109,9 @@ public class LastFMAPI {
             cl = c.getContentLengthLong();
             responsecode = c.getResponseCode();
 
-            if (c.getResponseCode() == 200)
-            {
+            if (c.getResponseCode() == 200) {
                 i = new BufferedInputStream(c.getInputStream());
-            } else
-            {
+            } else {
                 i = new BufferedInputStream(c.getErrorStream());
             }
 
@@ -153,10 +144,8 @@ public class LastFMAPI {
             j.put("_exceptionMessage", "");
             j.put("_content", content);
             postjson = new Date();
-        } catch (JSONException ex)
-        {
-            if (ex.getMessage().contains("A JSONObject text must begin with"))
-            {
+        } catch (JSONException ex) {
+            if (ex.getMessage().contains("A JSONObject text must begin with")) {
                 j = new JSONObject("{}");
                 j.put("_success", true);
                 j.put("_type", type.name());
@@ -167,15 +156,12 @@ public class LastFMAPI {
                 j.put("_exception", "MalformedJSONData (HTTP " + responsecode + ")");
                 j.put("_exceptionMessage", "");
                 j.put("_content", rawcontent);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
-        } catch (NullPointerException ex)
-        {
+        } catch (NullPointerException ex) {
             com.gmt2001.Console.err.printStackTrace(ex);
-        } catch (MalformedURLException ex)
-        {
+        } catch (MalformedURLException ex) {
             j.put("_success", false);
             j.put("_type", type.name());
             j.put("_url", url);
@@ -186,15 +172,12 @@ public class LastFMAPI {
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (Quorrabot.enableDebugging)
-            {
+            if (Quorrabot.enableDebugging) {
                 com.gmt2001.Console.err.printStackTrace(ex);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
-        } catch (SocketTimeoutException ex)
-        {
+        } catch (SocketTimeoutException ex) {
             j.put("_success", false);
             j.put("_type", type.name());
             j.put("_url", url);
@@ -205,15 +188,12 @@ public class LastFMAPI {
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (Quorrabot.enableDebugging)
-            {
+            if (Quorrabot.enableDebugging) {
                 com.gmt2001.Console.err.printStackTrace(ex);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
-        } catch (IOException ex)
-        {
+        } catch (IOException ex) {
             j.put("_success", false);
             j.put("_type", type.name());
             j.put("_url", url);
@@ -224,15 +204,12 @@ public class LastFMAPI {
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (Quorrabot.enableDebugging)
-            {
+            if (Quorrabot.enableDebugging) {
                 com.gmt2001.Console.err.printStackTrace(ex);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             j.put("_success", false);
             j.put("_type", type.name());
             j.put("_url", url);
@@ -243,22 +220,17 @@ public class LastFMAPI {
             j.put("_exceptionMessage", ex.getMessage());
             j.put("_content", "");
 
-            if (Quorrabot.enableDebugging)
-            {
+            if (Quorrabot.enableDebugging) {
                 com.gmt2001.Console.err.printStackTrace(ex);
-            } else
-            {
+            } else {
                 com.gmt2001.Console.err.logStackTrace(ex);
             }
         }
 
-        if (i != null)
-        {
-            try
-            {
+        if (i != null) {
+            try {
                 i.close();
-            } catch (IOException ex)
-            {
+            } catch (IOException ex) {
                 j.put("_success", false);
                 j.put("_type", type.name());
                 j.put("_url", url);
@@ -269,18 +241,15 @@ public class LastFMAPI {
                 j.put("_exceptionMessage", ex.getMessage());
                 j.put("_content", "");
 
-                if (Quorrabot.enableDebugging)
-                {
+                if (Quorrabot.enableDebugging) {
                     com.gmt2001.Console.err.printStackTrace(ex);
-                } else
-                {
+                } else {
                     com.gmt2001.Console.err.logStackTrace(ex);
                 }
             }
         }
 
-        if (Quorrabot.enableDebugging)
-        {
+        if (Quorrabot.enableDebugging) {
             com.gmt2001.Console.out.println(">>>[DEBUG] LastFMAPI.GetData Timers " + (preconnect.getTime() - start.getTime()) + " "
                     + (postconnect.getTime() - start.getTime()) + " " + (prejson.getTime() - start.getTime()) + " "
                     + (postjson.getTime() - start.getTime()) + " " + start.toString() + " " + postjson.toString());
@@ -291,58 +260,46 @@ public class LastFMAPI {
 
         return j;
     }
-    
-    public void SetUsername(String username)
-    {
-            this.lfm_username = username;
+
+    public void SetUsername(String username) {
+        this.lfm_username = username;
     }
-    
-    public String[] getLastTrack()
-    {        
+
+    public String[] getLastTrack() {
         JSONObject j = GetData(LastFMAPI.request_type.GET, lfm_base_url + "user.getrecenttracks&user=" + lfm_username + "&api_key=" + lfm_access_token + "&format=json");
-        if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found"))
-        {
-            if (j.getInt("_http") == 200)
-            {
-                try
-                {                    
-                    if (Quorrabot.enableDebugging)
-                    {
+        if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found")) {
+            if (j.getInt("_http") == 200) {
+                try {
+                    if (Quorrabot.enableDebugging) {
                         com.gmt2001.Console.out.println(">>>[DEBUG] LastFMAPI.getLastTrack Success");
                     }
-                    JSONObject recenttracks = j.getJSONObject("recenttracks");                    
-                    JSONObject track = recenttracks.getJSONArray("track").getJSONObject(0);                    
+                    JSONObject recenttracks = j.getJSONObject("recenttracks");
+                    JSONObject track = recenttracks.getJSONArray("track").getJSONObject(0);
                     JSONObject artist = track.getJSONObject("artist");
-                    
-                    String artistname = artist.getString("#text");                    
+
+                    String artistname = artist.getString("#text");
                     String songname = track.getString("name");
-                                        
-                    return new String[]
-                    {
+
+                    return new String[]{
                         artistname, songname, lfm_username
                     };
-                    
-                } catch (Exception e)
-                {
-                    if (Quorrabot.enableDebugging)
-                    {
+
+                } catch (Exception e) {
+                    if (Quorrabot.enableDebugging) {
                         com.gmt2001.Console.out.println(">>>[DEBUG] LastFMAPI.getLastTrack Exception");
                     }
 
-                    return new String[]
-                    {
+                    return new String[]{
                         "", "", ""
                     };
                 }
             } else {
-                return new String[]
-                {
+                return new String[]{
                     "", "", ""
                 };
-            } 
+            }
         } else {
-            return new String[]
-            {
+            return new String[]{
                 "", "", ""
             };
         }

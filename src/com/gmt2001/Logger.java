@@ -51,17 +51,17 @@ public class Logger implements Runnable {
     public void run() {
         this.isRunning = true;
 
-        if (!new File ("./logs/").exists()) {
-          new File ("./logs/").mkdirs();
+        if (!new File("./logs/").exists()) {
+            new File("./logs/").mkdirs();
         }
-        if (!new File ("./logs/core").exists()) {
-          new File ("./logs/core/").mkdirs();
+        if (!new File("./logs/core").exists()) {
+            new File("./logs/core/").mkdirs();
         }
-        if (!new File ("./logs/core-error").exists()) {
-          new File ("./logs/core-error/").mkdirs();
+        if (!new File("./logs/core-error").exists()) {
+            new File("./logs/core-error/").mkdirs();
         }
-        if (!new File ("./logs/core-debug").exists()) {
-          new File ("./logs/core-debug/").mkdirs();
+        if (!new File("./logs/core-debug").exists()) {
+            new File("./logs/core-debug/").mkdirs();
         }
 
         while (!disposed) {
@@ -90,55 +90,55 @@ public class Logger implements Runnable {
                 }
 
                 try {
-                  
+
                     if (queue.size() > 0) {
                         LogItem i = queue.remove(0);
 
                         switch (i.t) {
-                        case Output:
-                            if (this.psCore == null) {
-                                this.fosCore = new FileOutputStream("./logs/core/" + timestamp + ".txt", true);
-                                this.psCore = new PrintStream(this.fosCore);
-                            }
-                            this.psCore.println(i.s);
-                            this.psCore.flush();
-                            break;
+                            case Output:
+                                if (this.psCore == null) {
+                                    this.fosCore = new FileOutputStream("./logs/core/" + timestamp + ".txt", true);
+                                    this.psCore = new PrintStream(this.fosCore);
+                                }
+                                this.psCore.println(i.s);
+                                this.psCore.flush();
+                                break;
 
-                        case Input:
-                            if (this.psCore == null) {
-                                this.fosCore = new FileOutputStream("./logs/core/" + timestamp + ".txt", true);
-                                this.psCore = new PrintStream(this.fosCore);
-                            }
-                            this.psCore.println(i.s);
-                            this.psCore.flush();
-                            break;
+                            case Input:
+                                if (this.psCore == null) {
+                                    this.fosCore = new FileOutputStream("./logs/core/" + timestamp + ".txt", true);
+                                    this.psCore = new PrintStream(this.fosCore);
+                                }
+                                this.psCore.println(i.s);
+                                this.psCore.flush();
+                                break;
 
-                        case Error:
-                            if (this.psError == null) {
-                                this.fosError = new FileOutputStream("./logs/core-error/" + timestamp + ".txt", true);
-                                this.psError = new PrintStream(this.fosError);
-                            }
-                            this.psError.println(i.s);
-                            this.psError.flush();
-                            break;
+                            case Error:
+                                if (this.psError == null) {
+                                    this.fosError = new FileOutputStream("./logs/core-error/" + timestamp + ".txt", true);
+                                    this.psError = new PrintStream(this.fosError);
+                                }
+                                this.psError.println(i.s);
+                                this.psError.flush();
+                                break;
 
-                        case Debug:
-                            if (this.psDebug == null) {
-                                this.fosDebug = new FileOutputStream("./logs/core-debug/" + timestamp + ".txt", true);
-                                this.psDebug = new PrintStream(this.fosDebug);
-                            }
-                            this.psDebug.println(i.s);
-                            this.psDebug.flush();
-                            break;
+                            case Debug:
+                                if (this.psDebug == null) {
+                                    this.fosDebug = new FileOutputStream("./logs/core-debug/" + timestamp + ".txt", true);
+                                    this.psDebug = new PrintStream(this.fosDebug);
+                                }
+                                this.psDebug.println(i.s);
+                                this.psDebug.flush();
+                                break;
 
-                        default:
-                            if (this.psCore == null) {
-                                this.fosCore = new FileOutputStream("./logs/core/" + timestamp + ".txt", true);
-                                this.psCore = new PrintStream(this.fosCore);
-                            } 
-                            this.psCore.println(i.s);
-                            this.psCore.flush();
-                            break;
+                            default:
+                                if (this.psCore == null) {
+                                    this.fosCore = new FileOutputStream("./logs/core/" + timestamp + ".txt", true);
+                                    this.psCore = new PrintStream(this.fosCore);
+                                }
+                                this.psCore.println(i.s);
+                                this.psCore.flush();
+                                break;
                         }
                     }
                 } catch (FileNotFoundException ex) {
@@ -147,7 +147,7 @@ public class Logger implements Runnable {
                     ex.printStackTrace(System.err);
                 } catch (ArrayIndexOutOfBoundsException ex) {
                     /* At shutdown queue.remove(0) throws an exception sometimes, it is expected, do not clutter the console/error logs. */
-                } 
+                }
             } else {
                 try {
                     Thread.sleep(500);
@@ -182,7 +182,7 @@ public class Logger implements Runnable {
         Input,
         Error,
         Debug,
-        
+
     }
 
     public static Logger instance() {
@@ -210,14 +210,14 @@ public class Logger implements Runnable {
         datefmt.setTimeZone(TimeZone.getTimeZone(Quorrabot.instance().timeZone));
         return datefmt.format(new Date());
     }
-    
+
     public String setTimeZone(String timezone) {
         SimpleDateFormat datefmt = new SimpleDateFormat("MM-dd-yyyy @ HH:mm:ss.SSS z");
         datefmt.setTimeZone(TimeZone.getTimeZone(timezone));
         Quorrabot.instance().botSetTimeZone(timezone);
         return datefmt.format(new Date());
     }
-    
+
     public String getTimeZone() {
         return Quorrabot.instance().timeZone;
     }

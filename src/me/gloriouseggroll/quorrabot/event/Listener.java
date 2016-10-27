@@ -16,6 +16,5 @@
  */
 package me.gloriouseggroll.quorrabot.event;
 
-public interface Listener
-{
+public interface Listener {
 }

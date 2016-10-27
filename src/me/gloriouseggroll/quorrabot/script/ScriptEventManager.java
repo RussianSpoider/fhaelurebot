@@ -26,17 +26,14 @@ import me.gloriouseggroll.quorrabot.event.Event;
 import me.gloriouseggroll.quorrabot.event.Listener;
 import org.apache.commons.lang3.text.WordUtils;
 
-public class ScriptEventManager implements Listener
-{
+public class ScriptEventManager implements Listener {
 
     private static final ScriptEventManager instance = new ScriptEventManager();
 
-    public static ScriptEventManager instance()
-    {
+    public static ScriptEventManager instance() {
         return instance;
     }
-    private static final String[] eventPackages = new String[]
-    {
+    private static final String[] eventPackages = new String[]{
         "me.gloriouseggroll.quorrabot.event.command",
         "me.gloriouseggroll.quorrabot.event.console",
         "me.gloriouseggroll.quorrabot.event.twitch.follower",
@@ -50,25 +47,22 @@ public class ScriptEventManager implements Listener
         "me.gloriouseggroll.quorrabot.event.musicplayer"
     };
 
-    private ScriptEventManager()
-    {
+    private ScriptEventManager() {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
 
-    private static class EventHandlerEntry
-    {
+    private static class EventHandlerEntry {
 
         Class<? extends Event> eventClass;
         ScriptEventHandler handler;
 
-        private EventHandlerEntry(Class<? extends Event> eventClass, ScriptEventHandler handler)
-        {
+        private EventHandlerEntry(Class<? extends Event> eventClass, ScriptEventHandler handler) {
             this.eventClass = eventClass;
             this.handler = handler;
         }
     }
     private final List<EventHandlerEntry> entries = Lists.newCopyOnWriteArrayList();
-    private final ConcurrentHashMap<String,EventHandlerEntry> hashEntries = new ConcurrentHashMap<String,EventHandlerEntry>();
+    private final ConcurrentHashMap<String, EventHandlerEntry> hashEntries = new ConcurrentHashMap<String, EventHandlerEntry>();
 
     public void runDirect(Event event) {
         if (Quorrabot.instance().isExiting()) {
@@ -86,68 +80,53 @@ public class ScriptEventManager implements Listener
             com.gmt2001.Console.err.printStackTrace(e);
         }
     }
-    
+
     @Subscribe
-    public void onEvent(Event event)
-    {
-        if (Quorrabot.instance().isExiting())
-        {
+    public void onEvent(Event event) {
+        if (Quorrabot.instance().isExiting()) {
             return;
         }
 
-        try
-        {
-            for (EventHandlerEntry entry : entries)
-            {
-                if (event.getClass().isAssignableFrom(entry.eventClass))
-                {
-                    if (Quorrabot.enableDebugging)
-                    {
+        try {
+            for (EventHandlerEntry entry : entries) {
+                if (event.getClass().isAssignableFrom(entry.eventClass)) {
+                    if (Quorrabot.enableDebugging) {
                         com.gmt2001.Console.out.println(">>>[DEBUG] Dispatching event " + entry.eventClass.getName());
                     }
 
                     entry.handler.handle(event);
                 }
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             com.gmt2001.Console.out.println(">>>[DEBUG] Failed to dispatch event " + event.getClass().getName());
             com.gmt2001.Console.err.printStackTrace(e);
         }
     }
 
-    public void register(String eventName, ScriptEventHandler handler)
-    {
+    public void register(String eventName, ScriptEventHandler handler) {
         Class<? extends Event> eventClass = null;
-        for (String eventPackage : eventPackages)
-        {
-            try
-            {
+        for (String eventPackage : eventPackages) {
+            try {
                 eventClass = Class.forName(eventPackage + "." + WordUtils.capitalize(eventName) + "Event").asSubclass(Event.class);
                 break;
-            } catch (ClassNotFoundException e)
-            {
+            } catch (ClassNotFoundException e) {
             }
         }
 
-        if (eventClass == null)
-        {
+        if (eventClass == null) {
             throw new RuntimeException("Event class not found: " + eventName);
         }
 
         entries.add(new EventHandlerEntry(eventClass, handler));
     }
 
-    public void unregister(ScriptEventHandler handler)
-    {
+    public void unregister(ScriptEventHandler handler) {
         EventHandlerEntry entry;
         Iterator<EventHandlerEntry> iterator = entries.iterator();
-        while (iterator.hasNext())
-        {
+        while (iterator.hasNext()) {
             entry = iterator.next();
 
-            if (entry.handler == handler)
-            {
+            if (entry.handler == handler) {
                 entries.remove(entry);
             }
         }

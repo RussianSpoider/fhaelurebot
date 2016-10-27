@@ -51,7 +51,7 @@ public class HTTPServer extends Thread {
     }
 
     @Override
-    @SuppressWarnings( {
+    @SuppressWarnings({
         "SleepWhileInLoop", "null"
     })
     public void run() {
@@ -101,168 +101,166 @@ public class HTTPServer extends Thread {
 
                 if (request.length == 3) {
                     switch (request[0]) {
-                    case "GET":
-                        File target = null;
-                        String data = null;
+                        case "GET":
+                            File target = null;
+                            String data = null;
 
-                        if (args.containsKey("password")) {
-                            String password = URLDecoder.decode(args.get("password"), "UTF-8").replace("oauth:", "");
+                            if (args.containsKey("password")) {
+                                String password = URLDecoder.decode(args.get("password"), "UTF-8").replace("oauth:", "");
 
-                            if (password.equals(pass)
-                                    && (
-                                        request[1].toLowerCase().startsWith("addons")
+                                if (password.equals(pass)
+                                        && (request[1].toLowerCase().startsWith("addons")
                                         || request[1].toLowerCase().startsWith("/addons")
                                         || request[1].toLowerCase().startsWith("logs")
-                                        || request[1].toLowerCase().startsWith("/logs")
-                                    )) {
+                                        || request[1].toLowerCase().startsWith("/logs"))) {
+                                    if (request[1].startsWith("/")) {
+                                        target = new File("." + request[1]);
+                                    } else {
+                                        target = new File("." + "/" + request[1]);
+                                    }
+                                } else if (password.equals(pass) && (request[1].toLowerCase().startsWith("inistore")
+                                        || request[1].toLowerCase().startsWith("/inistore"))) {
+                                    String realTarget = request[1];
+
+                                    if (realTarget.startsWith("/")) {
+                                        realTarget = realTarget.substring(10);
+                                    } else {
+                                        realTarget = realTarget.substring(9);
+                                    }
+
+                                    if (realTarget.toLowerCase().endsWith(".ini")) {
+                                        realTarget = realTarget.substring(0, realTarget.length() - 4);
+                                    }
+
+                                    String[] sections = Quorrabot.instance().getDataStore().GetCategoryList(realTarget);
+
+                                    data = "";
+
+                                    for (String section : sections) {
+                                        if (section != null && !section.equalsIgnoreCase("")) {
+                                            data += "\r\n\r\n[" + section + "]";
+                                        }
+
+                                        String[] keys = Quorrabot.instance().getDataStore().GetKeyList(realTarget, section);
+
+                                        for (String key : keys) {
+                                            String value = Quorrabot.instance().getDataStore().GetString(realTarget, section, key);
+
+                                            data += "\r\n" + key + "=" + value;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (target == null) {
                                 if (request[1].startsWith("/")) {
-                                    target = new File("." + request[1]);
+                                    target = new File(webhome + request[1]);
                                 } else {
-                                    target = new File("." + "/" + request[1]);
-                                }
-                            } else if (password.equals(pass) && (request[1].toLowerCase().startsWith("inistore")
-                                                                 || request[1].toLowerCase().startsWith("/inistore"))) {
-                                String realTarget = request[1];
-
-                                if (realTarget.startsWith("/")) {
-                                    realTarget = realTarget.substring(10);
-                                } else {
-                                    realTarget = realTarget.substring(9);
+                                    target = new File(webhome + "/" + request[1]);
                                 }
 
-                                if (realTarget.toLowerCase().endsWith(".ini")) {
-                                    realTarget = realTarget.substring(0, realTarget.length() - 4);
-                                }
-
-                                String[] sections = Quorrabot.instance().getDataStore().GetCategoryList(realTarget);
-
-                                data = "";
-
-                                for (String section : sections) {
-                                    if (section != null && !section.equalsIgnoreCase("")) {
-                                        data += "\r\n\r\n[" + section + "]";
-                                    }
-
-                                    String[] keys = Quorrabot.instance().getDataStore().GetKeyList(realTarget, section);
-
-                                    for (String key : keys) {
-                                        String value = Quorrabot.instance().getDataStore().GetString(realTarget, section, key);
-
-                                        data += "\r\n" + key + "=" + value;
+                                if (target.exists() && target.isDirectory()) {
+                                    if (request[1].endsWith("/")) {
+                                        target = new File(webhome + "/" + request[1] + "index.html");
+                                    } else {
+                                        target = new File(webhome + "/" + request[1] + "/" + "index.html");
                                     }
                                 }
                             }
-                        }
 
-                        if (target == null) {
-                            if (request[1].startsWith("/")) {
-                                target = new File(webhome + request[1]);
-                            } else {
-                                target = new File(webhome + "/" + request[1]);
-                            }
+                            if (target.exists() || data != null) {
+                                int length;
+                                byte[] b;
+                                String contentType;
 
-                            if (target.exists() && target.isDirectory()) {
-                                if (request[1].endsWith("/")) {
-                                    target = new File(webhome + "/" + request[1] + "index.html");
-                                } else {
-                                    target = new File(webhome + "/" + request[1] + "/" + "index.html");
-                                }
-                            }
-                        }
+                                if (data == null) {
+                                    if (target.isDirectory()) {
+                                        File[] files = target.listFiles();
+                                        String output = "";
 
-                        if (target.exists() || data != null) {
-                            int length;
-                            byte[] b;
-                            String contentType;
+                                        java.util.Arrays.sort(files);
 
-                            if (data == null) {
-                                if (target.isDirectory()) {
-                                    File[] files = target.listFiles();
-                                    String output = "";
+                                        for (File file : files) {
+                                            output += file.getName() + "\n";
+                                        }
 
-                                    java.util.Arrays.sort(files);
+                                        b = output.getBytes();
+                                        length = output.length();
+                                        contentType = "text/text";
 
-                                    for (File file : files) {
-                                        output += file.getName() + "\n";
+                                    } else {
+                                        FileInputStream fis = new FileInputStream(target);
+                                        length = fis.available();
+
+                                        b = new byte[length + 1];
+                                        fis.read(b);
+
+                                        contentType = inferContentType(target.getPath());
                                     }
+                                } else {
+                                    length = data.length();
+                                    b = data.getBytes();
 
-                                    b = output.getBytes();
-                                    length = output.length();
                                     contentType = "text/text";
+                                }
 
+                                out.print("HTTP/1.0 200 OK\n"
+                                        + "ContentType: " + contentType + "\n"
+                                        + "Date: " + new Date() + "\n"
+                                        + "Server: basic HTTP server\n"
+                                        + "Content-Length: " + length + "\n"
+                                        + "\n");
+
+                                out.write(b, 0, length);
+
+                                out.print("\n");
+                            } else {
+                                out.print("HTTP/1.0 404 Not Found\n"
+                                        + "ContentType: " + "text/text" + "\n"
+                                        + "Date: " + new Date() + "\n"
+                                        + "Server: basic HTTP server\n"
+                                        + "Content-Length: " + "18" + "\n"
+                                        + "\n"
+                                        + "HTTP 404 Not Found"
+                                        + "\n");
+                            }
+                            break;
+                        case "PUT":
+                            if (args.containsKey("password")) {
+                                String password = URLDecoder.decode(args.get("password"), "UTF-8").replace("oauth:", "");
+
+                                if (password.equals(pass)) {
+                                    if (!args.containsKey("user") || !args.containsKey("message")) {
+                                        out.print("HTTP/1.0 400 Bad Request\n"
+                                                + "ContentType: " + "text/text" + "\n"
+                                                + "Date: " + new Date() + "\n"
+                                                + "Server: basic HTTP server\n"
+                                                + "Content-Length: " + "17" + "\n"
+                                                + "\n"
+                                                + "missing parameter"
+                                                + "\n");
+                                    } else {
+                                        String user = URLDecoder.decode(args.get("user"), "UTF-8");
+                                        String message = URLDecoder.decode(args.get("message"), "UTF-8");
+
+                                        EventBus.instance().post(new IrcChannelMessageEvent(Quorrabot.instance().getSession(), user, message, Quorrabot.instance().getChannel()));
+
+                                        out.print("HTTP/1.0 200 OK\n"
+                                                + "ContentType: " + "text/text" + "\n"
+                                                + "Date: " + new Date() + "\n"
+                                                + "Server: basic HTTP server\n"
+                                                + "Content-Length: " + "12" + "\n"
+                                                + "\n"
+                                                + "event posted"
+                                                + "\n");
+                                    }
                                 } else {
-                                    FileInputStream fis = new FileInputStream(target);
-                                    length = fis.available();
-
-                                    b = new byte[length + 1];
-                                    fis.read(b);
-
-                                    contentType = inferContentType(target.getPath());
+                                    com.gmt2001.Console.out.println("Invalid password recieved for remote http PUT request. Recieved: " + password + " Expected: " + pass);
                                 }
                             } else {
-                                length = data.length();
-                                b = data.getBytes();
-
-                                contentType = "text/text";
+                                com.gmt2001.Console.out.println("No password recieved for remote http PUT request.");
                             }
-
-                            out.print("HTTP/1.0 200 OK\n"
-                                      + "ContentType: " + contentType + "\n"
-                                      + "Date: " + new Date() + "\n"
-                                      + "Server: basic HTTP server\n"
-                                      + "Content-Length: " + length + "\n"
-                                      + "\n");
-
-                            out.write(b, 0, length);
-
-                            out.print("\n");
-                        } else {
-                            out.print("HTTP/1.0 404 Not Found\n"
-                                      + "ContentType: " + "text/text" + "\n"
-                                      + "Date: " + new Date() + "\n"
-                                      + "Server: basic HTTP server\n"
-                                      + "Content-Length: " + "18" + "\n"
-                                      + "\n"
-                                      + "HTTP 404 Not Found"
-                                      + "\n");
-                        }
-                        break;
-                    case "PUT":
-                        if (args.containsKey("password")) {
-                            String password = URLDecoder.decode(args.get("password"), "UTF-8").replace("oauth:", "");
-
-                            if (password.equals(pass)) {
-                                if (!args.containsKey("user") || !args.containsKey("message")) {
-                                    out.print("HTTP/1.0 400 Bad Request\n"
-                                              + "ContentType: " + "text/text" + "\n"
-                                              + "Date: " + new Date() + "\n"
-                                              + "Server: basic HTTP server\n"
-                                              + "Content-Length: " + "17" + "\n"
-                                              + "\n"
-                                              + "missing parameter"
-                                              + "\n");
-                                } else {
-                                    String user = URLDecoder.decode(args.get("user"), "UTF-8");
-                                    String message = URLDecoder.decode(args.get("message"), "UTF-8");
-
-                                    EventBus.instance().post(new IrcChannelMessageEvent(Quorrabot.instance().getSession(), user, message, Quorrabot.instance().getChannel()));
-
-                                    out.print("HTTP/1.0 200 OK\n"
-                                              + "ContentType: " + "text/text" + "\n"
-                                              + "Date: " + new Date() + "\n"
-                                              + "Server: basic HTTP server\n"
-                                              + "Content-Length: " + "12" + "\n"
-                                              + "\n"
-                                              + "event posted"
-                                              + "\n");
-                                }
-                            } else {
-                                com.gmt2001.Console.out.println("Invalid password recieved for remote http PUT request. Recieved: " + password + " Expected: " + pass);
-                            }
-                        } else {
-                            com.gmt2001.Console.out.println("No password recieved for remote http PUT request.");
-                        }
-                        break;
+                            break;
                     }
                 }
 

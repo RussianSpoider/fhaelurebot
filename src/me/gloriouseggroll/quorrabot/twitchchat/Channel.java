@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package me.gloriouseggroll.quorrabot.twitchchat;
+
 import me.gloriouseggroll.quorrabot.twitchchat.Session;
 import me.gloriouseggroll.quorrabot.event.EventBus;
 
@@ -88,5 +89,5 @@ public class Channel {
     public Channel getChannel() {
         return channel;
     }
-   
+
 }

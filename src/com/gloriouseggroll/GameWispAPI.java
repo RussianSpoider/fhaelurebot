@@ -43,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
+
 /**
  *
  * @author Tom
@@ -85,8 +86,8 @@ public class GameWispAPI {
      * as needed.
      */
     private static void fillJSONObject(JSONObject jsonObject, boolean success, String type,
-                                       String url, int responseCode, String exception,
-                                       String exceptionMessage, String jsonContent) {
+            String url, int responseCode, String exception,
+            String exceptionMessage, String jsonContent) {
         jsonObject.put("_success", success);
         jsonObject.put("_type", type);
         jsonObject.put("_url", url);
@@ -119,7 +120,7 @@ public class GameWispAPI {
                 noAccessWarning = true;
             }
             JSONStringer jsonObject = new JSONStringer();
-            return(new JSONObject(jsonObject.object().key("result").object().key("status").value(-1).endObject().endObject().toString()));
+            return (new JSONObject(jsonObject.object().key("result").object().key("status").value(-1).endObject().endObject().toString()));
         }
 
         try {
@@ -127,8 +128,8 @@ public class GameWispAPI {
             urlConn = (HttpsURLConnection) urlRaw.openConnection();
             urlConn.setDoInput(true);
             urlConn.setRequestMethod(methodType);
-            urlConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 " +
-                                       "(KHTML, like Gecko) Chrome/44.0.2403.52 Safari/537.36 QuorraBot/2015");
+            urlConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 "
+                    + "(KHTML, like Gecko) Chrome/44.0.2403.52 Safari/537.36 QuorraBot/2015");
 
             if (methodType.equals("POST")) {
                 urlConn.setDoOutput(true);
@@ -168,16 +169,17 @@ public class GameWispAPI {
             fillJSONObject(jsonResult, false, methodType, urlAddress, 0, "Exception", ex.getMessage(), "");
             com.gmt2001.Console.err.println("GameWispAPI::readJsonFromUrl::Exception: " + ex.getMessage());
         } finally {
-            if (inputStream != null)
+            if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException ex) {
                     fillJSONObject(jsonResult, false, methodType, urlAddress, 0, "IOException", ex.getMessage(), "");
                     com.gmt2001.Console.err.println("GameWispAPI::readJsonFromUrl::Exception: " + ex.getMessage());
                 }
+            }
         }
 
-        return(jsonResult);
+        return (jsonResult);
     }
 
     /*
@@ -214,7 +216,7 @@ public class GameWispAPI {
      */
     public String getUserSubInfoString(String username) {
         JSONObject jsonObject = getUserSubInfoJSON(username);
-        return jsonObject.toString(); 
+        return jsonObject.toString();
     }
 
     /*
@@ -222,16 +224,16 @@ public class GameWispAPI {
      * @param String
      */
     public String[] refreshToken() {
-        JSONObject jsonObject = readJsonFromPOSTUrl(sAPIURL + "/pub/v1/oauth/token" +
-                                                             "?grant_type=refresh_token" +
-                                                             "&client_id=" + gwIdentifier +
-                                                             "&client_secret=" + gwSecret +
-                                                             "&redirect_uri=" + devURI +
-                                                             "&refresh_token=" + sRefreshToken);
+        JSONObject jsonObject = readJsonFromPOSTUrl(sAPIURL + "/pub/v1/oauth/token"
+                + "?grant_type=refresh_token"
+                + "&client_id=" + gwIdentifier
+                + "&client_secret=" + gwSecret
+                + "&redirect_uri=" + devURI
+                + "&refresh_token=" + sRefreshToken);
         if (jsonObject.has("access_token") && jsonObject.has("refresh_token")) {
             String newAccessToken = jsonObject.getString("access_token");
             String newRefreshToken = jsonObject.getString("refresh_token");
-            String[] returnString = { newAccessToken, newRefreshToken };
+            String[] returnString = {newAccessToken, newRefreshToken};
             com.gmt2001.Console.out.println("GameWispAPI: Refreshed GameWisp Token");
 
             sAccessToken = newAccessToken;
@@ -240,7 +242,7 @@ public class GameWispAPI {
         } else {
             com.gmt2001.Console.err.println("GameWispAPI: Error Refreshing Tokens! Keeping Current Tokens!");
             com.gmt2001.Console.err.println("GameWispAPI: JSON: " + jsonObject.toString().substring(0, 100));
-            String[] returnString = { sAccessToken, sRefreshToken };
+            String[] returnString = {sAccessToken, sRefreshToken};
             return returnString;
         }
     }

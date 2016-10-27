@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import me.gloriouseggroll.quorrabot.Quorrabot;
+
 /**
  *
  * @author Gary Tekulsky
@@ -47,7 +48,7 @@ public class err {
         String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
         String fileName = Thread.currentThread().getStackTrace()[2].getFileName();
         int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
-        stackInfo = "[" +  methodName + "()@" + fileName + ":" + lineNumber + "] ";
+        stackInfo = "[" + methodName + "()@" + fileName + ":" + lineNumber + "] ";
 
         Logger.instance().log(Logger.LogType.Error, "[" + logTimestamp.log() + "] " + stackInfo + o.toString());
         System.err.print("[" + logTimestamp.log() + "] [ERROR] " + stackInfo + o);
@@ -69,7 +70,7 @@ public class err {
         String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
         String fileName = Thread.currentThread().getStackTrace()[2].getFileName();
         int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
-        stackInfo = "[" +  methodName + "()@" + fileName + ":" + lineNumber + "] ";
+        stackInfo = "[" + methodName + "()@" + fileName + ":" + lineNumber + "] ";
 
         Logger.instance().log(Logger.LogType.Error, "[" + logTimestamp.log() + "] " + stackInfo + o.toString());
         Logger.instance().log(Logger.LogType.Error, "");
@@ -83,7 +84,7 @@ public class err {
         String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
         String fileName = Thread.currentThread().getStackTrace()[2].getFileName();
         int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
-        stackInfo = "[" +  methodName + "()@" + fileName + ":" + lineNumber + "] ";
+        stackInfo = "[" + methodName + "()@" + fileName + ":" + lineNumber + "] ";
 
         Logger.instance().log(Logger.LogType.Error, "[" + logTimestamp.log() + "] " + stackInfo + o.toString());
         Logger.instance().log(Logger.LogType.Error, "");

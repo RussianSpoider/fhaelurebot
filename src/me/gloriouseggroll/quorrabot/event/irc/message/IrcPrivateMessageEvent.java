@@ -24,21 +24,17 @@ import me.gloriouseggroll.quorrabot.twitchchat.Session;
  *
  * @author gmt2001
  */
-public class IrcPrivateMessageEvent extends IrcMessageEvent
-{
+public class IrcPrivateMessageEvent extends IrcMessageEvent {
 
-    public IrcPrivateMessageEvent(Session session, String sender, String message)
-    {
+    public IrcPrivateMessageEvent(Session session, String sender, String message) {
         super(session, sender, message, null, null);
     }
 
-    public IrcPrivateMessageEvent(Session session, String sender, String message, Map<String, String> tags)
-    {
+    public IrcPrivateMessageEvent(Session session, String sender, String message, Map<String, String> tags) {
         super(session, sender, message, tags, null);
     }
 
-    public IrcPrivateMessageEvent(Session session, String sender, String message, Map<String, String> tags, Channel channel)
-    {
+    public IrcPrivateMessageEvent(Session session, String sender, String message, Map<String, String> tags, Channel channel) {
         super(session, sender, message, tags, channel);
     }
 }

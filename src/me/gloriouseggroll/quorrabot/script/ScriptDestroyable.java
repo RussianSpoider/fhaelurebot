@@ -16,18 +16,15 @@
  */
 package me.gloriouseggroll.quorrabot.script;
 
-public abstract class ScriptDestroyable<T>
-{
+public abstract class ScriptDestroyable<T> {
 
     private final T object;
 
-    protected ScriptDestroyable(T object)
-    {
+    protected ScriptDestroyable(T object) {
         this.object = object;
     }
 
-    public void destroy()
-    {
+    public void destroy() {
         this.destroy(object);
     }
 

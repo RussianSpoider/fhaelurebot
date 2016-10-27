@@ -29,73 +29,57 @@ import com.google.common.eventbus.Subscribe;
 import me.gloriouseggroll.quorrabot.event.Event;
 import me.gloriouseggroll.quorrabot.event.Listener;
 
-
-public class EventWebSocketServer extends WebSocketServer implements Listener
-{
+public class EventWebSocketServer extends WebSocketServer implements Listener {
 
     private static EventWebSocketServer instance;
 
-    public static EventWebSocketServer instance()
-    {
+    public static EventWebSocketServer instance() {
         return instance;
     }
-    
-    public EventWebSocketServer(int port)
-    {
-		super(new InetSocketAddress(port), 1);
+
+    public EventWebSocketServer(int port) {
+        super(new InetSocketAddress(port), 1);
 
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
 
-	@Override
-    public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake)
-    {
+    @Override
+    public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
     }
 
     @Override
-    public void onClose(WebSocket webSocket, int i, String s, boolean b)
-    {
+    public void onClose(WebSocket webSocket, int i, String s, boolean b) {
     }
 
     @Override
-    public void onMessage(WebSocket webSocket, String s)
-    {
+    public void onMessage(WebSocket webSocket, String s) {
     }
 
     @Override
-    public void onError(WebSocket webSocket, Exception e)
-    {
+    public void onError(WebSocket webSocket, Exception e) {
         com.gmt2001.Console.err.printStackTrace(e);
     }
 
-    public void dispose()
-    {
-        try
-        {
+    public void dispose() {
+        try {
             this.stop(2000);
-        } catch (InterruptedException ex)
-        {
+        } catch (InterruptedException ex) {
             com.gmt2001.Console.err.printStackTrace(ex);
         }
     }
-    
+
     @Subscribe
-    public void sendToAll(Event event)
-    {
+    public void sendToAll(Event event) {
         Collection<WebSocket> con = connections();
-        synchronized (con)
-        {
-            for (WebSocket c : con)
-            {
-            	try
-            	{
-            		Method output = event.getClass().getMethod("toEventSocket", (Class<?>[]) null);
-            		c.send(event.getClass().getSimpleName() + ":" +output.invoke(event, (Object[]) null));
-	            } catch (Exception ex)
-	        	{
-	        		return;
-	        	}
-            } 
+        synchronized (con) {
+            for (WebSocket c : con) {
+                try {
+                    Method output = event.getClass().getMethod("toEventSocket", (Class<?>[]) null);
+                    c.send(event.getClass().getSimpleName() + ":" + output.invoke(event, (Object[]) null));
+                } catch (Exception ex) {
+                    return;
+                }
+            }
 
         }
     }

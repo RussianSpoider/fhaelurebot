@@ -19,25 +19,20 @@ package me.gloriouseggroll.quorrabot.console;
 import me.gloriouseggroll.quorrabot.event.EventBus;
 import me.gloriouseggroll.quorrabot.event.console.ConsoleInputEvent;
 
-public class ConsoleInputListener extends Thread
-{
+public class ConsoleInputListener extends Thread {
 
     @Override
     @SuppressWarnings("SleepWhileInLoop")
-    public void run()
-    {
+    public void run() {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
-        while (true)
-        {
-            try
-            {
+        while (true) {
+            try {
                 String msg = com.gmt2001.Console.in.readLine();
                 //don't change this to postAsync or console input will be delayed
                 EventBus.instance().post(new ConsoleInputEvent(msg));
                 Thread.sleep(10);
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 com.gmt2001.Console.err.printStackTrace(e);
             }
         }

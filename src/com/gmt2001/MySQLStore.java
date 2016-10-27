@@ -210,8 +210,7 @@ public class MySQLStore extends DataStore {
             com.gmt2001.Console.err.printStackTrace(ex);
         }
 
-        return new String[] {
-               };
+        return new String[]{};
     }
 
     @Override
@@ -239,8 +238,7 @@ public class MySQLStore extends DataStore {
             }
         }
 
-        return new String[] {
-               };
+        return new String[]{};
     }
 
     @Override
@@ -254,15 +252,15 @@ public class MySQLStore extends DataStore {
                 try (PreparedStatement statement = connection.prepareStatement("SELECT variable FROM " + dbprefix + fName + " WHERE section=?;")) {
                     statement.setQueryTimeout(10);
                     statement.setString(1, section);
-    
+
                     try (ResultSet rs = statement.executeQuery()) {
-    
+
                         ArrayList<String> s = new ArrayList<>();
-    
+
                         while (rs.next()) {
                             s.add(rs.getString("variable"));
                         }
-    
+
                         return s.toArray(new String[s.size()]);
                     }
                 } catch (SQLException ex) {
@@ -288,8 +286,7 @@ public class MySQLStore extends DataStore {
             }
         }
 
-        return new String[] {
-               };
+        return new String[]{};
     }
 
     @Override
@@ -307,9 +304,9 @@ public class MySQLStore extends DataStore {
                 statement.setQueryTimeout(10);
                 statement.setString(1, section);
                 statement.setString(2, key);
-    
+
                 try (ResultSet rs = statement.executeQuery()) {
-    
+
                     if (rs.next()) {
                         return true;
                     }
@@ -317,13 +314,13 @@ public class MySQLStore extends DataStore {
             } catch (SQLException ex) {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }
-       } else {
+        } else {
             try (PreparedStatement statement = connection.prepareStatement("SELECT value FROM " + dbprefix + fName + " WHERE variable=?;")) {
                 statement.setQueryTimeout(10);
                 statement.setString(1, key);
-    
+
                 try (ResultSet rs = statement.executeQuery()) {
-    
+
                     if (rs.next()) {
                         return true;
                     }
@@ -353,9 +350,9 @@ public class MySQLStore extends DataStore {
                 statement.setQueryTimeout(10);
                 statement.setString(1, section);
                 statement.setString(2, key);
-    
+
                 try (ResultSet rs = statement.executeQuery()) {
-    
+
                     if (rs.next()) {
                         result = rs.getString("value");
                     }
@@ -378,7 +375,7 @@ public class MySQLStore extends DataStore {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }
         }
-    
+
         return result;
     }
 
@@ -487,9 +484,11 @@ public class MySQLStore extends DataStore {
     private synchronized void incrAutoCommitCtr() {
         autoCommitCtr++;
     }
+
     private synchronized void decrAutoCommitCtr() {
         autoCommitCtr--;
     }
+
     private synchronized int getAutoCommitCtr() {
         return autoCommitCtr;
     }

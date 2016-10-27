@@ -16,8 +16,7 @@
  */
 package me.gloriouseggroll.quorrabot.musicplayer;
 
-public enum MusicPlayerState
-{
+public enum MusicPlayerState {
 
     NEW(-2),
     UNSTARTED(-1),
@@ -28,17 +27,13 @@ public enum MusicPlayerState
     CUED(5);
     public int i;
 
-    private MusicPlayerState(int i)
-    {
+    private MusicPlayerState(int i) {
         this.i = i;
     }
 
-    public static MusicPlayerState getStateFromId(int i)
-    {
-        for (MusicPlayerState mps : MusicPlayerState.values())
-        {
-            if (mps.i == i)
-            {
+    public static MusicPlayerState getStateFromId(int i) {
+        for (MusicPlayerState mps : MusicPlayerState.values()) {
+            if (mps.i == i) {
                 return mps;
             }
         }

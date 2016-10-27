@@ -16,18 +16,15 @@
  */
 package me.gloriouseggroll.quorrabot.event.console;
 
-public class ConsoleInputEvent extends ConsoleEvent
-{
+public class ConsoleInputEvent extends ConsoleEvent {
 
     String msg;
 
-    public ConsoleInputEvent(String msg)
-    {
+    public ConsoleInputEvent(String msg) {
         this.msg = msg;
     }
 
-    public String getMsg()
-    {
+    public String getMsg() {
         return msg;
     }
 }

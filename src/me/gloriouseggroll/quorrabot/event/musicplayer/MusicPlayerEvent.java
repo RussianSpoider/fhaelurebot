@@ -19,23 +19,19 @@ package me.gloriouseggroll.quorrabot.event.musicplayer;
 import me.gloriouseggroll.quorrabot.event.Event;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class MusicPlayerEvent extends Event
-{
+public class MusicPlayerEvent extends Event {
 
     private final Channel channel;
 
-    protected MusicPlayerEvent()
-    {
+    protected MusicPlayerEvent() {
         this.channel = null;
     }
 
-    protected MusicPlayerEvent(Channel channel)
-    {
+    protected MusicPlayerEvent(Channel channel) {
         this.channel = channel;
     }
 
-    public Channel getChannel()
-    {
+    public Channel getChannel() {
         return this.channel;
     }
 }

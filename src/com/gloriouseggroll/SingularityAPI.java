@@ -62,6 +62,7 @@ import org.json.JSONStringer;
  * @author Tom
  */
 public class SingularityAPI {
+
     private static final SingularityAPI instance = new SingularityAPI();
 
     private static final String apiURL = "https://singularity.gamewisp.com";
@@ -82,19 +83,19 @@ public class SingularityAPI {
     }
 
     public void StartService() {
-        
-        TrustManager[] trustAllCerts = new TrustManager[] {
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[] {};
+                    return new java.security.cert.X509Certificate[]{};
                 }
 
                 public void checkClientTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {
+                        String authType) throws CertificateException {
                 }
 
                 public void checkServerTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {
+                        String authType) throws CertificateException {
                 }
             }
         };
@@ -122,7 +123,7 @@ public class SingularityAPI {
                     JSONObject jsonObject = new JSONObject(args[0].toString());
                     com.gmt2001.Console.err.println("SingularityWS: Authorization Failed: " + jsonObject.getString("message"));
                     com.gmt2001.Console.err.println("Token: " + AccessToken + " Session ID: " + SessionID + " Client ID: " + gwIdentifier);
-                    
+
                 }
             });
 
@@ -190,7 +191,7 @@ public class SingularityAPI {
                     com.gmt2001.Console.out.println("SingularityWS: subscriber-anniversary received");
                     JSONObject jsonObject = new JSONObject(args[0].toString());
                     if (!jsonObject.has("data")) {
-                        return; 
+                        return;
                     }
                     if (!jsonObject.getJSONObject("data").has("subscriber")) {
                         return;
@@ -238,13 +239,15 @@ public class SingularityAPI {
             });
 
             /**
-             * Status Change Values: https://gamewisp.readme.io/docs/subscriber-new
-             * active - a currently active subscriber
-             * trial - a subscriber on a trial code
-             * grace_period - a canceled subscriber that is still received benefits
-             * billing_grace_period - a canceled subscriber still receiving benefits that was canceled due to a payment processing error
-             * inactive - a subscriber that is canceled and receiving no benefits
-             * twitch - a subscriber that is receiving free benefits from a partnered Twitch streamer.
+             * Status Change Values:
+             * https://gamewisp.readme.io/docs/subscriber-new active - a
+             * currently active subscriber trial - a subscriber on a trial code
+             * grace_period - a canceled subscriber that is still received
+             * benefits billing_grace_period - a canceled subscriber still
+             * receiving benefits that was canceled due to a payment processing
+             * error inactive - a subscriber that is canceled and receiving no
+             * benefits twitch - a subscriber that is receiving free benefits
+             * from a partnered Twitch streamer.
              */
             webSocket.on("subscriber-status-change", new Emitter.Listener() {
                 @Override
@@ -296,6 +299,7 @@ public class SingularityAPI {
     }
 
     private class NullHostnameVerifier implements HostnameVerifier {
+
         public boolean verify(String urlHostname, SSLSession sslSession) {
             return true;
         }

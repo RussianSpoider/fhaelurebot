@@ -20,15 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ScriptManager
-{
+public class ScriptManager {
 
     private static final HashMap<String, Script> scripts = new HashMap<>();
 
-    public static void loadScript(File scriptFile) throws IOException
-    {
-        if (scripts.containsKey(scriptFile.toPath().toString()) && !scripts.get(scriptFile.toPath().toString()).isKilled())
-        {
+    public static void loadScript(File scriptFile) throws IOException {
+        if (scripts.containsKey(scriptFile.toPath().toString()) && !scripts.get(scriptFile.toPath().toString()).isKilled()) {
             return;
         }
 
@@ -36,30 +33,24 @@ public class ScriptManager
         scripts.put(scriptFile.toPath().toString(), script);
         script.load();
     }
-    
-    public static void unloadScript(File scriptFile) throws IOException
-    {
-        if (scripts.containsKey(scriptFile.toPath().toString()) && !scripts.get(scriptFile.toPath().toString()).isKilled())
-        {
+
+    public static void unloadScript(File scriptFile) throws IOException {
+        if (scripts.containsKey(scriptFile.toPath().toString()) && !scripts.get(scriptFile.toPath().toString()).isKilled()) {
             scripts.remove(scriptFile.toPath().toString());
         }
     }
 
-    public static Script loadScriptR(File scriptFile) throws IOException
-    {
+    public static Script loadScriptR(File scriptFile) throws IOException {
         loadScript(scriptFile);
         return getScript(scriptFile);
     }
 
-    public static Script getScript(File scriptFile) throws IOException
-    {
-        if (!scripts.containsKey(scriptFile.toPath().toString()))
-        {
+    public static Script getScript(File scriptFile) throws IOException {
+        if (!scripts.containsKey(scriptFile.toPath().toString())) {
             return null;
         }
 
-        if (scripts.get(scriptFile.toPath().toString()).isKilled())
-        {
+        if (scripts.get(scriptFile.toPath().toString()).isKilled()) {
             scripts.remove(scriptFile.toPath().toString());
 
             return null;
@@ -68,8 +59,7 @@ public class ScriptManager
         return scripts.get(scriptFile.toPath().toString());
     }
 
-    public static HashMap<String, Script> getScripts()
-    {
+    public static HashMap<String, Script> getScripts() {
         return scripts;
     }
 }

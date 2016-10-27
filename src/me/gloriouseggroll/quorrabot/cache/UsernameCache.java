@@ -79,13 +79,13 @@ public class UsernameCache {
                         }
                         try {
                             throw new Exception("[HTTPErrorException] HTTP " + user.getInt("_http") + " " + user.getString("error") + ". req="
-                                                + user.getString("_type") + " " + user.getString("_url") + " " + user.getString("_post") + "   "
-                                                + (user.has("message") && !user.isNull("message") ? "message=" + user.getString("message") : "content=" + user.getString("_content")));
+                                    + user.getString("_type") + " " + user.getString("_url") + " " + user.getString("_post") + "   "
+                                    + (user.has("message") && !user.isNull("message") ? "message=" + user.getString("message") : "content=" + user.getString("_content")));
                         } catch (Exception e) {
-                              com.gmt2001.Console.debug.println("UsernameCache.updateCache: Failed to get username: " + e.getMessage());
-                              return username;
+                            com.gmt2001.Console.debug.println("UsernameCache.updateCache: Failed to get username: " + e.getMessage());
+                            return username;
                         }
-                        
+
                     }
                 } else {
                     if (user.getString("_exception").equalsIgnoreCase("SocketTimeoutException") || user.getString("_exception").equalsIgnoreCase("IOException")) {
@@ -112,7 +112,7 @@ public class UsernameCache {
                 com.gmt2001.Console.err.printStackTrace(e);
                 return username;
             }
-            
+
         }
     }
 

@@ -19,8 +19,8 @@ package me.gloriouseggroll.quorrabot.event.twitch.subscriber;
 import me.gloriouseggroll.quorrabot.event.twitch.TwitchEvent;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class TwitchSubscribesInitializedEvent extends TwitchEvent
-{
+public class TwitchSubscribesInitializedEvent extends TwitchEvent {
+
     public TwitchSubscribesInitializedEvent() {
     }
 

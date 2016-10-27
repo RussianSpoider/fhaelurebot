@@ -19,19 +19,16 @@ package me.gloriouseggroll.quorrabot.event.irc.channel;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
-public class IrcChannelJoinEvent extends IrcChannelEvent
-{
+public class IrcChannelJoinEvent extends IrcChannelEvent {
 
     private final String user;
 
-    public IrcChannelJoinEvent(Session session, Channel channel, String user)
-    {
+    public IrcChannelJoinEvent(Session session, Channel channel, String user) {
         super(session, channel);
         this.user = user;
     }
 
-    public String getUser()
-    {
+    public String getUser() {
         return user;
     }
 }

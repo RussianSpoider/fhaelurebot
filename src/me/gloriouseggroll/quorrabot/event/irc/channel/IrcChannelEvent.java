@@ -20,19 +20,16 @@ import me.gloriouseggroll.quorrabot.event.irc.IrcEvent;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
-public class IrcChannelEvent extends IrcEvent
-{
+public class IrcChannelEvent extends IrcEvent {
 
     private final Channel channel;
 
-    protected IrcChannelEvent(Session session, Channel channel)
-    {
+    protected IrcChannelEvent(Session session, Channel channel) {
         super(session);
         this.channel = channel;
     }
 
-    public Channel getChannel()
-    {
+    public Channel getChannel() {
         return channel;
     }
 }

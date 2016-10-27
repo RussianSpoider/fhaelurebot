@@ -19,26 +19,22 @@ package me.gloriouseggroll.quorrabot.event.irc.channel;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
-public class IrcChannelLeaveEvent extends IrcChannelEvent
-{
+public class IrcChannelLeaveEvent extends IrcChannelEvent {
 
     private final String user;
     private final String message;
 
-    public IrcChannelLeaveEvent(Session session, Channel channel, String user, String message)
-    {
+    public IrcChannelLeaveEvent(Session session, Channel channel, String user, String message) {
         super(session, channel);
         this.user = user;
         this.message = message;
     }
 
-    public String getUser()
-    {
+    public String getUser() {
         return user;
     }
 
-    public String getMessage()
-    {
+    public String getMessage() {
         return message;
     }
 }

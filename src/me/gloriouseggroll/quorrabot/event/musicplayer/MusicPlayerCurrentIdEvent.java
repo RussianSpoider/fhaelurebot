@@ -18,24 +18,20 @@ package me.gloriouseggroll.quorrabot.event.musicplayer;
 
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class MusicPlayerCurrentIdEvent extends MusicPlayerEvent
-{
+public class MusicPlayerCurrentIdEvent extends MusicPlayerEvent {
 
     private final String id;
 
-    public MusicPlayerCurrentIdEvent(String id)
-    {
+    public MusicPlayerCurrentIdEvent(String id) {
         this.id = id;
     }
 
-    public MusicPlayerCurrentIdEvent(String id, Channel channel)
-    {
+    public MusicPlayerCurrentIdEvent(String id, Channel channel) {
         super(channel);
         this.id = id;
     }
 
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
 }

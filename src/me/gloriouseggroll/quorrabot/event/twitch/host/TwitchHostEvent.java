@@ -19,8 +19,7 @@ package me.gloriouseggroll.quorrabot.event.twitch.host;
 import me.gloriouseggroll.quorrabot.event.twitch.TwitchEvent;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public abstract class TwitchHostEvent extends TwitchEvent
-{
+public abstract class TwitchHostEvent extends TwitchEvent {
 
     private final String hoster;
     private final Type type;
@@ -37,6 +36,7 @@ public abstract class TwitchHostEvent extends TwitchEvent
         this.type = type;
         this.users = 0;
     }
+
     protected TwitchHostEvent(String hoster, Type type, int users) {
         this.hoster = hoster;
         this.type = type;
@@ -49,6 +49,7 @@ public abstract class TwitchHostEvent extends TwitchEvent
         this.type = type;
         this.users = 0;
     }
+
     protected TwitchHostEvent(String hoster, Type type, int users, Channel channel) {
         super(channel);
         this.hoster = hoster;

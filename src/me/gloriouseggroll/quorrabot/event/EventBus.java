@@ -26,58 +26,48 @@ import java.util.concurrent.TimeUnit;
 
 import me.gloriouseggroll.quorrabot.Quorrabot;
 
-public class EventBus
-{
+public class EventBus {
 
     private static final EventBus instance = new EventBus();
 
-    public static EventBus instance()
-    {
+    public static EventBus instance() {
         return instance;
     }
-    
+
     /*public static ExecutorService newFixedThreadPoolWithQueueSize(int nThreads, int queueSize) {
            return new ThreadPoolExecutor(nThreads, nThreads,
                                          5000L, TimeUnit.MILLISECONDS,
                                          new ArrayBlockingQueue<Runnable>(queueSize, true), new ThreadPoolExecutor.CallerRunsPolicy());
     }*/
-    
-    
     //private final com.google.common.eventbus.AsyncEventBus aeventBus = new com.google.common.eventbus.AsyncEventBus(newFixedThreadPoolWithQueueSize(1,3), new ExceptionHandler());
     private final com.google.common.eventbus.EventBus aeventBus = new com.google.common.eventbus.EventBus(new ExceptionHandler());
-    
+
     //private final com.google.common.eventbus.AsyncEventBus aeventBus = new com.google.common.eventbus.AsyncEventBus(Executors.newFixedThreadPool(8), new ExceptionHandler());
     private final com.google.common.eventbus.EventBus eventBus = new com.google.common.eventbus.EventBus(new ExceptionHandler());
     private final Set<Listener> listeners = Sets.newHashSet();
 
-    public void register(Listener listener)
-    {
+    public void register(Listener listener) {
         listeners.add(listener);
         eventBus.register(listener);
         aeventBus.register(listener);
     }
 
-    public void unregister(Listener listener)
-    {
+    public void unregister(Listener listener) {
         listeners.remove(listener);
         eventBus.unregister(listener);
         aeventBus.unregister(listener);
     }
 
-    public void post(Event event)
-    {
-        if (Quorrabot.instance() == null || Quorrabot.instance().isExiting())
-        {
+    public void post(Event event) {
+        if (Quorrabot.instance() == null || Quorrabot.instance().isExiting()) {
             return;
         }
 
         eventBus.post(event);
     }
 
-    public void postAsync(Event event)
-    {
-        if (Quorrabot.instance() == null || Quorrabot.instance().isExiting())
-        {
+    public void postAsync(Event event) {
+        if (Quorrabot.instance() == null || Quorrabot.instance().isExiting()) {
             return;
         }
 

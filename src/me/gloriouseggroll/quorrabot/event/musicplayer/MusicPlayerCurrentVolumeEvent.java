@@ -18,24 +18,20 @@ package me.gloriouseggroll.quorrabot.event.musicplayer;
 
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class MusicPlayerCurrentVolumeEvent extends MusicPlayerEvent
-{
+public class MusicPlayerCurrentVolumeEvent extends MusicPlayerEvent {
 
     private final double volume;
 
-    public MusicPlayerCurrentVolumeEvent(double volume)
-    {
+    public MusicPlayerCurrentVolumeEvent(double volume) {
         this.volume = volume;
     }
 
-    public MusicPlayerCurrentVolumeEvent(double volume, Channel channel)
-    {
+    public MusicPlayerCurrentVolumeEvent(double volume, Channel channel) {
         super(channel);
         this.volume = volume;
     }
 
-    public double getVolume()
-    {
+    public double getVolume() {
         return volume;
     }
 }

@@ -19,7 +19,6 @@ package me.gloriouseggroll.quorrabot.event.twitch.follower;
 import me.gloriouseggroll.quorrabot.event.twitch.TwitchEvent;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-
 public abstract class TwitchFollowerEvent extends TwitchEvent {
 
     private final String follower;

@@ -19,11 +19,9 @@ package me.gloriouseggroll.quorrabot.event.irc.complete;
 import me.gloriouseggroll.quorrabot.event.irc.IrcEvent;
 import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
-public abstract class IrcCompleteEvent extends IrcEvent
-{
+public abstract class IrcCompleteEvent extends IrcEvent {
 
-    protected IrcCompleteEvent(Session session)
-    {
+    protected IrcCompleteEvent(Session session) {
         super(session);
     }
 }

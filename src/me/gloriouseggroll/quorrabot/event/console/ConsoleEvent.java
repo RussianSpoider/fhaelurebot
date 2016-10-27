@@ -18,6 +18,5 @@ package me.gloriouseggroll.quorrabot.event.console;
 
 import me.gloriouseggroll.quorrabot.event.Event;
 
-public class ConsoleEvent extends Event
-{
+public class ConsoleEvent extends Event {
 }

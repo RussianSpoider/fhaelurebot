@@ -4,18 +4,18 @@ var out = Packages.com.gmt2001.Console.out;
 
 var initscript = $script;
 
-isDirectory = function(path) {
+isDirectory = function (path) {
     try {
         var f = new java.io.File(path);
         return f.isDirectory();
     } catch (e) {
         return false;
-    }  
+    }
     return false;
 }
 
 
-if(!isDirectory("logs")) {
+if (!isDirectory("logs")) {
     var dir = new java.io.File("logs");
     dir.mkdir();
 }
@@ -84,7 +84,7 @@ $api.on($script, 'ircChannelUserMode', function (event) {
                                 $.println("Ready!");
                                 $.joinmsg = true;
                             }
-                        }    
+                        }
                     }
                     $.modeo = true;
                 } else {
@@ -558,21 +558,21 @@ $api.on($script, 'ircChannelJoinUpdate', function (event) {
     $.hook.call('ircChannelJoinUpdate', event, true);
 });
 
-$api.on($script, 'gameWispChange', function(event) {
+$api.on($script, 'gameWispChange', function (event) {
     $.hook.call('gameWispChange', event, false);
 });
 
-$api.on($script, 'gameWispBenefits', function(event) {
+$api.on($script, 'gameWispBenefits', function (event) {
     $.hook.call('gameWispBenefits', event, false);
 });
 
-$api.on($script, 'gameWispSubscribe', function(event) {
+$api.on($script, 'gameWispSubscribe', function (event) {
     $.hook.call('gameWispSubscribe', event, false);
 });
 
-$api.on($script, 'gameWispAnniversary', function(event) {
+$api.on($script, 'gameWispAnniversary', function (event) {
     $.hook.call('gameWispAnniversary', event, false);
-}); 
+});
 
 $api.on($script, 'ircPrivateMessage', function (event) {
     $.hook.call('ircPrivateMessage', event, false);
@@ -691,7 +691,7 @@ $api.on(initscript, 'command', function (event) {
     if (command.equalsIgnoreCase("helpcoolcom")) {
         $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.init.coolcom-help"));
     }
-    
+
     if (command.equalsIgnoreCase("coolcomuser")) {
         if (!$.isAdmin(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
@@ -787,7 +787,7 @@ $api.on(initscript, 'command', function (event) {
         $.connmgr.reconnectSession($.hostname);
         $.say($.lang.get("net.quorrabot.init.reconn"));
     }
-    
+
 
     if (command.equalsIgnoreCase("module")) {
         if (!$.isAdmin(sender)) {
@@ -909,7 +909,7 @@ $api.on(initscript, 'command', function (event) {
                     }
                 }
             }
-            
+
             if (args[0].equalsIgnoreCase("reload")) {
 
                 if (args[1].indexOf("./util/") != -1 || args[1].indexOf("./lang/") != -1) {
@@ -926,7 +926,7 @@ $api.on(initscript, 'command', function (event) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.init.module-reload", args[1]));
                 }
             }
-        
+
         }
     }
 });

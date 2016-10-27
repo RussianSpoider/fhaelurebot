@@ -78,7 +78,7 @@ public class Session {
      * @param  oAuth        OAUTH login
      * @param  Channel      Channel instance  
      * @param  eventBus     Eventbus
-     */ 
+     */
     private Session(Channel channel, String channelName, String botName, String oAuth, EventBus eventBus) {
         this.channelName = channelName.toLowerCase();
         this.eventBus = eventBus;
@@ -115,7 +115,7 @@ public class Session {
                 } catch (Exception ex) {
                     com.gmt2001.Console.err.println("Failed to reconnect to Twitch websocket chat... QuorraBot will now exit: " + ex.getMessage());
                     System.exit(0);
-                } 
+                }
             }
             try {
                 Thread.sleep(1000);
@@ -205,6 +205,7 @@ public class Session {
     public void close() {
         this.twitchIRC.delete();
     }
+
     public void close(String channelName) {
         this.twitchIRC.delete(channelName);
     }
@@ -277,7 +278,7 @@ public class Session {
         }
 
         Message message = session.sendQueue.poll();
-        if (message != null && sendMessages) { 
+        if (message != null && sendMessages) {
             twitchIRC.send("PRIVMSG #" + channelName + " :" + message.message);
             com.gmt2001.Console.out.println("[CHAT] " + message.message);
         }
@@ -288,7 +289,7 @@ public class Session {
      * @return  Channel      The related Channel object.
      */
     public Channel getChannel(String dummy) {
-        return this.channel; 
+        return this.channel;
     }
 
     /*
@@ -319,6 +320,7 @@ public class Session {
      *
      */
     class SendMsg extends TimerTask {
+
         @Override
         public void run() {
             sendWSMessages();
@@ -330,6 +332,7 @@ public class Session {
      *
      */
     class SendMsgAlternate extends TimerTask {
+
         @Override
         public void run() {
             sendWSMessagesAlternate();
@@ -341,14 +344,16 @@ public class Session {
      * does not send messages too quickly.
      */
     class Message {
+
         public String message;
 
         public Message(String message) {
             this.message = message;
         }
     }
-     
+
     class MessageTask extends TimerTask {
+
         private final Session session;
         private final double messageLimit = Quorrabot.getMessageInterval();
         private long lastMessage = 0;

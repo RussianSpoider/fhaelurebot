@@ -19,23 +19,19 @@ package me.gloriouseggroll.quorrabot.event.twitch;
 import me.gloriouseggroll.quorrabot.event.Event;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class TwitchEvent extends Event
-{
+public class TwitchEvent extends Event {
 
     private final Channel channel;
 
-    public TwitchEvent()
-    {
+    public TwitchEvent() {
         this.channel = null;
     }
 
-    public TwitchEvent(Channel channel)
-    {
+    public TwitchEvent(Channel channel) {
         this.channel = channel;
     }
 
-    public Channel getChannel()
-    {
+    public Channel getChannel() {
         return this.channel;
     }
 }

@@ -62,18 +62,18 @@ public class SoundBoard extends WebSocketServer {
     @Override
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
         wsSessionMap.put(genSessionKey(webSocket), new wsSession(false, true, webSocket));
-        com.gmt2001.Console.debug.println("SoundBoard: Connection from " + 
-                                          webSocket.getRemoteSocketAddress().getHostName() + 
-                                          ":" + webSocket.getRemoteSocketAddress().getPort());
+        com.gmt2001.Console.debug.println("SoundBoard: Connection from "
+                + webSocket.getRemoteSocketAddress().getHostName()
+                + ":" + webSocket.getRemoteSocketAddress().getPort());
 
     }
 
     @Override
     public void onClose(WebSocket webSocket, int i, String s, boolean b) {
         wsSessionMap.remove(genSessionKey(webSocket));
-        com.gmt2001.Console.debug.println("SoundBoard: Disconnection from " + 
-                                          webSocket.getRemoteSocketAddress().getHostName() + 
-                                          ":" + webSocket.getRemoteSocketAddress().getPort());
+        com.gmt2001.Console.debug.println("SoundBoard: Disconnection from "
+                + webSocket.getRemoteSocketAddress().getHostName()
+                + ":" + webSocket.getRemoteSocketAddress().getPort());
     }
 
     @Override
@@ -88,17 +88,17 @@ public class SoundBoard extends WebSocketServer {
 
     private void handleMessage(WebSocket webSocket, String jsonString) {
         JSONObject jsonObject;
-        JSONArray  jsonArray;
-        wsSession  sessionData;
-        Boolean    authenticated;
-        String     dataString;
-        String     uniqueID;
-        int        dataInt;
+        JSONArray jsonArray;
+        wsSession sessionData;
+        Boolean authenticated;
+        String dataString;
+        String uniqueID;
+        int dataInt;
 
         try {
             jsonObject = new JSONObject(jsonString);
         } catch (JSONException ex) {
-            com.gmt2001.Console.err.println("SoundBoard: Bad JSON passed ["+jsonString+"]");
+            com.gmt2001.Console.err.println("SoundBoard: Bad JSON passed [" + jsonString + "]");
             com.gmt2001.Console.err.printStackTrace(ex);
             return;
         } catch (Exception ex) {
@@ -135,7 +135,6 @@ public class SoundBoard extends WebSocketServer {
         }
 
         // debugMsg("PanelSocketServer::onMessage(" + jsonString + ")");
-
         try {
             if (jsonObject.has("command")) {
                 dataString = jsonObject.getString("command");
@@ -184,12 +183,12 @@ public class SoundBoard extends WebSocketServer {
             } else if (jsonObject.has("soundboard_hooks") && !sessionData.isReadOnly()) {
                 doSoundBoardsUpdate(jsonObject);
             } else {
-                com.gmt2001.Console.err.println("SoundBoard: Unknown JSON passed ["+jsonString+"]");
+                com.gmt2001.Console.err.println("SoundBoard: Unknown JSON passed [" + jsonString + "]");
                 return;
             }
         } catch (JSONException ex) {
             com.gmt2001.Console.err.println("SoundBoard::JSONException(" + ex.getMessage() + "): " + jsonString);
-        } 
+        }
     }
 
     @Override
@@ -238,13 +237,13 @@ public class SoundBoard extends WebSocketServer {
 
         jsonObject.object().key("versionresult").value(id).key("version").value(version).endObject();
         webSocket.send(jsonObject.toString());
-   }
+    }
 
     private void doDBQuery(WebSocket webSocket, String id, String table, String key) {
         JSONStringer jsonObject = new JSONStringer();
         String value = "";
 
-        try {  
+        try {
             value = Quorrabot.instance().getDataStore().GetString(table, "", key);
         } catch (NullPointerException ex) {
             if (!dbCallNull) {
@@ -366,7 +365,7 @@ public class SoundBoard extends WebSocketServer {
     public void alertImage(String imageInfo) {
         JSONStringer jsonObject = new JSONStringer();
         jsonObject.object().key("alert_image").value(imageInfo).endObject();
-        debugMsg("alertImage(" + imageInfo +")");
+        debugMsg("alertImage(" + imageInfo + ")");
         sendToAll(jsonObject.toString());
     }
 
@@ -404,7 +403,7 @@ public class SoundBoard extends WebSocketServer {
         if (value.equals(authUsername)) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -412,6 +411,7 @@ public class SoundBoard extends WebSocketServer {
     // Class for storing Session data.
     // -----------------------------------------------------------------------
     private class wsSession {
+
         Boolean authenticated;
         Boolean readonly;
         WebSocket webSocket;
@@ -425,6 +425,7 @@ public class SoundBoard extends WebSocketServer {
         public void setAuthenticated(Boolean authenticated) {
             this.authenticated = authenticated;
         }
+
         public Boolean isAuthenticated() {
             return authenticated;
         }
@@ -432,6 +433,7 @@ public class SoundBoard extends WebSocketServer {
         public void setReadOnly(Boolean readonly) {
             this.readonly = readonly;
         }
+
         public Boolean isReadOnly() {
             return readonly;
         }
@@ -439,6 +441,7 @@ public class SoundBoard extends WebSocketServer {
         public void setWebSocket(WebSocket webSocket) {
             this.webSocket = webSocket;
         }
+
         public WebSocket getWebSocket() {
             return webSocket;
         }
@@ -448,6 +451,7 @@ public class SoundBoard extends WebSocketServer {
     // Class for handling threads for the execution of received data.
     // -----------------------------------------------------------------------
     public class MessageRunnable implements Runnable {
+
         private WebSocket webSocket;
         private String jsonString;
 

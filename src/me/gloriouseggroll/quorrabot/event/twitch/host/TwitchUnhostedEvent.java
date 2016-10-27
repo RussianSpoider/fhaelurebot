@@ -18,8 +18,7 @@ package me.gloriouseggroll.quorrabot.event.twitch.host;
 
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class TwitchUnhostedEvent extends TwitchHostEvent
-{
+public class TwitchUnhostedEvent extends TwitchHostEvent {
 
     public TwitchUnhostedEvent(String hoster) {
         super(hoster, Type.UNHOST);

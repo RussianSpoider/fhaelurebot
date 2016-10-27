@@ -16,7 +16,6 @@
  */
 package me.gloriouseggroll.quorrabot;
 
-
 public class RepoVersion {
 
     private static final String quorraBotVersion = "@quorrabot.version@";
@@ -38,7 +37,7 @@ public class RepoVersion {
     public static String getNightlyBuild() {
         return nightlyBuild;
     }
-    
+
     public static String getTimeStamp() {
         return timeStamp;
     }

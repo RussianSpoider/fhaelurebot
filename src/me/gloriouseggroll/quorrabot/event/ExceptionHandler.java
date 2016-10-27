@@ -19,12 +19,10 @@ package me.gloriouseggroll.quorrabot.event;
 import com.google.common.eventbus.SubscriberExceptionContext;
 import com.google.common.eventbus.SubscriberExceptionHandler;
 
-public class ExceptionHandler implements SubscriberExceptionHandler
-{
+public class ExceptionHandler implements SubscriberExceptionHandler {
 
     @Override
-    public void handleException(Throwable thrwbl, SubscriberExceptionContext sec)
-    {
+    public void handleException(Throwable thrwbl, SubscriberExceptionContext sec) {
         com.gmt2001.Console.err.println("Failed to dispatch event " + sec.getEvent().toString() + " to " + sec.getSubscriberMethod().toString());
         com.gmt2001.Console.err.printStackTrace(thrwbl);
     }

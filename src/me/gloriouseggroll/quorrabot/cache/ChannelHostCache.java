@@ -173,8 +173,8 @@ public class ChannelHostCache implements Runnable {
             } else {
                 try {
                     throw new Exception("[HTTPErrorException] HTTP " + j.getInt("_http") + " " + j.getString("error") + ". req="
-                                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+                            + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                            + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
                 } catch (Exception e) {
                     com.gmt2001.Console.debug.println("ChannelHostCache.updateCache: Failed to update hosts: " + e.getMessage());
                 }

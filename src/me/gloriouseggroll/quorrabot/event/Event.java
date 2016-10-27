@@ -16,6 +16,5 @@
  */
 package me.gloriouseggroll.quorrabot.event;
 
-public class Event
-{
+public class Event {
 }

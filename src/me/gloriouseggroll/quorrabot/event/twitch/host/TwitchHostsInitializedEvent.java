@@ -19,8 +19,7 @@ package me.gloriouseggroll.quorrabot.event.twitch.host;
 import me.gloriouseggroll.quorrabot.event.twitch.TwitchEvent;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class TwitchHostsInitializedEvent extends TwitchEvent
-{
+public class TwitchHostsInitializedEvent extends TwitchEvent {
 
     public TwitchHostsInitializedEvent() {
     }

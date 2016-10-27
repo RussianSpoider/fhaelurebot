@@ -17,6 +17,7 @@
 package me.gloriouseggroll.quorrabot.event.gamewisp;
 
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
+
 /**
  *
  * @author Tom
@@ -47,7 +48,7 @@ public class GameWispAnniversaryEvent extends GameWispEvent {
     public int getMonths() {
         return months;
     }
-    
+
     public int getTier() {
         return tier;
     }

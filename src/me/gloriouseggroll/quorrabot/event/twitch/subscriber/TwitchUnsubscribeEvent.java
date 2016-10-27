@@ -18,8 +18,8 @@ package me.gloriouseggroll.quorrabot.event.twitch.subscriber;
 
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class TwitchUnsubscribeEvent extends TwitchSubscriberEvent
-{
+public class TwitchUnsubscribeEvent extends TwitchSubscriberEvent {
+
     public TwitchUnsubscribeEvent(String subscriber) {
         super(subscriber, Type.UNSUBSCRIBE);
     }

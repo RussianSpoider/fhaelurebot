@@ -19,33 +19,28 @@ package me.gloriouseggroll.quorrabot.event.irc.channel;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
-public class IrcChannelUserModeEvent extends IrcChannelEvent
-{
+public class IrcChannelUserModeEvent extends IrcChannelEvent {
 
     private final String user;
     private final String mode;
     private final Boolean add;
 
-    public IrcChannelUserModeEvent(Session session, Channel channel, String user, String mode, Boolean add)
-    {
+    public IrcChannelUserModeEvent(Session session, Channel channel, String user, String mode, Boolean add) {
         super(session, channel);
         this.user = user;
         this.mode = mode;
         this.add = add;
     }
 
-    public String getUser()
-    {
+    public String getUser() {
         return user;
     }
 
-    public String getMode()
-    {
+    public String getMode() {
         return mode;
     }
 
-    public Boolean getAdd()
-    {
+    public Boolean getAdd() {
         return add;
     }
 }

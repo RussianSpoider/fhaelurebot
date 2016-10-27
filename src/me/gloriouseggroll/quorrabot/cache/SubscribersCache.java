@@ -88,8 +88,8 @@ public class SubscribersCache implements Runnable {
                 return -1;
             } else {
                 throw new Exception("[HTTPErrorException] HTTP " + j.getInt("_http") + " " + j.getString("error") + ". req="
-                                    + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                                    + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
             }
         } else {
             throw new Exception("[" + j.getString("_exception") + "] " + j.getString("_exceptionMessage"));
@@ -125,11 +125,9 @@ public class SubscribersCache implements Runnable {
 
                         if (newCount == -1) {
                             run = false;
-                        } else {
-                            if (new Date().after(timeoutExpire) && newCount != this.count) {
-                                this.updateCache(newCount);
+                        } else if (new Date().after(timeoutExpire) && newCount != this.count) {
+                            this.updateCache(newCount);
 
-                            }
                         }
                     }
                 } catch (Exception e) {
@@ -187,8 +185,8 @@ public class SubscribersCache implements Runnable {
                         } else {
                             try {
                                 throw new Exception("[HTTPErrorException] HTTP " + j.getInt("_http") + " " + j.getString("error") + ". req="
-                                                    + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                                                    + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+                                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
                             } catch (Exception e) {
                                 com.gmt2001.Console.debug.println("SubscribersCache.updateCache: Failed to update subscribers: " + e.getMessage());
                             }

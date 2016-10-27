@@ -19,29 +19,24 @@ package me.gloriouseggroll.quorrabot.event.musicplayer;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 import me.gloriouseggroll.quorrabot.musicplayer.MusicPlayerState;
 
-public class MusicPlayerStateEvent extends MusicPlayerEvent
-{
+public class MusicPlayerStateEvent extends MusicPlayerEvent {
 
     private final MusicPlayerState state;
 
-    public MusicPlayerStateEvent(MusicPlayerState state)
-    {
+    public MusicPlayerStateEvent(MusicPlayerState state) {
         this.state = state;
     }
 
-    public MusicPlayerStateEvent(MusicPlayerState state, Channel channel)
-    {
+    public MusicPlayerStateEvent(MusicPlayerState state, Channel channel) {
         super(channel);
         this.state = state;
     }
 
-    public MusicPlayerState getState()
-    {
+    public MusicPlayerState getState() {
         return state;
     }
 
-    public int getStateId()
-    {
+    public int getStateId() {
         return state.i;
     }
 }

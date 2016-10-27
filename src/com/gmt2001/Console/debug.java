@@ -33,7 +33,7 @@ public class debug {
     public static debug instance() {
         return instance;
     }
-    
+
     private debug() {
     }
 
@@ -46,7 +46,7 @@ public class debug {
             String fileName = Thread.currentThread().getStackTrace()[2].getFileName();
             int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
 
-            stackInfo = "[" +  methodName + "()@" + fileName + ":" + lineNumber + "] ";
+            stackInfo = "[" + methodName + "()@" + fileName + ":" + lineNumber + "] ";
 
             Logger.instance().log(Logger.LogType.Debug, logTimestamp.log() + " " + stackInfo + o.toString());
             Logger.instance().log(Logger.LogType.Debug, "");
@@ -55,9 +55,9 @@ public class debug {
     }
 
     public static void println() {
-      if (Quorrabot.enableDebugging) {
-        System.out.println();
-      }
+        if (Quorrabot.enableDebugging) {
+            System.out.println();
+        }
     }
 
     public static void printlnRhino(Object o) {
@@ -80,7 +80,7 @@ public class debug {
             Logger.instance().log(Logger.LogType.Debug, logTimestamp.log() + " " + stackInfo + o.toString());
             Logger.instance().log(Logger.LogType.Debug, "");
 
-            stackInfo = "[" +  methodName + "()@" + fileName + ":" + lineNumber + "] ";
+            stackInfo = "[" + methodName + "()@" + fileName + ":" + lineNumber + "] ";
             System.out.println("[" + logTimestamp.log() + "] [DEBUG] " + stackInfo + o);
         }
     }
@@ -96,9 +96,9 @@ public class debug {
         if (Quorrabot.enableDebugging) {
             Writer trace = new StringWriter();
             PrintWriter ptrace = new PrintWriter(trace);
-    
+
             e.printStackTrace(ptrace);
-    
+
             Logger.instance().log(Logger.LogType.Debug, logTimestamp.log() + " " + trace.toString());
             Logger.instance().log(Logger.LogType.Debug, "");
         }

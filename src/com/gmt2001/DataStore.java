@@ -46,18 +46,15 @@ public class DataStore {
     }
 
     public String[] GetFileList() {
-        return new String[] {
-               };
+        return new String[]{};
     }
 
     public String[] GetCategoryList(String fName) {
-        return new String[] {
-               };
+        return new String[]{};
     }
 
     public String[] GetKeyList(String fName, String section) {
-        return new String[] {
-               };
+        return new String[]{};
     }
 
     public String GetString(String fName, String section, String key) {

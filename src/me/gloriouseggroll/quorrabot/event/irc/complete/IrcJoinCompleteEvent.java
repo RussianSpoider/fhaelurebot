@@ -19,24 +19,21 @@ package me.gloriouseggroll.quorrabot.event.irc.complete;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
-public class IrcJoinCompleteEvent extends IrcCompleteEvent
-{
+public class IrcJoinCompleteEvent extends IrcCompleteEvent {
 
     private final Channel channel;
     public String sessionName = "";
 
-    public IrcJoinCompleteEvent(Session session, Channel channel)
-    {
+    public IrcJoinCompleteEvent(Session session, Channel channel) {
         super(session);
         this.channel = channel;
     }
 
-    public Channel getChannel()
-    {
+    public Channel getChannel() {
         return channel;
     }
-    public String getSessionName()
-    {
+
+    public String getSessionName() {
         return sessionName;
     }
 }

@@ -18,15 +18,16 @@ package me.gloriouseggroll.quorrabot.event.twitch.host;
 
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-public class TwitchHostedEvent extends TwitchHostEvent
-{
+public class TwitchHostedEvent extends TwitchHostEvent {
 
     public TwitchHostedEvent(String hoster) {
         super(hoster, Type.HOST);
     }
+
     public TwitchHostedEvent(String hoster, int users) {
         super(hoster, Type.HOST, users);
     }
+
     public TwitchHostedEvent(String hoster, Channel channel) {
         super(hoster, Type.HOST, 0, channel);
     }

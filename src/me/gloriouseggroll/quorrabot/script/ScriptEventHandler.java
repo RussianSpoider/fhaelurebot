@@ -18,8 +18,7 @@ package me.gloriouseggroll.quorrabot.script;
 
 import me.gloriouseggroll.quorrabot.event.Event;
 
-public interface ScriptEventHandler
-{
+public interface ScriptEventHandler {
 
     public void handle(Event event);
 }

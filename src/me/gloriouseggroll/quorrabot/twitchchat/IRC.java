@@ -43,7 +43,6 @@ import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
-
 public class IRC extends WebSocketClient {
 
     private static final Map<String, IRC> instances = Maps.newHashMap();
@@ -106,6 +105,7 @@ public class IRC extends WebSocketClient {
             this.close();
         }
     }
+
     public void delete() {
         if (instances.containsKey(this.channelName)) {
             instances.remove(this.channelName);
@@ -139,7 +139,7 @@ public class IRC extends WebSocketClient {
             return false;
         }
     }
-     
+
     /*
      * Callback for connection opening to WS-IRC.  Calls send() directly to login to Twitch
      * IRC rather than sendAddQueue().
@@ -178,7 +178,7 @@ public class IRC extends WebSocketClient {
         if (message.startsWith("PING")) {
             sendPong();
         }
-        
+
         if (message.startsWith(":") || message.startsWith("@")) {
             try {
                 MessageRunnable messageRunnable = new MessageRunnable(message);
@@ -209,9 +209,11 @@ public class IRC extends WebSocketClient {
     }
 
     /**
-     * Class for starting threads to handling incoming messages (other than PING)
+     * Class for starting threads to handling incoming messages (other than
+     * PING)
      */
     private class MessageRunnable implements Runnable {
+
         private String message;
 
         public MessageRunnable(String message) {
@@ -223,4 +225,3 @@ public class IRC extends WebSocketClient {
         }
     }
 }
-
