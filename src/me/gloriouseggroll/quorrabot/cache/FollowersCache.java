@@ -165,20 +165,6 @@ public class FollowersCache implements Runnable {
                          * int newCount =
                          */
                         quickUpdate(channel);
-
-                        /*
-                         * if (new Date().after(timeoutExpire) &&
-                         * (Math.abs(newCount - count) > 30 || firstUpdate ||
-                         * new Date().after(nextFull))) {
-                         * this.updateCache(newCount); }
-                         */
-
-                        /*
-                         * if (firstUpdate) { firstUpdate = false;
-                         * EventBus.instance().post(new
-                         * TwitchFollowsInitializedEvent(PhantomBot.getChannel(this.channel)));
-                         * }
-                         */
                     }
                 } catch (Exception e) {
                     if (e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) {

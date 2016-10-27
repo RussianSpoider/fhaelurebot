@@ -43,15 +43,6 @@ public class Session {
     private int chatLineCtr = 0;
     private Long lastTry = 0L;
 
-    /*
-     * Creates an instance for a Session
-     *
-     * @param  botName  The name of the PhantomBot instance
-     * @param  botName      Botname and name of the instance
-     * @param  oAuth        OAUTH login
-     * @param  Channel      Channel instance  
-     * @param  eventBus     Eventbus
-     */
     public static Session instance(Channel channel, String channelName, String botName, String oAuth, EventBus eventBus) {
         Session instance = instances.get(botName);
         if (instance == null) {
@@ -83,11 +74,11 @@ public class Session {
         try {
             this.twitchIRC = IRC.instance(new URI("wss://irc-ws.chat.twitch.tv"), channelName, botName, oAuth, channel, this, eventBus);
             if (!twitchIRC.connectWSS(false)) {
-                com.gmt2001.Console.err.println("Unable to login to Twitch. PhantomBot will exit.");
+                com.gmt2001.Console.err.println("Unable to login to Twitch. QuorraBot will exit.");
                 System.exit(0);
             }
         } catch (Exception ex) {
-            com.gmt2001.Console.err.println("TwitchWSIRC URI Failed, PhantomBot will exit: " + ex.getMessage());
+            com.gmt2001.Console.err.println("Twitch websocket chat connection Failed, QuorraBot will exit: " + ex.getMessage());
             System.exit(0);
         }
     }
@@ -106,7 +97,7 @@ public class Session {
                     this.twitchIRC = twitchIRC.instance(new URI("wss://irc-ws.chat.twitch.tv"), channelName, botName, oAuth, channel, this, eventBus);
                     reconnected = this.twitchIRC.connectWSS(true);
                 } catch (Exception ex) {
-                    com.gmt2001.Console.err.println("Failed to reconnect to TwitchWSIRC... PhantomBot will now exit: " + ex.getMessage());
+                    com.gmt2001.Console.err.println("Failed to reconnect to Twitch websocket chat... QuorraBot will now exit: " + ex.getMessage());
                     System.exit(0);
                 } 
             }
@@ -160,7 +151,7 @@ public class Session {
     /*
      * Returns the IRC Nick (login) for this Session.
      *
-     * @return  String  The name of the PhantomBot instance, also the Twitch login ID.
+     * @return  String  The name of the QuorraBot instance, also the Twitch login ID.
      */
     public String getNick() {
         return this.botName.toLowerCase();
@@ -330,7 +321,7 @@ public class Session {
     }
 
 
-    /* Message Throttling.  The following classes implement timers which work to ensure that PhantomBot
+    /* Message Throttling.  The following classes implement timers which work to ensure that QuorraBot
      * does not send messages too quickly.
      */
     class Message {

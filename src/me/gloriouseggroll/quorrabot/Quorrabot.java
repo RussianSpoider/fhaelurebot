@@ -500,6 +500,7 @@ public class Quorrabot implements Listener
             }
             webenabled = true;
             httpserver.start();
+            com.gmt2001.Console.out.println("HTTPServer accepting connections on port " + baseport);
             
             if (musicenable)
             {
