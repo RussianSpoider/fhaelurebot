@@ -1,76 +1,19 @@
-
-/* Websocket accepts the following JSON data from the Panel Interface
+/* 
+ * Copyright (C) 2016 www.quorrabot.com
  *
- * Please take note of the "id" field with the "unique_id" value. There is
- * no guarantee that a call to the websocket will result in an immediate
- * reply to the Panel Interface. As such, a unique ID must be generated for 
- * each request and is part of every reply.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * // Authenticate
- * { "authenticate : "authentication_key" }
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * // Get Version
- * { "version" : "unique_id" }
- *
- * // Send command - if username is not provided, defaults to the botname.
- * { "command" : "command line", "username" : "user name" }
- *
- * // Query DB
- * { "dbquery" : "query_id", "query" : { "table" : "table_name", "key" : "key_name" } }
- *
- * // Query DB keys and values
- * { "dbkeys" : "query_id", "query" : { "table" : "table_name"  } }
- *
- * // Update DB
- * { "dbupdate" : "query_id", "update" : { "table" : "table_name", "key" : "key_name", "value" : "new_value" } }
- *
- * // Increment data in DB
- * { "dbincr" : "query_id", "incr" : { "table" : "table_name", "key" : "key_name", "value" : "incr_value" } }
- *
- * // Decrement data in DB
- * { "dbdecr" : "query_id", "decr" : { "table" : "table_name", "key" : "key_name", "value" : "decr_value" } }
- *
- * // Delete from DB
- * { "dbdelkey" : "query_id", "delkey" : { "table" : "table_name", "key" : "key_name" } }
- *
- * // Replace the Audio Hooks DB Entries
- * { "soundboard_hooks" : [ "name" : "audio hook name", "desc" : "audio hook description" ] }
- * 
- * ---------------------------------------------------------------------------
- *
- * Websocket pushes the following to the Panel Interface
- *
- * // Return authorization result.
- * { "authresult" : true/false }
- *
- * // Return Version
- * { "versionresult" : "unique_id", "version" : "core version (repo version)" }
- *
- * // Return DB query. Returns "error" key only if error occurred.
- * { "query_id" : "query_id", "results" :  { "table" : "table_name", "key_name" : "value" } }
- * { "query_id" : "query_id", "error" : "error" } 
- *
- * // Return DB keylist. Returns "error" key only if error occurred.
- * { "query_id" : "query_id", "results" : { [ "table" : "table_name", "key" : "key_name", "value" : "value" ] } }
- * { "query_id" : "query_id", "error" : "error" }
- *
- * // Return when DB has been updated.
- * { "query_id" : "query_id" }
- *
- * // Return when DB key has been deleted.
- * { "query_id" : "query_id" }
- *
- * // Request an audio byte to play.
- * { "soundboard_hook" : "audio hook name" }
- *
- * // Request an alert image to be displayed.
- * { "alert_image" : "filename[,duration_in_seconds]" }
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/*
- * @author: IllusionaryOne
- */
-
 package com.gloriouseggroll;
 
 import java.io.IOException;
