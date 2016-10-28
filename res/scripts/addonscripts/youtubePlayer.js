@@ -747,6 +747,7 @@ $.on('command', function (event) {
             if (name == $var.songqueue[i].song.getId() || $var.songqueue[i].song.getName().toLowerCase().contains(name.toLowerCase())) {
                 if ($var.songqueue[i].user == username || $.isModv3(sender, event.getTags())) {
                     $.say($.lang.get("net.quorrabot.musicplayer.del-song-success", $var.songqueue[i].song.getName(), username.toLowerCase()));
+                    $var.requestusers[$var.songqueue[i].user]-=1;
                     $var.songqueue.splice(i, 1);
                     $.parseSongQueue();
                     return;
