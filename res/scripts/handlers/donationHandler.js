@@ -111,7 +111,7 @@ $.on('command', function (event) {
 setTimeout(function(){ 
     if ($.moduleEnabled("./handlers/donationHandler.js")) {
         $.timer.addTimer("./handlers/donationHandler.js", "currdonation", true, function() {
-            if($.DonationHandler.DonationToggle != 1 || !$.isOnline($.channelName)) {
+            if($.DonationHandler.DonationToggle != 1 /*|| !$.isOnline($.channelName)*/) {
                 return;
             }
             if(!$.readFile($.DonationHandler.CheckerStorePath)) {
@@ -130,11 +130,9 @@ setTimeout(function(){
                 if($.DonationHandler.DonationType=="tipeeestream") {
                     $.tadata = $.donationhandler.tpeGetChannelDonations();
                 }
-                
                 if($.tadata[0]=="" | $.tadata[1]=="" | $.tadata[3]=="" | $.tadata==null) {
                     return;
                 }
-                
                 $.tadonator = $.tadata[0];
                 $.taamount = $.tadata[1];
                 $.tamsg = $.tadata[2];
