@@ -1009,3 +1009,4 @@ $.lang.data["net.quorrabot.consolecommand.consolemessage"] = "(caster) is curren
 $.lang.data["net.quorrabot.consolecommand.consolemsg-set"] = "The current console message has been set to $1.";
 $.lang.data["net.quorrabot.consolecommand.console-set"] = "The current console being used has been set to $1";
 $.lang.data["net.quorrabot.consolecommand.console-others-set"] = "The streamer's additional consoles have been set to: $1";
+$.lang.data["net.quorrabot.consolecommand.console-others-clear"] = "The streamer's additional consoles list has been cleared.";

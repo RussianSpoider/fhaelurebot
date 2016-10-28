@@ -65,15 +65,17 @@ $.on('command', function (event) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.consolecommand.console-others-set", $.ConsoleCommand.ConsolesList));
                     return;
                 }
+                
             }
-            var console = "";
-            if (args[0].contains("360")) {
-                console = "Xbox 360";
-            } else if (args[0].equalsIgnoreCase("xb1") || args[0].equalsIgnoreCase("xbone") || args[0].equalsIgnoreCase("xbox one") || args[0].equalsIgnoreCase("xbox")) {
-                console = "Xbox";
-            } else {
-                console = args[0];
-            }
+                if (args[0].equalsIgnoreCase("listclear")) {
+                    for (var i = 1; i < args.length; i++) {
+                        $.inidb.del("console", "console_" + i.toString());
+                    }
+                    $.getOtherConsoles();
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.consolecommand.console-others-clear"));
+                    return;
+               }
+            console = args[0];
             $.inidb.set("console", "current_console", console);
             $.ConsoleCommand.CurrentConsole = console;
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.consolecommand.console-set", console));
