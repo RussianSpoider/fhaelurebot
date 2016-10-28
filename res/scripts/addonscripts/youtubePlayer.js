@@ -180,7 +180,11 @@ function RequestedSong(song, user) {
 
 
 $.parseDefault = function parseDefault() {
-    
+    if ($.fileExists("./addons/youtubePlayer/playlist.txt")) {
+        $var.defaultplaylist = $.readFile("./addons/youtubePlayer/playlist.txt");
+    } else if ($.fileExists("./addons/youtubePlayer/default.txt")) {
+        $var.defaultplaylist = $.readFile("./addons/youtubePlayer/default.txt");
+    }
     if($var.defaultplaylist.length > 0  && $.storing==1) {
         $.println("Parsing default playlist, please wait...");
         $.writeToFile("",$.storepath + "default.html", false);
