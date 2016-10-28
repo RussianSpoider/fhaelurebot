@@ -111,7 +111,7 @@ $.on('command', function (event) {
 setTimeout(function(){ 
     if ($.moduleEnabled("./handlers/donationHandler.js")) {
         $.timer.addTimer("./handlers/donationHandler.js", "currdonation", true, function() {
-            if($.DonationHandler.DonationToggle != 1 /*|| !$.isOnline($.channelName)*/) {
+            if($.DonationHandler.DonationToggle != 1 || !$.isOnline($.channelName)) {
                 return;
             }
             if(!$.readFile($.DonationHandler.CheckerStorePath)) {
