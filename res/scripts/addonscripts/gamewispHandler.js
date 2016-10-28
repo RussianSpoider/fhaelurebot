@@ -24,23 +24,6 @@ $.on('gameWispSubscribe', function(event) {
             tier = parseInt(event.getTier());
 
             $.inidb.set('gwsubslist', username, '1');
-        
-        //log gw subs count
-        if(!$.inidb.exists("gwsubscount",username)) {
-            $.inidb.set("gwsubscount",username, '1');
-        } else {
-            var gwsubcount = parseInt($.inidb.get("gwsubscount", username));
-            gwmonths += gwsubcount;
-            $.inidb.set("gwsubscount",username, gwmonths);
-        }
-        
-        if(!$.inidb.exists("subscount",username)) {
-            $.inidb.set("subscount",username, '1');
-        } else {
-            var subcount = parseInt($.inidb.get("subscount", username));
-            months += subcount;
-            $.inidb.set("subscount",username, months);
-        }
 
         if ($.SubscribeHandler.SubReward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
             $.inidb.incr('points', username, $.SubscribeHandler.SubReward);
@@ -64,23 +47,6 @@ $.on('gameWispAnniversary', function(event) {
             tier = parseInt(event.getTier());
         
         $.inidb.set('gwsubslist', username, '1');
-        
-        //log gw subs count
-        if(!$.inidb.exists("gwsubscount",username)) {
-            $.inidb.set("gwsubscount",username, '1');
-        } else {
-            var gwsubcount = parseInt($.inidb.get("gwsubscount", username));
-            gwmonths += gwsubcount;
-            $.inidb.set("gwsubscount",username, gwmonths);
-        }
-        
-        if(!$.inidb.exists("subscount",username)) {
-            $.inidb.set("subscount",username, '1');
-        } else {
-            var subcount = parseInt($.inidb.get("subscount", username));
-            months += subcount;
-            $.inidb.set("subscount",username, months);
-        }
         
         if ($.SubscribeHandler.SubReward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
             $.inidb.incr('points', username, $.SubscribeHandler.SubReward);
