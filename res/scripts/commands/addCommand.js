@@ -302,7 +302,7 @@ $.on('command', function (event) {
         if (messageCommand.contains('(touser)')) {
             if(args.length > 0) {
                 if(args[0].contains('@')) {
-                    args[0] = args[0].substring(args[0].indexOf('@') +1, args[0].length());
+                    args[0] = args[0].substring(args[0].indexOf('@') +1);
                 }
                 messageCommand = $.replaceAll(messageCommand, '(touser)', $.username.resolve(args[0]));
             } else {
@@ -455,7 +455,7 @@ $.urlEncode = function(message, argsString) {
             urlencodeportion = '(urlencode $1)';
             encodedurl = encoder.encode(argsString);
         } else {
-            var urlencodestart = message.substring(message.indexOf("(urlencode "),message.length());
+            var urlencodestart = message.substring(message.indexOf("(urlencode "));
             urlencodeportion = message.substring(message.indexOf("(urlencode "),urlencodestart.indexOf(")"));
             encodedurl = encoder.encode(urlencodestart.substring(urlencodestart.indexOf(" " + 1), urlencodestart.indexOf(")")));
         }
@@ -493,7 +493,7 @@ $.customAPI = function(message, command, args, sender) {
 
         $.customAPIParseArgs = function(regExCheck) {
             if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
-                var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1,message.length());
+                var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1);
                 args = mArgsString.split(" ");
             }
             

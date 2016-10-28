@@ -292,7 +292,8 @@ public class IRCParser {
         /* Check to see if the user is subscribing to the channel */
         if (message.endsWith("subscribed!") || message.endsWith("Prime!")) {
             if (username.equalsIgnoreCase("twitchnotify")) {
-                eventBus.post(new IrcPrivateMessageEvent(this.session, "twitchnotify", message.split(" ")[0] + " just subscribed!", tagsMap));
+                message = message.split(" ")[0] + " just subscribed!";
+                //eventBus.post(new IrcPrivateMessageEvent(this.session, "twitchnotify", message.split(" ")[0] + " just subscribed!", tagsMap));
                 com.gmt2001.Console.debug.println(message.split(" ")[0] + " just subscribed!");
             }
         }

@@ -660,13 +660,6 @@ $.loadScript('./util/chatModerator.js');
 
 $.loadScriptsRecursive(".");
 
-$api.on(initscript, 'ircChannelMessage', function (event) {
-    var sender = event.getSender();
-    var username = $.username.resolve(sender, event.getTags());
-    var message = event.getMessage();
-
-    println(username + ": " + message);
-});
 
 $api.on(initscript, 'command', function (event) {
     var sender = event.getSender();

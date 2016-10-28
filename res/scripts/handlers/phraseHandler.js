@@ -55,7 +55,7 @@ $.on('command', function (event) {
             response = response.replace('”','"');
             response = response.substring(response.indexOf('" "') + 3, response.length() -1);
         } else {
-            response = argsString.substring(args[0].length() + 1,argsString.length());
+            response = argsString.substring(args[0].length() + 1);
         }
          
         $.inidb.set('phrases', triggerphrase, response);

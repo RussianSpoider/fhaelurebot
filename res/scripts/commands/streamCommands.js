@@ -54,7 +54,7 @@ $.getUptime = function(channel) {
             var inset = 6;
             var s0 = createdAt.substring( 0, createdAt.length() - inset );
             //$.say(s0);
-            var s1 = createdAt.substring( createdAt.length() - inset, createdAt.length() );
+            var s1 = createdAt.substring( createdAt.length() - inset );
             //$.say(s1);
             createdAt = s0 + "GMT" + s1;     
     }
@@ -95,7 +95,7 @@ $.getHighlight = function(channel) {
             var inset = 6;
             var s0 = createdAt.substring( 0, createdAt.length() - inset );
             //$.say(s0);
-            var s1 = createdAt.substring( createdAt.length() - inset, createdAt.length() );
+            var s1 = createdAt.substring( createdAt.length() - inset );
             //$.say(s1);
             createdAt = s0 + "GMT" + s1;     
     }

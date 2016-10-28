@@ -149,7 +149,7 @@ setTimeout(function(){
                 } else {
                     var inset = 6;
                     var s0 = $.tacreated.substring( 0, $.tacreated.length() - inset );
-                    var s1 = $.tacreated.substring( $.tacreated.length() - inset, $.tacreated.length() );
+                    var s1 = $.tacreated.substring( $.tacreated.length() - inset );
                     $.tacreated = s0 + "GMT" + s1;     
                 }
 

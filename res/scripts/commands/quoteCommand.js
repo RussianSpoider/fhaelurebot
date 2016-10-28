@@ -102,7 +102,7 @@ $.on('command', function (event) {
             }
             var message = "";
             if(argsString.contains(" ")) {
-                message = argsString.substring(argsString.indexOf(argsString.split(" ")[1]), argsString.length());
+                message = argsString.substring(argsString.indexOf(argsString.split(" ")[1]));
             }
             $.inidb.set('quotes', 'quote_' + $.QuoteCommand.getTotalQuotes, message + quoteInfo);
             $.QuoteCommand.getTotalQuotes++;
@@ -184,7 +184,7 @@ $.on('command', function (event) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.editquote-error"));
                 return;
             }
-            var messageEdit = argsString.substring(argsString.indexOf(args[2]) - 1, argsString.length());
+            var messageEdit = argsString.substring(argsString.indexOf(args[2]) - 1);
             $.inidb.set('quotes', 'quote_' + parseInt(args[1]), messageEdit + quoteInfo);
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.quotecommand.editquote-success", (parseInt(args[1]) + 1), messageEdit));
             return;

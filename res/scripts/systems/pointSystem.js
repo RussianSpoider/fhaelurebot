@@ -420,7 +420,7 @@ $.on('command', function (event) {
                 if (args[2] != null) {
                     //var secondArgString = args[2].toString();
                     var argsString = event.getArguments().trim();
-                    var secondArgString = argsString.substring(argsString.indexOf(args[2].toString()), argsString.length());
+                    var secondArgString = argsString.substring(argsString.indexOf(args[2].toString()));
                 }
 
                 if (args[1] == null) {

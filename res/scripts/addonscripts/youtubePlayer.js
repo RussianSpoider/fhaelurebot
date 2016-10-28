@@ -426,7 +426,7 @@ $.on('command', function (event) {
     var argsString = event.getArguments().trim();
     var argsString2 = "";
     if(argsString.contains(" ")) {
-        argsString2 = argsString.substring(argsString.indexOf(argsString.split(" ")[1]), argsString.length());
+        argsString2 = argsString.substring(argsString.indexOf(argsString.split(" ")[1]));
     }
     var args;
     var song;
@@ -609,7 +609,7 @@ $.on('command', function (event) {
                 return;
             }
             if(args[1]!=null) {
-                $.currsongfile = argsString.substring(argsString.indexOf(args[1]), argsString.length());
+                $.currsongfile = argsString.substring(argsString.indexOf(args[1]));
             }
             
             $.inidb.set('settings','currsongfile', $.currsongfile);

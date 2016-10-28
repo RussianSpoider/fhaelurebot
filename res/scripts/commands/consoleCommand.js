@@ -17,7 +17,7 @@ $.getOtherConsoles = function () {
             }
         }
     }
-    if ($.ConsoleCommand.ConsolesList.substring($.ConsoleCommand.ConsolesList.length - 1, $.ConsoleCommand.ConsolesList.length) == " ") {
+    if ($.ConsoleCommand.ConsolesList.substring($.ConsoleCommand.ConsolesList.length - 1) == " ") {
         $.ConsoleCommand.ConsolesList = $.ConsoleCommand.ConsolesList.substring(0, $.ConsoleCommand.ConsolesList.length - 1);
     }
 };

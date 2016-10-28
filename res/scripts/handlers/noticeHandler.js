@@ -305,7 +305,7 @@ $.startTimer = function(id) {
 
 if ($.Notice.NumberOfNotices > 0 && $.Notice.NoticeToggle=="true") {
     for(var i=0;i<$.Notice.NoticeTimers.length;i++) {
-        var nId = $.Notice.NoticeTimers[i].substring($.Notice.NoticeTimers[i].indexOf("message_") + 8, $.Notice.NoticeTimers[i].length());
+        var nId = $.Notice.NoticeTimers[i].substring($.Notice.NoticeTimers[i].indexOf("message_") + 8);
         $.startTimer(nId);
     }
 }

@@ -640,14 +640,6 @@ public class Quorrabot implements Listener {
         Script.global.defineProperty("subscribers", this.subscribersCache, 0);
         Script.global.defineProperty("channelUsers", this.channelUsersCache, 0);
 
-        /**
-         * Make all these to null because they are useless with multiple
-         * channels
-         */
-        this.followersCache = null;
-        this.hostCache = null;
-        this.subscribersCache = null;
-        this.channelUsersCache = null;
     }
 
     @Subscribe

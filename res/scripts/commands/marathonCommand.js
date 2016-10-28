@@ -211,8 +211,8 @@ $.on('command', function(event) {
                     if (subcommand.equalsIgnoreCase("delete") || subcommand.equalsIgnoreCase("remove")) {
                         var keys = $.inidb.GetKeyList("marathon", "");
                         
-                        dateS = data.substring(data.split(" ")[0]);
-                        timeS = data.substring(data.split(" ")[1]);
+                        dateS = data.substring(data.indexOf(data.split(" ")[0]));
+                        timeS = data.substring(data.indexOf(data.split(" ")[1]));
                     
                         if (!isNaN(dateS.substring(0, dateS.indexOf("/")))) {
                             month = java.lang.Integer.parseInt(dateS.substring(0, dateS.indexOf("/"))) - 1;

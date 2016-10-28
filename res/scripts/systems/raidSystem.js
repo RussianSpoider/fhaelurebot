@@ -52,14 +52,14 @@ $.on('command', function(event) {
                     
                     for (var i = 0; i < parseInt(args[1]); i++) {
                         if(args[2] != null) {
-                            $.say($.lang.get("net.quorrabot.raidsystem.raid-success", args[0].toLowerCase(), argsString.substring(argsString.indexOf(args[2].toString()), argsString.length())));
+                            $.say($.lang.get("net.quorrabot.raidsystem.raid-success", args[0].toLowerCase(), argsString.substring(argsString.indexOf(args[2].toString()))));
                         } else {
                             $.say($.lang.get("net.quorrabot.raidsystem.raid-success", args[0].toLowerCase(), ""));                                
                         }
                     }
                     return;
                 } else {
-                    $.say($.lang.get("net.quorrabot.raidsystem.raid-success", args[0].toLowerCase(), argsString.substring(argsString.indexOf(args[1].toString()), argsString.length())));
+                    $.say($.lang.get("net.quorrabot.raidsystem.raid-success", args[0].toLowerCase(), argsString.substring(argsString.indexOf(args[1].toString()))));
                     return;
                 }
             }

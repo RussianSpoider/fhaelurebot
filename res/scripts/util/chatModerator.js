@@ -209,7 +209,7 @@ $.on('command', function(event) {
     var found;
     var phrase = "";
     if(argsString.contains(" ")) {
-        phrase = argsString.substring(argsString.indexOf(argsString.split(" ")[1]), argsString.length());
+        phrase = argsString.substring(argsString.indexOf(argsString.split(" ")[1]));
     }
     if (command.equalsIgnoreCase("chat") && username.equalsIgnoreCase($.botname)) {
         $.say(argsString);

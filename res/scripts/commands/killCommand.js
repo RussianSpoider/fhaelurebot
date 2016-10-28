@@ -7,7 +7,7 @@ $.on('command', function (event) {
     var argsString = event.getArguments().trim();
     var argsString2 = "";
     if(argsString.contains(" ")) {
-        argsString2 = argsString.substring(argsString.indexOf(argsString.split(" ")[1]), argsString.length());
+        argsString2 = argsString.substring(argsString.indexOf(argsString.split(" ")[1]));
     }
     var args = event.getArgs();
     var num_kills = parseInt($.inidb.get("kills", "num_kills"));
