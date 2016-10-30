@@ -81,7 +81,7 @@ $api.on($script, 'ircChannelUserMode', function (event) {
                                 $.say(connectedMessage);
                                 $.joinmsg = true;
                             } else {
-                                $.println("Ready!");
+                                $.println($.username.resolve($.botname) +  " is now online.");
                                 $.joinmsg = true;
                             }
                         }
@@ -552,6 +552,10 @@ $api.on($script, 'ircChannelUserMode', function (event) {
 
 $api.on($script, 'ircConnectComplete', function (event) {
     $.hook.call('ircConnectComplete', event, true);
+});
+
+$api.on($script, 'ircJoinComplete', function (event) {
+    $.hook.call('ircJoinComplete', event, true);
 });
 
 $api.on($script, 'ircChannelJoinUpdate', function (event) {

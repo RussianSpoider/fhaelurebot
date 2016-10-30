@@ -181,7 +181,7 @@ if(keys!=null || keys!="" || keys!=undefined) {
     while(kl < keys.length) {
         if ($.inidb.get('subscribed', keys[i])!=null) {
             if ($.inidb.get('subscribed', keys[i]).equalsIgnoreCase('1')) {
-                Packages.me.gloriouseggroll.quorrabot.cache.SubscribersCache.instance($.channelName).addSubscriber(keys[i]);
+                $.subscribers.addSubscriber(keys[i]);
             }
         }
         kl++;

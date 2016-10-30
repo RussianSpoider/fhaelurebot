@@ -137,7 +137,7 @@ public class ChannelUsersCache implements Runnable {
         }
     }
 
-    private void updateCache() throws Exception {
+    public void updateCache() throws Exception {
         Map<String, String> newCache = Maps.newHashMap();
 
         JSONObject j = TwitchAPIv3.instance().GetChatUsers(channel);
@@ -225,7 +225,13 @@ public class ChannelUsersCache implements Runnable {
             }
 
             this.cache = newCache;
+            for (String joined : join) {
+                EventBus.instance().post(new IrcChannelJoinUpdateEvent(Quorrabot.getSession(this.channel), Quorrabot.getChannel(this.channel), joined));
+            }
 
+            for (String parted : part) {
+                EventBus.instance().post(new IrcChannelLeaveEvent(Quorrabot.getSession(this.channel), Quorrabot.getChannel(this.channel), parted, "Left"));
+            }
             firstTime = false;
         }
     }
@@ -233,7 +239,9 @@ public class ChannelUsersCache implements Runnable {
     public void setCache(Map<String, String> cache) {
         this.cache = cache;
     }
-
+    public void addUser(String username) {
+        cache.put(username, null);
+    }
     public Map<String, String> getCache() {
         return cache;
     }

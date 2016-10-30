@@ -138,16 +138,6 @@ $.on('command', function (event) {
 });
 setTimeout(function () {
     if ($.moduleEnabled('./handlers/hostHandler.js')) {
-	if($.AutoHost.AutoHostToggle == 1)
-        {
-                        setTimeout(function(){
-                            $.autoHost();
-                            $.println(">>Enabling offline auto-hosting");
-                        }, 20 * 1000);
-			$.timer.addTimer('./handlers/hostHandler.js', 'autoHost', true, function () {
-                            $.autoHost();
-			}, 60 * 1000);
-	}
         $.registerChatCommand('./handlers/hostHandler.js', 'addhost', 'admin');
         $.registerChatCommand('./handlers/hostHandler.js', 'delhost', 'admin');
         $.registerChatCommand('./handlers/hostHandler.js', 'listautohosts', 'admin');

@@ -116,7 +116,9 @@ $.checkDynamicGroup = function (user) {
     //we don't use isMod or isModv3 here because we are skipping $.isAdmin (which is included in both)
     //we skip isAdmin because this check is for dynamic groups which do not utilize the group table
     
-    if ($.hasModeO(user) || $.hasModList(user)) {
+    if($.isCaster(user)) {
+        group = 0;
+    } else if ($.hasModeO(user) || $.hasModList(user)) {
         group = 2;
     } else if ($.isSub(user)) {
         group = 3;
@@ -624,7 +626,40 @@ $.on('ircChannelJoin', function (event) {
     if (!found) {
         $.users.push(new Array(username, System.currentTimeMillis()));
     }
+    for (i = 0; i < $.modListUsers.length; i++) {
+        if ($.modListUsers[i].equalsIgnoreCase(username)) {
+            $.modeOUsers.push(username);
+            if ($.isAdmin(username) == false && $.isBot(username) == false) {
+                println("+Moderator: " + username);
+            }
+        }
+    }
+});
 
+$.on('ircChannelJoinUpdate', function (event) {
+    var username = event.getUser().toLowerCase();
+    var found = false;
+
+    $.lastjoinpart = System.currentTimeMillis();
+
+    for (var i = 0; i < $.users.length; i++) {
+        if ($.users[i][0].equalsIgnoreCase(username)) {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        $.users.push(new Array(username, System.currentTimeMillis()));
+    }
+    for (i = 0; i < $.modListUsers.length; i++) {
+        if ($.modListUsers[i].equalsIgnoreCase(username)) {
+            $.modeOUsers.push(username);
+            if ($.isAdmin(username) == false && $.isBot(username) == false) {
+                println("+Moderator: " + username);
+            }
+        }
+    }
 });
 
 $.on('ircChannelLeave', function (event) {
@@ -642,7 +677,7 @@ $.on('ircChannelLeave', function (event) {
     }
 
     for (i = 0; i < $.modeOUsers.length; i++) {
-        if ($.modeOUsers[i].equalsIgnoreCase(event.getUser().toLowerCase())) {
+        if ($.modeOUsers[i].equalsIgnoreCase(username)) {
             $.modeOUsers.splice(i, 1);
             if ($.isAdmin(username) == false && $.isBot(username) == false) {
                 println("-Moderator: " + username);
@@ -715,14 +750,14 @@ $.timer.addTimer("./util/permissions.js", "modcheck", true, function () {
 $.timer.addTimer("./util/permissions.js", "usercheck", true, function () {
     var curtime = System.currentTimeMillis();
 
-    /*if ($.lastjoinpart + usergonetime < curtime) {
+    if ($.lastjoinpart + usergonetime < curtime) {
      for (var i = 0; i < $.users.length; i++) {
      if ($.users[i][1] + usergonetime < curtime) {
      $.users.splice(i, 1);
      i--;
      }
      }
-     }*/
+     }
 
     for (var b = 0; b < $.subUsers.length; b++) {
         if ($.subUsers[b][1] < curtime) {

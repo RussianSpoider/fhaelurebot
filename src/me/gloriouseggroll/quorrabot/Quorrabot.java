@@ -79,6 +79,7 @@ import me.gloriouseggroll.quorrabot.script.ScriptManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import me.gloriouseggroll.quorrabot.event.EventBus;
+import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelJoinUpdateEvent;
 
 public class Quorrabot implements Listener {
 
@@ -124,10 +125,10 @@ public class Quorrabot implements Listener {
     private static HashMap<String, Channel> channels;
     private static HashMap<String, Session> sessions;
     private static HashMap<String, String> apiOAuths;
-    private FollowersCache followersCache;
-    private ChannelHostCache hostCache;
-    private SubscribersCache subscribersCache;
-    private ChannelUsersCache channelUsersCache;
+    public FollowersCache followersCache;
+    public ChannelHostCache hostCache;
+    public SubscribersCache subscribersCache;
+    public ChannelUsersCache channelUsersCache;
     private MusicWebSocketServer musicsocketserver;
     private HTTPServer httpserver;
     private EventWebSocketServer eventsocketserver;
@@ -510,10 +511,10 @@ public class Quorrabot implements Listener {
         Script.global.defineProperty("tempdb", TempStore.instance(), 0);
         Script.global.defineProperty("twitch", TwitchAPIv3.instance(), 0);
         Script.global.defineProperty("username", UsernameCache.instance(), 0);
-        Script.global.defineProperty("followers", followersCache, 0);
-        Script.global.defineProperty("hosts", hostCache, 0);
-        Script.global.defineProperty("subscribers", subscribersCache, 0);
-        Script.global.defineProperty("channelUsers", channelUsersCache, 0);
+        Script.global.defineProperty("followers", FollowersCache.instance(this.channelName), 0);
+        Script.global.defineProperty("subscribers", SubscribersCache.instance(this.channelName), 0);
+        Script.global.defineProperty("hosts", ChannelHostCache.instance(this.channelName), 0);
+        Script.global.defineProperty("channelUsers", ChannelUsersCache.instance(this.channelName), 0);
         Script.global.defineProperty("botName", username, 0);
         Script.global.defineProperty("channelName", channelName, 0);
         Script.global.defineProperty("channels", channels, 0);
@@ -624,13 +625,14 @@ public class Quorrabot implements Listener {
         Quorrabot.addSession(this.channelName, this.session);
 
         //com.gmt2001.Console.out.println("Joined channel: " + event.getChannel().getName());
-        event.getSession().saySilent(".mods");
-        event.getSession().startTimers();
+        this.session.startTimers();
 
         this.followersCache = FollowersCache.instance(this.channelName);
         this.hostCache = ChannelHostCache.instance(this.channelName);
         this.subscribersCache = SubscribersCache.instance(this.channelName);
         this.channelUsersCache = ChannelUsersCache.instance(this.channelName);
+
+        this.session.saySilent(".mods");
 
         /**
          * Export these to the $. api for the scripts to use
@@ -639,7 +641,6 @@ public class Quorrabot implements Listener {
         Script.global.defineProperty("hosts", this.hostCache, 0);
         Script.global.defineProperty("subscribers", this.subscribersCache, 0);
         Script.global.defineProperty("channelUsers", this.channelUsersCache, 0);
-
     }
 
     @Subscribe
@@ -648,16 +649,24 @@ public class Quorrabot implements Listener {
             String message = event.getMessage().toLowerCase();
             if (message.startsWith("the moderators of this room are: ")) {
                 String[] moderators = message.substring(33).split(", ");
+                try {
+                    ChannelUsersCache.instance(this.channelName).updateCache();
+                } catch (Exception e) {
+                    //
+                }
                 for (String moderator : moderators) {
                     if (moderator.equalsIgnoreCase(this.username)) {
                         event.getSession().setAllowSendMessages(true);
+                    }
+                    if (ChannelUsersCache.instance(this.channelName).getCache().toString().contains(moderator.toLowerCase() + "=mod")) {
+                            EventBus.instance().post(new IrcChannelUserModeEvent(Quorrabot.getSession(this.channelName), Quorrabot.getChannel(this.channelName), moderator.toLowerCase(), "O", true));
                     }
                 }
             }
 
             if (message.contains("is now hosting you")) {
                 String hoster = message.substring(0, message.indexOf(" ", 1)).toString();
-                EventBus.instance().postAsync(new TwitchHostedEvent(hoster, Quorrabot.getChannel(event.getChannel().getName())));
+                EventBus.instance().post(new TwitchHostedEvent(hoster, Quorrabot.getChannel(event.getChannel().getName())));
             }
         }
         if (!event.getSender().equalsIgnoreCase("jtv") && !event.getSender().equalsIgnoreCase("twitchnotify")) {
@@ -684,20 +693,6 @@ public class Quorrabot implements Listener {
         if (message.startsWith("!")) {
             String commandString = message.substring(1);
             handleCommand(sender, commandString);
-        }
-
-        if (sender.equalsIgnoreCase("jtv")) {
-            message = message.toLowerCase();
-
-            if (message.startsWith("the moderators of this room are: ")) {
-                String[] moderators = message.substring(33).split(", ");
-
-                for (String moderator : moderators) {
-                    if (moderator.equalsIgnoreCase(this.username)) {
-                        event.getSession().setAllowSendMessages(true);
-                    }
-                }
-            }
         }
     }
 
@@ -735,22 +730,22 @@ public class Quorrabot implements Listener {
         //used for testing notifications
         if (message.equalsIgnoreCase("subtest")) {
             String randomUser = generateRandomString(10);
-            EventBus.instance().postAsync(new IrcPrivateMessageEvent(Quorrabot.getSession(this.channelName), "twitchnotify", randomUser + " just subscribed!"));
+            EventBus.instance().post(new IrcPrivateMessageEvent(Quorrabot.getSession(this.channelName), "twitchnotify", randomUser + " just subscribed!"));
 
         }
         if (message.equalsIgnoreCase("resubtest")) {
             String randomUser = generateRandomString(10);
-            EventBus.instance().postAsync(new IrcPrivateMessageEvent(Quorrabot.getSession(this.channelName), "twitchnotify", randomUser + " just subscribed for 10 months in a row!"));
+            EventBus.instance().post(new IrcPrivateMessageEvent(Quorrabot.getSession(this.channelName), "twitchnotify", randomUser + " just subscribed for 10 months in a row!"));
 
         }
         if (message.equalsIgnoreCase("followtest")) {
             String randomUser = generateRandomString(10);
-            EventBus.instance().postAsync(new TwitchFollowEvent(randomUser, Quorrabot.getChannel(this.channelName)));
+            EventBus.instance().post(new TwitchFollowEvent(randomUser, Quorrabot.getChannel(this.channelName)));
         }
 
         if (message.equalsIgnoreCase("hosttest")) {
             String randomUser = generateRandomString(10);
-            EventBus.instance().postAsync(new TwitchHostedEvent(randomUser, Quorrabot.getChannel(this.channelName)));
+            EventBus.instance().post(new TwitchHostedEvent(randomUser, Quorrabot.getChannel(this.channelName)));
         }
 
         if (message.equals("debugoff")) {
@@ -1137,7 +1132,6 @@ public class Quorrabot implements Listener {
             }
             tceSession.leave("#" + channelName.toLowerCase()); 
     }*/
-
     private void sqlite2MySql() {
         com.gmt2001.Console.out.print("Performing SQLite to MySQL Conversion...\n");
         MySQLStore mysql = MySQLStore.instance();

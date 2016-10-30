@@ -341,7 +341,7 @@ var kl = 0;
 while(kl < keys.length) {
     if(keys[i]!=null || keys[i]!="") {
         if ($.inidb.get('followed', keys[i]).equalsIgnoreCase('1')) {
-                Packages.me.gloriouseggroll.quorrabot.cache.FollowersCache.instance($.channelName).addFollower(keys[i]);
+                $.followers.addFollower(keys[i]);
         }
     }
     kl++;
