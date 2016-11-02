@@ -76,11 +76,7 @@ public class IRCParser {
      */
     public IRCParser(WebSocket webSocket, String channelName, Channel channel, Session session, EventBus eventBus) {
         this.webSocket = webSocket;
-        if(session.getNick().equalsIgnoreCase(Quorrabot.instance().getBotName())) {
-            this.channelName = channelName.toLowerCase();
-        } else {
-            this.channelName = session.getNick();
-        }
+        this.channelName = channelName.toLowerCase();
         this.channel = channel;
         this.session = session;
         this.eventBus = eventBus;
@@ -282,21 +278,21 @@ public class IRCParser {
         if (message.endsWith("subscribed!") || message.endsWith("Prime!")) {
             if (username.equalsIgnoreCase("twitchnotify")) {
                 message = message.split(" ")[0] + " just subscribed!";
-                //eventBus.post(new IrcPrivateMessageEvent(this.session, "twitchnotify", message.split(" ")[0] + " just subscribed!", tagsMap));
+                //eventBus.post(new IrcPrivateMessageEvent(Quorrabot.instance().getSession(Quorrabot.instance().getOwnerName()), "twitchnotify", message.split(" ")[0] + " just subscribed!", tagsMap));
                 com.gmt2001.Console.debug.println(message.split(" ")[0] + " just subscribed!");
             }
         }
 
         /* Check to see if the user is donating/cheering bits */
         if (tagsMap.containsKey("bits")) {
-            scriptEventManager.runDirect(new NewBits(this.session, Quorrabot.getChannel(this.channelName), username, tagsMap.get("bits")));
+            scriptEventManager.runDirect(new NewBits(Quorrabot.instance().getSession(Quorrabot.instance().getOwnerName()), Quorrabot.getChannel(this.channelName), username, tagsMap.get("bits")));
             com.gmt2001.Console.debug.println("Bits::" + username + "::amount::" + tagsMap.get("bits"));
         }
 
         /* Check to see if the user is a channel subscriber */
         if (tagsMap.containsKey("subscriber")) {
             if (tagsMap.get("subscriber").equals("1")) {
-                eventBus.post(new IrcPrivateMessageEvent(this.session, "jtv", "SPECIALUSER " + username + " subscriber", tagsMap));
+                eventBus.post(new IrcPrivateMessageEvent(Quorrabot.instance().getSession(Quorrabot.instance().getOwnerName()), "jtv", "SPECIALUSER " + username + " subscriber", tagsMap));
                 com.gmt2001.Console.debug.println("Subscriber::" + username + "::true");
             }
         }
@@ -306,13 +302,13 @@ public class IRCParser {
             if (tagsMap.get("user-type").length() > 0) {
                 if (!moderators.contains(username.toLowerCase())) {
                     moderators.add(username.toLowerCase());
-                    eventBus.post(new IrcChannelUserModeEvent(this.session, this.channel, username, "O", true));
+                    eventBus.post(new IrcChannelUserModeEvent(Quorrabot.instance().getSession(Quorrabot.instance().getOwnerName()), Quorrabot.instance().getChannel(Quorrabot.instance().getOwnerName()), username, "O", true));
                     com.gmt2001.Console.debug.println("Moderator::" + username + "::true");
                 }
             } else if (this.channelName.equalsIgnoreCase(username)) {
                 if (!moderators.contains(username.toLowerCase())) {
                     moderators.add(username.toLowerCase());
-                    eventBus.post(new IrcChannelUserModeEvent(this.session, this.channel, username, "O", true));
+                    eventBus.post(new IrcChannelUserModeEvent(Quorrabot.instance().getSession(Quorrabot.instance().getOwnerName()), Quorrabot.instance().getChannel(Quorrabot.instance().getOwnerName()), username, "O", true));
                     com.gmt2001.Console.debug.println("Broadcaster::" + username + "::true");
                 }
             }
@@ -335,17 +331,17 @@ public class IRCParser {
 
         /* Moderate the incoming message. Have it run in the background on a thread. */
         try {
-            ModerationRunnable moderationRunnable = new ModerationRunnable(this.session, username, message, this.channel, tagsMap);
+            ModerationRunnable moderationRunnable = new ModerationRunnable(Quorrabot.instance().getSession(Quorrabot.instance().getOwnerName()), username, message, Quorrabot.instance().getChannel(Quorrabot.instance().getOwnerName()), tagsMap);
             new Thread(moderationRunnable).start();
         } catch (Exception ex) {
-            scriptEventManager.runDirect(new IrcModerationEvent(this.session, username, message, this.channel, tagsMap));
+            scriptEventManager.runDirect(new IrcModerationEvent(Quorrabot.instance().getSession(Quorrabot.instance().getOwnerName()), username, message, Quorrabot.instance().getChannel(Quorrabot.instance().getOwnerName()), tagsMap));
         }
 
         /* Send the message to the scripts. */
-        eventBus.post(new IrcChannelMessageEvent(this.session, username, message, this.channel, tagsMap));
+        eventBus.post(new IrcChannelMessageEvent(Quorrabot.instance().getSession(Quorrabot.instance().getOwnerName()), username, message, Quorrabot.instance().getChannel(Quorrabot.instance().getOwnerName()), tagsMap));
 
         /* Incrememnt the chat lines, this should be the last operation of this function. */
-        this.session.chatLinesIncr();
+        Quorrabot.instance().getSession(Quorrabot.instance().getOwnerName()).chatLinesIncr();
     }
 
     /*
