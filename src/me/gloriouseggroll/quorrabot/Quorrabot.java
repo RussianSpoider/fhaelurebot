@@ -122,6 +122,7 @@ public class Quorrabot implements Listener {
     private TreeSet<String> voters;
     private Session session;
     private Channel channel;
+    private Channel tcechannel;
     private static HashMap<String, Channel> channels;
     private static HashMap<String, Session> sessions;
     private static HashMap<String, String> apiOAuths;
@@ -338,7 +339,8 @@ public class Quorrabot implements Listener {
         this.init();
 
         this.channel = Channel.instance(this.channelName, this.username, this.oauth, EventBus.instance());
-
+        this.tcechannel = Channel.instance(this.username, this.ownerName, this.apioauth, EventBus.instance());
+        
         if (SystemUtils.IS_OS_LINUX && !interactive) {
             try {
                 java.lang.management.RuntimeMXBean runtime = java.lang.management.ManagementFactory.getRuntimeMXBean();
@@ -511,12 +513,12 @@ public class Quorrabot implements Listener {
         Script.global.defineProperty("tempdb", TempStore.instance(), 0);
         Script.global.defineProperty("twitch", TwitchAPIv3.instance(), 0);
         Script.global.defineProperty("username", UsernameCache.instance(), 0);
-        Script.global.defineProperty("followers", FollowersCache.instance(this.channelName), 0);
-        Script.global.defineProperty("subscribers", SubscribersCache.instance(this.channelName), 0);
-        Script.global.defineProperty("hosts", ChannelHostCache.instance(this.channelName), 0);
-        Script.global.defineProperty("channelUsers", ChannelUsersCache.instance(this.channelName), 0);
+        Script.global.defineProperty("followers", FollowersCache.instance(this.ownerName.toLowerCase()), 0);
+        Script.global.defineProperty("subscribers", SubscribersCache.instance(this.ownerName.toLowerCase()), 0);
+        Script.global.defineProperty("hosts", ChannelHostCache.instance(this.ownerName.toLowerCase()), 0);
+        Script.global.defineProperty("channelUsers", ChannelUsersCache.instance(this.ownerName.toLowerCase()), 0);
         Script.global.defineProperty("botName", username, 0);
-        Script.global.defineProperty("channelName", channelName, 0);
+        Script.global.defineProperty("channelName", ownerName.toLowerCase(), 0);
         Script.global.defineProperty("channels", channels, 0);
         Script.global.defineProperty("ownerName", ownerName, 0);
         Script.global.defineProperty("channelStatus", channelStatus, 0);
@@ -552,7 +554,7 @@ public class Quorrabot implements Listener {
 
     @SuppressWarnings("SleepWhileInLoop")
     public void onExit() {
-        Quorrabot.getSession(this.channelName).setAllowSendMessages(false);
+        Quorrabot.getSession(this.ownerName.toLowerCase()).setAllowSendMessages(false);
         com.gmt2001.Console.out.println("[SHUTDOWN] Bot shutting down...");
 
         com.gmt2001.Console.out.println("[SHUTDOWN] Stopping event & message dispatching...");
@@ -607,7 +609,7 @@ public class Quorrabot implements Listener {
     }
 
     @Subscribe
-    public void onIRCJoinComplete(IrcJoinCompleteEvent event) {
+    public void onTwitchJoinComplete(IrcJoinCompleteEvent event) {
         /* Check if the bot already joined once. */
         if (joined) {
             return;
@@ -627,12 +629,14 @@ public class Quorrabot implements Listener {
         //com.gmt2001.Console.out.println("Joined channel: " + event.getChannel().getName());
         this.session.startTimers();
 
-        this.followersCache = FollowersCache.instance(this.channelName);
-        this.hostCache = ChannelHostCache.instance(this.channelName);
-        this.subscribersCache = SubscribersCache.instance(this.channelName);
-        this.channelUsersCache = ChannelUsersCache.instance(this.channelName);
+        this.followersCache = FollowersCache.instance(this.ownerName.toLowerCase());
+        this.hostCache = ChannelHostCache.instance(this.ownerName.toLowerCase());
+        this.subscribersCache = SubscribersCache.instance(this.ownerName.toLowerCase());
+        this.channelUsersCache = ChannelUsersCache.instance(this.ownerName.toLowerCase());
 
-        this.session.saySilent(".mods");
+        if(this.session.getNick().equalsIgnoreCase(getBotName())) {
+            this.session.saySilent(".mods");
+        }
 
         /**
          * Export these to the $. api for the scripts to use
@@ -644,13 +648,14 @@ public class Quorrabot implements Listener {
     }
 
     @Subscribe
-    public void onIRCPrivateMessage(IrcPrivateMessageEvent event) {
+    public void onTwitchPrivateMessage(IrcPrivateMessageEvent event) {
+
         if (event.getSender().equalsIgnoreCase("jtv")) {
             String message = event.getMessage().toLowerCase();
             if (message.startsWith("the moderators of this room are: ")) {
                 String[] moderators = message.substring(33).split(", ");
                 try {
-                    ChannelUsersCache.instance(this.channelName).updateCache();
+                    ChannelUsersCache.instance(this.ownerName.toLowerCase()).updateCache();
                 } catch (Exception e) {
                     //
                 }
@@ -658,35 +663,21 @@ public class Quorrabot implements Listener {
                     if (moderator.equalsIgnoreCase(this.username)) {
                         event.getSession().setAllowSendMessages(true);
                     }
-                    if (ChannelUsersCache.instance(this.channelName).getCache().toString().contains(moderator.toLowerCase() + "=mod")) {
-                            EventBus.instance().post(new IrcChannelUserModeEvent(Quorrabot.getSession(this.channelName), Quorrabot.getChannel(this.channelName), moderator.toLowerCase(), "O", true));
+                    if (ChannelUsersCache.instance(this.ownerName.toLowerCase()).getCache().toString().contains(moderator.toLowerCase() + "=mod")) {
+                            EventBus.instance().post(new IrcChannelUserModeEvent(Quorrabot.getSession(this.ownerName.toLowerCase()), Quorrabot.getChannel(this.ownerName.toLowerCase()), moderator.toLowerCase(), "O", true));
                     }
                 }
             }
-
-            if (message.contains("is now hosting you")) {
+            if (message.contains("is now hosting you"))
+            {
                 String hoster = message.substring(0, message.indexOf(" ", 1)).toString();
-                EventBus.instance().post(new TwitchHostedEvent(hoster, Quorrabot.getChannel(event.getChannel().getName())));
-            }
-        }
-        if (!event.getSender().equalsIgnoreCase("jtv") && !event.getSender().equalsIgnoreCase("twitchnotify")) {
-            if (event.getMessage().startsWith("!")) {
-                String command;
-                String argsString;
-                if (event.getMessage().indexOf(" ") == -1) {
-                    command = event.getMessage().substring(1, event.getMessage().length());
-                    argsString = "";
-                } else {
-                    command = event.getMessage().substring(1, event.getMessage().indexOf(" "));
-                    argsString = event.getMessage().substring(event.getMessage().indexOf(" ") + 1, event.getMessage().length());
-                }
-                EventBus.instance().post(new CommandEvent(event.getSender(), command, argsString));
+                EventBus.instance().post(new TwitchHostedEvent(hoster, channel));    
             }
         }
     }
 
     @Subscribe
-    public void onIRCChannelMessage(IrcChannelMessageEvent event) {
+    public void onTwitchChannelMessage(IrcChannelMessageEvent event) {
         String message = event.getMessage();
         String sender = event.getSender();
 
@@ -697,7 +688,7 @@ public class Quorrabot implements Listener {
     }
 
     @Subscribe
-    public void onIRCChannelUserMode(IrcChannelUserModeEvent event) {
+    public void onTwitchChannelUserMode(IrcChannelUserModeEvent event) {
         /**
          * Check to see if Twitch sent a mode event for the bot name
          */
@@ -706,12 +697,12 @@ public class Quorrabot implements Listener {
              * Did we get mod? if not try .mods again
              */
             if (!event.getAdd()) {
-                event.getSession().saySilent(".mods");
+                Quorrabot.getSession(this.ownerName.toLowerCase()).saySilent(".mods");
             }
             /**
              * Allow the bot to sends message to this session
              */
-            event.getSession().setAllowSendMessages(event.getAdd());
+            Quorrabot.getSession(this.ownerName.toLowerCase()).setAllowSendMessages(event.getAdd());
         }
     }
 
@@ -730,22 +721,22 @@ public class Quorrabot implements Listener {
         //used for testing notifications
         if (message.equalsIgnoreCase("subtest")) {
             String randomUser = generateRandomString(10);
-            EventBus.instance().post(new IrcPrivateMessageEvent(Quorrabot.getSession(this.channelName), "twitchnotify", randomUser + " just subscribed!"));
+            EventBus.instance().post(new IrcPrivateMessageEvent(Quorrabot.getSession(this.ownerName.toLowerCase()), "twitchnotify", randomUser + " just subscribed!"));
 
         }
         if (message.equalsIgnoreCase("resubtest")) {
             String randomUser = generateRandomString(10);
-            EventBus.instance().post(new IrcPrivateMessageEvent(Quorrabot.getSession(this.channelName), "twitchnotify", randomUser + " just subscribed for 10 months in a row!"));
+            EventBus.instance().post(new IrcPrivateMessageEvent(Quorrabot.getSession(this.ownerName.toLowerCase()), "twitchnotify", randomUser + " just subscribed for 10 months in a row!"));
 
         }
         if (message.equalsIgnoreCase("followtest")) {
             String randomUser = generateRandomString(10);
-            EventBus.instance().post(new TwitchFollowEvent(randomUser, Quorrabot.getChannel(this.channelName)));
+            EventBus.instance().post(new TwitchFollowEvent(randomUser, Quorrabot.getChannel(this.ownerName.toLowerCase())));
         }
 
         if (message.equalsIgnoreCase("hosttest")) {
             String randomUser = generateRandomString(10);
-            EventBus.instance().post(new TwitchHostedEvent(randomUser, Quorrabot.getChannel(this.channelName)));
+            EventBus.instance().post(new TwitchHostedEvent(randomUser, Quorrabot.getChannel(this.ownerName.toLowerCase())));
         }
 
         if (message.equals("debugoff")) {

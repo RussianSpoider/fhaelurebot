@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ArrayList;
+import me.gloriouseggroll.quorrabot.Quorrabot;
+import me.gloriouseggroll.quorrabot.cache.ChannelUsersCache;
 
 import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelUserModeEvent;
 import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelJoinEvent;
@@ -35,9 +37,10 @@ import me.gloriouseggroll.quorrabot.event.irc.message.IrcModerationEvent;
 import me.gloriouseggroll.quorrabot.event.irc.clearchat.IrcClearchatEvent;
 import me.gloriouseggroll.quorrabot.event.twitch.bits.NewBits;
 import me.gloriouseggroll.quorrabot.event.EventBus;
-import me.gloriouseggroll.quorrabot.event.command.CommandEvent;
 import me.gloriouseggroll.quorrabot.script.ScriptEventManager;
 import me.gloriouseggroll.quorrabot.cache.UsernameCache;
+import me.gloriouseggroll.quorrabot.event.command.CommandEvent;
+import me.gloriouseggroll.quorrabot.event.twitch.host.TwitchHostedEvent;
 
 /*
  * Create an interface that is used to create event handling methods.
@@ -73,7 +76,11 @@ public class IRCParser {
      */
     public IRCParser(WebSocket webSocket, String channelName, Channel channel, Session session, EventBus eventBus) {
         this.webSocket = webSocket;
-        this.channelName = channelName.toLowerCase();
+        if(session.getNick().equalsIgnoreCase(Quorrabot.instance().getBotName())) {
+            this.channelName = channelName.toLowerCase();
+        } else {
+            this.channelName = session.getNick();
+        }
         this.channel = channel;
         this.session = session;
         this.eventBus = eventBus;
@@ -232,29 +239,11 @@ public class IRCParser {
         webSocket.send("CAP REQ :twitch.tv/membership");
         webSocket.send("CAP REQ :twitch.tv/commands");
         webSocket.send("CAP REQ :twitch.tv/tags");
-        webSocket.send("JOIN #" + this.channelName.toLowerCase());
-        com.gmt2001.Console.out.println("Channel Joined [#" + this.channelName + "]");
-        eventBus.post(new IrcJoinCompleteEvent(this.session, this.channel));
-    }
-
-    /*
-     * Handles commands.
-     */
-    private void commandEvent(String message, String username, Map<String, String> tagsMap) {
-        String arguments = "";
-        String command = message.substring(1);
-
-        /**
-         * Does the command have arguments?
-         */
-        if (command.contains(" ")) {
-            String commandString = command;
-            command = commandString.substring(0, commandString.indexOf(" "));
-            arguments = commandString.substring(commandString.indexOf(" ") + 1);
+        if(this.session.getNick().equalsIgnoreCase(Quorrabot.instance().getBotName())) {
+            webSocket.send("JOIN #" + this.channelName.toLowerCase());
+            com.gmt2001.Console.out.println("Channel Joined [#" + this.channelName + "]");
         }
-
-        /* Send the command event with the ircv3 tags from Twitch. */
-        scriptEventManager.runDirect(new CommandEvent(username, command, arguments, tagsMap));
+        eventBus.post(new IrcJoinCompleteEvent(this.session, this.channel));
     }
 
     /*
@@ -300,7 +289,7 @@ public class IRCParser {
 
         /* Check to see if the user is donating/cheering bits */
         if (tagsMap.containsKey("bits")) {
-            scriptEventManager.runDirect(new NewBits(this.session, channel, username, tagsMap.get("bits")));
+            scriptEventManager.runDirect(new NewBits(this.session, Quorrabot.getChannel(this.channelName), username, tagsMap.get("bits")));
             com.gmt2001.Console.debug.println("Bits::" + username + "::amount::" + tagsMap.get("bits"));
         }
 
@@ -329,9 +318,19 @@ public class IRCParser {
             }
         }
 
-        /* Check if the message is a command */
-        if (message.startsWith("!")) {
-            commandEvent(message, username, tagsMap);
+        if (!username.equalsIgnoreCase("jtv") && !username.equalsIgnoreCase("twitchnotify")) {
+            if (message.startsWith("!")) {
+                String command;
+                String argsString;
+                if (message.indexOf(" ") == -1) {
+                    command = message.substring(1, message.length());
+                    argsString = "";
+                } else {
+                    command = message.substring(1, message.indexOf(" "));
+                    argsString = message.substring(message.indexOf(" ") + 1);
+                }
+                EventBus.instance().post(new CommandEvent(username, command, argsString, tagsMap));
+            }
         }
 
         /* Moderate the incoming message. Have it run in the background on a thread. */
@@ -392,6 +391,21 @@ public class IRCParser {
      * @param Map<String, String> tagsMap
      */
     private void whisperMessage(String message, String username, Map<String, String> tagsMap) {
+        if (!username.equalsIgnoreCase("jtv") && !username.equalsIgnoreCase("twitchnotify"))
+        {
+            if(message.startsWith("!")) {
+                String command;
+                String argsString;
+                if(message.indexOf(" ")==-1) {
+                    command = message.substring(1,message.length());
+                    argsString = "";
+                } else {
+                    command = message.substring(1, message.indexOf(" "));
+                    argsString = message.substring(message.indexOf(" ") + 1, message.length());
+                }
+                eventBus.post(new CommandEvent(username, command, argsString));
+            }
+        }
         eventBus.post(new IrcPrivateMessageEvent(this.session, username, message, tagsMap));
         com.gmt2001.Console.out.println("[WHISPER] " + username + ": " + message);
     }

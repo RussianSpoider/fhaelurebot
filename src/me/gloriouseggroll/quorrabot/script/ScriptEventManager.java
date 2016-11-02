@@ -73,7 +73,7 @@ public class ScriptEventManager implements Listener {
             EventHandlerEntry entry = hashEntries.get(event.getClass().getName());
             if (entry != null) {
                 entry.handler.handle(event);
-                com.gmt2001.Console.debug.println("Dispatched runDirect event " + entry.eventClass.getName());
+                com.gmt2001.Console.out.println("Dispatched runDirect event " + entry.eventClass.getName());
             }
         } catch (Exception e) {
             com.gmt2001.Console.err.println("Failed to dispatch runDirect event " + event.getClass().getName());

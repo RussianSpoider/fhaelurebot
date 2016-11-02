@@ -1,5 +1,5 @@
-/* 
- * Copyright (C) 2016 www.quorrabot.com
+/*
+ * Copyright (C) 2016 phantombot.tv
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,10 @@
  */
 package me.gloriouseggroll.quorrabot.cache;
 
+import me.gloriouseggroll.quorrabot.Quorrabot;
+
 import com.gmt2001.TwitchAPIv3;
+import com.gloriouseggroll.TwitchTMIv1;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.Calendar;
@@ -24,7 +27,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import me.gloriouseggroll.quorrabot.Quorrabot;
 import me.gloriouseggroll.quorrabot.event.EventBus;
 import me.gloriouseggroll.quorrabot.event.twitch.host.TwitchHostedEvent;
 import me.gloriouseggroll.quorrabot.event.twitch.host.TwitchHostsInitializedEvent;
@@ -159,12 +161,11 @@ public class ChannelHostCache implements Runnable {
             return;
         }
 
-        j = TwitchAPIv3.instance().GetHostUsers(id);
-
+        j = TwitchTMIv1.instance().GetHostUsers(id);
         if (j.getBoolean("_success")) {
             if (j.getInt("_http") == 200) {
                 JSONArray hosts = j.getJSONArray("hosts");
-                com.gmt2001.Console.debug.println("ChannelHostCache: Success");
+                com.gmt2001.Console.debug.println("ChannelHostCache: Success with TMI");
 
                 for (int i = 0; i < hosts.length(); i++) {
                     newCache.put(hosts.getJSONObject(i).getString("host_login"), hosts.getJSONObject(i));
@@ -173,8 +174,8 @@ public class ChannelHostCache implements Runnable {
             } else {
                 try {
                     throw new Exception("[HTTPErrorException] HTTP " + j.getInt("_http") + " " + j.getString("error") + ". req="
-                            + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                            + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+                                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
                 } catch (Exception e) {
                     com.gmt2001.Console.debug.println("ChannelHostCache.updateCache: Failed to update hosts: " + e.getMessage());
                 }

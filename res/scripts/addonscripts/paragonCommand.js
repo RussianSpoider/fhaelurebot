@@ -148,9 +148,8 @@ $.on('command', function (event) {
     }
 
     if (command.equalsIgnoreCase("paragon")) {
-        action = args[0];
-        
-        if (action.equalsIgnoreCase("help")) {
+
+        if (argsString.isEmpty() | argsString.equalsIgnoreCase("help")) {
             $.say($.getWhisperString(sender) + "All stats are provided by Agora.gg. Usage:");
             $.say($.getWhisperString(sender) + "!paragon setname {player} - Set your Paragon name for the !match command (defaults to Twitch username)");
             $.say($.getWhisperString(sender) + "!paragon stats {player} - Fetch a player's current stats");
@@ -160,7 +159,8 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + "!paragon help - Displays various commands for the user to use");
             return;
         }
-        
+
+        action = args[0];
         if (args[1] == null) {
             avalue = $.getEpicAccount(sender);
         } else {
@@ -206,36 +206,37 @@ $.on('command', function (event) {
         var assists = stats.getJSONObject(0).getInt("assists");
         var towers = stats.getJSONObject(0).getInt("towers");
         var rank;
-        if(stats.toString().indexOf("rank")!=-1) {
+        if (stats.toString().indexOf("rank") != -1) {
             rank = stats.getJSONObject(0).getInt("rank");
         } else {
             rank = "Unranked";
         }
         var percentile;
-        if(stats.toString().indexOf("percentile")!=-1) {
-            percentile = stats.getJSONObject(0).getInt("percentile");
+        if (stats.toString().indexOf("percentile") != -1) {
+            percentile = stats.getJSONObject(0).getDouble("percentile");
         } else {
-            percentile = "None";
+            percentile = 0;
         }
         var mode = stats.getJSONObject(0).getInt("mode");
-        
+
         var kda;
-        if(kills==0 && assists==0 && deaths==0) {
+        if (kills == 0 && assists == 0 && deaths == 0) {
             kda = 0;
         } else {
             kda = (kills + assists) / deaths;
-            kda = kda.toString().split(".")[1].substring(0, 2);        
+            kda = kda.toString().split(".")[1].substring(0, 2);
         }
         var winloss;
-        if(wins==0 && gamesplayed==0) {
+        if (wins == 0 && gamesplayed == 0) {
             winloss = 0;
         } else {
             winloss = wins / gamesplayed;
-            winloss = winloss.toString().split(".")[1].substring(0, 2);      
+            winloss = winloss.toString().split(".")[1].substring(0, 2);
         }
 
         var towerspergame = towers / gamesplayed;
-        if(stats.toString().indexOf('"heroes":null')!=-1) {
+        $.println(stats.toString());
+        if (stats.toString().indexOf('"heroes":[{') != -1) {
             heroes = stats.getJSONObject(0).getJSONArray("heroes");
         } else {
             heroes = "None";
@@ -249,7 +250,7 @@ $.on('command', function (event) {
         var bestheroratio;
         var heroratio;
         var heroratiolist = [];
-        if (heroes!="None" && heroes.length() > 0) {
+        if (heroes != "None" && heroes.length() > 0) {
             for (var i = 0; i < heroes.length(); i++) {
                 herostats = heroes.getJSONObject(i);
 
@@ -333,7 +334,7 @@ $.on('command', function (event) {
                     );
         }
         if (action.equalsIgnoreCase("besthero")) {
-            if($.herostring=="") {
+            if ($.herostring == "") {
                 $.say("/me " + playerData.getString("name") + " has not played any heroes this season.");
                 return;
             }
@@ -417,10 +418,13 @@ $.on('command', function (event) {
             }
         }
     }
-    if ($.moduleEnabled('./addonscripts/paragonCommand.js')) {
-        setTimeout(function () {
-            $.registerChatCommand("./addonscripts/paragonCommand.js", "paragon");
-        }, 10 * 1000);
-        $.println('Agora.gg Paragon API module loaded.');
-    }
+    ;
 });
+
+if ($.moduleEnabled('./addonscripts/paragonCommand.js')) {
+    setTimeout(function () {
+        $.registerChatCommand("./addonscripts/paragonCommand.js", "paragon");
+    }, 10 * 1000);
+    $.println('Agora.gg Paragon API module loaded.');
+}
+;

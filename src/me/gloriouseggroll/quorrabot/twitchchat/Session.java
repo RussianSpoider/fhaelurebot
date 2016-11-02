@@ -229,7 +229,7 @@ public class Session {
      * @param message
      */
     public void saySilent(String message) {
-        twitchIRC.send("PRIVMSG #" + channelName.toLowerCase() + " :" + message);
+        twitchIRC.send("PRIVMSG #" + channelName + " :" + message);
     }
 
     /*
