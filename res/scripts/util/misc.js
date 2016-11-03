@@ -41,10 +41,10 @@ $.isJSON = function isJSON(data) {
 }
 
 $.say = function (s) {
-    if ($.session !== null) {
+    if ($.botsession !== null) {
         $.logChat($.botname, s);
         if (s.startsWith('.')) {
-            $.session.say(s);
+            $.botsession.say(s);
         }
 
         if (s.startsWith('@') && s.endsWith(',')) {
@@ -59,9 +59,9 @@ $.say = function (s) {
                 var whispercheck = s.substring(0, 3);
                 if (whispercheck.equalsIgnoreCase("/w ")) {
                     sleep(1000);
-                    $.session.say(s);
+                    $.botsession.say(s);
                 } else {
-                    $.session.say(s);
+                    $.botsession.say(s);
                 }
             }
         }

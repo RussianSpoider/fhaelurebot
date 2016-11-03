@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ArrayList;
 import me.gloriouseggroll.quorrabot.Quorrabot;
+import static me.gloriouseggroll.quorrabot.Quorrabot.getChannel;
 import me.gloriouseggroll.quorrabot.cache.ChannelUsersCache;
 
 import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelUserModeEvent;
@@ -41,6 +42,7 @@ import me.gloriouseggroll.quorrabot.script.ScriptEventManager;
 import me.gloriouseggroll.quorrabot.cache.UsernameCache;
 import me.gloriouseggroll.quorrabot.event.command.CommandEvent;
 import me.gloriouseggroll.quorrabot.event.twitch.host.TwitchHostedEvent;
+import me.gloriouseggroll.quorrabot.cache.ChannelUsersCache;
 
 /*
  * Create an interface that is used to create event handling methods.
@@ -270,6 +272,37 @@ public class IRCParser {
         /* Print the IRCv3 tags if debug mode is on*/
         com.gmt2001.Console.debug.println("IRCv3 Tags: " + tagsMap);
 
+        /* Set moderator status for owner, bot, and any mods currently in channel on connect */
+        if (username.equalsIgnoreCase("jtv")) {
+            if (this.channelName.equalsIgnoreCase(this.ownerName) && message.startsWith("the moderators of this room are: ")) {
+                eventBus.post(new IrcChannelUserModeEvent(this.session, this.channel, this.ownerName.toLowerCase(), "O", true));
+                try {
+                    Quorrabot.channelUsersCache.updateCache();
+                    String[] moderators = message.substring(33).split(", ");
+                    for (String moderator : moderators) {
+                        if (moderator.equalsIgnoreCase(this.session.getNick())) {
+                            this.session.setAllowSendMessages(true);
+
+                        }
+                        if (Quorrabot.channelUsersCache.getCache().toString().contains(moderator.toLowerCase() + "=mod")) {
+                            eventBus.post(new IrcChannelUserModeEvent(this.session, this.channel, moderator.toLowerCase(), "O", true));
+                        }
+                    }
+
+                } catch (Exception e) {
+                    //
+                    com.gmt2001.Console.out.println("Error::" + e.toString());
+                }
+
+            }
+            if (message.indexOf("is now hosting you") != -1) {
+                String hoster = message.split(" ")[0].toString();
+                com.gmt2001.Console.out.println("Hoster::" + hoster + "::true");
+                eventBus.post(new TwitchHostedEvent(hoster, Quorrabot.channel));
+                //EventBus.instance().post(new IrcChannelMessageEvent(getSession(channel.getName()), username, message, channel));
+            }
+        }
+
         /* Check to see if the users disaplay name. Used in the scripts. */
         if (tagsMap.containsKey("display-name")) {
             usernameCache.addUser(username, tagsMap.get("display-name"));
@@ -280,7 +313,6 @@ public class IRCParser {
         if (message.endsWith("subscribed!") || message.endsWith("Prime!")) {
             if (username.equalsIgnoreCase("twitchnotify")) {
                 message = message.split(" ")[0] + " just subscribed!";
-                //eventBus.post(new IrcPrivateMessageEvent(this.session, "twitchnotify", message.split(" ")[0] + " just subscribed!", tagsMap));
                 com.gmt2001.Console.debug.println(message.split(" ")[0] + " just subscribed!");
             }
         }
@@ -331,9 +363,10 @@ public class IRCParser {
             }
         }
 
+
         /* Moderate the incoming message. Have it run in the background on a thread. */
         try {
-            ModerationRunnable moderationRunnable = new ModerationRunnable(this.session, username, message, this.channel, tagsMap, this.ownerName);
+            ModerationRunnable moderationRunnable = new ModerationRunnable(this.session, username, message, this.channel, tagsMap);
             new Thread(moderationRunnable).start();
         } catch (Exception ex) {
             scriptEventManager.runDirect(new IrcModerationEvent(this.session, username, message, this.channel, tagsMap));
@@ -515,15 +548,13 @@ public class IRCParser {
         private final String message;
         private final Channel channel;
         private final Map<String, String> tagsMap;
-        private final String ownername;
 
-        public ModerationRunnable(Session session, String username, String message, Channel channel, Map<String, String> tagsMap, String ownerName) {
+        public ModerationRunnable(Session session, String username, String message, Channel channel, Map<String, String> tagsMap) {
             this.session = session;
             this.username = username;
             this.message = message;
             this.channel = channel;
             this.tagsMap = tagsMap;
-            this.ownername = ownerName;
         }
 
         public void run() {

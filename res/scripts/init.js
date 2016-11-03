@@ -65,15 +65,17 @@ $.modeo = false;
 
 $api.on($script, 'ircJoinComplete', function (event) {
     $.connected = true;
-    if(!event.getChannel().getName().equalsIgnoreCase("tcechannel")) {
-        $.channel = event.getChannel();
-        $.session = event.getSession();
+    $.channel = event.getChannel();
+    $.session = event.getSession();
+    if (!event.getChannel().getName().equalsIgnoreCase("tcechannel")) {
+        $.botchannel = event.getChannel();
+        $.botsession = event.getSession();
     }
 });
 
 $api.on($script, 'ircChannelUserMode', function (event) {
     if ($.connected) {
-        if (event.getChannel().getName().equalsIgnoreCase($.channel.getName())) {
+        if ($.botchannel!=null && event.getChannel().getName().equalsIgnoreCase($.botchannel.getName())) {
             if (event.getUser().equalsIgnoreCase($.botname) && event.getMode().equalsIgnoreCase("o")) {
                 if (event.getAdd() == true) {
                     if (!$.modeo) {
@@ -83,7 +85,7 @@ $api.on($script, 'ircChannelUserMode', function (event) {
                                 $.say(connectedMessage);
                                 $.joinmsg = true;
                             } else {
-                                $.println($.username.resolve($.botname) +  " is now online.");
+                                $.println($.username.resolve($.botname) + " is now online.");
                                 $.joinmsg = true;
                             }
                         }

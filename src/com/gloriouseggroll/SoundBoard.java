@@ -139,9 +139,9 @@ public class SoundBoard extends WebSocketServer {
             if (jsonObject.has("command")) {
                 dataString = jsonObject.getString("command");
                 if (jsonObject.has("username")) {
-                    Quorrabot.instance().handleCommand(jsonObject.getString("username"), dataString);
+                    Quorrabot.instance().consoleCommand(jsonObject.getString("username"), dataString);
                 } else {
-                    Quorrabot.instance().handleCommand(Quorrabot.instance().getBotName(), dataString);
+                    Quorrabot.instance().consoleCommand(Quorrabot.instance().getBotName(), dataString);
                 }
                 return;
             } else if (jsonObject.has("version")) {
