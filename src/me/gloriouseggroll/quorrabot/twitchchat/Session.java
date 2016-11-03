@@ -54,15 +54,16 @@ public class Session {
     private EventBus eventBus;
     private Channel channel;
     private String channelName;
+    private String ownerName;
     private String botName;
     private String oAuth;
     private int chatLineCtr = 0;
     private Long lastTry = 0L;
 
-    public static Session instance(Channel channel, String channelName, String botName, String oAuth, EventBus eventBus) {
+    public static Session instance(Channel channel, String channelName, String botName, String oAuth, EventBus eventBus, String ownerName) {
         Session instance = instances.get(botName);
         if (instance == null) {
-            instance = new Session(channel, channelName, botName, oAuth, eventBus);
+            instance = new Session(channel, channelName, botName, oAuth, eventBus, ownerName);
             instances.put(botName, instance);
             session = instance;
             return instance;
@@ -79,8 +80,9 @@ public class Session {
      * @param  Channel      Channel instance  
      * @param  eventBus     Eventbus
      */
-    private Session(Channel channel, String channelName, String botName, String oAuth, EventBus eventBus) {
+    private Session(Channel channel, String channelName, String botName, String oAuth, EventBus eventBus, String ownerName) {
         this.channelName = channelName.toLowerCase();
+        this.ownerName = ownerName;
         this.eventBus = eventBus;
         this.channel = channel;
         this.botName = botName;
@@ -88,7 +90,7 @@ public class Session {
         this.alternateBurst = Quorrabot.webSocketIRCAB;
 
         try {
-            this.twitchIRC = IRC.instance(new URI("wss://irc-ws.chat.twitch.tv"), channelName, botName, oAuth, channel, this, eventBus);
+            this.twitchIRC = IRC.instance(new URI("wss://irc-ws.chat.twitch.tv"), channelName, botName, oAuth, channel, this, eventBus, ownerName);
             if (!twitchIRC.connectWSS(false)) {
                 com.gmt2001.Console.err.println("Unable to login to Twitch. QuorraBot will exit.");
                 System.exit(0);
@@ -110,7 +112,7 @@ public class Session {
                 lastTry = System.currentTimeMillis();
                 try {
                     this.twitchIRC.delete();
-                    this.twitchIRC = twitchIRC.instance(new URI("wss://irc-ws.chat.twitch.tv"), channelName, botName, oAuth, channel, this, eventBus);
+                    this.twitchIRC = twitchIRC.instance(new URI("wss://irc-ws.chat.twitch.tv"), channelName, botName, oAuth, channel, this, eventBus, ownerName);
                     reconnected = this.twitchIRC.connectWSS(true);
                 } catch (Exception ex) {
                     com.gmt2001.Console.err.println("Failed to reconnect to Twitch websocket chat... QuorraBot will now exit: " + ex.getMessage());
@@ -173,6 +175,9 @@ public class Session {
         return this.botName.toLowerCase();
     }
 
+    public String getOwner() {
+        return this.ownerName.toLowerCase();
+    }
     /*
      *
      * @return  Session  Returns the session

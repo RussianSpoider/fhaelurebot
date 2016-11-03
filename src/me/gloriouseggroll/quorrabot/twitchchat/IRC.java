@@ -49,6 +49,7 @@ public class IRC extends WebSocketClient {
     private final String channelName;
     private final String login;
     private final String oAuth;
+    private final String ownerName;
     private final URI uri;
     private IRCParser twitchWSIRCParser;
     private EventBus eventBus;
@@ -62,10 +63,10 @@ public class IRC extends WebSocketClient {
      * @param  login    User ID to login with.
      * @param  oauth    OAuth key to use for authentication.
      */
-    public static IRC instance(URI uri, String channelName, String login, String oAuth, Channel channel, Session session, EventBus eventBus) {
+    public static IRC instance(URI uri, String channelName, String login, String oAuth, Channel channel, Session session, EventBus eventBus, String ownerName) {
         IRC instance = instances.get(channelName);
         if (instance == null) {
-            instance = new IRC(uri, channelName, login, oAuth, channel, session, eventBus);
+            instance = new IRC(uri, channelName, login, oAuth, channel, session, eventBus, ownerName);
             instances.put(channelName, instance);
             return instance;
         }
@@ -79,13 +80,14 @@ public class IRC extends WebSocketClient {
      * @param  login    User ID to login with.
      * @param  oauth    OAuth key to use for authentication.
      */
-    private IRC(URI uri, String channelName, String login, String oAuth, Channel channel, Session session, EventBus eventBus) {
+    private IRC(URI uri, String channelName, String login, String oAuth, Channel channel, Session session, EventBus eventBus, String ownerName) {
         super(uri, new Draft_17(), null, 5000);
         if (channelName.startsWith("#")) {
             channelName = channelName.substring(1);
         }
 
         this.channelName = channelName;
+        this.ownerName = ownerName;
         this.login = login;
         this.oAuth = oAuth;
         this.uri = uri;
@@ -131,7 +133,7 @@ public class IRC extends WebSocketClient {
             sslContext.init(null, null, null);
             SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
             this.setSocket(sslSocketFactory.createSocket());
-            this.twitchWSIRCParser = new IRCParser(this.getConnection(), channelName, channel, session, eventBus);
+            this.twitchWSIRCParser = new IRCParser(this.getConnection(), channelName, channel, session, eventBus, ownerName);
             this.connect();
             return true;
         } catch (Exception ex) {

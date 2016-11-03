@@ -38,6 +38,7 @@ public class Channel {
     private EventBus eventBus;
     private String channelName;
     private String botName;
+    private String ownerName;
     private String oAuth;
     private Session session;
 
@@ -46,10 +47,10 @@ public class Channel {
      *
      * @param  channel  Twitch Channel
      */
-    public static Channel instance(String channelName, String botName, String oAuth, EventBus eventBus) {
+    public static Channel instance(String channelName, String botName, String oAuth, EventBus eventBus, String ownerName) {
         Channel instance = instances.get(channelName);
         if (instance == null) {
-            instance = new Channel(channelName, botName, oAuth, eventBus);
+            instance = new Channel(channelName, botName, oAuth, eventBus, ownerName);
             instances.put(channelName, instance);
             channel = instance;
             return instance;
@@ -63,13 +64,14 @@ public class Channel {
      * @param  channelName  Twitch Channel
      * @param  webSocket    WebSocket object for writing data to
      */
-    private Channel(String channelName, String botName, String oAuth, EventBus eventBus) {
+    private Channel(String channelName, String botName, String oAuth, EventBus eventBus, String ownerName) {
         this.channelName = channelName;
         this.eventBus = eventBus;
         this.botName = botName;
         this.oAuth = oAuth;
+        this.ownerName = ownerName;
 
-        session = Session.instance(this, channelName, botName, oAuth, eventBus);
+        session = Session.instance(this, channelName, botName, oAuth, eventBus, ownerName);
     }
 
     /*

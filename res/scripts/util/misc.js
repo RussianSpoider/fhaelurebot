@@ -1,43 +1,43 @@
 //Function takes the amount of user and the name of points/currency and converts accordingly
 //then calls next function with information that was processed
-$.econNameFormat = function(amt, name){
-	regex = /.$\w[^aeiou]+y/i;
-	if(name === undefined){
-		name = "";
-	}
-	if (amt > 1) {
-                if($.inidb.exists("settings","pointNameMultiple")) {
-                    name = $.inidb.get("settings","pointNameMultiple");
-                } else {
-                    if (regex.test(name)){
-                    	name = " " + name+"ies";
-                    } else {
-			name = " " + name+"s";
-                    }
-                }
+$.econNameFormat = function (amt, name) {
+    regex = /.$\w[^aeiou]+y/i;
+    if (name === undefined) {
+        name = "";
+    }
+    if (amt > 1) {
+        if ($.inidb.exists("settings", "pointNameMultiple")) {
+            name = $.inidb.get("settings", "pointNameMultiple");
+        } else {
+            if (regex.test(name)) {
+                name = " " + name + "ies";
+            } else {
+                name = " " + name + "s";
+            }
         }
-	return $.formatNumbers(amt, name);
+    }
+    return $.formatNumbers(amt, name);
 }
 //Converts int based numbers (not string based) to normal currency values. Ex: 1000 -> 1,000
 // can also take the name of points or currency when returning.
-$.formatNumbers = function(n, econ) {
-	if (econ === undefined) {
-		econ = "";
-	}
-	return n.toFixed().replace(/./g, function(c, i, a) {
-			return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
-		}
-	) + " " + econ;
+$.formatNumbers = function (n, econ) {
+    if (econ === undefined) {
+        econ = "";
+    }
+    return n.toFixed().replace(/./g, function (c, i, a) {
+        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+    }
+    ) + " " + econ;
 }
 
 $.isJSON = function isJSON(data) {
-   var ret = true;
-   try {
-      JSON.parse(data);
-   }catch(e) {
-      ret = false;
-   }
-   return ret;
+    var ret = true;
+    try {
+        JSON.parse(data);
+    } catch (e) {
+        ret = false;
+    }
+    return ret;
 }
 
 $.say = function (s) {
@@ -51,28 +51,30 @@ $.say = function (s) {
             return;
         }
         if (!s.startsWith('.')) {
-        if (!$.inidb.exists("settings", "response_@all") || $.inidb.get("settings", "response_@all").equalsIgnoreCase("1")
-                || s.equals($.lang.get("net.quorrabot.misc.response-disable")) == true || s.indexOf(".timeout ") != -1 || s.indexOf(".ban ") != -1
-                || s.indexOf(".unban ") != -1 || s.equalsIgnoreCase(".clear") || s.equalsIgnoreCase(".mods")) {
-            var whispercheck = s.substring(0,3);
-            if(whispercheck.equalsIgnoreCase("/w ")) {
-                sleep(1000);
-                $.session.say(s);
-            } else {
-                $.session.say(s);
+
+            if (!$.inidb.exists("settings", "response_@all") || $.inidb.get("settings", "response_@all").equalsIgnoreCase("1")
+                    || s.equals($.lang.get("net.quorrabot.misc.response-disable")) == true || s.indexOf(".timeout ") != -1 || s.indexOf(".ban ") != -1
+                    || s.indexOf(".unban ") != -1 || s.equalsIgnoreCase(".clear") || s.equalsIgnoreCase(".mods")) {
+
+                var whispercheck = s.substring(0, 3);
+                if (whispercheck.equalsIgnoreCase("/w ")) {
+                    sleep(1000);
+                    $.session.say(s);
+                } else {
+                    $.session.say(s);
+                }
             }
-        }
         }
     }
 }
 
 function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds) {
+            break;
+        }
     }
-  }
 }
 
 
@@ -80,33 +82,33 @@ $.replaceAll = function (string, find, replace) {
     if (find.equals(replace)) {
         return string;
     }
-    
-    if(find.indexOf("(")!=-1) {
-        while(string.indexOf(find)>=0) {
+
+    if (find.indexOf("(") != -1) {
+        while (string.indexOf(find) >= 0) {
             string = string.replace(find, replace);
         }
         return string;
     } else {
         var args = string.split(" ");
         var retstr = "";
-    
-        for(var i=0;i<args.length;i++) {
-            if(args[i].indexOf(find)>=0) {
-                var substr = args[i].substring( args[i].indexOf(find), find.length + 1);
-                var substr2 = substr.substring(find.length, find.length+1);
-            
-                if(isNaN(substr2) || substr2=="") {
-                    args[i] = args[i].replace(find,replace);
+
+        for (var i = 0; i < args.length; i++) {
+            if (args[i].indexOf(find) >= 0) {
+                var substr = args[i].substring(args[i].indexOf(find), find.length + 1);
+                var substr2 = substr.substring(find.length, find.length + 1);
+
+                if (isNaN(substr2) || substr2 == "") {
+                    args[i] = args[i].replace(find, replace);
                 }
             }
-        
+
             retstr += args[i];
-        
-            if(i<args.length) {
-                retstr+=" ";
+
+            if (i < args.length) {
+                retstr += " ";
             }
         }
-    
+
         return retstr;
     }
 }
@@ -313,8 +315,8 @@ $.on('command', function (event) {
     var argsString = event.getArguments().trim();
     var args = event.getArgs();
 
-    if(command.toString().equalsIgnoreCase("say")) {
-        if(!$.isModv3(sender, event.getTags())) {
+    if (command.toString().equalsIgnoreCase("say")) {
+        if (!$.isModv3(sender, event.getTags())) {
             $.say($.getWhisperString(sender) + $.modmsg);
             return;
         }
@@ -497,7 +499,7 @@ $.on('ircChannelMessage', function (event) {
 
 $.timer.addTimer("./util/misc.js", "registercommand", false, function () {
     $.registerChatCommand("./util/misc.js", "log", "admin");
-    $.registerChatCommand("./util/misc.js", "say", "admin");    
+    $.registerChatCommand("./util/misc.js", "say", "admin");
     $.registerChatCommand("./util/misc.js", "logchat", "admin");
     $.registerChatCommand("./util/misc.js", "response", "admin");
 }, 5000);
@@ -548,53 +550,53 @@ $.strlen = function (str) {
         }
     }
 };
-$.getSetIniDbBoolean = function(fileName, key, defaultValue) {
-        if ($.inidb.exists(fileName, key)) {
-            return ($.inidb.get(fileName, key) == 'true');
-        } else {
-            $.inidb.set(fileName, key, defaultValue.toString());
-            return (defaultValue);
-        }
+$.getSetIniDbBoolean = function (fileName, key, defaultValue) {
+    if ($.inidb.exists(fileName, key)) {
+        return ($.inidb.get(fileName, key) == 'true');
+    } else {
+        $.inidb.set(fileName, key, defaultValue.toString());
+        return (defaultValue);
+    }
 };
 
-$.paginateArray = function(array, langKey, sep, whisper, sender, display_page) {
-        var idx,
+$.paginateArray = function (array, langKey, sep, whisper, sender, display_page) {
+    var idx,
             output = '',
             maxlen,
             pageCount = 0;
 
-        if (display_page === undefined) {
-            display_page = 0;
-        }
+    if (display_page === undefined) {
+        display_page = 0;
+    }
 
-        maxlen = 440 - $.lang.get(langKey).length;
-        for (idx in array) {
-            output += array[idx];
-            if (output.length >= maxlen) {
-                pageCount++;
-                if (display_page === 0 || display_page === pageCount) {
-                    if (whisper) {
-                        $.say($.getWhisperString(sender) + $.lang.get(langKey, output));
-                    } else {
-                        $.say($.lang.get(langKey, output));
-                    }
-                }
-                output = '';
-            } else {
-                if (idx < array.length - 1) {
-                    output += sep;
+    maxlen = 440 - $.lang.get(langKey).length;
+    for (idx in array) {
+        output += array[idx];
+        if (output.length >= maxlen) {
+            pageCount++;
+            if (display_page === 0 || display_page === pageCount) {
+                if (whisper) {
+                    $.say($.getWhisperString(sender) + $.lang.get(langKey, output));
+                } else {
+                    $.say($.lang.get(langKey, output));
                 }
             }
-        }
-        pageCount++;
-        if (display_page === 0 || display_page === pageCount) {
-            if (whisper) {
-                $.say($.getWhisperString(sender) + $.lang.get(langKey, output));
-            } else {
-                $.say($.lang.get(langKey, output));
+            output = '';
+        } else {
+            if (idx < array.length - 1) {
+                output += sep;
             }
         }
-        return pageCount;
+    }
+    pageCount++;
+    if (display_page === 0 || display_page === pageCount) {
+        if (whisper) {
+            $.say($.getWhisperString(sender) + $.lang.get(langKey, output));
+        } else {
+            $.say($.lang.get(langKey, output));
+        }
+    }
+    return pageCount;
 }
 
 
