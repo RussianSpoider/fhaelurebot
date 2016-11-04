@@ -42,8 +42,6 @@ $.on('ircChannelLeave', function(event) {
 });
 
 
-setTimeout(function(){ 
     if ($.moduleEnabled('./commands/lastseenCommand.js')) {
         $.registerChatCommand("./commands/lastseenCommand.js", "lastseen");
     }
-},10 * 1000);

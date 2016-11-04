@@ -105,10 +105,6 @@ $.on('command', function (event) {
     }
 });
 
-
-//Q: why is there a timeout delay here before a timer? seems redundant no?
-//A: the timeout sets a delay to start the timer, otherwise the timer won't detect if a module is disabled (because it hasnt loaded in yet)
-setTimeout(function(){ 
     if ($.moduleEnabled("./handlers/donationHandler.js")) {
         $.timer.addTimer("./handlers/donationHandler.js", "currdonation", true, function() {
             if($.DonationHandler.DonationToggle != 1 || !$.isOnline($.channelName)) {
@@ -204,4 +200,4 @@ setTimeout(function(){
         }, 10 * 1000);
     }
     $.registerChatCommand("./handlers/donationHandler.js", "donationalert", "mod");
-}, 10 * 1000);
+

@@ -220,11 +220,9 @@ $.on('command', function (event) {
     }
 });
 
-setTimeout(function () { 
     if ($.moduleEnabled('./handlers/noticeHandler.js')) {
         $.registerChatCommand('./handlers/noticeHandler.js', 'notice');
     }
-}, 10 * 1000);
 
 $.SendNotice = function (number) {
     var noticenum = number;

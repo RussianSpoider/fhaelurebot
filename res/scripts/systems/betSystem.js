@@ -1,61 +1,111 @@
-$.betSystem = {
-    betMinimum: ($.inidb.get('betsettings', 'betminimum') ? $.inidb.get('betsettings', 'betminimum') : 1),
-    betMaximum: ($.inidb.get('betsettings', 'betmaximum') ? $.inidb.get('betsettings', 'betmaximum') : 1000),
-    time: 0,
-    betStatus: false,
-    betWinRatio: 0,
-    betLoseRatio: 0,
-    betPot: 0,
-    betOptions: [],
-    betTable: [],
+var betMinimum = $.inidb.set('betSettings', 'betMinimum', 1),
+        betMaximum = $.inidb.set('betSettings', 'betMaximum', 1000),
+        betMessageToggle = $.inidb.set('betSettings', 'betMessageToggle', true),
+        time = 0,
+        betStatus = false,
+        betTimerStatus = false,
+        betTimer = $.inidb.set('betSettings', 'betTimer', 0),
+        betPot = 0,
+        betOptions = [],
+        betTable = [];
+
+/** 
+ * @function hasKey
+ * @param {Array} list
+ * @param {*} value
+ * @param {Number} [subIndex]
+ * @returns {boolean}
+ */
+function hasKey(list, value, subIndex) {
+    var i;
+
+    if (subIndex > -1) {
+        for (i in list) {
+            if (list[i][subIndex].equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+    } else {
+        for (i in list) {
+            if (list[i].equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
+;
 
-
-    function betOpen(event, bet) {
-        var sender = event.getSender(),
+/**
+ * @function betOpen
+ */
+function betOpen(event, bet, timer) {
+    var sender = event.getSender(),
             args = event.getArgs(),
             string,
             betOp = '',
             i;
 
-        if ($.betSystem.betStatus) {
-            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.bet.opened'));
-            return;
-        }
-
-        if (bet.length < 2) {
-            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.options'));
-            return;
-        }
-
-        for (i = 0; i < bet.length; i++) {
-            $.betSystem.betOptions.push(bet[i].toLowerCase().trim());
-            if (!isNaN(bet[i])) {
-                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.open'));
-                $.betSystem.betOptions = [];
-                return;
-            }
-        }
-
-        string = $.betSystem.betOptions.join(' vs ');
-
-        $.betSystem.betStatus = true;
-
-        $.say($.lang.get('net.quorrabot.betsystem.opened', string, $.pointNameMultiple));
-    };
-
-    function resetBet() {
-        $.betSystem.betPot = 0;
-        $.betSystem.betTotal = 0;
-        $.betSystem.betWinRatio = 0;
-        $.betSystem.betLoseRatio = 0;
-        $.betSystem.betWinners = '';
-        $.betSystem.betOptions = [];
-        $.betSystem.betTable = [];
+    if (betStatus || betTimerStatus) {
+        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.bet.opened'));
+        return;
     }
 
-    function betClose(sender, event, subAction) {
-        var args = event.getArgs(),
+    if (bet.length < 2 && !timer) {
+        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.options'));
+        return;
+    }
+
+    for (i = 0; i < bet.length; i++) {
+        betOptions.push(bet[i].toLowerCase().trim());
+        if (!isNaN(bet[i])) {
+            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.open'));
+            betOptions = [];
+            return;
+        }
+    }
+
+    string = betOptions.join(' vs ');
+
+    betStatus = true;
+    betTimerStatus = true
+
+    $.say($.lang.get('net.quorrabot.betsystem.opened', string, $.pointNameMultiple));
+
+    if (timer > 0) {
+        setTimeout(function () {
+            if (betStatus) {
+                $.say($.lang.get('net.quorrabot.betsystem.auto.close.warn', string));
+            }
+        }, (betTimer / 2) * 1000);
+        setTimeout(function () {
+            betTimerStatus = false;
+            if (betStatus) {
+                $.say($.lang.get('net.quorrabot.betsystem.auto.close'));
+            }
+        }, betTimer * 1000);
+    }
+}
+;
+
+/**
+ * @function resetBet
+ */
+function resetBet() {
+    betPot = 0;
+    betTotal = 0;
+    betWinners = '';
+    betOptions = [];
+    betTable = [];
+    betStatus = false;
+    betTimerStatus = false;
+}
+
+/**
+ * @function betClose
+ */
+function betClose(sender, event, subAction) {
+    var args = event.getArgs(),
             betWinning = subAction,
             betWinPercent = 0,
             betPointsWon = 0,
@@ -65,104 +115,114 @@ $.betSystem = {
             a = 0,
             i;
 
-        if (!$.betSystem.betStatus) {
-            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.bet.closed'));
-            return;
+    if (!betStatus) {
+        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.bet.closed'));
+        return;
+    }
+
+    if (!subAction) {
+        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.win.option'));
+        return;
+    }
+
+    if (subAction && subAction.equalsIgnoreCase('refundall')) {
+        betStatus = false;// Have this here in case it takes longer for the loop to end. 
+        for (i in betTable) {
+            bet = betTable[i];
+            $.inidb.incr('points', i, bet.amount);
         }
-
-        if (!betWinning) {
-            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.win.option'));
-            return;
-        }
-
-        if (!$.array.contains($.betSystem.betOptions, betWinning)) {
-            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.option.404'));
-            return;
-        }
-
-        betWinning = subAction.toLowerCase();
-        $.betSystem.betStatus = false;
-
-        for (i in $.betSystem.betTable) {
-            bet = $.betSystem.betTable[i];
-            if (bet.option.equalsIgnoreCase(betWinning)) {
-                betTotal = bet.amount;
-            }
-        }
-
-        for (i in $.betSystem.betTable) {
-            a++;
-            bet = $.betSystem.betTable[i];
-            if (bet.option.equalsIgnoreCase(betWinning)) {
-                $.betSystem.betWinRatio++;
-            } else {
-                $.betSystem.betLoseRatio++;
-            }
-        }
-
-        /**
-         * Disable for now.  Needs to have a different value for
-         * betMinimum, right now this is the minimum amount, not
-         * minimum users. Could set a default through a set command
-         * and perhaps override with !bet open min=num option option
-         * 
-         * if (a < betMinimum) {
-         *   for (i in betTable) {
-         *     bet = betTable[i];
-         *     $.inidb.incr('points', i, bet.amount);
-         *   }
-         *
-         *   $.say($.lang.get('net.quorrabot.betsystem.not.enough.ppl'));
-         *   resetBet();
-         *   return;
-         * }
-         **/
-		 
-        var betMultiplier = Math.round($.betSystem.betLoseRatio / $.betSystem.betWinRatio);
-
-        if (betTotal == 0) {
-            $.say($.lang.get('net.quorrabot.betsystem.closed.404', betWinning));
-            resetBet();
-            return;
-        }
-		
-
-        if ($.betSystem.betPot <= 0) {
-            for (i in $.betSystem.betTable) {
-                bet = $.betSystem.betTable[i];
-                $.inidb.incr('points', i, bet.amount);
-            }
-            $.say($.lang.get('net.quorrabot.betsystem.err.points.refunded'));
-            resetBet();
-            return;
-        }
-		
-        var winAmount = 0;
-        var winnerString = "";
-
-        for (i in $.betSystem.betTable) {
-            bet = $.betSystem.betTable[i];
-            if (bet.option.equalsIgnoreCase(betWinning)) {
-                winAmount = bet.amount + (bet.amount * betMultiplier);
-                if (winAmount > 0) {
-                    if (betWinners.length > 0) {
-                        betWinners += ', ';
-                        winnerString += ', ';
-                    }
-                    betWinners += $.username.resolve(i);
-                    winnerString += $.username.resolve(i) + " [+" + winAmount + "]";
-                }
-            }
-        }
-
-        // For the Panel
-        $.inidb.set('betresults', 'winners', winnerString);
-        $.say($.lang.get('net.quorrabot.betsystem.closed', betWinning, $.betSystem.betWinRatio.toString() + "/" + $.betSystem.betLoseRatio.toString(), winnerString));
+        $.say($.lang.get('net.quorrabot.betsystem.close.refund', $.pointNameMultiple));
         resetBet();
-    };
+        return;
+    }
 
-    $.on('command', function(event) {
-        var sender = event.getSender(),
+    if (!hasKey(betOptions, betWinning)) {
+        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.option.404'));
+        return;
+    }
+
+    betWinning = subAction.toLowerCase();
+    betStatus = false;
+    betTimerStatus = false;
+
+    for (i in betTable) {
+        bet = betTable[i];
+        if (bet.option.equalsIgnoreCase(betWinning)) {
+            betTotal = bet.amount;
+        }
+    }
+
+    for (i in betTable) {
+        a++;
+        bet = betTable[i];
+        if (bet.option.equalsIgnoreCase(betWinning)) {
+            betPointsWon = (betPot / betTotal);
+            if (betPointsWon > 0) {
+                if (betWinners.length > 0) {
+                    betWinners += ', ';
+                }
+                betWinners += i;
+            }
+        }
+    }
+
+    /**
+     * Disable for now.  Needs to have a different value for
+     * betMinimum, right now this is the minimum amount, not
+     * minimum users. Could set a default through a set command
+     * and perhaps override with !bet open min=num option option
+     * 
+     * if (a < betMinimum) {
+     *   for (i in betTable) {
+     *     bet = betTable[i];
+     *     $.inidb.incr('points', i, bet.amount);
+     *   }
+     *
+     *   $.say($.lang.get('betsystem.not.enough.ppl'));
+     *   resetBet();
+     *   return;
+     * }
+     **/
+
+    if (betTotal == 0) {
+        $.say($.lang.get('net.quorrabot.betsystem.closed.404', betWinning));
+        resetBet();
+        return;
+    }
+
+    if (betPot <= 0) {
+        for (i in betTable) {
+            bet = betTable[i];
+            $.inidb.incr('points', i, bet.amount);
+        }
+        $.say($.lang.get('net.quorrabot.betsystem.err.points.refunded'));
+        resetBet();
+        return;
+    }
+    var winners = "";
+    var winamount = 0;
+    for (i in betTable) {
+        bet = betTable[i];
+        if (bet.option.equalsIgnoreCase(betWinning)) {
+            betWinPercent = (bet.amount / betTotal);
+            var win = (betPot * betWinPercent).toFixed(0);
+            $.inidb.incr('points', i, win);
+            winamount = win;
+            winners += " +" + winamount.toString() + " " + $.username.resolve(i) + ", ";
+        }
+    }
+    winners = winners.toString().substring(winners, winners.length - 2);
+
+    $.inidb.set('betresults', 'winners', betWinners);
+    $.inidb.set('betresults', 'amount', (betPot * betWinPercent));
+
+    $.say($.lang.get('net.quorrabot.betsystem.closed', betWinning, winners));
+    resetBet();
+}
+;
+
+$.on('command', function (event) {
+    var sender = event.getSender(),
             command = event.getCommand(),
             argString = event.getArguments().trim(),
             args = event.getArgs(),
@@ -170,150 +230,166 @@ $.betSystem = {
             subAction = args[1],
             bet = args.slice(1);
 
+    /**
+     * @commandpath bet - Performs bet operations.
+     */
+    if (command.equalsIgnoreCase('bet')) {
+        if (!action) {
+            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.command.usage'));
+            return;
+        }
+
         /**
-         * @commandpath bet - Performs bet operations.
+         * @commandpath bet open [option option option ...] - Opens a bet with options; not allowed to be digits, words only.
          */
-        if (command.equalsIgnoreCase('bet')) {
-            if (!action) {
-                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.command.usage'));
-                return;
-            }
+        if (action.equalsIgnoreCase('open')) {
+            betOpen(event, bet, betTimer);
+            return;
 
             /**
-             * @commandpath bet open [option option option ...] - Opens a bet with options; not allowed to be digits, words only.
+             * @commandpath bet close [option] - Closes the bet and selects option as the winner.
+             * @commandpath bet close refundall - Closes the bet and refunds all points.
              */
-            if (action.equalsIgnoreCase('open')) {
-                if (!$.isModv3(sender, event.getTags())) {
-                    $.say($.getWhisperString(sender) + $.modmsg);
-                    return;
-                }
+        } else if (action.equalsIgnoreCase('close')) {
+            betClose(sender, event, subAction);
+            return;
 
-                betOpen(event, bet);
+            /**
+             * @commandpath bet setminimum [value] - Set the minimum value of a bet.
+             */
+        } else if (action.equalsIgnoreCase('setminimum')) {
+            if (!subAction) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.min.usage'));
                 return;
+            }
 
-                /**
-                 * @commandpath bet close [option] - Closes the bet and selects option as the winner.
-                 */
-            } else if (action.equalsIgnoreCase('close')) {
-                if (!$.isModv3(sender, event.getTags())) {
-                    $.say($.getWhisperString(sender) + $.modmsg);
-                    return;
-                }
-                betClose(sender, event, subAction);
+            betMinimum = parseInt(subAction);
+            $.inidb.set('betSettings', 'betMinimum', betMinimum);
+            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.min', betMinimum, $.pointNameMultiple));
+            return;
+
+            /**
+             * @commandpath bet setmaximum [value] - Set the maximum value of a bet.
+             */
+        } else if (action.equalsIgnoreCase('setmaximum')) {
+            if (!subAction) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.max.usage'));
                 return;
+            }
 
-                /**
-                 * @commandpath bet setminimum [value] - Set the minimum value of a bet.
-                 */
-            } else if (action.equalsIgnoreCase('setminimum')) {
-                if (!$.isModv3(sender, event.getTags())) {
-                    $.say($.getWhisperString(sender) + $.modmsg);
-                    return;
-                }
+            betMaximum = parseInt(subAction);
+            $.inidb.set('betSettings', 'betMaximum', betMaximum);
+            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.max', betMaximum, $.pointNameMultiple));
+            return;
 
-                if (!subAction) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.min.usage'));
-                    return;
-                }
-
-                $.betSystem.betMinimum = parseInt(subAction);
-                $.inidb.set('betsettings', 'betminimum', $.betSystem.betMinimum);
-                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.min', $.betSystem.betMinimum, $.pointNameMultiple));
+            /**
+             * @commandpath bet settimer [amount in seconds] - Sets a auto close timer for bets
+             */
+        } else if (action.equalsIgnoreCase('settimer')) {
+            if (!subAction) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.timer.usage'));
                 return;
+            }
 
-                /**
-                 * @commandpath bet setmaximum [value] - Set the maximum value of a bet.
-                 */
-            } else if (action.equalsIgnoreCase('setmaximum')) {
-                if (!$.isModv3(sender, event.getTags())) {
-                    $.say($.getWhisperString(sender) + $.modmsg);
-                    return;
-                }
+            betTimer = parseInt(subAction);
+            $.inidb.set('betSettings', 'betTimer', betTimer);
+            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.timer', betTimer));
+            return;
 
-                if (!subAction) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.max.usage'));
-                    return;
-                }
+            /**
+             * @commandpath togglebetmessage - Toggles the bet enter message
+             */
+        } else if (action.equalsIgnoreCase('togglebetmessage')) {
+            if (betMessageToggle) {
+                betMessageToggle = false;
+                $.inidb.set('betSettings', 'betMessageToggle', false);
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.toggle.off'));
+            } else if (!betMessageToggle) {
+                betMessageToggle = true;
+                $.inidb.set('betSettings', 'betMessageToggle', true);
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.toggle.on'));
+            }
+            return;
 
-                $.betSystem.betMaximum = parseInt(subAction);
-                $.inidb.set('betsettings', 'betmaximum', $.betSystem.betMaximum);
-                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.set.max', $.betSystem.betMaximum, $.pointNameMultiple));
+            /**
+             * @commandpath bet [ [option amount] | [amount option] ]- Places a bet on option, betting an amount of points.
+             */
+        } else {
+            if (!betStatus || !betTimerStatus) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.bet.closed'));
                 return;
+            }
 
-                /**
-                 * @commandpath bet [ [option amount] | [amount option] ]- Places a bet on option, betting an amount of points.
-                 */
-            } else {
-                if (!$.betSystem.betStatus) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.bet.closed'));
-                    return;
-                }
-
-                var betWager,
+            var betWager,
                     betOption;
 
-                if (!action || !subAction) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.option.404'));
+            if (!action || !subAction) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.option.err'));
+                return;
+            }
+
+            if (isNaN(action) && isNaN(subAction)) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.option.404'));
+                return;
+            }
+            if (isNaN(action) && !isNaN(subAction)) {
+                betWager = parseInt(subAction);
+                betOption = action;
+            } else {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.option.err'));
+                return;
+            }
+
+            if (!hasKey(betOptions, betOption.toLowerCase())) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.option.404'));
+                return;
+            } else if (betWager < 1) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.bet.err.neg', $.pointNameMultiple));
+                return;
+            } else if (betWager < betMinimum) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.bet.err.less', $.getPointsString(betMinimum)));
+                return;
+            } else if (betWager > betMaximum) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.bet.err.more', $.getPointsString(betMaximum)));
+                return;
+            } else if (parseInt($.getPoints(sender.toLowerCase())) < betWager) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.points', $.pointNameMultiple));
+                return;
+            }
+
+            for (i in betTable) {
+                if (sender.equalsIgnoreCase(i)) {
+                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.voted'));
                     return;
                 }
+            }
 
-                if (isNaN(action) && isNaN(subAction)) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.option.404'));
-                    return;
-                }
-                if (isNaN(action) && !isNaN(subAction)) {
-                    betWager = parseInt(subAction);
-                    betOption = action;
-                }
-                if (!isNaN(action) && isNaN(subAction)) {
-                    betWager = parseInt(action);
-                    betOption = subAction;
-                }
+            $.inidb.decr('points', sender, betWager);
 
-                if (!$.array.contains($.betSystem.betOptions, betOption.toLowerCase())) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.option.404'));
-                    return;
-                } else if (betWager < 1) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.bet.err.neg', $.pointNameMultiple));
-                    return;
-                } else if (betWager < $.betSystem.betMinimum) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.bet.err.less', $.getPointsString($.betSystem.betMinimum)));
-                    return;
-                } else if (betWager > $.betSystem.betMaximum) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.bet.err.more', $.getPointsString($.betSystem.betMaximum)));
-                    return;
-                } else if (parseInt($.getPoints(sender.toLowerCase())) < betWager) {
-                    $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.points', $.pointNameMultiple));
-                    return;
-                }
+            if (betPot == 0) {
+                betPot = betWager;
+            } else {
+                betPot = (betPot + betWager);
+            }
 
-                for (i in $.betSystem.betTable) {
-                    if (sender.equalsIgnoreCase(i)) {
-                        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.err.voted'));
-                        return;
-                    }
-                }
+            betTable[sender] = {
+                amount: betWager,
+                option: betOption
+            };
 
-                $.inidb.decr('points', sender, betWager);
-
-                if ($.betSystem.betPot == 0) {
-                    $.betSystem.betPot = betWager;
-                } else {
-                    $.betSystem.betPot = ($.betSystem.betPot + betWager);
-                }
-
-                $.betSystem.betTable[sender] = {
-                    amount: betWager,
-                    option: betOption
-                };
-
-                $.say($.lang.get('net.quorrabot.betsystem.bet.updated', $.username.resolve(sender), $.getPointsString(betWager), betOption));
+            if (betMessageToggle = true) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.betsystem.bet.updated', $.username.resolve(sender), $.getPointsString(betWager), betOption, $.getPointsString(betPot)));
             }
         }
-    });
-
-setTimeout(function () {
-    if ($.moduleEnabled('./systems/betSystem.js')) {
-        $.registerChatCommand("./systems/betSystem.js", "bet");
     }
-}, 10 * 1000);
+});
+
+if ($.moduleEnabled('./systems/betSystem.js')) {
+    $.registerChatCommand('./systems/betSystem.js', 'bet', 7);
+    $.registerChatSubcommand('bet', 'open', 2);
+    $.registerChatSubcommand('bet', 'close', 2);
+    $.registerChatSubcommand('bet', 'setmaximum', 2);
+    $.registerChatSubcommand('bet', 'setminimum', 2);
+    $.registerChatSubcommand('bet', 'settimer', 2);
+    $.registerChatSubcommand('bet', 'togglebetmessage', 2);
+}

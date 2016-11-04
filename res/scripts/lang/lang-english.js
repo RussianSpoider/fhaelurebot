@@ -352,26 +352,35 @@ $.lang.data["net.quorrabot.penaltysystem.usage"] = "Usage: \"!penalty [<name>, <
 // betSystem.js
 $.lang.data["net.quorrabot.betsystem.err.bet.opened"] = "A bet is already opened.";
 $.lang.data["net.quorrabot.betsystem.command.usage"] = "Usage: !bet open (option1) (option2) | !bet (option) (amount)";
-$.lang.data["net.quorrabot.betsystem.err.open"] = "You can\'t use numbers for starting a bet!";
-$.lang.data["net.quorrabot.betsystem.err.options"] = "You did not spcify enough options.";
-$.lang.data["net.quorrabot.betsystem.opened"] = "Bet started! You can vote for $1! For a chance to win $2!";
+$.lang.data["net.quorrabot.betsystem.err.open"] = "You can't use numbers for starting a bet!";
+$.lang.data["net.quorrabot.betsystem.err.options"] = "You did not specify enough options.";
+$.lang.data["net.quorrabot.betsystem.opened"] = "Bet started! You can bet on for $1! For a chance to win $2! To bet type !bet (option) (amount)!";
 $.lang.data["net.quorrabot.betsystem.err.bet.closed"] = "There is no bet opened.";
 $.lang.data["net.quorrabot.betsystem.err.win.option"] = "You need to choose the wining option.";
 $.lang.data["net.quorrabot.betsystem.err.option.404"] = "That bet option does not exists.";
 $.lang.data["net.quorrabot.betsystem.not.enough.ppl"] = "Bet is now closed! No enough people entered and peoples points have been refunded.";
 $.lang.data["net.quorrabot.betsystem.closed.404"] = "Bet closed! No one entered or bet on option ($1).";
 $.lang.data["net.quorrabot.betsystem.err.points.refunded"] = "Bet closed! Everyone wagered the same option. All points have been refunded.";
-$.lang.data["net.quorrabot.betsystem.closed"] = "Bet closed! Winning option: $1. Win/Lose Ratio: $2 Payouts: $3!";
+$.lang.data["net.quorrabot.betsystem.closed"] = "Bet closed! The winners for option $1 are: $2!";
 $.lang.data["net.quorrabot.betsystem.set.min.usage"] = "Usage: !bet setminimum (amount)";
-$.lang.data["net.quorrabot.betsystem.set.min"] = "bet minimum set to $1 $2";
+$.lang.data["net.quorrabot.betsystem.set.min"] = "Bet minimum set to $1 $2";
 $.lang.data["net.quorrabot.betsystem.set.max.usage"] = "Usage: !bet setmaximum (amount)";
-$.lang.data["net.quorrabot.betsystem.set.max"] = "bet maximum set to $1 $2";
+$.lang.data["net.quorrabot.betsystem.set.max"] = "Bet maximum set to $1 $2";
 $.lang.data["net.quorrabot.betsystem.bet.err.neg"] = "You can not bet negative $1!";
 $.lang.data["net.quorrabot.betsystem.bet.err.less"] = "You can not bet less then $1";
 $.lang.data["net.quorrabot.betsystem.bet.err.more"] = "You can not bet more then $1";
-$.lang.data["net.quorrabot.betsystem.err.points"] = "You don\'t have that many $1 to bet.";
+$.lang.data["net.quorrabot.betsystem.err.points"] = "You don't have that many $1 to bet.";
 $.lang.data["net.quorrabot.betsystem.err.voted"] = "You already voted.";
-$.lang.data["net.quorrabot.betsystem.bet.updated"] = "Bet updated! $1 wagers $2 on $3!";
+$.lang.data["net.quorrabot.betsystem.bet.updated"] = "Bet updated! $1, you wagered $2 on $3!";
+$.lang.data["net.quorrabot.betsystem.err.option.err"] = "Usage: !bet (option) (points)";
+$.lang.data["net.quorrabot.betsystem.set.timer.usage"] = "Usage: !bet settimer (amount in seconds)";
+$.lang.data["net.quorrabot.betsystem.set.timer"] = "Bet auto close timer set to $1 seconds!";
+$.lang.data["net.quorrabot.betsystem.auto.close.warn"] = "Bet is about to close !bet for $1!";
+$.lang.data["net.quorrabot.betsystem.auto.close"] = "Bet is now closed! Now waiting on the winning option.";
+$.lang.data["net.quorrabot.betsystem.close.refund"] = "Bet is now closed! And all $1 have been refunded.";
+$.lang.data["net.quorrabot.betsystem.toggle.on"] = "Bet enter messages have been enabled.";
+$.lang.data["net.quorrabot.betsystem.toggle.off"] = "Bet enter messages have been disabled.";
+
 
 // top10Command.js
 $.lang.data["net.quorrabot.top10.points-disabled"] = "You can not use this command while the points module is disabled.";
@@ -479,6 +488,7 @@ $.lang.data["net.quorrabot.hosthandler.host-list-error"] = "No one is currently 
 $.lang.data["net.quorrabot.hosthandler.current-host-message"] = "The current new hoster message is: $1";		
 $.lang.data["net.quorrabot.hosthandler.host-message-usage"] = "To change it use '!hostmessage (message)'. You can also add the string '(name)' to put the hosters name";		
 $.lang.data["net.quorrabot.hosthandler.host-message-set-success"] = "New host message set!";
+$.lang.data["net.quorrabot.hosthandler.hostannounce"] = "Host announcements have been $1.";
 
 //donationHandler.js 
 $.lang.data["net.quorrabot.donationhandler.current-file-path"] = "Current tip alert file path is: $1";

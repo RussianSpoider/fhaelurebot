@@ -697,8 +697,6 @@ $.on('ircChannelMessage', function(event) {
     }
 });
 
-setTimeout(function(){ 
     if ($.moduleEnabled('./systems/raffleSystem.js')) {
         $.registerChatCommand("./systems/raffleSystem.js", "raffle");
     }
-}, 10 * 1000);

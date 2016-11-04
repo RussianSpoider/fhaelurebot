@@ -82,11 +82,9 @@ $.on('command', function(event) {
 });
 
 
-setTimeout(function(){ 
     if ($.moduleEnabled('./commands/multiCommand.js')) {
         $.registerChatCommand("./commands/multiCommand.js", "multi", "mod");
     }
-},10 * 1000);
 
 $.interval = parseInt($.inidb.get('multicommand', 'interval'));
 if ($.interval == undefined || $.interval == null || isNaN($.interval)) {

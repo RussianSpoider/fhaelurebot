@@ -235,7 +235,7 @@ public class ChannelHostCache implements Runnable {
 
         if (firstUpdate) {
             firstUpdate = false;
-            EventBus.instance().post(new TwitchHostsInitializedEvent(Quorrabot.getChannel(this.channel)));
+            EventBus.instance().postAsync(new TwitchHostsInitializedEvent(Quorrabot.getChannel(this.channel)));
         }
     }
 

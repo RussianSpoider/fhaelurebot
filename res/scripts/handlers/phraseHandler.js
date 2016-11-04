@@ -82,9 +82,7 @@ $.on('command', function (event) {
     }
 });
 
-setTimeout(function(){ 
     if ($.moduleEnabled('./handlers/phraseHandler.js')) {
         $.registerChatCommand("./handlers/phraseHandler.js", "addphrase", "mod");
         $.registerChatCommand("./handlers/phraseHandler.js", "delphrase", "mod");
     }
-},10 * 1000);

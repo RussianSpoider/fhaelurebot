@@ -422,9 +422,7 @@ $.on('command', function (event) {
 });
 
 if ($.moduleEnabled('./addonscripts/paragonCommand.js')) {
-    setTimeout(function () {
-        $.registerChatCommand("./addonscripts/paragonCommand.js", "paragon");
-    }, 10 * 1000);
+    $.registerChatCommand("./addonscripts/paragonCommand.js", "paragon");
     $.println('Agora.gg Paragon API module loaded.');
 }
 ;

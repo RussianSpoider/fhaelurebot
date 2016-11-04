@@ -711,10 +711,8 @@ $.timer.addTimer("./systems/pointSystem.js", "pointsystem", true, function () {
     $.lastpointInterval = 0;
 }, 60 * 1000);
 
-setTimeout(function () {
     if ($.moduleEnabled('./systems/pointSystem.js')) {
         $.registerChatCommand("./systems/pointSystem.js", "points");
         $.registerChatCommand("./systems/pointSystem.js", "makeitrain");
         $.registerChatCommand("./systems/pointSystem.js", "gift");
     }
-}, 10 * 1000); // 11-7-15 modified to have user settable point gain amounts -Kojitsari

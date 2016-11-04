@@ -75,7 +75,7 @@ $.on('command', function (event) {
                     $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.consolecommand.console-others-clear"));
                     return;
                }
-            console = args[0];
+            var console = args[0];
             $.inidb.set("console", "current_console", console);
             $.ConsoleCommand.CurrentConsole = console;
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.consolecommand.console-set", console));
@@ -83,4 +83,8 @@ $.on('command', function (event) {
         }
     }
 });
+
+if ($.moduleEnabled('./commands/consoleCommand.js')) {
+    $.registerChatCommand("./commands/consoleCommand.js", "console", "mod");
+}
 

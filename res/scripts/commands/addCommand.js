@@ -12,7 +12,7 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.modmsg);
             return;
         }
-        
+
         if (args.length < 2) {
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.addcom-error-usage"));
             return;
@@ -31,9 +31,9 @@ $.on('command', function (event) {
         }
 
         if (message.search(/(\(file ([^)]+)\))/g) >= 0) {
-            if (RegExp.$2.indexOf('\\') > 0 || RegExp.$2.indexOf('/') > 0 ) {
-				$.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.filetag-error"));
-			return;
+            if (RegExp.$2.indexOf('\\') > 0 || RegExp.$2.indexOf('/') > 0) {
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.filetag-error"));
+                return;
             }
         }
 
@@ -70,7 +70,7 @@ $.on('command', function (event) {
             if (message.substring(0, 1) == '!') {
                 message = message.substring(1);
             }
-            
+
             if (!$.commandExists(commandString)) {
                 $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.aliascom-error-no-command"));
                 return;
@@ -107,7 +107,7 @@ $.on('command', function (event) {
             }
 
             var acommands = $.inidb.GetKeyList('aliases', "");
-            
+
 
             for (var i = 0; i < acommands.length; i++) {
                 if (acommands[i].toLowerCase().contains(commandString)) {
@@ -115,7 +115,7 @@ $.on('command', function (event) {
                     $.inidb.del('aliases', commandString);
                 }
             }
-          
+
 
             $.inidb.del('command', commandString);
             $.inidb.del('commandperm', commandString);
@@ -157,10 +157,10 @@ $.on('command', function (event) {
             }
 
             if (message.search(/(\(file ([^)]+)\))/g) >= 0) {
-                if (RegExp.$2.indexOf('\\') > 0 || RegExp.$2.indexOf('/') > 0 ) {
-        	    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.filetag-error"));
-        	    return;
-        	}
+                if (RegExp.$2.indexOf('\\') > 0 || RegExp.$2.indexOf('/') > 0) {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.filetag-error"));
+                    return;
+                }
             }
 
             $.inidb.set('command', commandString, message);
@@ -288,27 +288,27 @@ $.on('command', function (event) {
         }
         if (messageCommand.contains('(sender)')) {
             messageCommand = $.replaceAll(messageCommand, '(sender)', $.username.resolve(sender));
-        } 
+        }
         if (messageCommand.contains('(count)')) {
             $.inidb.incr('commandcount', command.toLowerCase(), 1);
             messageCommand = $.replaceAll(messageCommand, '(count)', $.inidb.get('commandcount', command.toLowerCase()));
-        } 
+        }
         if (messageCommand.contains('(points)')) {
             messageCommand = $.replaceAll(messageCommand, '(points)', $.getPointsString(parseInt($.inidb.get("points", sender))));
-        } 
+        }
         if (messageCommand.contains('(caster)')) {
             messageCommand = $.replaceAll(messageCommand, '(caster)', $.username.resolve($.channelName));
         }
         if (messageCommand.contains('(touser)')) {
-            if(args.length > 0) {
-                if(args[0].contains('@')) {
-                    args[0] = args[0].substring(args[0].indexOf('@') +1);
+            if (args.length > 0) {
+                if (args[0].contains('@')) {
+                    args[0] = args[0].substring(args[0].indexOf('@') + 1);
                 }
                 messageCommand = $.replaceAll(messageCommand, '(touser)', $.username.resolve(args[0]));
             } else {
                 messageCommand = $.replaceAll(messageCommand, '(touser)', $.username.resolve(sender));
             }
-        } 
+        }
         if (messageCommand.contains('(game)')) {
             if (args.length > 0) {
                 messageCommand = $.replaceAll(messageCommand, '(game)', $.getGame($.username.resolve(args[0])));
@@ -338,10 +338,10 @@ $.on('command', function (event) {
         }
         if (messageCommand.contains('(#)')) {
             messageCommand = $.replaceAll(messageCommand, '(#)', $.randRange(1, 100));
-        } 
+        }
         if (messageCommand.contains('(count)')) {
             messageCommand = $.replaceAll(messageCommand, '(count)', $.inidb.get('commandcount', command.toLowerCase()));
-        } 
+        }
         if (messageCommand.contains('(z_stroke)')) {
             messageCommand = $.replaceAll(messageCommand, '(z_stroke)', java.lang.Character.toString(java.lang.Character.toChars(0x01B6)[0]));
         }
@@ -355,15 +355,15 @@ $.on('command', function (event) {
             messageCommand = $.urlEncode(messageCommand, argsString);
         }
         if (messageCommand.contains('(customapi')) {
-            messageCommand = $.customAPI(messageCommand,command,args,sender);
+            messageCommand = $.customAPI(messageCommand, command, args, sender);
         }
         while (messageCommand.contains('(file')) {
             if (messageCommand.search(/(\(file ([^)]+)\))/g) >= 0) {
-            	if (RegExp.$2.indexOf('\\') > 0 || RegExp.$2.indexOf('/') > 0 ) {
-            		$.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.filetag-error"));
-            		return;
-            	}
-            	messageCommand = $.replaceAll(messageCommand, RegExp.$1, $.readFile('addons/txt/'+RegExp.$2)[0]);
+                if (RegExp.$2.indexOf('\\') > 0 || RegExp.$2.indexOf('/') > 0) {
+                    $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.filetag-error"));
+                    return;
+                }
+                messageCommand = $.replaceAll(messageCommand, RegExp.$1, $.readFile('addons/txt/' + RegExp.$2)[0]);
             }
         }
 
@@ -375,7 +375,7 @@ $.on('command', function (event) {
             }
             messageCommand = $.replaceAll(messageCommand, '(code)', text);
         }
-        
+
         $.say(messageCommand);
     }
 
@@ -384,7 +384,7 @@ $.on('command', function (event) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }
-        
+
         if (!$.inidb.exists("settings", "pricecommod") || !$.inidb.get("settings", "pricecommod").equalsIgnoreCase("true")) {
             $.inidb.set("settings", "pricecommod", "true");
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.addcommand.pricecommod-enable"));
@@ -447,33 +447,33 @@ $.on('command', function (event) {
     }
 });
 
-$.urlEncode = function(message, argsString) {
-        var encoder = Packages.java.net.URLEncoder;
-        var encodedurl = "";
-        var urlencodeportion = "";
-        if(message.contains('(urlencode $1)')) {
-            urlencodeportion = '(urlencode $1)';
-            encodedurl = encoder.encode(argsString);
-        } else {
-            var urlencodestart = message.substring(message.indexOf("(urlencode "));
-            urlencodeportion = message.substring(message.indexOf("(urlencode "),urlencodestart.indexOf(")"));
-            encodedurl = encoder.encode(urlencodestart.substring(urlencodestart.indexOf(" " + 1), urlencodestart.indexOf(")")));
-        }
-        message = message.replace(urlencodeportion, encodedurl);
-        return message;
+$.urlEncode = function (message, argsString) {
+    var encoder = Packages.java.net.URLEncoder;
+    var encodedurl = "";
+    var urlencodeportion = "";
+    if (message.contains('(urlencode $1)')) {
+        urlencodeportion = '(urlencode $1)';
+        encodedurl = encoder.encode(argsString);
+    } else {
+        var urlencodestart = message.substring(message.indexOf("(urlencode "));
+        urlencodeportion = message.substring(message.indexOf("(urlencode "), urlencodestart.indexOf(")"));
+        encodedurl = encoder.encode(urlencodestart.substring(urlencodestart.indexOf(" " + 1), urlencodestart.indexOf(")")));
+    }
+    message = message.replace(urlencodeportion, encodedurl);
+    return message;
 }
 
-$.getCustomAPIValue = function(url) {
-	var HttpResponse = Packages.com.gmt2001.HttpResponse;
-	var HttpRequest = Packages.com.gmt2001.HttpRequest;
-	var HashMap = Packages.java.util.HashMap;
-	var response = HttpRequest.getData(HttpRequest.RequestType.GET, url, "", new HashMap());
-	return response.content;
+$.getCustomAPIValue = function (url) {
+    var HttpResponse = Packages.com.gmt2001.HttpResponse;
+    var HttpRequest = Packages.com.gmt2001.HttpRequest;
+    var HashMap = Packages.java.util.HashMap;
+    var response = HttpRequest.getData(HttpRequest.RequestType.GET, url, "", new HashMap());
+    return response.content;
 }
 
-$.customAPI = function(message, command, args, sender) {
+$.customAPI = function (message, command, args, sender) {
 
-        var JSONObject = Packages.org.json.JSONObject,
+    var JSONObject = Packages.org.json.JSONObject,
             jsonObject,
             customAPIResponse = '',
             origCustomAPIResponse = '',
@@ -487,124 +487,122 @@ $.customAPI = function(message, command, args, sender) {
             jsonItems,
             jsonCheckList;
 
-        var reCustomAPI = new RegExp(/\(customapi\s([\w\W:\/\$\=\?\&]+)\)/), // URL[1]
+    var reCustomAPI = new RegExp(/\(customapi\s([\w\W:\/\$\=\?\&]+)\)/), // URL[1]
             reCustomAPIJson = new RegExp(/\(customapi ([\w\.:\/\$=\?\&]+)\s([\w\W]+)\)/), // URL[1], JSONmatch[2..n]
             reCustomAPITextTag = new RegExp(/{([\w\W]+)}/);
 
-        $.customAPIParseArgs = function(regExCheck) {
-            if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
-                var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1);
-                args = mArgsString.split(" ");
-            }
-            
-            if (regExCheck[1].indexOf('$1') != -1) {
-                for (var i = 1; i <= 9; i++) {
-                    if (regExCheck[1].indexOf('$' + i) != -1) {
-                        if (!args[i - 1]) {
-                            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapi.404', command));
-                            return;
-                        }
-                        regExCheck[1] = regExCheck[1].replace('$' + i, args[i - 1]);
-                    } else {
-                        break;
+    $.customAPIParseArgs = function (regExCheck) {
+        if (command.toString().toLowerCase().indexOf('notice id: #') != -1) {
+            var mArgsString = message.substring(message.indexOf(regExCheck[0].toString()) + regExCheck[0].toString().length + 1);
+            args = mArgsString.split(" ");
+        }
+
+        if (regExCheck[1].indexOf('$1') != -1) {
+            for (var i = 1; i <= 9; i++) {
+                if (regExCheck[1].indexOf('$' + i) != -1) {
+                    if (!args[i - 1]) {
+                        $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapi.404', command));
+                        return;
                     }
+                    regExCheck[1] = regExCheck[1].replace('$' + i, args[i - 1]);
+                } else {
+                    break;
                 }
             }
         }
+    }
 
-        if ((regExCheck = csmessage.match(reCustomAPIJson))) {
-                    $.customAPIParseArgs(regExCheck);
-                    origCustomAPIResponse = getCustomAPIValue(regExCheck[1]);
-                    jsonItems = regExCheck[2].split(' ');
-                    for (var j = 0; j < jsonItems.length; j++) {
-                        
-                        if (jsonItems[j].startsWith('{') && jsonItems[j].endsWith('}')) {
-                            customAPIReturnString += " " + jsonItems[j].match(reCustomAPITextTag)[1];
-                        } else if (jsonItems[j].startsWith('{') && !jsonItems[j].endsWith('}')) {
-                            customJSONStringTag = '';
-                            while (!jsonItems[j].endsWith('}')) {
-                                customJSONStringTag += jsonItems[j++] + " ";
-                            }
-                            customJSONStringTag += jsonItems[j];
-                            customAPIReturnString += " " + customJSONStringTag.match(reCustomAPITextTag)[1];
-                        } else {
-                            jsonCheckList = jsonItems[j].split('.');
-                            if (jsonCheckList.length == 1) {
-                                try {
-                                    customAPIResponse = new JSONObject(origCustomAPIResponse).getString(jsonCheckList[0]);
-                                } catch (ex) {
-                                    if (ex.message.indexOf('not a string') != -1) {
+    if ((regExCheck = csmessage.match(reCustomAPIJson))) {
+        $.customAPIParseArgs(regExCheck);
+        origCustomAPIResponse = getCustomAPIValue(regExCheck[1]);
+        jsonItems = regExCheck[2].split(' ');
+        for (var j = 0; j < jsonItems.length; j++) {
 
-                                        try {
-                                            customAPIResponse = jsonObject.getInt(jsonCheckList[0]);
-                                        } catch (ex) {
-                                            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
-                                            return;
-                                        }
-                                    }
-                                }
-                                //prevent duplicate data due to for loop
-                                if(customAPIReturnString.indexOf(customAPIResponse)==-1) {
-                                    customAPIReturnString += " " + customAPIResponse;
-                                }
+            if (jsonItems[j].startsWith('{') && jsonItems[j].endsWith('}')) {
+                customAPIReturnString += " " + jsonItems[j].match(reCustomAPITextTag)[1];
+            } else if (jsonItems[j].startsWith('{') && !jsonItems[j].endsWith('}')) {
+                customJSONStringTag = '';
+                while (!jsonItems[j].endsWith('}')) {
+                    customJSONStringTag += jsonItems[j++] + " ";
+                }
+                customJSONStringTag += jsonItems[j];
+                customAPIReturnString += " " + customJSONStringTag.match(reCustomAPITextTag)[1];
+            } else {
+                jsonCheckList = jsonItems[j].split('.');
+                if (jsonCheckList.length == 1) {
+                    try {
+                        customAPIResponse = new JSONObject(origCustomAPIResponse).getString(jsonCheckList[0]);
+                    } catch (ex) {
+                        if (ex.message.indexOf('not a string') != -1) {
 
-                            } else {
-                                for (var i = 0; i < jsonCheckList.length - 1; i++) {
-                                    if (i == 0) {
-                                        jsonObject = new JSONObject(origCustomAPIResponse).getJSONObject(jsonCheckList[i]);
-                                    } else {
-                                        jsonObject = jsonObject.getJSONObject(jsonCheckList[i]);
-                                    }
-                                }
-                                try {
-                                    customAPIResponse = jsonObject.getString(jsonCheckList[i]);
-                                } catch (ex) {
-                                    if (ex.message.indexOf('not a string') != -1) {
-                                        try {
-                                            customAPIResponse = jsonObject.getInt(jsonCheckList[i]);
-                                        } catch (ex) {
-                                            $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
-                                            return;
-                                        }
-                                    }
-                                }
-                                //prevent duplicate data due to for loop
-                                if(customAPIReturnString.indexOf(customAPIResponse)==-1) {
-                                    customAPIReturnString += " " + customAPIResponse;
-                                }
+                            try {
+                                customAPIResponse = jsonObject.getInt(jsonCheckList[0]);
+                            } catch (ex) {
+                                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
+                                return;
                             }
                         }
-                        
                     }
-            var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
-            if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
-                replacedmessage = replacedmessage.substring(0, replacedmessage.indexOf(customAPIReturnString) + customAPIReturnString.length);
+                    //prevent duplicate data due to for loop
+                    if (customAPIReturnString.indexOf(customAPIResponse) == -1) {
+                        customAPIReturnString += " " + customAPIResponse;
+                    }
+
+                } else {
+                    for (var i = 0; i < jsonCheckList.length - 1; i++) {
+                        if (i == 0) {
+                            jsonObject = new JSONObject(origCustomAPIResponse).getJSONObject(jsonCheckList[i]);
+                        } else {
+                            jsonObject = jsonObject.getJSONObject(jsonCheckList[i]);
+                        }
+                    }
+                    try {
+                        customAPIResponse = jsonObject.getString(jsonCheckList[i]);
+                    } catch (ex) {
+                        if (ex.message.indexOf('not a string') != -1) {
+                            try {
+                                customAPIResponse = jsonObject.getInt(jsonCheckList[i]);
+                            } catch (ex) {
+                                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.addcommand.customapijson.err', command));
+                                return;
+                            }
+                        }
+                    }
+                    //prevent duplicate data due to for loop
+                    if (customAPIReturnString.indexOf(customAPIResponse) == -1) {
+                        customAPIReturnString += " " + customAPIResponse;
+                    }
+                }
             }
-            return replacedmessage;
-            
-        } else if(regExCheck = csmessage.match(reCustomAPI)) {
-                    $.customAPIParseArgs(regExCheck);
-                    customAPIReturnString = $.getCustomAPIValue(regExCheck[1]);
-                    var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
-                    if(command.toString().toLowerCase().indexOf('notice id: #')!=-1) {
-                        replacedmessage = replacedmessage.substring(0, replacedmessage.indexOf(customAPIReturnString) + customAPIReturnString.length);
-                    }
-                    return replacedmessage;
+
         }
+        var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
+        if (command.toString().toLowerCase().indexOf('notice id: #') != -1) {
+            replacedmessage = replacedmessage.substring(0, replacedmessage.indexOf(customAPIReturnString) + customAPIReturnString.length);
+        }
+        return replacedmessage;
+
+    } else if (regExCheck = csmessage.match(reCustomAPI)) {
+        $.customAPIParseArgs(regExCheck);
+        customAPIReturnString = $.getCustomAPIValue(regExCheck[1]);
+        var replacedmessage = $.replaceAll(message, regExCheck[0], customAPIReturnString);
+        if (command.toString().toLowerCase().indexOf('notice id: #') != -1) {
+            replacedmessage = replacedmessage.substring(0, replacedmessage.indexOf(customAPIReturnString) + customAPIReturnString.length);
+        }
+        return replacedmessage;
+    }
 }
 
-setTimeout(function () {
-    if ($.moduleEnabled('./commands/addCommand.js')) {
-        $.registerChatCommand("./commands/addCommand.js", "addcom", "mod");
-        $.registerChatCommand("./commands/addCommand.js", "editcom", "mod");
-        $.registerChatCommand("./commands/addCommand.js", "pricecom", "mod");
-        $.registerChatCommand("./commands/addCommand.js", "aliascom", "mod");
-        $.registerChatCommand("./commands/addCommand.js", "delalias", "mod");
-        $.registerChatCommand("./commands/addCommand.js", "delcom", "mod");
-        $.registerChatCommand("./commands/addCommand.js", "permcom", "admin");
-        $.registerChatCommand("./commands/addCommand.js", "helpcom", "mod");
-    }
-}, 10 * 1000);
+if ($.moduleEnabled('./commands/addCommand.js')) {
+    $.registerChatCommand("./commands/addCommand.js", "addcom", "mod");
+    $.registerChatCommand("./commands/addCommand.js", "editcom", "mod");
+    $.registerChatCommand("./commands/addCommand.js", "pricecom", "mod");
+    $.registerChatCommand("./commands/addCommand.js", "aliascom", "mod");
+    $.registerChatCommand("./commands/addCommand.js", "delalias", "mod");
+    $.registerChatCommand("./commands/addCommand.js", "delcom", "mod");
+    $.registerChatCommand("./commands/addCommand.js", "permcom", "admin");
+    $.registerChatCommand("./commands/addCommand.js", "helpcom", "mod");
+}
 
 var commands = $.inidb.GetKeyList("command", "");
 

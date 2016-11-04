@@ -305,7 +305,7 @@ public class FollowersCache implements Runnable {
 
         if (firstUpdate) {
             firstUpdate = false;
-            EventBus.instance().post(new TwitchFollowsInitializedEvent(Quorrabot.getChannel(this.channel)));
+            EventBus.instance().postAsync(new TwitchFollowsInitializedEvent(Quorrabot.getChannel(this.channel)));
         }
 
         for (String follower : followers) {

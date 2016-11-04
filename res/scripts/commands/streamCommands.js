@@ -390,7 +390,6 @@ $.on('command', function(event) {
     }
 });
 
-setTimeout(function(){ 
     if ($.moduleEnabled('./commands/streamCommands.js')) {
         $.registerChatCommand("./commands/streamCommands.js", "online", "admin");
         $.registerChatCommand("./commands/streamCommands.js", "game", "admin");
@@ -401,7 +400,6 @@ setTimeout(function(){
         $.registerChatCommand("./commands/streamCommands.js", "viewers");
         $.registerChatCommand("./commands/streamCommands.js", "follows");
     }
-}, 10 * 1000);
 
 var lastCommercial = $.inidb.get("settings", "lastCommercial");
 

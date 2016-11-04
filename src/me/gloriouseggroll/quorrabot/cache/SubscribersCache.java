@@ -213,7 +213,7 @@ public class SubscribersCache implements Runnable {
                                 }
                             }
 
-                            com.gmt2001.Console.debug.println("SubscribersCache.updateCache: Failed to update subscribers: " + e.getMessage());
+                            com.gmt2001.Console.out.println("SubscribersCache.updateCache: Failed to update subscribers: " + e.getMessage());
                         }
                     }
                 }
@@ -260,10 +260,6 @@ public class SubscribersCache implements Runnable {
         this.cache = newCache;
         this.count = newCache.size();
 
-        if (firstUpdate) {
-            firstUpdate = false;
-            EventBus.instance().post(new TwitchSubscribesInitializedEvent(Quorrabot.getChannel(this.channel)));
-        }
 
         for (String subscriber : subscribers) {
             EventBus.instance().post(new TwitchSubscribeEvent(subscriber, Quorrabot.getChannel(this.channel)));
@@ -271,6 +267,11 @@ public class SubscribersCache implements Runnable {
 
         for (String subscriber : unsubscribers) {
             EventBus.instance().post(new TwitchUnsubscribeEvent(subscriber, Quorrabot.getChannel(this.channel)));
+        }
+        
+        if (firstUpdate) {
+            firstUpdate = false;
+            EventBus.instance().postAsync(new TwitchSubscribesInitializedEvent(Quorrabot.getChannel(this.channel)));
         }
 
     }

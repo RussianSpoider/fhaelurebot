@@ -1,6 +1,7 @@
 $.hostreward = parseInt($.inidb.get('settings', 'hostreward'));
 $.hosttimeout = parseInt($.inidb.get('settings', 'hosttimeout'));
 $.hostMessage = ($.inidb.get('settings', 'hostmessage') ? $.inidb.get('settings', 'hostmessage') : $.lang.get("net.quorrabot.hosthandler.default-host-welcome-message"));
+$.annoucneHosts = ($.inidb.get('settings', 'announce_hosts') ? $.inidb.get('settings', 'announce_hosts') : false);
 
 if ($.hostlist == null || $.hostlist == undefined) {
     $.hostlist = new Array();
@@ -21,7 +22,7 @@ $.isHostUser = function (user) {
 }
 
 $.on('twitchHosted', function (event) {
-    var username = $.username.resolve(event.getHoster());
+    var username = $.username.resolve(event.getHoster().toString());
     var s = $.hostMessage;
 
     if ($.announceHosts && $.moduleEnabled("./handlers/hostHandler.js") && ($.hostlist[username.toLowerCase()] == null || $.hostlist[username.toLowerCase()] == undefined || $.hostlist[username.toLowerCase()] < System.currentTimeMillis())) {
@@ -61,8 +62,6 @@ $.on('twitchUnhosted', function (event) {
 
 $.on('twitchHostsInitialized', function (event) {
     println(">>Enabling new hoster announcements");
-
-    $.announceHosts = true;
 });
 
 $.on('command', function (event) {
@@ -134,9 +133,23 @@ $.on('command', function (event) {
         $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-count", $.hostlist.length));
         return;
     }
+    
+    if (command.equalsIgnoreCase("hostannounce")) {
+        var status;
+        if(args[0].toString().equalsIgnoreCase("true")) {
+            $.announceHosts = true;
+            $.inidb.set("settings","announce_hosts", "true");
+            status = "enabled";
+        } else {
+            $.announceHosts = false;
+            $.inidb.set("settings","announce_hosts", "false");
+            status = "disabled";
+        }
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.hostannounce", status));
+        return;
+    }
 
 });
-setTimeout(function () {
     if ($.moduleEnabled('./handlers/hostHandler.js')) {
         $.registerChatCommand('./handlers/hostHandler.js', 'addhost', 'admin');
         $.registerChatCommand('./handlers/hostHandler.js', 'delhost', 'admin');
@@ -146,10 +159,10 @@ setTimeout(function () {
         $.registerChatCommand("./handlers/hostHandler.js", "hostmessage", "admin");
         $.registerChatCommand("./handlers/hostHandler.js", "hostreward", "admin");
         $.registerChatCommand("./handlers/hostHandler.js", "hosttime", "admin");
+        $.registerChatCommand("./handlers/hostHandler.js", "hostannounce", "admin");
         $.registerChatCommand("./handlers/hostHandler.js", "hostcount");
         $.registerChatCommand("./handlers/hostHandler.js", "hostlist");
     }
-}, 10 * 1000);
 
 
 $.getChannelID = function(channel) {

@@ -309,8 +309,6 @@ if ($.inidb.get("random_num", "num_randoms") == null || $.inidb.get("random_num"
     }
 }
 
-setTimeout(function () {
     if ($.moduleEnabled('./commands/randomCommand.js')) {
         $.registerChatCommand("./commands/randomCommand.js", "random");
     }
-}, 10 * 1000);

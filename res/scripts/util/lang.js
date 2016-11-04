@@ -95,3 +95,5 @@ $.on('command', function(event) {
         }
     }
 });
+
+$.registerChatCommand("./util/lang.js", "lang", "mod");

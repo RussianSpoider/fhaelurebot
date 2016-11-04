@@ -450,7 +450,6 @@ $.timer.addTimer("./systems/timeSystem.js", "timesystem", true, function() {
     }
 }, 60 * 1000);
 
-setTimeout(function(){ 
     if ($.moduleEnabled('./systems/timeSystem.js')) {
         $.registerChatCommand("./systems/timeSystem.js", "time");
         $.registerChatCommand("./systems/timeSystem.js", "time help");
@@ -459,4 +458,3 @@ setTimeout(function(){
         $.registerChatCommand("./systems/timeSystem.js", "uptime");
         $.registerChatCommand("./systems/timeSystem.js", "botuptime");
     }
-},10*1000);

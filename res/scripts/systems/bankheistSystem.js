@@ -775,11 +775,9 @@ $.on('command', function (event) {
     }
 });
 
-setTimeout(function () {
     if ($.moduleEnabled('./systems/bankheistSystem.js')) {
         if ($.bankheistToggle == "true" ) {
             startHeist();
         }
         $.registerChatCommand("./systems/bankheistSystem.js", "bankheist");
     }
-}, 10 * 1000);

@@ -127,10 +127,10 @@ public class Quorrabot implements Listener {
     private static HashMap<String, Channel> channels;
     private static HashMap<String, Session> sessions;
     private static HashMap<String, String> apiOAuths;
-    public static FollowersCache followersCache;
-    public static ChannelHostCache hostCache;
-    public static SubscribersCache subscribersCache;
-    public static ChannelUsersCache channelUsersCache;
+    public final FollowersCache followersCache;
+    public final ChannelHostCache hostCache;
+    public final SubscribersCache subscribersCache;
+    public final ChannelUsersCache channelUsersCache;
     private MusicWebSocketServer musicsocketserver;
     private HTTPServer httpserver;
     private EventWebSocketServer eventsocketserver;
@@ -186,7 +186,7 @@ public class Quorrabot implements Listener {
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh,
             String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken,
             String streamtipid, boolean webenable, boolean musicenable, boolean usehttps, String timeZone, String mySqlHost, String mySqlPort, String mySqlConn,
-            String mySqlPass, String mySqlUser, String mySqlName, String keystorepath, String keystorepassword, String keypassword, String soundboardauth, String soundboardauthread, 
+            String mySqlPass, String mySqlUser, String mySqlName, String keystorepath, String keystorepassword, String keypassword, String soundboardauth, String soundboardauthread,
             FollowersCache followersCache, ChannelHostCache hostCache, ChannelUsersCache channelUsersCache, SubscribersCache subscribersCache) {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
@@ -267,6 +267,11 @@ public class Quorrabot implements Listener {
         this.soundboardauth = soundboardauth;
         this.soundboardauthread = soundboardauthread;
 
+        this.channelUsersCache = ChannelUsersCache.instance(this.ownerName);
+        this.followersCache = FollowersCache.instance(this.ownerName);
+        this.hostCache = ChannelHostCache.instance(this.ownerName);
+        this.subscribersCache = SubscribersCache.instance(this.ownerName);
+
         if (clientid.length() == 0) {
             this.clientid = "pcaalhorck7ryamyg6ijd5rtnls5pjl";
         } else {
@@ -343,7 +348,7 @@ public class Quorrabot implements Listener {
         this.tcechannel = Channel.instance("tcechannel", this.ownerName, this.apioauth, EventBus.instance(), this.ownerName);
         //Give the bot some time in between sessions so to be sure the stream channel connects last
         //This needs to be done in order for the parser to detect which chat channel to use
-        try{
+        try {
             Thread.sleep(2000);
         } catch (Exception e) {
             //
@@ -544,7 +549,10 @@ public class Quorrabot implements Listener {
         Script.global.defineProperty("hostname", hostname, 0);
         Script.global.defineProperty("soundboard", soundBoard, 0);
         Script.global.defineProperty("logger", Logger.instance(), 0);
-
+        Script.global.defineProperty("channelUsers", channelUsersCache, 0);
+        Script.global.defineProperty("subscribers", subscribersCache, 0);
+        Script.global.defineProperty("followers", followersCache, 0);
+        Script.global.defineProperty("hosts", hostCache, 0);
         t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -636,18 +644,8 @@ public class Quorrabot implements Listener {
 
         Quorrabot.addChannel(event.getChannel().getName(), event.getChannel());
         Quorrabot.addSession(event.getChannel().getName(), event.getSession());
-        
+
         event.getSession().startTimers();
-        
-        this.channelUsersCache = ChannelUsersCache.instance(this.ownerName);
-        this.followersCache = FollowersCache.instance(this.ownerName);
-        this.hostCache = ChannelHostCache.instance(this.ownerName);
-        this.subscribersCache = SubscribersCache.instance(this.ownerName);
-        
-        Script.global.defineProperty("followers", this.followersCache, 0);
-        Script.global.defineProperty("hosts", this.hostCache, 0);
-        Script.global.defineProperty("subscribers", this.subscribersCache, 0);
-        Script.global.defineProperty("channelUsers", this.channelUsersCache, 0);
     }
 
     /*@Subscribe
@@ -661,7 +659,6 @@ public class Quorrabot implements Listener {
             consoleCommand(sender, commandString);
         }
     }*/
-
     @Subscribe
     public void onTwitchChannelUserMode(IrcChannelUserModeEvent event) {
         Session esession = event.getSession();
@@ -1341,6 +1338,10 @@ public class Quorrabot implements Listener {
         String mySqlName = "";
         String mySqlUser = "";
         String mySqlPass = "";
+        FollowersCache followersCache;
+        ChannelUsersCache channelUsersCache;
+        ChannelHostCache hostCache;
+        SubscribersCache subscribersCache;
 
         boolean changed = false;
 
@@ -1824,6 +1825,10 @@ public class Quorrabot implements Listener {
             Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
+        channelUsersCache = ChannelUsersCache.instance(owner);
+        followersCache = FollowersCache.instance(owner);
+        hostCache = ChannelHostCache.instance(owner);
+        subscribersCache = SubscribersCache.instance(owner);
 
         Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channelName, owner, baseport, hostname, port,
                 msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken,

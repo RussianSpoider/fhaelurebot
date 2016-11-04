@@ -200,12 +200,10 @@
             }
         }
     });
-    setTimeout(function(){ 
         if ($.moduleEnabled('./systems/soundBoardSystem.js')) {
             $.registerChatCommand('./systems/soundBoardSystem.js', 'soundboard', 1);
             loadSoundBoardCommands();
         }
-    },10*1000);
 
     $.loadSoundBoardCommands = loadSoundBoardCommands;
 

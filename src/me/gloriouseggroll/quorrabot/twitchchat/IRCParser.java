@@ -315,13 +315,6 @@ public class IRCParser {
                 }
             }
         }
-        if (username.equalsIgnoreCase("jtv")) {
-            if (message.indexOf("is now hosting you") != -1) {
-                String hoster = message.split(" ")[0].toString();
-                com.gmt2001.Console.out.println("Hoster::" + hoster + "::true");
-                eventBus.postAsync(new TwitchHostedEvent(hoster, this.channel));
-            }
-        }
 
         if (!username.equalsIgnoreCase("jtv") && !username.equalsIgnoreCase("twitchnotify") && !this.session.getNick().equalsIgnoreCase(this.session.getOwner())) {
             if (message.startsWith("!")) {
@@ -442,6 +435,13 @@ public class IRCParser {
             } catch (Exception e) {
                 //
                 com.gmt2001.Console.out.println("Error::" + e.toString());
+            }
+        }
+        if (username.equalsIgnoreCase("jtv")) {
+            if (message.indexOf("is now hosting you") != -1) {
+                String hoster = message.split(" ")[0].toString();
+                com.gmt2001.Console.out.println("Hoster::" + hoster + "::true");
+                eventBus.postAsync(new TwitchHostedEvent(hoster, this.channel));
             }
         }
         eventBus.postAsync(new IrcPrivateMessageEvent(this.session, "jtv", message, tagsMap));

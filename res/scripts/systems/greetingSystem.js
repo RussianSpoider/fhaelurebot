@@ -214,7 +214,6 @@ $.on('ircChannelJoin', function(event) {
     }
 });
 
-setTimeout(function(){ 
     if ($.moduleEnabled('./systems/greetingSystem.js')) {
         $.registerChatCommand("./systems/greetingSystem.js", "greet");
         $.registerChatCommand("./systems/greetingSystem.js", "greet toggle");
@@ -224,4 +223,3 @@ setTimeout(function(){
         $.registerChatCommand("./systems/greetingSystem.js", "greet set default");
         $.registerChatCommand("./systems/greetingSystem.js", "greet set user");
     }
-}, 10 * 1000);

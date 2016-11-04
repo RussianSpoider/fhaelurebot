@@ -227,8 +227,6 @@ if ($.inidb.get("kills", "num_kills") == null || $.inidb.get("kills", "num_kills
     }
 }
 
-setTimeout(function () {
     if ($.moduleEnabled('./commands/killCommand.js')) {
         $.registerChatCommand("./commands/killCommand.js", "kill");
     }
-}, 10 * 1000);

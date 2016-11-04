@@ -83,8 +83,9 @@ public class UsernameCache {
                                     + (user.has("message") && !user.isNull("message") ? "message=" + user.getString("message") : "content=" + user.getString("_content")));
                         } catch (Exception e) {
                             com.gmt2001.Console.debug.println("UsernameCache.updateCache: Failed to get username: " + e.getMessage());
-                            return username;
+                            //return username;
                         }
+                        return username;
 
                     }
                 } else {

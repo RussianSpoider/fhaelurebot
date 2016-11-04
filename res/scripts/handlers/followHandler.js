@@ -57,10 +57,11 @@ $.on('twitchFollowsInitialized', function (event) {
 });
 
 $.on('twitchFollow', function (event) {
-    var follower = event.getFollower();
+    var follower = event.getFollower().toString();
     var s = $.FollowHandler.FollowMessage;
     var r = $.FollowHandler.FollowReward;
     var username = $.username.resolve(follower);
+    
     if ($.inidb.GetKeyList('followed', '').length == 0 && $.FollowHandler.FollowToggle == "true") {
        $.FollowHandler.FollowToggle = "false";
        var t = setTimeout(function () {
@@ -347,7 +348,6 @@ while(kl < keys.length) {
     kl++;
 }
 
-setTimeout(function () {
     if ($.moduleEnabled('./handlers/followHandler.js')) {
         $.registerChatCommand("./handlers/followHandler.js", "followed", "mod");
         $.registerChatCommand("./handlers/followHandler.js", "follow", "mod");
@@ -358,4 +358,3 @@ setTimeout(function () {
         $.registerChatCommand("./handlers/followHandler.js", "followreward", "admin");
         $.registerChatCommand("./handlers/followHandler.js", "followage");
     }
-}, 10 * 1000);

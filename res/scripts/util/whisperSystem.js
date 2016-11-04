@@ -44,6 +44,4 @@ $.on('command', function (event) {
     }
 });
 
-$.timer.addTimer("./util/whisperSystem.js", "whisperSystem", false, function () {
     $.registerChatCommand("./util/whisperSystem.js", "whispermode", "admin");
-}, 5000);

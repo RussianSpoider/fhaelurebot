@@ -241,9 +241,7 @@ $.on('command', function (event) {
     }
 });
 
-setTimeout(function(){ 
     if ($.moduleEnabled('./systems/pollSystem.js')) {
         $.registerChatCommand("./systems/pollSystem.js", "poll", "mod");
         $.registerChatCommand("./systems/pollSystem.js", "vote");
     }
-},10*1000);

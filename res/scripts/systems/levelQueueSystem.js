@@ -140,11 +140,10 @@ $.on('command', function (event) {
         }
     }
 });
-setTimeout(function(){ 
+
     if ($.moduleEnabled('./systems/queueSystem.js')) {
         $.registerChatCommand("./systems/queueSystem.js", "requests", "admin");
         $.registerChatCommand("./systems/queueSystem.js", "currentlevel");
         $.registerChatCommand("./systems/queueSystem.js", "request");
         $.registerChatCommand("./systems/queueSystem.js", "nextlevel", "mod");
     }
-},10 * 1000);

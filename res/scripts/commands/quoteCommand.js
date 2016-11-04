@@ -194,8 +194,6 @@ $.on('command', function (event) {
     }
 });
 
-setTimeout(function() { 
     if ($.moduleEnabled('./commands/quoteCommand.js')) {
         $.registerChatCommand("./commands/quoteCommand.js", "quote");
     }
-}, 10 * 1000);

@@ -164,7 +164,6 @@ $.on('ircPrivateMessage', function (event) {
     }
 });
 
-setTimeout(function () { 
     if ($.moduleEnabled('./handlers/subscribeHandler.js')) {
         $.registerChatCommand("./handlers/subscribeHandler.js", "subannounce", "admin");
         $.registerChatCommand("./handlers/subscribeHandler.js", "subscribereward", "admin");
@@ -173,7 +172,6 @@ setTimeout(function () {
         $.registerChatCommand("./handlers/subscribeHandler.js", "resubmessage", "admin");
         $.registerChatCommand("./handlers/subscribeHandler.js", "autosubmodetimer", "admin");
     }
-}, 10 * 1000);
 
 var keys = $.inidb.GetKeyList('subscribed', '');
 var kl = 0;

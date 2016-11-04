@@ -1,4 +1,4 @@
-$.stopPoints = function(user) {
+$.stopPoints = function (user) {
     var penaltyPoints = parseInt($.inidb.get('penalty', user.toLowerCase() + "_points"));
     var penaltyPointsCount = (isNaN(penaltyPoints)) ? 0 : penaltyPoints;
 
@@ -25,7 +25,7 @@ $.stopPoints = function(user) {
     $.inidb.set('points', user, penaltyUserPointsCount);
 }
 
-$.returnPoints = function(user) {
+$.returnPoints = function (user) {
     var penaltyPoints = parseInt($.inidb.get('penalty', user.toLowerCase() + "_points"));
     var penaltyPointsCount = (isNaN(penaltyPoints)) ? 0 : penaltyPoints;
 
@@ -44,7 +44,7 @@ $.returnPoints = function(user) {
     $.inidb.set('points', user, penaltyUserPointsCount + penaltyPointsCount);
 }
 
-$.on('command', function(event) {
+$.on('command', function (event) {
     var sender = event.getSender();
     var username = $.username.resolve(sender, event.getTags());
     var command = event.getCommand();
@@ -157,60 +157,58 @@ $.on('command', function(event) {
 
 
 
-setTimeout(function(){ 
-    if ($.moduleEnabled('./systems/penaltySystem.js')) {
-        $.registerChatCommand("./systems/penaltySystem.js", "penalty");
-    
-$.timer.addTimer("./systems/penaltySystem.js", "penaltySystem", true, function() {
-    if (!$.moduleEnabled("./systems/pointSystem.js")) {
-        return;
-    }
+if ($.moduleEnabled('./systems/penaltySystem.js')) {
+    $.registerChatCommand("./systems/penaltySystem.js", "penalty");
 
-    if ($.penlastpointinterval == null || $.penlastpointinterval == undefined) {
-        $.penlastpointinterval = System.currentTimeMillis();
-        return;
-    }
-
-    if (!$.isOnline($.channelName)) {
-        if ($.penlastpointinterval + (parseInt($.inidb.get('settings', 'pointIntervalOffline')) * 60 * 1000) >= System.currentTimeMillis()) {
+    $.timer.addTimer("./systems/penaltySystem.js", "penaltySystem", true, function () {
+        if (!$.moduleEnabled("./systems/pointSystem.js")) {
             return;
-        } else {
-            $.penlastpointinterval = System.currentTimeMillis();
         }
-    } else {
-        if ($.penlastpointinterval + (parseInt($.inidb.get('settings', 'pointInterval')) * 60 * 1000) >= System.currentTimeMillis()) {
+
+        if ($.penlastpointinterval == null || $.penlastpointinterval == undefined) {
+            $.penlastpointinterval = System.currentTimeMillis();
             return;
-        } else {
-            $.penlastpointinterval = System.currentTimeMillis();
         }
-    }
-    
-    for (var i = 0; i < $.users.length; i++) {
-        var nick = $.users[i][0].toLowerCase();
 
-        if ($.inidb.get('penalty', nick) == "true") {
-            $.stopPoints(nick);
-
-            var penaltypoints = parseInt($.inidb.get('penalty', nick + "_points"));
-            var penaltythreshold = parseInt($.inidb.get('penalty', nick + "_threshold"));
-
-            if (penaltythreshold < 0) {
+        if (!$.isOnline($.channelName)) {
+            if ($.penlastpointinterval + (parseInt($.inidb.get('settings', 'pointIntervalOffline')) * 60 * 1000) >= System.currentTimeMillis()) {
                 return;
+            } else {
+                $.penlastpointinterval = System.currentTimeMillis();
             }
-            
-            if (penaltypoints >= penaltythreshold && $.inidb.get('penalty', nick) == "true") {
-                $.returnPoints(nick);
-
-                $.inidb.set('penalty', nick, "false");
-                $.inidb.set('penalty', nick + "_points", 0);
-                $.inidb.set('penalty', nick + "_pointscount", 0);
-                $.inidb.set('penalty', nick + "_threshold", 0);
-
-                $.say($.getWhisperString(nick) + $.lang.get("net.quorrabot.penaltysystem.lifted", $.username.resolve(nick), $.getPointsString(penaltypoints)));
+        } else {
+            if ($.penlastpointinterval + (parseInt($.inidb.get('settings', 'pointInterval')) * 60 * 1000) >= System.currentTimeMillis()) {
+                return;
+            } else {
+                $.penlastpointinterval = System.currentTimeMillis();
             }
         }
-    }
-}, 1000);
-    }
 
-}, 10 * 1000);
+        for (var i = 0; i < $.users.length; i++) {
+            var nick = $.users[i][0].toLowerCase();
+
+            if ($.inidb.get('penalty', nick) == "true") {
+                $.stopPoints(nick);
+
+                var penaltypoints = parseInt($.inidb.get('penalty', nick + "_points"));
+                var penaltythreshold = parseInt($.inidb.get('penalty', nick + "_threshold"));
+
+                if (penaltythreshold < 0) {
+                    return;
+                }
+
+                if (penaltypoints >= penaltythreshold && $.inidb.get('penalty', nick) == "true") {
+                    $.returnPoints(nick);
+
+                    $.inidb.set('penalty', nick, "false");
+                    $.inidb.set('penalty', nick + "_points", 0);
+                    $.inidb.set('penalty', nick + "_pointscount", 0);
+                    $.inidb.set('penalty', nick + "_threshold", 0);
+
+                    $.say($.getWhisperString(nick) + $.lang.get("net.quorrabot.penaltysystem.lifted", $.username.resolve(nick), $.getPointsString(penaltypoints)));
+                }
+            }
+        }
+    }, 1000);
+}
+

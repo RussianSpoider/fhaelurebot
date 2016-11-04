@@ -87,9 +87,7 @@ $.on('command', function(event) {
     }
 });
 
-setTimeout(function(){ 
     if ($.moduleEnabled('./systems/raidSystem.js')) {
         $.registerChatCommand("./systems/raidSystem.js", "raid", "mod");
         $.registerChatCommand("./systems/raidSystem.js", "raider", "mod");
     }
-},10*1000);
