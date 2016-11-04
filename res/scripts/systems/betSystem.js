@@ -201,16 +201,25 @@ function betClose(sender, event, subAction) {
     }
     var winners = "";
     var winamount = 0;
+    var wingroup = 0;
+    var win = 0;
     for (i in betTable) {
         bet = betTable[i];
         if (bet.option.equalsIgnoreCase(betWinning)) {
-            betWinPercent = (bet.amount / betTotal);
-            var win = (betPot * betWinPercent).toFixed(0);
+            wingroup++;
+        }
+    }
+    for (i in betTable) {
+        bet = betTable[i];
+        if (bet.option.equalsIgnoreCase(betWinning)) {
+            win = (betPot / wingroup).toFixed(0);
             $.inidb.incr('points', i, win);
             winamount = win;
             winners += " +" + winamount.toString() + " " + $.username.resolve(i) + ", ";
         }
     }
+
+
     winners = winners.toString().substring(winners, winners.length - 2);
 
     $.inidb.set('betresults', 'winners', betWinners);
