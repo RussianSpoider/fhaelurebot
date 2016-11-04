@@ -36,6 +36,7 @@ import me.gloriouseggroll.quorrabot.event.irc.message.IrcChannelMessageEvent;
  *
  * @author jesse
  */
+
 public class HTTPServer extends Thread {
 
     int port;

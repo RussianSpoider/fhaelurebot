@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gloriouseggroll;
+package com.illusionaryone;
 
 import java.io.IOException;
 import java.io.File;
@@ -43,6 +43,13 @@ import org.json.JSONException;
 import org.json.JSONStringer;
 
 import me.gloriouseggroll.quorrabot.Quorrabot;
+
+
+/*
+ *
+ * @author illusionaryone
+ */
+
 
 public class SoundBoard extends WebSocketServer {
 

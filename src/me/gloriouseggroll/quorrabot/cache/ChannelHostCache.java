@@ -19,7 +19,7 @@ package me.gloriouseggroll.quorrabot.cache;
 import me.gloriouseggroll.quorrabot.Quorrabot;
 
 import com.gmt2001.TwitchAPIv3;
-import com.gloriouseggroll.TwitchTMIv1;
+import com.illusionaryone.TwitchTMIv1;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.Calendar;

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gloriouseggroll;
+package com.illusionaryone;
 
 import com.gmt2001.UncaughtExceptionHandler;
 
@@ -57,10 +57,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
-/**
+/*
  *
- * @author Tom
+ * @author illusionaryone
  */
+
 public class SingularityAPI {
 
     private static final SingularityAPI instance = new SingularityAPI();

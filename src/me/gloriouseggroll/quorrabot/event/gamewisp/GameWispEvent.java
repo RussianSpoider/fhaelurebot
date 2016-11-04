@@ -19,9 +19,9 @@ package me.gloriouseggroll.quorrabot.event.gamewisp;
 import me.gloriouseggroll.quorrabot.event.Event;
 import me.gloriouseggroll.quorrabot.twitchchat.Channel;
 
-/**
+/*
  *
- * @author Tom
+ * @author illusionaryone
  */
 public class GameWispEvent extends Event {
 

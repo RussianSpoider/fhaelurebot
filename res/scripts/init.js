@@ -70,6 +70,7 @@ $api.on($script, 'ircJoinComplete', function (event) {
     if (!event.getChannel().getName().equalsIgnoreCase("tcechannel")) {
         $.botchannel = event.getChannel();
         $.botsession = event.getSession();
+        $.botsession.saySilent(".mods");
     }
 });
 

@@ -1,4 +1,4 @@
-package com.gloriouseggroll;
+package com.illusionaryone;
 import com.gmt2001.UncaughtExceptionHandler;
 import me.gloriouseggroll.quorrabot.RepoVersion;
 import java.io.BufferedOutputStream;
@@ -25,10 +25,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /*
- * Communicates with the Twitch TMI API.
  *
  * @author illusionaryone
  */
+
 public class TwitchTMIv1 {
 
     private static final TwitchTMIv1 instance = new TwitchTMIv1();
