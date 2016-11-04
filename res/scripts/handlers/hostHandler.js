@@ -1,7 +1,7 @@
 $.hostreward = parseInt($.inidb.get('settings', 'hostreward'));
 $.hosttimeout = parseInt($.inidb.get('settings', 'hosttimeout'));
 $.hostMessage = ($.inidb.get('settings', 'hostmessage') ? $.inidb.get('settings', 'hostmessage') : $.lang.get("net.quorrabot.hosthandler.default-host-welcome-message"));
-$.annoucneHosts = ($.inidb.get('settings', 'announce_hosts') ? $.inidb.get('settings', 'announce_hosts') : false);
+$.announceHosts = ($.inidb.get('settings', 'announce_hosts') ? $.inidb.get('settings', 'announce_hosts') : true);
 
 if ($.hostlist == null || $.hostlist == undefined) {
     $.hostlist = new Array();
@@ -24,9 +24,7 @@ $.isHostUser = function (user) {
 $.on('twitchHosted', function (event) {
     var username = $.username.resolve(event.getHoster().toString());
     var s = $.hostMessage;
-
     if ($.announceHosts && $.moduleEnabled("./handlers/hostHandler.js") && ($.hostlist[username.toLowerCase()] == null || $.hostlist[username.toLowerCase()] == undefined || $.hostlist[username.toLowerCase()] < System.currentTimeMillis())) {
-        
         s = $.replaceAll(s, '(name)', username);
         if ($.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
             $.inidb.incr('points', username.toLowerCase(), $.hostreward);

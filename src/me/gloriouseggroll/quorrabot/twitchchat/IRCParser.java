@@ -122,7 +122,7 @@ public class IRCParser {
 
         parserMap.put("NOTICE", new IRCCommand() {
             public void exec(String message, String username, Map<String, String> tagsMap) {
-                noticeMessage(message, username, tagsMap);
+                privMsg(message, "jtv", tagsMap);
             }
         });
 
@@ -265,11 +265,48 @@ public class IRCParser {
             message = message.replaceAll("\001", "").replace("ACTION", "/me");
         }
 
-        /* Print the parsed message in the console. */
-        com.gmt2001.Console.out.println(username + ": " + message);
-
         /* Print the IRCv3 tags if debug mode is on*/
         com.gmt2001.Console.debug.println("IRCv3 Tags: " + tagsMap);
+        
+        //Check for JTV notices
+        if (username.equalsIgnoreCase("jtv")) {
+            com.gmt2001.Console.debug.println("jtv");
+            
+            //Check for hosts
+            if (message.indexOf("is now hosting you") != -1) {
+                com.gmt2001.Console.out.println("host");
+                String hoster = message.split(" ")[0].toString();
+                eventBus.postAsync(new TwitchHostedEvent(hoster, this.channel));
+                com.gmt2001.Console.debug.println("Hoster::" + hoster + "::true");
+                return;
+            }
+            
+            //Check for moderators on .mods notice
+            if (message.indexOf("The moderators of this room are: ") != -1) {
+                try {
+                    Thread.sleep(2000);
+                    Quorrabot.instance().channelUsersCache.updateCache();
+                    eventBus.postAsync(new IrcChannelUserModeEvent(this.session, this.channel, this.ownerName.toLowerCase(), "O", true));
+                    String[] moderators = message.substring(33).split(", ");
+                    for (String moderator : moderators) {
+                        if (moderator.equalsIgnoreCase(this.session.getNick())) {
+                            this.session.setAllowSendMessages(true);
+                        }
+                        if (Quorrabot.instance().channelUsersCache.getCache().toString().contains(moderator.toLowerCase() + "=mod")) {
+                            eventBus.postAsync(new IrcChannelUserModeEvent(this.session, this.channel, moderator.toLowerCase(), "O", true));
+                        }
+                    }
+
+                } catch (Exception e) {
+                    //
+                    com.gmt2001.Console.out.println("Error::" + e.toString());
+                }
+                return;
+            }
+        }
+        
+        /* Print the parsed message in the console. */
+        com.gmt2001.Console.out.println(username + ": " + message);
 
         /* Check to see if the users disaplay name. Used in the scripts. */
         if (tagsMap.containsKey("display-name")) {
@@ -292,12 +329,12 @@ public class IRCParser {
         }
 
         /* Check to see if the user is a channel subscriber */
-        //if (tagsMap.containsKey("subscriber")) {
-        //if (tagsMap.get("subscriber").equals("1")) {
-        //eventBus.post(new IrcPrivateMessageEvent(this.session, "jtv", "SPECIALUSER " + username + " subscriber", tagsMap));
-        //com.gmt2001.Console.debug.println("Subscriber::" + username + "::true");
-        //}
-        //}
+        if (tagsMap.containsKey("subscriber")) {
+            if (tagsMap.get("subscriber").equals("1")) {
+                eventBus.post(new IrcPrivateMessageEvent(this.session, "jtv", "SPECIALUSER " + username + " subscriber", tagsMap));
+                com.gmt2001.Console.debug.println("Subscriber::" + username + "::true");
+            }
+        }
 
         /* Check to see if the user is a moderator */
         if (tagsMap.containsKey("user-type")) {
@@ -315,7 +352,7 @@ public class IRCParser {
                 }
             }
         }
-
+        
         if (!username.equalsIgnoreCase("jtv") && !username.equalsIgnoreCase("twitchnotify") && !this.session.getNick().equalsIgnoreCase(this.session.getOwner())) {
             if (message.startsWith("!")) {
                 String command;
@@ -328,6 +365,7 @@ public class IRCParser {
                     argsString = message.substring(message.indexOf(" ") + 1);
                 }
                 EventBus.instance().post(new CommandEvent(username, command, argsString, tagsMap, this.channel));
+                return;
             }
         }
 
@@ -416,37 +454,13 @@ public class IRCParser {
      * @param String username
      * @param Map<String, String> tagsMap
      */
-    private void noticeMessage(String message, String username, Map<String, String> tagsMap) {
-        if (message.indexOf("The moderators of this room are: ") != -1) {
-            try {
-                Thread.sleep(2000);
-                Quorrabot.instance().channelUsersCache.updateCache();
-                eventBus.postAsync(new IrcChannelUserModeEvent(this.session, this.channel, this.ownerName.toLowerCase(), "O", true));
-                String[] moderators = message.substring(33).split(", ");
-                for (String moderator : moderators) {
-                    if (moderator.equalsIgnoreCase(this.session.getNick())) {
-                        this.session.setAllowSendMessages(true);
-                    }
-                    if (Quorrabot.instance().channelUsersCache.getCache().toString().contains(moderator.toLowerCase() + "=mod")) {
-                        eventBus.postAsync(new IrcChannelUserModeEvent(this.session, this.channel, moderator.toLowerCase(), "O", true));
-                    }
-                }
-
-            } catch (Exception e) {
-                //
-                com.gmt2001.Console.out.println("Error::" + e.toString());
-            }
-        }
-        if (username.equalsIgnoreCase("jtv")) {
-            if (message.indexOf("is now hosting you") != -1) {
-                String hoster = message.split(" ")[0].toString();
-                com.gmt2001.Console.out.println("Hoster::" + hoster + "::true");
-                eventBus.postAsync(new TwitchHostedEvent(hoster, this.channel));
-            }
-        }
-        eventBus.postAsync(new IrcPrivateMessageEvent(this.session, "jtv", message, tagsMap));
+    
+    //Notices are sent to privmsg for handling
+    //this function is not used.
+    /*private void noticeMessage(String message, String username, Map<String, String> tagsMap) {
+        eventBus.post(new IrcPrivateMessageEvent(this.session, "jtv", message, tagsMap));
         com.gmt2001.Console.debug.println("Message from jtv (NOTICE): " + message);
-    }
+    }*/
 
     /*
      * Handles the JOIN event from IRC.
