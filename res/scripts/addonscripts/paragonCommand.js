@@ -424,5 +424,4 @@ $.on('command', function (event) {
 if ($.moduleEnabled('./addonscripts/paragonCommand.js')) {
     $.registerChatCommand("./addonscripts/paragonCommand.js", "paragon");
     $.println('Agora.gg Paragon API module loaded.');
-}
-;
+};

@@ -87,7 +87,7 @@ public class TwitchTMIv1 {
             urlConn.addRequestProperty("Content-Type", "application/json");
             urlConn.addRequestProperty("Accept", "application/vnd.github.v3+json");
             urlConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 " +
-                                       "(KHTML, like Gecko) Chrome/44.0.2403.52 Safari/537.36 PhantomBotJ/2015");
+                                       "(KHTML, like Gecko) Chrome/44.0.2403.52 Safari/537.36 QuorraBot/2015");
             urlConn.connect();
 
             if (urlConn.getResponseCode() == 200) {

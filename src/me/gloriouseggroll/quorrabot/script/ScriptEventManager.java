@@ -36,6 +36,7 @@ public class ScriptEventManager implements Listener {
     private static final String[] eventPackages = new String[]{
         "me.gloriouseggroll.quorrabot.event.command",
         "me.gloriouseggroll.quorrabot.event.console",
+        "me.gloriouseggroll.quorrabot.event.discord",
         "me.gloriouseggroll.quorrabot.event.gamewisp",
         "me.gloriouseggroll.quorrabot.event.irc",
         "me.gloriouseggroll.quorrabot.event.irc.channel",

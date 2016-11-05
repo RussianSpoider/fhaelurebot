@@ -629,6 +629,10 @@ $api.on($script, 'musicPlayerState', function (event) {
     $.hook.call('musicPlayerState', event, false);
 });
 
+$api.on($script, 'discord', function (event) {
+    $.hook.call('discord', event, false);
+});
+
 $.botname = $.botName;
 $.botowner = $.ownerName;
 

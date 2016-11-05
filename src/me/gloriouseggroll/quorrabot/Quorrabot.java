@@ -29,6 +29,7 @@ import com.gloriouseggroll.TwitterAPI;
 import com.illusionaryone.SingularityAPI;
 import com.illusionaryone.GameWispAPI;
 import com.illusionaryone.SoundBoard;
+import com.illusionaryone.DiscordAPI;
 import com.gmt2001.YouTubeAPIv3;
 import com.google.common.eventbus.Subscribe;
 import com.simeonf.EventWebSocketSecureServer;
@@ -132,6 +133,8 @@ public class Quorrabot implements Listener {
     public final ChannelHostCache hostCache;
     public final SubscribersCache subscribersCache;
     public final ChannelUsersCache channelUsersCache;
+    private String discordToken = "";
+    private String discordMainChannel = "";
     private MusicWebSocketServer musicsocketserver;
     private HTTPServer httpserver;
     private EventWebSocketServer eventsocketserver;
@@ -183,12 +186,16 @@ public class Quorrabot implements Listener {
         return botVersion() + " (Revision: " + repoVersion() + ")";
     }
 
+    public String getDiscordStreamOnlineChannel() {
+        return discordMainChannel;
+    }
+
     public Quorrabot(String username, String oauth, String apioauth, String clientid, String channelName, String owner, int baseport,
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh,
             String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken,
             String streamtipid, boolean webenable, boolean musicenable, boolean usehttps, String timeZone, String mySqlHost, String mySqlPort, String mySqlConn,
             String mySqlPass, String mySqlUser, String mySqlName, String keystorepath, String keystorepassword, String keypassword, String soundboardauth, String soundboardauthread,
-            FollowersCache followersCache, ChannelHostCache hostCache, ChannelUsersCache channelUsersCache, SubscribersCache subscribersCache) {
+            FollowersCache followersCache, ChannelHostCache hostCache, ChannelUsersCache channelUsersCache, SubscribersCache subscribersCache, String discordToken, String discordMainChannel) {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
         com.gmt2001.Console.out.println();
@@ -218,6 +225,10 @@ public class Quorrabot implements Listener {
         if (!youtubekey.isEmpty()) {
             YouTubeAPIv3.instance().SetAPIKey(youtubekey);
         }
+
+        this.discordToken = discordToken;
+        this.discordMainChannel = discordMainChannel;
+
         this.gamewispauth = gamewispauth;
         this.gamewisprefresh = gamewisprefresh;
         this.twitchalertstoken = twitchalertstoken;
@@ -516,6 +527,10 @@ public class Quorrabot implements Listener {
                 SingularityAPI.instance().StartService();
                 doRefreshGameWispToken();
             }
+
+            if (!discordToken.isEmpty()) {
+                DiscordAPI.instance().connect(discordToken);
+            }
         }
 
         if (interactive) {
@@ -550,6 +565,8 @@ public class Quorrabot implements Listener {
         Script.global.defineProperty("hostname", hostname, 0);
         Script.global.defineProperty("soundboard", soundBoard, 0);
         Script.global.defineProperty("logger", Logger.instance(), 0);
+        Script.global.defineProperty("discord", DiscordAPI.instance(), 0);
+        Script.global.defineProperty("discordMainChannel", getDiscordStreamOnlineChannel(), 0);
         Script.global.defineProperty("channelUsers", channelUsersCache, 0);
         Script.global.defineProperty("subscribers", subscribersCache, 0);
         Script.global.defineProperty("followers", followersCache, 0);
@@ -648,7 +665,7 @@ public class Quorrabot implements Listener {
 
         event.getSession().startTimers();
     }
-    
+
     @Subscribe
     public void onConsoleMessage(ConsoleInputEvent msg) {
         String message = msg.getMsg();
@@ -951,7 +968,9 @@ public class Quorrabot implements Listener {
                 data += "mysqlpass=" + mySqlPass + "\r\n";
                 data += "keystorepath=" + keystorepath + "\r\n";
                 data += "keystorepassword=" + keystorepassword + "\r\n";
-                data += "keypassword=" + keypassword;
+                data += "keypassword=" + keypassword + "\r\n";
+                data += "discordtoken=" + discordToken + "\r\n";
+                data += "discordmainchannel=" + discordMainChannel + "\r\n";
 
                 Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
@@ -1028,7 +1047,6 @@ public class Quorrabot implements Listener {
                     command = arguments.substring(1, split);
                     arguments = arguments.substring(split + 1);
                 }
-
 
                 com.gmt2001.Console.out.println("Issuing command as " + sender + " [" + command + "] " + arguments);
 
@@ -1311,6 +1329,8 @@ public class Quorrabot implements Listener {
         ChannelUsersCache channelUsersCache;
         ChannelHostCache hostCache;
         SubscribersCache subscribersCache;
+        String discordToken = "";
+        String discordMainChannel = "";
 
         boolean changed = false;
 
@@ -1423,11 +1443,17 @@ public class Quorrabot implements Listener {
                     if (line.startsWith("keypassword=") && line.length() > 13) {
                         keypassword = line.substring(12);
                     }
-                    if (line.startsWith("webauth=") && line.length() > 11) {
+                    if (line.startsWith("webauth=") && line.length() > 9) {
                         soundboardauth = line.substring(8);
                     }
-                    if (line.startsWith("webauthro=") && line.length() > 13) {
+                    if (line.startsWith("webauthro=") && line.length() > 11) {
                         soundboardauthread = line.substring(10);
+                    }
+                    if (line.startsWith("discordtoken=") && line.length() >= 14) {
+                        discordToken = line.substring(13);
+                    }
+                    if (line.startsWith("discordmainchannel=") && line.length() >= 20) {
+                        discordMainChannel = line.substring(19);
                     }
                 }
             }
@@ -1517,6 +1543,8 @@ public class Quorrabot implements Listener {
                     com.gmt2001.Console.out.println("keystorepath='" + keystorepath + "'");
                     com.gmt2001.Console.out.println("keystorepassword='" + keystorepassword + "'");
                     com.gmt2001.Console.out.println("keypassword='" + keypassword + "'");
+                    com.gmt2001.Console.out.println("discordtoken='" + discordToken + "'");
+                    com.gmt2001.Console.out.println("discordmainchannel='" + discordMainChannel + "'");
                 }
                 if (arg.equalsIgnoreCase("debugon")) {
                     Quorrabot.enableDebugging = true;
@@ -1789,7 +1817,9 @@ public class Quorrabot implements Listener {
             data += "mysqlpass=" + mySqlPass + "\r\n";
             data += "keystorepath=" + keystorepath + "\r\n";
             data += "keystorepassword=" + keystorepassword + "\r\n";
-            data += "keypassword=" + keypassword;
+            data += "keypassword=" + keypassword + "\r\n";
+            data += "discordtoken=" + discordToken + "\r\n";
+            data += "discordmainchannel=" + discordMainChannel;
 
             Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
@@ -1803,9 +1833,14 @@ public class Quorrabot implements Listener {
                 msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken,
                 lastfmuser, tpetoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid,
                 webenable, musicenable, usehttps, timeZone, mySqlHost, mySqlPort, mySqlConn, mySqlPass, mySqlUser, mySqlName, keystorepath,
-                keystorepassword, keypassword, soundboardauth, soundboardauthread, followersCache, hostCache, channelUsersCache, subscribersCache);
+                keystorepassword, keypassword, soundboardauth, soundboardauthread, followersCache, hostCache, channelUsersCache, subscribersCache, discordToken,
+                discordMainChannel);
     }
 
+    /**
+     *
+     * @param newTokens
+     */
     public void updateGameWispTokens(String[] newTokens) {
         String data = "";
         data += "user=" + username + "\r\n";
@@ -1842,7 +1877,9 @@ public class Quorrabot implements Listener {
         data += "mysqlpass=" + mySqlPass + "\r\n";
         data += "keystorepath=" + keystorepath + "\r\n";
         data += "keystorepassword=" + keystorepassword + "\r\n";
-        data += "keypassword=" + keypassword;
+        data += "keypassword=" + keypassword + "\r\n";
+        data += "discordtoken=" + discordToken + "\r\n";
+        data += "discordmainchannel=" + discordMainChannel;
 
         try {
             Files.write(Paths.get("./botlogin.txt"), data.getBytes(StandardCharsets.UTF_8),
@@ -1893,7 +1930,9 @@ public class Quorrabot implements Listener {
         data += "mysqlpass=" + mySqlPass + "\r\n";
         data += "keystorepath=" + keystorepath + "\r\n";
         data += "keystorepassword=" + keystorepassword + "\r\n";
-        data += "keypassword=" + keypassword;
+        data += "keypassword=" + keypassword + "\r\n";
+        data += "discordtoken=" + discordToken + "\r\n";
+        data += "discordmainchannel=" + discordMainChannel;
 
         timeZone = timezone;
         try {
