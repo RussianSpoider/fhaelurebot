@@ -224,6 +224,10 @@ public class ChannelHostCache implements Runnable {
         }
 
         this.cache = newCache;
+        if (firstUpdate) {
+            firstUpdate = false;
+            EventBus.instance().postAsync(new TwitchHostsInitializedEvent(Quorrabot.getChannel(this.channel)));
+        }
 
         for (String hoster : hosted) {
             EventBus.instance().post(new TwitchHostedEvent(hoster, Quorrabot.getChannel(this.channel)));
@@ -231,11 +235,6 @@ public class ChannelHostCache implements Runnable {
 
         for (String unhoster : unhosted) {
             EventBus.instance().post(new TwitchUnhostedEvent(unhoster, Quorrabot.getChannel(this.channel)));
-        }
-
-        if (firstUpdate) {
-            firstUpdate = false;
-            EventBus.instance().postAsync(new TwitchHostsInitializedEvent(Quorrabot.getChannel(this.channel)));
         }
     }
 

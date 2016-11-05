@@ -45,6 +45,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -116,7 +117,7 @@ public class Quorrabot implements Listener {
     private String keystorepassword;
     private String keypassword;
     private String channelStatus;
-    private DataStore dataStoreObj;
+    private static DataStore dataStoreObj;
     private SecureRandom rng;
     private TreeMap<String, Integer> pollResults;
     private TreeSet<String> voters;
@@ -647,38 +648,7 @@ public class Quorrabot implements Listener {
 
         event.getSession().startTimers();
     }
-
-    /*@Subscribe
-    public void onTwitchChannelMessage(IrcChannelMessageEvent event) {
-        String message = event.getMessage();
-        String sender = event.getSender();
-        Session esession = event.getSession();
-
-        if (esession.getNick().equalsIgnoreCase(this.username) && message.startsWith("!")) {
-            String commandString = message.substring(1);
-            consoleCommand(sender, commandString);
-        }
-    }*/
-    @Subscribe
-    public void onTwitchChannelUserMode(IrcChannelUserModeEvent event) {
-        Session esession = event.getSession();
-        /**
-         * Check to see if Twitch sent a mode event for the bot name
-         */
-        if (esession.getNick().equalsIgnoreCase(this.username) && event.getUser().equalsIgnoreCase(this.username) && event.getMode().equalsIgnoreCase("o")) {
-            /**
-             * Did we get mod? if not try .mods again
-             */
-            if (!event.getAdd()) {
-                esession.saySilent(".mods");
-            }
-            /**
-             * Allow the bot to sends message to this session
-             */
-            esession.setAllowSendMessages(event.getAdd());
-        }
-    }
-
+    
     @Subscribe
     public void onConsoleMessage(ConsoleInputEvent msg) {
         String message = msg.getMsg();
@@ -1013,11 +983,11 @@ public class Quorrabot implements Listener {
         if (message.equals("exit")) {
             System.exit(0);
         }
-
-        consoleCommand(username, message);
+        Map<String, String> tags = new HashMap<>();
+        handleCommand(username, message, tags, channel, ownerName);
     }
 
-    public void consoleCommand(String sender, String commandString) {
+    public static final void handleCommand(String sender, String commandString, Map<String, String> tags, Channel channel, String ownerName) {
         String command, arguments;
         int split = commandString.indexOf(' ');
 
@@ -1039,7 +1009,7 @@ public class Quorrabot implements Listener {
             }
 
             String d = sender.toLowerCase();
-            String validityCheck = this.ownerName.toLowerCase();
+            String validityCheck = ownerName.toLowerCase();
 
             if (debugD) {
                 com.gmt2001.Console.out.println("d=" + d);
@@ -1059,9 +1029,8 @@ public class Quorrabot implements Listener {
                     arguments = arguments.substring(split + 1);
                 }
 
-                sender = username;
 
-                com.gmt2001.Console.out.println("Issuing command as " + username + " [" + command + "] " + arguments);
+                com.gmt2001.Console.out.println("Issuing command as " + sender + " [" + command + "] " + arguments);
 
                 if (command.equalsIgnoreCase("exit")) {
                     dataStoreObj.SaveAll(true);
@@ -1071,7 +1040,7 @@ public class Quorrabot implements Listener {
         }
 
         //Don't change this to postAsync. It cannot be processed in async or commands will be delayed
-        EventBus.instance().post(new CommandEvent(sender, command, arguments));
+        EventBus.instance().post(new CommandEvent(sender, command, arguments, tags, channel));
     }
 
     //previously used in auto-hosting, disabled since replaced by twitch auto-host

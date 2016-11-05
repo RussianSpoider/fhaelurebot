@@ -76,8 +76,16 @@ $api.on($script, 'ircJoinComplete', function (event) {
 
 $api.on($script, 'ircChannelUserMode', function (event) {
     if ($.connected) {
-        if ($.botchannel!=null && event.getChannel().getName().equalsIgnoreCase($.botchannel.getName())) {
+        if ($.botchannel != null && event.getChannel().getName().equalsIgnoreCase($.botchannel.getName())) {
             if (event.getUser().equalsIgnoreCase($.botname) && event.getMode().equalsIgnoreCase("o")) {
+                if (!event.getAdd()) {
+                    event.getSession().saySilent(".mods");
+                }
+                /**
+                 * Allow the bot to sends message to this session
+                 */
+                event.getSession().setAllowSendMessages(event.getAdd());
+
                 if (event.getAdd() == true) {
                     if (!$.modeo) {
                         var connectedMessage = $.inidb.get('settings', 'connectedMessage');
@@ -169,6 +177,12 @@ $.loadScript = function (scriptFile) {
             var enabled = true;
 
             if (senabled) {
+                enabled = senabled.equalsIgnoreCase("1");
+            }
+
+            if (!senabled) {
+                $.inidb.set('modules', scriptFile + '_enabled', "1");
+                senabled = $.inidb.get('modules', scriptFile + '_enabled');
                 enabled = senabled.equalsIgnoreCase("1");
             }
 

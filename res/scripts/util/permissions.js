@@ -744,7 +744,7 @@ $.on('ircPrivateMessage', function (event) {
 });
 
 $.timer.addTimer("./util/permissions.js", "modcheck", true, function () {
-    $.say(".mods");
+    $.botsession.saySilent(".mods");
 }, modcheckinterval);
 
 $.timer.addTimer("./util/permissions.js", "usercheck", true, function () {

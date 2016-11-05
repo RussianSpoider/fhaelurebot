@@ -364,7 +364,8 @@ public class IRCParser {
                     command = message.substring(1, message.indexOf(" "));
                     argsString = message.substring(message.indexOf(" ") + 1);
                 }
-                EventBus.instance().post(new CommandEvent(username, command, argsString, tagsMap, this.channel));
+                Quorrabot.handleCommand(username, message.substring(1), tagsMap, this.channel, this.ownerName);
+                //EventBus.instance().post(new CommandEvent(username, command, argsString, tagsMap, this.channel));
                 return;
             }
         }

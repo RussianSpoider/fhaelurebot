@@ -200,30 +200,19 @@ function betClose(sender, event, subAction) {
         return;
     }
     var winners = "";
-    var winamount = 0;
-    var wingroup = 0;
     var win = 0;
+
     for (i in betTable) {
         bet = betTable[i];
         if (bet.option.equalsIgnoreCase(betWinning)) {
-            wingroup++;
-        }
-    }
-    for (i in betTable) {
-        bet = betTable[i];
-        if (bet.option.equalsIgnoreCase(betWinning)) {
-            win = (betPot / wingroup).toFixed(0);
+            win = (bet.amount*2);
             $.inidb.incr('points', i, win);
-            winamount = win;
-            winners += " +" + winamount.toString() + " " + $.username.resolve(i) + ", ";
+            winners += " +" + win.toString() + " " + $.username.resolve(i) + ", ";
         }
     }
 
 
     winners = winners.toString().substring(winners, winners.length - 2);
-
-    $.inidb.set('betresults', 'winners', betWinners);
-    $.inidb.set('betresults', 'amount', (betPot * betWinPercent));
 
     $.say($.lang.get('net.quorrabot.betsystem.closed', betWinning, winners));
     resetBet();
