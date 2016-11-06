@@ -459,7 +459,7 @@ $.on('command', function (event) {
             }
 
             if (args[0].equalsIgnoreCase("signupMinutes")) {
-                if (!$.isAdmin(sender) || !$.isModv3(sender, event.getTags())) {
+                if (!$.isModv3(sender, event.getTags())) {
                     $.say($.getWhisperString(sender) + $.modmsg);
                     return;
                 }

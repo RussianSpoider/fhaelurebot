@@ -23,6 +23,8 @@
  */
 var lastStreamOnlineSend = 0;
 var discordAnnounce = false;
+var discordToggleAnnounce = $.inidb.get('settings', 'discordannounce') ? $.inidb.get('settings', 'discordannounce') : "false";
+var discordMessage = $.inidb.get('settings', 'discordmessage') ? $.inidb.get('settings', 'discordmessage') : $.lang.get('net.quorrabot.discord.streamonline', $.username.resolve($.channelName));
 
 /*
  * @event discord
@@ -35,15 +37,18 @@ $.on('discord', function (event) {
 });
 
 //Send message to discord channel if streamer is online
-if ($.isOnline($.ownerName) == true && discordAnnounce == false) {
+if ($.isOnline($.ownerName) == true && discordAnnounce == false && discordToggleAnnounce == "true") {
     discordAnnounce = true;
     var now = parseInt(java.lang.System.currentTimeMillis());
     if (now - lastStreamOnlineSend > 600e3) {
         lastStreamOnlineSend = now;
         if ($.moduleEnabled('./addonscripts/discordHandler.js')) {
-            $.discordSay($.lang.get('net.quorrabot.discord.streamonline', $.username.resolve($.channelName)));
+            $.discordSay(discordMessage);
         }
     }
+} else {
+    discordAnnounce = false;
+    lastStreamOnlineSend = 0;
 }
 
 $.discordSay = function (message) {
@@ -65,17 +70,53 @@ $.on('command', function (event) {
         }
         if (args[0] == null) {
             $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.discord.usage'));
-            return
+            return;
         }
         if (action.equalsIgnoreCase("say")) {
             if (args[1] == null) {
                 $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.discord.nomessage'));
-                return
+                return;
             }
             if ($.moduleEnabled('./addonscripts/discordHandler.js')) {
                 var message = argsString.substring(argsString.indexOf(args[1]));
                 $.discordSay(message);
                 $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.discord.messagesent'));
+                return;
+            }
+        }
+
+        if (action.equalsIgnoreCase("announce")) {
+            if (args[1] == null) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.discord.announce.nooption'));
+                return;
+            }
+            if (args[1] == "true") {
+                $.inidb.set('settings', 'discordannounce', "true");
+                discordToggleAnnounce = true;
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.discord.announce.enabled'));
+                return;
+            } else {
+                $.inidb.set('settings', 'discordannounce', "false");
+                discordToggleAnnounce = false;
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.discord.announce.disabled'));
+                return;
+            }
+        }
+
+        if (action.equalsIgnoreCase("announcemsg")) {
+            if (args[1] == null) {
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.discord.custommessage.err.nomsg'));
+                return;
+            } else {
+                var message = argsString.substring(argsString.indexOf(args[1]));
+                message.replace('(streamer)', $.username.resolve($.channelName));
+                message.replace('(caster)', $.username.resolve($.channelName));
+                message.replace('(title)', $.getStatus($.channelName));
+                message.replace('(game)', $.getGame($.channelName));
+                message.replace('(twitchchannel)', 'http://www.twitch.tv/' + $.channelName.toLowerCase());
+                $.inidb.set('settings', 'discordmessage', message);
+                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.discord.custommessage.set'));
+                return;
             }
         }
     }
@@ -83,4 +124,5 @@ $.on('command', function (event) {
 
 if ($.moduleEnabled('./addonscripts/discordHandler.js')) {
     $.registerChatCommand("./addonscripts/discordHandler.js", "discordchat");
-};
+}
+;

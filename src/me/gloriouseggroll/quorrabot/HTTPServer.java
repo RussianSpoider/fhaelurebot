@@ -22,6 +22,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -30,13 +31,15 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.TreeMap;
 import me.gloriouseggroll.quorrabot.event.EventBus;
-import me.gloriouseggroll.quorrabot.event.irc.message.IrcChannelMessageEvent;
+import me.gloriouseggroll.quorrabot.event.command.CommandEvent;
+import me.gloriouseggroll.quorrabot.script.ScriptEventManager;
+import me.gloriouseggroll.quorrabot.twitchchat.Channel;
+import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
 /**
  *
  * @author jesse
  */
-
 public class HTTPServer extends Thread {
 
     int port;
@@ -45,8 +48,8 @@ public class HTTPServer extends Thread {
     Boolean dorun = true;
 
     HTTPServer(int p, String oauth) {
-        port = p;
-        pass = oauth.replace("oauth:", "");
+        this.port = p;
+        this.pass = oauth.replace("oauth:", "");
 
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
@@ -61,7 +64,7 @@ public class HTTPServer extends Thread {
         String webhome = "./web";
 
         try {
-            socket = new ServerSocket(port);
+            this.socket = new ServerSocket(this.port);
         } catch (IOException e) {
             com.gmt2001.Console.err.println("Could not start HTTP server: " + e);
             com.gmt2001.Console.err.logStackTrace(e);
@@ -70,7 +73,7 @@ public class HTTPServer extends Thread {
 
         while (dorun) {
             try {
-                Socket conn = socket.accept();
+                Socket conn = this.socket.accept();
                 Scanner scan = new Scanner(new BufferedInputStream(conn.getInputStream()));
                 PrintStream out = new PrintStream(new BufferedOutputStream(conn.getOutputStream()));
 
@@ -109,7 +112,7 @@ public class HTTPServer extends Thread {
                             if (args.containsKey("password")) {
                                 String password = URLDecoder.decode(args.get("password"), "UTF-8").replace("oauth:", "");
 
-                                if (password.equals(pass)
+                                if (password.equals(this.pass)
                                         && (request[1].toLowerCase().startsWith("addons")
                                         || request[1].toLowerCase().startsWith("/addons")
                                         || request[1].toLowerCase().startsWith("logs")
@@ -119,7 +122,7 @@ public class HTTPServer extends Thread {
                                     } else {
                                         target = new File("." + "/" + request[1]);
                                     }
-                                } else if (password.equals(pass) && (request[1].toLowerCase().startsWith("inistore")
+                                } else if (password.equals(this.pass) && (request[1].toLowerCase().startsWith("inistore")
                                         || request[1].toLowerCase().startsWith("/inistore"))) {
                                     String realTarget = request[1];
 
@@ -230,7 +233,7 @@ public class HTTPServer extends Thread {
                             if (args.containsKey("password")) {
                                 String password = URLDecoder.decode(args.get("password"), "UTF-8").replace("oauth:", "");
 
-                                if (password.equals(pass)) {
+                                if (password.equals(this.pass)) {
                                     if (!args.containsKey("user") || !args.containsKey("message")) {
                                         out.print("HTTP/1.0 400 Bad Request\n"
                                                 + "ContentType: " + "text/text" + "\n"
@@ -244,7 +247,19 @@ public class HTTPServer extends Thread {
                                         String user = URLDecoder.decode(args.get("user"), "UTF-8");
                                         String message = URLDecoder.decode(args.get("message"), "UTF-8");
 
-                                        EventBus.instance().post(new IrcChannelMessageEvent(Quorrabot.instance().getSession(), user, message, Quorrabot.instance().getChannel()));
+                                        if (message.startsWith("!")) {
+                                            String command;
+                                            String argsString;
+                                            if (message.indexOf(" ") == -1) {
+                                                command = message.substring(1);
+                                                argsString = "";
+                                            } else {
+                                                command = message.substring(1, message.indexOf(" "));
+                                                argsString = message.substring(message.indexOf(" ") + 1, message.length());
+                                            }
+
+                                            EventBus.instance().postAsync(new CommandEvent(user, command, argsString));
+                                        }
 
                                         out.print("HTTP/1.0 200 OK\n"
                                                 + "ContentType: " + "text/text" + "\n"
@@ -286,7 +301,7 @@ public class HTTPServer extends Thread {
         com.gmt2001.Console.debug.println("HTTP server closing down on port " + port);
         try {
             dorun = false;
-            socket.close();
+            this.socket.close();
         } catch (IOException ex) {
             com.gmt2001.Console.err.printStackTrace(ex);
         }

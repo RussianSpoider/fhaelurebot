@@ -113,7 +113,7 @@ public class SingularityAPI {
             webSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    com.gmt2001.Console.out.println("SingularityWS: Connected to Singularity");
+                    //com.gmt2001.Console.out.println("GameWisp API: Connected to Singularity");
                     webSocket.emit("authentication", new JSONObject().put("key", gwIdentifier).put("access_token", AccessToken));
                 }
             });
@@ -122,7 +122,7 @@ public class SingularityAPI {
                 @Override
                 public void call(Object... args) {
                     JSONObject jsonObject = new JSONObject(args[0].toString());
-                    com.gmt2001.Console.err.println("SingularityWS: Authorization Failed: " + jsonObject.getString("message"));
+                    com.gmt2001.Console.err.println("GameWisp API: Authorization Failed: " + jsonObject.getString("message"));
                     com.gmt2001.Console.err.println("Token: " + AccessToken + " Session ID: " + SessionID + " Client ID: " + gwIdentifier);
 
                 }
@@ -131,10 +131,10 @@ public class SingularityAPI {
             webSocket.on("authenticated", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    com.gmt2001.Console.out.println("SingularityWS: Authenticated");
+                    //com.gmt2001.Console.out.println("GameWisp API: Authenticated");
                     JSONObject jsonObject = new JSONObject(args[0].toString());
                     if (!jsonObject.has("session")) {
-                        com.gmt2001.Console.err.println("SingularityWS: Missing Session in Authenticated Return JSON");
+                        com.gmt2001.Console.err.println("GameWisp API: Missing Session in Authenticated Return JSON");
                         Authenticated = false;
                         return;
                     }
@@ -148,13 +148,13 @@ public class SingularityAPI {
                 public void call(Object... args) {
                     if (Authenticated) {
                         if (Quorrabot.enableDebugging) {
-                            com.gmt2001.Console.out.println("SingularityWS: Connected to Channel");
+                            com.gmt2001.Console.out.println("GameWisp API: Connected to Channel");
                         } else {
-                            com.gmt2001.Console.out.println("SingularityWS: Connected and Ready for Requests");
+                            com.gmt2001.Console.out.println("GameWisp API: Connected and Ready for Requests");
                         }
                         ChannelConnected = true;
                     } else {
-                        com.gmt2001.Console.out.println("SingularityWS: Connected to Channel; Missing Session ID; Unusable Session");
+                        com.gmt2001.Console.out.println("GameWisp API: Connected to Channel; Missing Session ID; Unusable Session");
                         ChannelConnected = false;
                     }
                 }
@@ -163,7 +163,7 @@ public class SingularityAPI {
             webSocket.on("subscriber-new", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    com.gmt2001.Console.out.println("SingularityWS: subscriber-new received");
+                    com.gmt2001.Console.out.println("GameWisp API: subscriber-new received");
                     JSONObject jsonObject = new JSONObject(args[0].toString());
                     if (!jsonObject.has("data")) {
                         return;
@@ -189,7 +189,7 @@ public class SingularityAPI {
             webSocket.on("subscriber-anniversary", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    com.gmt2001.Console.out.println("SingularityWS: subscriber-anniversary received");
+                    com.gmt2001.Console.out.println("GameWisp API: subscriber-anniversary received");
                     JSONObject jsonObject = new JSONObject(args[0].toString());
                     if (!jsonObject.has("data")) {
                         return;
@@ -216,7 +216,7 @@ public class SingularityAPI {
             webSocket.on("subscriber-benefits-change", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    com.gmt2001.Console.out.println("SingularityWS: subscriber-benefits-change received");
+                    com.gmt2001.Console.out.println("GameWisp API: subscriber-benefits-change received");
                     JSONObject jsonObject = new JSONObject(args[0].toString());
                     if (!jsonObject.has("data")) {
                         return;
@@ -253,7 +253,7 @@ public class SingularityAPI {
             webSocket.on("subscriber-status-change", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    com.gmt2001.Console.out.println("SingularityWS: subscriber-status-changed received");
+                    com.gmt2001.Console.out.println("GameWisp API: subscriber-status-changed received");
                     JSONObject jsonObject = new JSONObject(args[0].toString());
                     if (!jsonObject.has("data")) {
                         return;
@@ -276,14 +276,14 @@ public class SingularityAPI {
             webSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    com.gmt2001.Console.out.println("SingularityWS: Disconnected");
+                    com.gmt2001.Console.out.println("GameWisp API: Disconnected");
                 }
             });
 
             webSocket.connect();
 
         } catch (Exception ex) {
-            com.gmt2001.Console.err.println("SingularityWS: Exception: " + ex.getMessage());
+            com.gmt2001.Console.err.println("GameWisp API: Exception: " + ex.getMessage());
         }
     }
 

@@ -1,50 +1,39 @@
-$.hostreward = parseInt($.inidb.get('settings', 'hostreward'));
-$.hosttimeout = parseInt($.inidb.get('settings', 'hosttimeout'));
-$.hostMessage = ($.inidb.get('settings', 'hostmessage') ? $.inidb.get('settings', 'hostmessage') : $.lang.get("net.quorrabot.hosthandler.default-host-welcome-message"));
-$.announceHosts = ($.inidb.get('settings', 'announce_hosts') ? $.inidb.get('settings', 'announce_hosts') : true);
-$.firstLaunch = true;
-
-if ($.hostlist == null || $.hostlist == undefined) {
-    $.hostlist = new Array();
-}
-
-if ($.hosttimeout == null || $.hosttimeout == undefined || isNaN($.hosttimeout)) {
-    $.hosttimeout = 60 * 60 * 1000;
-} else {
-    $.hosttimeout = $.hosttimeout * 60 * 1000;
-}
-
-if ($.hostreward == null || $.hostreward == undefined || isNaN($.hostreward)) {
-    $.hostreward = 0;
-}
+$.HostHandler = {
+    hostreward: ($.inidb.get('settings', 'hostreward') ? $.inidb.get('settings', 'hostreward') : 20),
+    hosttimeout: ($.inidb.get('settings', 'hosttimeout') ? $.inidb.get('settings', 'hosttimeout') : 60 * 60 * 1000),
+    hostMessage: ($.inidb.get('settings', 'hostmessage') ? $.inidb.get('settings', 'hostmessage') : $.lang.get("net.quorrabot.hosthandler.default-host-welcome-message")),
+    announceHosts: (parseInt($.inidb.get('settings', 'announce_hosts')) ? parseInt($.inidb.get('settings', 'announce_hosts')) : "true"),
+    hostlist: [],
+    firstLaunch: true
+};
 
 $.isHostUser = function (user) {
-    return $.array.contains($.hostlist, user.toLowerCase());
+    return $.array.contains($.HostHandler.hostlist, user.toLowerCase());
 }
 
 $.on('twitchHosted', function (event) {
     var username = $.username.resolve(event.getHoster().toString());
-    var s = $.hostMessage;
-    if ($.firstLaunch == true && $.announceHosts == true) {
-        $.announceHosts = false;
-        $.firstLaunch = false;
-        var t = setTimeout(function () {
-            $.announceHosts = true;
-            clearTimeout(t);
-        }, 300 * 1000);
+    var s = $.HostHandler.hostMessage;
+    if ($.HostHandler.firstLaunch == true && $.HostHandler.announceHosts == "true") {
+        $.HostHandler.announceHosts = "false";
+        $.HostHandler.firstLaunch = false;
+
+        setTimeout(function () {
+            $.HostHandler.announceHosts = "true";
+        }, 20000);
     }
-    if ($.announceHosts == true && $.moduleEnabled("./handlers/hostHandler.js") && ($.hostlist[username.toLowerCase()] == null || $.hostlist[username.toLowerCase()] == undefined || $.hostlist[username.toLowerCase()] < System.currentTimeMillis())) {
+    if ($.HostHandler.announceHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js") && ($.HostHandler.hostlist[username.toLowerCase()] == null || $.HostHandler.hostlist[username.toLowerCase()] == undefined || $.HostHandler.hostlist[username.toLowerCase()] < System.currentTimeMillis())) {
         s = $.replaceAll(s, '(name)', username);
-        if ($.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
-            $.inidb.incr('points', username.toLowerCase(), $.hostreward);
-            s += " +" + $.getPointsString($.hostreward);
+        if ($.HostHandler.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
+            $.inidb.incr('points', username.toLowerCase(), $.HostHandler.hostreward);
+            s += " +" + $.getPointsString($.HostHandler.hostreward);
         }
         $.say("/me " + s);
     }
 
-    $.hostlist[username.toLowerCase()] = System.currentTimeMillis() + $.hosttimeout;
+    $.HostHandler.hostlist[username.toLowerCase()] = System.currentTimeMillis() + $.HostHandler.hosttimeout;
 
-    $.hostlist.push(username.toLowerCase());
+    $.HostHandler.hostlist.push(username.toLowerCase());
 
     if (!$.inidb.exists("hostslist", username.toLowerCase())) {
         $.inidb.set("hostslist", username.toLowerCase(), 1);
@@ -57,11 +46,11 @@ $.on('twitchHosted', function (event) {
 $.on('twitchUnhosted', function (event) {
     var username = $.username.resolve(event.getHoster());
 
-    $.hostlist[event.getHoster()] = System.currentTimeMillis() + $.hosttimeout;
+    $.HostHandler.hostlist[event.getHoster()] = System.currentTimeMillis() + $.HostHandler.hosttimeout;
 
-    for (var i = 0; i < $.hostlist.length; i++) {
-        if ($.hostlist[i].equalsIgnoreCase(username)) {
-            $.hostlist.splice(i, 1);
+    for (var i = 0; i < $.HostHandler.hostlist.length; i++) {
+        if ($.HostHandler.hostlist[i].equalsIgnoreCase(username)) {
+            $.HostHandler.hostlist.splice(i, 1);
             break;
         }
     }
@@ -86,10 +75,10 @@ $.on('command', function (event) {
 
         if ($.strlen(argsString) == 0) {
             if ($.inidb.exists('settings', 'hostreward')) {
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-reward-current-and-usage", $.getPointsString($.hostreward)));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-reward-current-and-usage", $.getPointsString($.HostHandler.hostreward)));
                 return;
             } else {
-                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-reward-current-and-usage", $.getPointsString($.hostreward)));
+                $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-reward-current-and-usage", $.getPointsString($.HostHandler.hostreward)));
                 return;
             }
         } else {
@@ -101,7 +90,7 @@ $.on('command', function (event) {
             $.logEvent("hostHandler.js", 134, username + " changed the host points reward to: " + argsString);
 
             $.inidb.set('settings', 'hostreward', argsString);
-            $.hostreward = parseInt(argsString);
+            $.HostHandler.hostreward = parseInt(argsString);
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-reward-set-success"));
             return;
         }
@@ -114,9 +103,9 @@ $.on('command', function (event) {
         }
 
         if ($.strlen(argsString) == 0) {
-            var msg = $.hostMessage;
-            if ($.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
-                msg += " +" + $.getPointsString($.hostreward);
+            var msg = $.HostHandler.hostMessage;
+            if ($.HostHandler.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
+                msg += " +" + $.getPointsString($.HostHandler.hostreward);
             }
             $.say($.getWhisperString(sender) + msg);
 
@@ -129,7 +118,7 @@ $.on('command', function (event) {
             $.logEvent("hostHandler.js", 73, username + " changed the new hoster message to: " + argsString);
 
             $.inidb.set('settings', 'hostmessage', argsString);
-            $.hostMessage = $.inidb.get('settings', 'hostmessage');
+            $.HostHandler.hostMessage = $.inidb.get('settings', 'hostmessage');
 
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-message-set-success"));
             return;
@@ -137,18 +126,18 @@ $.on('command', function (event) {
     }
 
     if (command.equalsIgnoreCase("hostcount")) {
-        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-count", $.hostlist.length));
+        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-count", $.HostHandler.hostlist.length));
         return;
     }
 
     if (command.equalsIgnoreCase("hostannounce")) {
         var status;
         if (args[0].toString().equalsIgnoreCase("true")) {
-            $.announceHosts = true;
+            $.HostHandler.announceHosts = "true";
             $.inidb.set("settings", "announce_hosts", "true");
             status = "enabled";
         } else {
-            $.announceHosts = false;
+            $.HostHandler.announceHosts = "false";
             $.inidb.set("settings", "announce_hosts", "false");
             status = "disabled";
         }

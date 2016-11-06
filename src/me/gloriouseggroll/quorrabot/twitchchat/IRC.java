@@ -127,7 +127,7 @@ public class IRC extends WebSocketClient {
             if (reconnect) {
                 com.gmt2001.Console.out.println("Reconnecting to Twitch Websockets chat [" + this.uri.getHost() + "]");
             } else {
-                com.gmt2001.Console.out.println("Connecting to Twitch Websockets chat [" + this.uri.getHost() + "]");
+                //com.gmt2001.Console.out.println("Connecting to Twitch Websockets chat [" + this.uri.getHost() + "]");
             }
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, null, null);

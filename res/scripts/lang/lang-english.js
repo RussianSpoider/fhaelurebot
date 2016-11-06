@@ -509,6 +509,12 @@ $.lang.data["net.quorrabot.discord.streamonline"] = "@everyone $1 just went onli
 $.lang.data["net.quorrabot.discord.nomessage"] = "You did not specify a message. Usage: !discordchat say (message)";
 $.lang.data["net.quorrabot.discord.messagesent"] = "Discord message sent successfully.";
 $.lang.data["net.quorrabot.discord.usage"] = "No action specified. Usage: !discordchat say (message)";
+$.lang.data["net.quorrabot.discord.announce.nooption"] = "No option specified. Usage: !discordchat announce true/false";
+$.lang.data["net.quorrabot.discord.announce.enabled"] = "Bot will now announce in discord when the stream goes live!";
+$.lang.data["net.quorrabot.discord.announce.disabled"] = "Bot will no longer announce in discord when the stream goes live.";
+$.lang.data["net.quorrabot.discord.custommessage.set"] = "Custom discord announcement message has been set!";
+$.lang.data["net.quorrabot.discord.custommessage.err.nomsg"] = "You did not specify a message. Usage: !discordchat announcemsg (message). Tags available: (streamer)/(caster),(twitchchannel),(game),(title)";
+
 
 //subscribeHandler.js
 $.lang.data["net.quorrabot.subscribeHandler.sub-toggle-off"] = "Subscribers will no longer be thanked upon subscribing.";

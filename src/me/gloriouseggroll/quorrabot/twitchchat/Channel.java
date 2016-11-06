@@ -91,5 +91,8 @@ public class Channel {
     public Channel getChannel() {
         return channel;
     }
+    public String getOwner() {
+        return ownerName;
+    }
 
 }

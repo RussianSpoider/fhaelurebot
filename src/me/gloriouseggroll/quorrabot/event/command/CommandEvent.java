@@ -58,6 +58,14 @@ public class CommandEvent extends Event {
         this.channel = channel;
         parse();
     }
+    public CommandEvent(String sender, String command, String arguments, Channel channel) {
+        this.sender = sender;
+        this.command = command;
+        this.arguments = arguments;
+        this.channel = channel;
+        this.tags = new HashMap<>();
+        parse();
+    }
 
     private void parse() {
         List<String> tmpArgs = new LinkedList<>();

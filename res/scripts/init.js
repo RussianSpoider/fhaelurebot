@@ -159,7 +159,11 @@ $.loadScriptForce = function (scriptFile) {
         if (senabled) {
             enabled = senabled.equalsIgnoreCase("1");
         }
-
+        
+        if (!senabled) {
+            $.inidb.set('modules', scriptFile + '_enabled', "1");
+            enabled = true;
+        }
         modules.push(new Array(scriptFile, enabled, script));
     } catch (e) {
         if ($.isModuleLoaded("./util/misc.js")) {
@@ -182,8 +186,7 @@ $.loadScript = function (scriptFile) {
 
             if (!senabled) {
                 $.inidb.set('modules', scriptFile + '_enabled', "1");
-                senabled = $.inidb.get('modules', scriptFile + '_enabled');
-                enabled = senabled.equalsIgnoreCase("1");
+                enabled = true;
             }
 
             modules.push(new Array(scriptFile, enabled, script));

@@ -483,7 +483,10 @@ public class Quorrabot implements Listener {
     public final void init() {
         if (webenable) {
             if (usehttps) {
+                //modify this later for https support
+                com.gmt2001.Console.out.println(channel.getName());
                 httpserver = new HTTPServer(baseport, oauth);
+                
                 if (musicenable) {
                     musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword);
                 }
