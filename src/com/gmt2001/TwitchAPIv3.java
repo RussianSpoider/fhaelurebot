@@ -413,6 +413,10 @@ public class TwitchAPIv3 {
     public JSONObject GetChannelSubscriptions(String channel, int limit, int offset, boolean ascending) {
         return GetChannelSubscriptions(channel, limit, offset, ascending, this.oauth);
     }
+    
+    public int isPartnered(String channel, int limit, int offset, boolean ascending) {
+        return isPartnered(channel, limit, offset, ascending, this.oauth);
+    }
 
     /**
      * Gets an object listing the users subscribing to a channel
@@ -424,6 +428,20 @@ public class TwitchAPIv3 {
      * @param oauth
      * @return
      */
+    public int isPartnered(String channel, int limit, int offset, boolean ascending,String oauth) {
+        limit = Math.max(0, Math.min(limit, 100));
+        offset = Math.max(0, offset);
+
+        String dir = "desc";
+
+        if (ascending) {
+            dir = "asc";
+        }
+        
+        String partner = GetData(request_type.GET, base_url + "/channels/" + channel + "/subscriptions?limit=" + limit + "&offset=" + offset + "&direction=" + dir, "", oauth, false).toString();
+        return partner.indexOf("422");
+    }
+    
     public JSONObject GetChannelSubscriptions(String channel, int limit, int offset, boolean ascending, String oauth) {
         limit = Math.max(0, Math.min(limit, 100));
         offset = Math.max(0, offset);
@@ -434,7 +452,7 @@ public class TwitchAPIv3 {
             dir = "asc";
         }
 
-        return GetData(request_type.GET, base_url + "/channels/" + channel + "/subscriptions?limit=" + limit + "&offset=" + offset + "&direction=" + dir, oauth, false);
+        return GetData(request_type.GET, base_url + "/channels/" + channel + "/subscriptions?limit=" + limit + "&offset=" + offset + "&direction=" + dir, "", oauth, false);
     }
 
     /**

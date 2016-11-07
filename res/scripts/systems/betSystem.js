@@ -384,10 +384,4 @@ $.on('command', function (event) {
 
 if ($.moduleEnabled('./systems/betSystem.js')) {
     $.registerChatCommand('./systems/betSystem.js', 'bet', 7);
-    $.registerChatSubcommand('bet', 'open', 2);
-    $.registerChatSubcommand('bet', 'close', 2);
-    $.registerChatSubcommand('bet', 'setmaximum', 2);
-    $.registerChatSubcommand('bet', 'setminimum', 2);
-    $.registerChatSubcommand('bet', 'settimer', 2);
-    $.registerChatSubcommand('bet', 'togglebetmessage', 2);
 }

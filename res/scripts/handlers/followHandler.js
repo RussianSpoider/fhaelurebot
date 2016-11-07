@@ -53,7 +53,7 @@ $.getUserFollowed = function (user, channel) {
 };
 
 $.on('twitchFollowsInitialized', function (event) {
-        $.println(">>Enabling new follower announcements");
+    $.followannounce = "loaded";
 });
 
 $.on('twitchFollow', function (event) {

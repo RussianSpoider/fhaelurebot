@@ -77,4 +77,5 @@ if ($.moduleEnabled('./addonscripts/twitterHandler.js')) {
     }
 
     $.registerChatCommand("./addonscripts/twitterHandler.js", "tweet", "admin");
+    $.println('Twitter API module loaded.');
 }

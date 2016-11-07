@@ -215,6 +215,11 @@ public class Quorrabot implements Listener {
         this.baseport = baseport;
         this.datastore = datastore;
         this.datastoreconfig = datastoreconfig;
+        this.hostCache = ChannelHostCache.instance(this.ownerName);
+        this.subscribersCache = SubscribersCache.instance(this.ownerName);
+        this.channelUsersCache = ChannelUsersCache.instance(this.ownerName);
+        this.followersCache = FollowersCache.instance(this.ownerName);
+        
         this.youtubekey = youtubekey;
         if (!timeZone.isEmpty()) {
             this.timeZone = timeZone;
@@ -278,11 +283,6 @@ public class Quorrabot implements Listener {
         this.keypassword = keypassword;
         this.soundboardauth = soundboardauth;
         this.soundboardauthread = soundboardauthread;
-
-        this.channelUsersCache = ChannelUsersCache.instance(this.ownerName);
-        this.followersCache = FollowersCache.instance(this.ownerName);
-        this.hostCache = ChannelHostCache.instance(this.ownerName);
-        this.subscribersCache = SubscribersCache.instance(this.ownerName);
 
         if (clientid.length() == 0) {
             this.clientid = "pcaalhorck7ryamyg6ijd5rtnls5pjl";
@@ -486,7 +486,7 @@ public class Quorrabot implements Listener {
                 //modify this later for https support
                 com.gmt2001.Console.out.println(channel.getName());
                 httpserver = new HTTPServer(baseport, oauth);
-                
+
                 if (musicenable) {
                     musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword);
                 }
@@ -523,24 +523,27 @@ public class Quorrabot implements Listener {
              */
             //soundBoard.start();
             //com.gmt2001.Console.out.println("SoundBoard accepting connections on port: " + (baseport + 4));
-            if (gamewispauth.length() > 0) {
-                GameWispAPI.instance().SetAccessToken(gamewispauth);
-                GameWispAPI.instance().SetRefreshToken(gamewisprefresh);
-                SingularityAPI.instance().setAccessToken(gamewispauth);
-                SingularityAPI.instance().StartService();
-                doRefreshGameWispToken();
-            }
-
-            if (!discordToken.isEmpty()) {
-                DiscordAPI.instance().connect(discordToken);
-            }
+        }
+        if (gamewispauth.length() > 0) {
+            GameWispAPI.instance().SetAccessToken(gamewispauth);
+            GameWispAPI.instance().SetRefreshToken(gamewisprefresh);
+            SingularityAPI.instance().setAccessToken(gamewispauth);
+            SingularityAPI.instance().StartService();
+            doRefreshGameWispToken();
         }
 
-        if (interactive) {
-            cil = new ConsoleInputListener();
-            cil.start();
+        if (!discordToken.isEmpty()) {
+            DiscordAPI.instance().connect(discordToken);
         }
 
+        //Give the services above a moment to load before loading scripts and console input listener
+        try {
+            Thread.sleep(3000);
+        } catch (Exception e) {
+            //
+        }
+
+        //Load the scripts before loading the console input listener
         EventBus.instance().register(this);
         EventBus.instance().register(ScriptEventManager.instance());
 
@@ -574,6 +577,12 @@ public class Quorrabot implements Listener {
         Script.global.defineProperty("subscribers", subscribersCache, 0);
         Script.global.defineProperty("followers", followersCache, 0);
         Script.global.defineProperty("hosts", hostCache, 0);
+
+        //load console input listener last.
+        if (interactive) {
+            cil = new ConsoleInputListener();
+            cil.start();
+        }
         t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -887,6 +896,17 @@ public class Quorrabot implements Listener {
             doRefreshGameWispToken();
             changed = true;
         }
+        
+        if (message.equals("discord")) {
+            com.gmt2001.Console.out.print("Please enter a new Discord Access Token: ");
+            String newdiscordtoken = System.console().readLine().trim();
+            discordToken = newdiscordtoken;
+            
+            com.gmt2001.Console.out.print("Please enter the name of the discord channel for the bot to join: ");
+            String newdiscordmainchannel = System.console().readLine().trim();
+            discordMainChannel = newdiscordmainchannel;
+            changed = true;
+        }
 
         if (message.equals("testgwrefresh")) {
             com.gmt2001.Console.out.println("[CONSOLE] Executing testgwrefresh");
@@ -988,7 +1008,7 @@ public class Quorrabot implements Listener {
                  * musicsocketserver = new MusicWebSocketServer(baseport + 1); }
                  * }
                  */
-                com.gmt2001.Console.out.println("Changes have been saved. For web and music server settings to take effect you must restart the bot.");
+                com.gmt2001.Console.out.println("Changes have been saved. For discord, web, and music server settings to take effect you must restart the bot.");
             } catch (IOException ex) {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }

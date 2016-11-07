@@ -88,16 +88,7 @@ $api.on($script, 'ircChannelUserMode', function (event) {
 
                 if (event.getAdd() == true) {
                     if (!$.modeo) {
-                        var connectedMessage = $.inidb.get('settings', 'connectedMessage');
-                        if ($.joinmsg == false) {
-                            if (connectedMessage != null && !connectedMessage.isEmpty()) {
-                                $.say(connectedMessage);
-                                $.joinmsg = true;
-                            } else {
-                                $.println($.username.resolve($.botname) + " is now online.");
-                                $.joinmsg = true;
-                            }
-                        }
+                        sayOnline();
                     }
                     $.modeo = true;
                 } else {
@@ -131,13 +122,59 @@ $.isModuleLoaded = function (scriptFile) {
 }
 
 $.moduleEnabled = function (scriptFile) {
-    var i = $.getModuleIndex(scriptFile);
-
-    if (i == -1) {
+    var status = $.inidb.get('modules', scriptFile + '_enabled');
+    if (status == 0 || status == "0") {
         return false;
     }
 
-    return modules[i][1];
+    return true;
+};
+
+$.cacheonline = 0;
+$.cachecount = 0;
+$.counter = 0;
+if ($.moduleEnabled('./handlers/followHandler.js')) {
+    $.cachecount++;
+}
+if ($.moduleEnabled('./handlers/hostHandler.js')) {
+    $.cachecount++;
+}
+if ($.twitch.isPartnered($.channelName, 1, 0, false) == -1) {
+    if ($.moduleEnabled('./handlers/subscribeHandler.js')) {
+        $.cachecount++;
+    }
+};
+
+function sayOnline() {
+    $.timer.addTimer("./init.js", "botonline", true, function () {
+
+        if ($.followannounce == "loaded" && $.counter == 0) {
+            $.cacheonline++;
+            $.counter = 1;
+        }
+        if ($.hostannounce == "loaded" && $.counter == 1) {
+            $.cacheonline++;
+            $.counter = 2;
+        }
+        if ($.subscriberannounce == "loaded" && $.counter == 2) {
+            $.cacheonline++;
+        }
+
+        if ($.cacheonline == $.cachecount) {
+            var connectedMessage = $.inidb.get('settings', 'connectedMessage');
+            if ($.joinmsg == false) {
+                if (connectedMessage != null && !connectedMessage.isEmpty()) {
+                    $.say(connectedMessage);
+                    $.joinmsg = true;
+                } else {
+                    $.println($.username.resolve($.botname) + " is now online!");
+                    $.joinmsg = true;
+                }
+            }
+            $.timer.clearTimer("./init.js", "botonline", true);
+        }
+
+    }, 10 * 1000);
 }
 
 $.getModule = function (scriptFile) {
@@ -159,7 +196,7 @@ $.loadScriptForce = function (scriptFile) {
         if (senabled) {
             enabled = senabled.equalsIgnoreCase("1");
         }
-        
+
         if (!senabled) {
             $.inidb.set('modules', scriptFile + '_enabled', "1");
             enabled = true;
@@ -652,6 +689,7 @@ if ($.inidb.FileExists("timezone") && $.inidb.get("timezone", "timezone") != und
     $.timezone = $.inidb.get("timezone", "timezone");
 }
 
+$.println("Loading utilities scripts.");
 $.loadScript('./util/misc.js');
 $.loadScript('./util/commandList.js');
 $.loadScript('./util/patternDetector.js');
@@ -688,8 +726,17 @@ $.loadScript('./util/whisperSystem.js');
 $.loadScript('./util/permissions.js');
 $.loadScript('./util/chatModerator.js');
 
-$.loadScriptsRecursive(".");
-
+//$.loadScriptsRecursive(".");
+$.println("Loading language scripts.");
+$.loadScriptsRecursive("./lang/");
+$.println("Loading systems.");
+$.loadScriptsRecursive("./systems/");
+$.println("Loading commands.");
+$.loadScriptsRecursive("./commands/");
+$.println("Loading alert handlers.");
+$.loadScriptsRecursive("./handlers/");
+$.println("Loading custom add-on scripts.");
+$.loadScriptsRecursive("./addonscripts/");
 
 $api.on(initscript, 'command', function (event) {
     var sender = event.getSender();

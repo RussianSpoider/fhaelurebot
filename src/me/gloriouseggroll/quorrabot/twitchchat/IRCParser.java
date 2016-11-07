@@ -445,7 +445,9 @@ public class IRCParser {
             }
         }
         eventBus.postAsync(new IrcPrivateMessageEvent(this.session, username, message, tagsMap));
-        com.gmt2001.Console.out.println("[WHISPER] " + username + ": " + message);
+        if(!this.session.getNick().equalsIgnoreCase(this.ownerName)) {
+            com.gmt2001.Console.out.println("[WHISPER] " + username + ": " + message);
+        }
     }
 
     /*

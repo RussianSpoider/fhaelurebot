@@ -451,7 +451,7 @@ $.urlEncode = function (message, argsString) {
     var encoder = Packages.java.net.URLEncoder;
     var encodedurl = "";
     var urlencodeportion = "";
-    if (message.contains('(urlencode $1)')) {
+    if (message.toLowerCase().indexOf('(urlencode $1)')!=-1) {
         urlencodeportion = '(urlencode $1)';
         encodedurl = encoder.encode(argsString);
     } else {

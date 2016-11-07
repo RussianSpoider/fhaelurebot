@@ -49,7 +49,7 @@ public class SubscribersCache implements Runnable {
         return instance;
     }
 
-    private Map<String, JSONObject> cache;
+    private Map<String, JSONObject> cache = Maps.newHashMap();
     private final String channel;
     private int count = -1;
     private final Thread updateThread;
@@ -67,7 +67,6 @@ public class SubscribersCache implements Runnable {
 
         this.channel = channel;
         this.updateThread = new Thread(this);
-        this.cache = Maps.newHashMap();
 
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
         this.updateThread.setUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
@@ -112,7 +111,7 @@ public class SubscribersCache implements Runnable {
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
         try {
-            Thread.sleep(30 * 1000);
+            Thread.sleep(20 * 1000);
         } catch (InterruptedException e) {
             com.gmt2001.Console.debug.println("SubscribersCache.run: Failed to initial sleep: [InterruptedException] " + e.getMessage());
         }
@@ -156,7 +155,7 @@ public class SubscribersCache implements Runnable {
             }
 
             try {
-                Thread.sleep(60 * 60 * 1000); // One hour. This pulls every sub from the Twitch API and is for refreshing old subs more than anything.
+                Thread.sleep(20 * 1000); // One hour. This pulls every sub from the Twitch API and is for refreshing old subs more than anything.
             } catch (InterruptedException e) {
                 com.gmt2001.Console.debug.println("SubscribersCache.run: Failed to sleep: [InterruptedException] " + e.getMessage());
             }
@@ -260,11 +259,6 @@ public class SubscribersCache implements Runnable {
         this.cache = newCache;
         this.count = newCache.size();
 
-        if (firstUpdate) {
-            firstUpdate = false;
-            EventBus.instance().postAsync(new TwitchSubscribesInitializedEvent(Quorrabot.getChannel(this.channel)));
-        }
-        
         for (String subscriber : subscribers) {
             EventBus.instance().post(new TwitchSubscribeEvent(subscriber, Quorrabot.getChannel(this.channel)));
         }
@@ -272,7 +266,13 @@ public class SubscribersCache implements Runnable {
         for (String subscriber : unsubscribers) {
             EventBus.instance().post(new TwitchUnsubscribeEvent(subscriber, Quorrabot.getChannel(this.channel)));
         }
-        
+
+        if (firstUpdate) {
+            firstUpdate = false;
+            EventBus.instance().postAsync(new TwitchSubscribesInitializedEvent(Quorrabot.getChannel(this.channel)));
+            com.gmt2001.Console.out.println(">>Enabling new subscriber announcements");
+        }
+
     }
 
     public void addSubscriber(String username) {

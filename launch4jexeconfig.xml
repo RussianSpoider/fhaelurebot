@@ -25,4 +25,18 @@
     <opt>-Dfile.encoding=UTF-8</opt>
     <opt>-Dinteractive=true</opt>
   </jre>
+  <versionInfo>
+    <fileVersion>1.14.0.0</fileVersion>
+    <txtFileVersion>1.14.0</txtFileVersion>
+    <fileDescription>QuorraBot</fileDescription>
+    <copyright>www.quorrabot.com</copyright>
+    <productVersion>1.14.0.0</productVersion>
+    <txtProductVersion>1.14.0</txtProductVersion>
+    <productName>QuorraBot</productName>
+    <companyName></companyName>
+    <internalName>QuorraBot</internalName>
+    <originalFilename>QuorraBot.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ENGLISH_US</language>
+  </versionInfo>
 </launch4jConfig>

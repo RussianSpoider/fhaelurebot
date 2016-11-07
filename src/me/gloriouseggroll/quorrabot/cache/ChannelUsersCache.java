@@ -49,7 +49,7 @@ public class ChannelUsersCache implements Runnable {
         return instance;
     }
 
-    private Map<String, String> cache;
+    private Map<String, String> cache = Maps.newHashMap();
     private final String channel;
     private final Thread updateThread;
     private Date timeoutExpire = new Date();
@@ -89,7 +89,7 @@ public class ChannelUsersCache implements Runnable {
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
         try {
-            Thread.sleep(30 * 1000);
+            Thread.sleep(25 * 1000);
         } catch (InterruptedException e) {
             com.gmt2001.Console.debug.println("ChannelUsersCache.run: Failed to initial sleep: [InterruptedException] " + e.getMessage());
         }
@@ -126,10 +126,10 @@ public class ChannelUsersCache implements Runnable {
             }
 
             try {
-                if (firstTime) {
-                    Thread.sleep(30 * 1000);      // Failed to fetch during startup, sleep 30 seconds.
+                if(firstTime) {
+                    Thread.sleep(25 * 1000);
                 } else {
-                    Thread.sleep(60 * 60 * 1000); // Success on the iniital pull, now once an hour.
+                    Thread.sleep(60 * 60 * 1000);
                 }
             } catch (InterruptedException e) {
                 com.gmt2001.Console.debug.println("ChannelUsersCache.run: Failed to sleep: [InterruptedException] " + e.getMessage());
@@ -211,20 +211,20 @@ public class ChannelUsersCache implements Runnable {
             List<String> part = Lists.newArrayList();
 
             for (String key : newCache.keySet()) {
-                if (this.cache == null || !this.cache.containsKey(key)) {
+                if (cache == null || !cache.containsKey(key)) {
                     join.add(key);
                 }
             }
 
-            if (this.cache != null) {
-                for (String key : this.cache.keySet()) {
+            if (cache != null) {
+                for (String key : cache.keySet()) {
                     if (!newCache.containsKey(key)) {
                         part.add(key);
                     }
                 }
             }
 
-            this.cache = newCache;
+            cache = newCache;
             for (String joined : join) {
                 EventBus.instance().post(new IrcChannelJoinUpdateEvent(Quorrabot.getSession(this.channel), Quorrabot.getChannel(this.channel), joined));
             }
@@ -239,9 +239,11 @@ public class ChannelUsersCache implements Runnable {
     public void setCache(Map<String, String> cache) {
         this.cache = cache;
     }
+
     public void addUser(String username) {
         cache.put(username, null);
     }
+
     public Map<String, String> getCache() {
         return cache;
     }

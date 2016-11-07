@@ -93,7 +93,15 @@ public class FollowersCache implements Runnable {
                 for (String key : newCache.keySet()) {
                     if (cache == null || !cache.containsKey(key)) {
                         cache.put(key, newCache.get(key));
-                        EventBus.instance().post(new TwitchFollowEvent(key, Quorrabot.getChannel("#" + this.channel)));
+                        EventBus.instance().post(new TwitchFollowEvent(key, Quorrabot.getChannel(this.channel)));
+                    }
+                }
+
+                if (cache != null) {
+                    for (String key : cache.keySet()) {
+                        if (!newCache.containsKey(key)) {
+                            EventBus.instance().post(new TwitchUnfollowEvent(key, Quorrabot.getChannel(this.channel)));
+                        }
                     }
                 }
 
@@ -122,7 +130,7 @@ public class FollowersCache implements Runnable {
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
         try {
-            Thread.sleep(30 * 1000);
+            Thread.sleep(25 * 1000);
         } catch (InterruptedException e) {
             com.gmt2001.Console.debug.println("FollowersCache.run: Failed to initial sleep: [InterruptedException] " + e.getMessage());
         }
@@ -154,8 +162,11 @@ public class FollowersCache implements Runnable {
         } catch (Exception e) {
             com.gmt2001.Console.err.printStackTrace(e);
         }
-
-        EventBus.instance().post(new TwitchFollowsInitializedEvent(Quorrabot.getChannel(this.channel)));
+        if (firstUpdate) {
+            firstUpdate = false;
+            EventBus.instance().postAsync(new TwitchFollowsInitializedEvent(Quorrabot.getChannel(this.channel)));
+            com.gmt2001.Console.out.println(">>Enabling new follower announcements");
+        }
 
         while (!killed) {
             try {
@@ -192,128 +203,10 @@ public class FollowersCache implements Runnable {
             }
 
             try {
-                Thread.sleep(30 * 1000);
+                Thread.sleep(25 * 1000);
             } catch (InterruptedException e) {
                 com.gmt2001.Console.debug.println("FollowersCache.run: Failed to sleep: [InterruptedException] " + e.getMessage());
             }
-        }
-    }
-
-    private void updateCache(int newCount) throws Exception {
-        Map<String, JSONObject> newCache = Maps.newHashMap();
-
-        final List<JSONObject> responses = Lists.newArrayList();
-        List<Thread> threads = Lists.newArrayList();
-
-        hasFail = false;
-
-        Calendar c = Calendar.getInstance();
-
-        c.add(Calendar.HOUR, 1);
-
-        nextFull = c.getTime();
-
-        for (int i = 0; i < Math.ceil(newCount / 100.0); i++) {
-            final int offset = i * 100;
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    JSONObject j = TwitchAPIv3.instance().GetChannelFollows(channel, 100, offset, true);
-
-                    if (j.getBoolean("_success")) {
-                        if (j.getInt("_http") == 200) {
-                            responses.add(j);
-
-                        } else {
-                            try {
-                                throw new Exception("[HTTPErrorException] HTTP " + j.getInt("status") + " " + j.getString("error") + ". req="
-                                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
-                            } catch (Exception e) {
-                                com.gmt2001.Console.debug.println("FollowersCache.updateCache: Failed to update followers: " + e.getMessage());
-                            }
-                        }
-                    } else {
-                        try {
-                            throw new Exception("[" + j.getString("_exception") + "] " + j.getString("_exceptionMessage"));
-                        } catch (Exception e) {
-                            if ((e.getMessage().startsWith("[SocketTimeoutException]") || e.getMessage().startsWith("[IOException]")) && !hasFail) {
-                                hasFail = true;
-
-                                Calendar c = Calendar.getInstance();
-
-                                if (lastFail.after(new Date())) {
-                                    numfail++;
-                                } else {
-                                    numfail = 1;
-                                }
-
-                                c.add(Calendar.MINUTE, 1);
-
-                                lastFail = c.getTime();
-
-                                if (numfail >= 5) {
-                                    timeoutExpire = c.getTime();
-                                }
-                            }
-
-                            com.gmt2001.Console.debug.println("FollowersCache.updateCache: Failed to update followers: " + e.getMessage());
-                        }
-                    }
-                }
-            };
-            threads.add(thread);
-            thread.start();
-        }
-
-        for (Thread thread : threads) {
-            thread.join();
-        }
-
-        for (JSONObject response : responses) {
-            JSONArray followers = response.getJSONArray("follows");
-
-            if (followers.length() == 0) {
-                break;
-            }
-
-            for (int j = 0; j < followers.length(); j++) {
-                JSONObject follower = followers.getJSONObject(j);
-                newCache.put(follower.getJSONObject("user").getString("name"), follower);
-            }
-        }
-
-        List<String> followers = Lists.newArrayList();
-        List<String> unfollowers = Lists.newArrayList();
-
-        for (String key : newCache.keySet()) {
-            if (cache == null || !cache.containsKey(key)) {
-                followers.add(key);
-            }
-        }
-
-        if (cache != null) {
-            for (String key : cache.keySet()) {
-                if (!newCache.containsKey(key)) {
-                    unfollowers.add(key);
-                }
-            }
-        }
-
-        this.cache = newCache;
-        this.count = newCache.size();
-
-        if (firstUpdate) {
-            firstUpdate = false;
-            EventBus.instance().postAsync(new TwitchFollowsInitializedEvent(Quorrabot.getChannel(this.channel)));
-        }
-
-        for (String follower : followers) {
-            EventBus.instance().post(new TwitchFollowEvent(follower, Quorrabot.getChannel(this.channel)));
-        }
-
-        for (String follower : unfollowers) {
-            EventBus.instance().post(new TwitchUnfollowEvent(follower, Quorrabot.getChannel(this.channel)));
         }
     }
 

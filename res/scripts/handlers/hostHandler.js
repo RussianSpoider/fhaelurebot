@@ -57,7 +57,7 @@ $.on('twitchUnhosted', function (event) {
 });
 
 $.on('twitchHostsInitialized', function (event) {
-    println(">>Enabling new hoster announcements");
+    $.hostannounce = "loaded";
 });
 
 $.on('command', function (event) {

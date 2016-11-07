@@ -51,7 +51,7 @@ public class ChannelHostCache implements Runnable {
         return instance;
     }
 
-    private Map<String, JSONObject> cache;
+    private Map<String, JSONObject> cache = Maps.newHashMap();
     private final String channel;
     private final Thread updateThread;
     private boolean firstUpdate = true;
@@ -91,9 +91,8 @@ public class ChannelHostCache implements Runnable {
     @Override
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
-
         try {
-            Thread.sleep(30 * 1000);
+            Thread.sleep(25 * 1000);
         } catch (InterruptedException e) {
             com.gmt2001.Console.debug.println("ChannelHostCache.run: Failed to initial sleep: [InterruptedException] " + e.getMessage());
         }
@@ -130,7 +129,7 @@ public class ChannelHostCache implements Runnable {
             }
 
             try {
-                Thread.sleep(30 * 1000);
+                Thread.sleep(25 * 1000);
             } catch (InterruptedException e) {
                 com.gmt2001.Console.debug.println("ChannelHostCache.run: Failed to sleep: [InterruptedException] " + e.getMessage());
             }
@@ -174,8 +173,8 @@ public class ChannelHostCache implements Runnable {
             } else {
                 try {
                     throw new Exception("[HTTPErrorException] HTTP " + j.getInt("_http") + " " + j.getString("error") + ". req="
-                                        + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
-                                        + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
+                            + j.getString("_type") + " " + j.getString("_url") + " " + j.getString("_post") + "   "
+                            + (j.has("message") && !j.isNull("message") ? "message=" + j.getString("message") : "content=" + j.getString("_content")));
                 } catch (Exception e) {
                     com.gmt2001.Console.debug.println("ChannelHostCache.updateCache: Failed to update hosts: " + e.getMessage());
                 }
@@ -223,10 +222,11 @@ public class ChannelHostCache implements Runnable {
             }
         }
 
-        this.cache = newCache;
-        if (firstUpdate) {
+        cache = newCache;
+        if (firstUpdate == true) {
             firstUpdate = false;
             EventBus.instance().postAsync(new TwitchHostsInitializedEvent(Quorrabot.getChannel(this.channel)));
+            com.gmt2001.Console.out.println(">>Enabling new hoster announcements");
         }
 
         for (String hoster : hosted) {
