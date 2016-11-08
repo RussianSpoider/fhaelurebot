@@ -23,10 +23,9 @@
  */
 
 $.DiscordHandler = {
-    lastStreamOnlineSend: 0,
     discordAnnounce: false,
     discordToggleAnnounce: ($.inidb.get('settings', 'discordannounce') ? $.inidb.get('settings', 'discordannounce') : "false"),
-    discordAnnounceMsg: ($.inidb.get('settings', 'discordmessage') ? $.inidb.get('settings', 'discordmessage') : $.lang.get('net.quorrabot.discord.streamonline', $.username.resolve($.channelName)))
+    discordAnnounceMsg: ($.inidb.get('settings', 'discordmessage') ? $.inidb.get('settings', 'discordmessage') : $.lang.get('net.quorrabot.discord.streamonline')),
 };
 
 /*
@@ -43,33 +42,21 @@ $.discordSay = function (message) {
     $.discord.sendMessage($.discordMainChannel, message);
 };
 
-
-$.timer.addTimer("./addonscripts/discordHandler.js", "discordannounce", true, function () {
-    $.discordAnnounce();
-}, 15 * 1000);
 //Send message to discord channel if streamer is online
 $.discordAnnounce = function () {
-    if ($.isOnline($.channelName) == true && $.DiscordHandler.discordAnnounce == false && $.DiscordHandler.discordToggleAnnounce == "true") {
-        $.DiscordHandler.discordAnnounce = true;
-        var now = parseInt(java.lang.System.currentTimeMillis());
-        if (now - $.DiscordHandler.lastStreamOnlineSend > 600e3) {
-            $.DiscordHandler.lastStreamOnlineSend = now;
-            if ($.moduleEnabled('./addonscripts/discordHandler.js')) {
-                var message = $.DiscordHandler.discordAnnounceMsg;
-
-                message = replaceAll(message, '(streamer)', $.username.resolve($.channelName));
-                message = replaceAll(message, '(caster)', $.username.resolve($.channelName));
-                message = replaceAll(message, '(title)', $.getStatus($.channelName));
-                message = replaceAll(message, '(game)', $.getGame($.channelName));
-                message = replaceAll(message, '(twitchchannel)', 'http://www.twitch.tv/' + $.channelName.toLowerCase());
-                $.println($.DiscordHandler.discordAnnounceMsg);
-                $.println(message);
-                $.discordSay(message);
-            }
+    if ($.isOnline($.channelName) == true) {
+        if ($.DiscordHandler.discordAnnounce == false && $.DiscordHandler.discordToggleAnnounce == "true") {
+            var message = $.DiscordHandler.discordAnnounceMsg;
+            message = replaceAll(message, '(streamer)', $.username.resolve($.channelName));
+            message = replaceAll(message, '(caster)', $.username.resolve($.channelName));
+            message = replaceAll(message, '(title)', $.getStatus($.channelName));
+            message = replaceAll(message, '(game)', $.getGame($.channelName));
+            message = replaceAll(message, '(twitchchannel)', 'http://www.twitch.tv/' + $.channelName.toLowerCase());
+            $.discordSay(message);
+            $.DiscordHandler.discordAnnounce = true;
         }
     } else {
         $.DiscordHandler.discordAnnounce = false;
-        $.DiscordHandler.lastStreamOnlineSend = 0;
     }
 };
 
@@ -132,7 +119,7 @@ $.on('command', function (event) {
 
         if (action.equalsIgnoreCase("announcemsg")) {
             if (args[1] == null) {
-                $.say($.getWhisperString(sender) + $.lang.get('net.quorrabot.discord.streamonline', $.username.resolve($.channelName)));
+                $.say($.getWhisperString(sender) + $.DiscordHandler.discordAnnounceMsg);
                 return;
             } else {
                 var message = argsString.substring(argsString.indexOf(args[1]));
@@ -147,6 +134,11 @@ $.on('command', function (event) {
 
 if ($.moduleEnabled('./addonscripts/discordHandler.js')) {
     $.registerChatCommand("./addonscripts/discordHandler.js", "discordchat");
+    if ($.DiscordHandler.discordToggleAnnounce == "true") {
+        $.timer.addTimer("./addonscripts/discordHandler.js", "discordannounce", true, function () {
+            $.discordAnnounce();
+        }, 15 * 1000);
+    }
     $.println('Discord API module loaded.');
 }
 ;

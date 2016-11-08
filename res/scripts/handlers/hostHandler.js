@@ -4,7 +4,7 @@ $.HostHandler = {
     hostMessage: ($.inidb.get('settings', 'hostmessage') ? $.inidb.get('settings', 'hostmessage') : $.lang.get("net.quorrabot.hosthandler.default-host-welcome-message")),
     announceHosts: (parseInt($.inidb.get('settings', 'announce_hosts')) ? parseInt($.inidb.get('settings', 'announce_hosts')) : "true"),
     hostlist: [],
-    firstLaunch: true
+    firstLaunch: true,
 };
 
 $.isHostUser = function (user) {

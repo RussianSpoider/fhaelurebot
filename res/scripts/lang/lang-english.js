@@ -505,7 +505,7 @@ $.lang.data["net.quorrabot.donationhandler.new-donation-text"] = "/me has receiv
 $.lang.data["net.quorrabot.donationhandler.donationalert-usage"] = "!donationalert filepath | filepath (/path/to/file.txt) | toggle | type (twitchalerts|streamtip|text)";
 
 //discordHandler.js
-$.lang.data["net.quorrabot.discord.streamonline"] = "@everyone $1 just went online on Twitch at https://www.twitch.tv/$1";
+$.lang.data["net.quorrabot.discord.streamonline"] = "@everyone (streamer) is live! (title) | (game) (twitchchannel)";
 $.lang.data["net.quorrabot.discord.nomessage"] = "You did not specify a message. Usage: !discordchat say (message)";
 $.lang.data["net.quorrabot.discord.messagesent"] = "Discord message sent successfully.";
 $.lang.data["net.quorrabot.discord.usage"] = "No action specified. Usage: !discordchat say (message)";

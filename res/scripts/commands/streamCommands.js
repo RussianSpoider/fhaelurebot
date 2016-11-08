@@ -1,14 +1,11 @@
 $.isOnline = function(channel) {
     channel = channel.toLowerCase();
-    if($.getUserExists(channel)==false) {
+    var stream = $.twitch.GetStream(channel);
+    if(stream.getBoolean("_success")) {
+        return !stream.isNull("stream");
+    } else {
         return false;
     }
-    var stream = $.twitch.GetStream(channel);
-    if (stream.toString().indexOf('stream":{')!=-1) {
-        return true;
-    }
-
-    return false;
 }
 
 $.hostEvent = function(hostedName, eventName) {

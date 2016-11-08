@@ -58,24 +58,27 @@ $.on('command', function (event) {
 
 });
 
-if ($.moduleEnabled('./addonscripts/twitterHandler.js')) {
-    if ($.TwitterHandler.TweetStreamToggle == "1") {
-        $.timer.addTimer("./addonscripts/twitterHandler.js", "twitterHandler", true, function () {
-            if ($.isOnline($.channelName)) {
-                if ($.TwitterHandler.StreamTweeted == 0) {
-                    var lasttweet = $.twitter.getlast().toString();
-                    var status = $.getStatus($.channelName);
-                    if (status != null && !lasttweet.toLowerCase().contains(status.toLowerCase())) {
-                        $.TwitterHandler.StreamTweeted = 1;
-                        $.twitter.tweet($.getGame($.channelName) + " | " + $.getStatus($.channelName) + ": " + "twitch.tv/" + $.channelName.toLowerCase());
-                    } else {
-                        $.TwitterHandler.StreamTweeted = 0;
-                    }
-                }
+$.twitterAnnounce = function () {
+    if ($.isOnline($.channelName) == true) {
+        if ($.TwitterHandler.StreamTweeted == 0 && $.TwitterHandler.TweetStreamToggle == "1") {
+            var lasttweet = $.twitter.getlast().toString();
+            var status = $.getStatus($.channelName);
+            if (status != null && !lasttweet.toLowerCase().contains(status.toLowerCase())) {
+                $.twitter.tweet($.getGame($.channelName) + " | " + $.getStatus($.channelName) + ": " + "twitch.tv/" + $.channelName.toLowerCase());
+                $.TwitterHandler.StreamTweeted = 1;
             }
-        }, 10 * 1000); //bankheist run time
+        }
+    } else {
+        $.TwitterHandler.StreamTweeted = 0;
     }
+};
 
+if ($.moduleEnabled('./addonscripts/twitterHandler.js')) {
     $.registerChatCommand("./addonscripts/twitterHandler.js", "tweet", "admin");
+    if ($.TwitterHandler.TweetStreamToggle == "1") {
+        $.timer.addTimer("./addonscripts/twitterHandler.js", "twitterannounce", true, function () {
+            $.twitterAnnounce();
+        }, 15 * 1000);
+    }
     $.println('Twitter API module loaded.');
 }
