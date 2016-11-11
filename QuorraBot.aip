@@ -84,6 +84,7 @@
     <ROW File="consoleCommand.js" Component_="ballCommand.js" FileName="CONSOL~1.JS|consoleCommand.js" Attributes="0" SourcePath="..\QuorraBot-1.14\scripts\commands\consoleCommand.js" SelfReg="false" NextFile="highlightCommand.js"/>
     <ROW File="currentsong.txt" Component_="currentsong.txt" FileName="CURREN~1.TXT|currentsong.txt" Attributes="0" SourcePath="..\QuorraBot-1.14\addons\youtubePlayer\currentsong.txt" SelfReg="false" NextFile="default.txt"/>
     <ROW File="default.txt" Component_="currentsong.txt" FileName="default.txt" Attributes="0" SourcePath="..\QuorraBot-1.14\addons\youtubePlayer\default.txt" SelfReg="false" NextFile="commonsio2.4.jar"/>
+    <ROW File="destinyCommand.js" Component_="discordHandler.js" FileName="DESTIN~1.JS|destinyCommand.js" Attributes="0" SourcePath="..\QuorraBot-1.14\scripts\addonscripts\destinyCommand.js" SelfReg="false"/>
     <ROW File="discordHandler.js" Component_="discordHandler.js" FileName="DISCOR~1.JS|discordHandler.js" Attributes="0" SourcePath="..\QuorraBot-1.14\scripts\addonscripts\discordHandler.js" SelfReg="false" NextFile="gamewispHandler.js"/>
     <ROW File="donationHandler.js" Component_="donationHandler.js" FileName="DONATI~1.JS|donationHandler.js" Attributes="0" SourcePath="..\QuorraBot-1.14\scripts\handlers\donationHandler.js" SelfReg="false" NextFile="followHandler.js"/>
     <ROW File="engine.ioclient0.7.0.jar" Component_="commonsio2.4.jar" FileName="ENGINE~1.JAR|engine.io-client-0.7.0.jar" Attributes="0" SourcePath="..\QuorraBot-1.14\lib\engine.io-client-0.7.0.jar" SelfReg="false" NextFile="guava18.0.jar"/>
@@ -131,7 +132,7 @@
     <ROW File="rollCommand.js" Component_="ballCommand.js" FileName="ROLLCO~1.JS|rollCommand.js" Attributes="0" SourcePath="..\QuorraBot-1.14\scripts\commands\rollCommand.js" SelfReg="false" NextFile="rouletteCommand.js"/>
     <ROW File="rouletteCommand.js" Component_="ballCommand.js" FileName="ROULET~1.JS|rouletteCommand.js" Attributes="0" SourcePath="..\QuorraBot-1.14\scripts\commands\rouletteCommand.js" SelfReg="false" NextFile="slotMachineCommand.js"/>
     <ROW File="rsocket.js" Component_="app.js" FileName="rsocket.js" Attributes="0" SourcePath="..\QuorraBot-1.14\web\rsocket.js" SelfReg="false" NextFile="style.css"/>
-    <ROW File="sinbin" Component_="QuorraBot.bat" FileName="sinbin" Attributes="0" SourcePath="..\QuorraBot-1.14\sinbin" SelfReg="false"/>
+    <ROW File="sinbin" Component_="QuorraBot.bat" FileName="sinbin" Attributes="0" SourcePath="..\QuorraBot-1.14\sinbin" SelfReg="false" NextFile="destinyCommand.js"/>
     <ROW File="slotMachineCommand.js" Component_="ballCommand.js" FileName="SLOTMA~1.JS|slotMachineCommand.js" Attributes="0" SourcePath="..\QuorraBot-1.14\scripts\commands\slotMachineCommand.js" SelfReg="false" NextFile="streamCommands.js"/>
     <ROW File="socket.ioclient.0.7.0.jar" Component_="commonsio2.4.jar" FileName="SOCKET~1.JAR|socket.io-client.0.7.0.jar" Attributes="0" SourcePath="..\QuorraBot-1.14\lib\socket.io-client.0.7.0.jar" SelfReg="false" NextFile="sqlitejdbc3.9.1.jar"/>
     <ROW File="soundBoardSystem.js" Component_="bankheistSystem.js" FileName="SOUNDB~1.JS|soundBoardSystem.js" Attributes="0" SourcePath="..\QuorraBot-1.14\scripts\systems\soundBoardSystem.js" SelfReg="false" NextFile="ticketraffleSystem.js"/>
