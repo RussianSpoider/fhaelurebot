@@ -131,6 +131,10 @@ $.on('command', function (event) {
     }
 
     if (command.equalsIgnoreCase("hostannounce")) {
+        if (!$.isAdmin(sender)) {
+            $.say($.getWhisperString(sender) + $.adminmsg);
+            return;
+        }
         var status;
         if (args[0].toString().equalsIgnoreCase("true")) {
             $.HostHandler.announceHosts = "true";
