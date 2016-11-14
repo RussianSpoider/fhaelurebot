@@ -22,6 +22,62 @@ if ($.lastjoinpart == null || $.lastjoinpart == undefined) {
     $.lastjoinpart = System.currentTimeMillis();
 }
 
+$.usergroups = [];
+var keys = $.inidb.GetKeyList("groups", "");
+
+for (var i = 0; i < keys.length; i++) {
+    $.usergroups[i] = $.inidb.get("groups", keys[i]);
+}
+
+if ($.usergroups[0] == undefined || $.usergroups[0] == null || $.usergroups[0] != "Caster") {
+    $.usergroups[0] = "Caster";
+    $.inidb.set("grouppoints", "Caster", "0");
+    $.inidb.set("groups", "0", "Caster");
+}
+
+if ($.usergroups[1] == undefined || $.usergroups[1] == null || $.usergroups[1] != "Administrator") {
+    $.usergroups[1] = "Administrator";
+    $.inidb.set("grouppoints", "Administrator", "0");
+    $.inidb.set("groups", "1", "Administrator");
+}
+
+if ($.usergroups[2] == undefined || $.usergroups[2] == null || $.usergroups[2] != "Moderator") {
+    $.usergroups[2] = "Moderator";
+    $.inidb.set("grouppoints", "Moderator", "0");
+    $.inidb.set("groups", "2", "Moderator");
+}
+
+if ($.usergroups[3] == undefined || $.usergroups[3] == null || $.usergroups[3] != "Subscriber") {
+    $.usergroups[3] = "Subscriber";
+    $.inidb.set("grouppoints", "Subscriber", "0");
+    $.inidb.set("groups", "3", "Subscriber");
+}
+
+if ($.usergroups[4] == undefined || $.usergroups[4] == null || $.usergroups[4] != "Donator") {
+    $.usergroups[4] = "Donator";
+    $.inidb.set("grouppoints", "Donator", "0");
+    $.inidb.set("groups", "4", "Donator");
+}
+
+if ($.usergroups[5] == undefined || $.usergroups[5] == null || $.usergroups[5] != "Hoster") {
+    $.usergroups[5] = "Hoster";
+    $.inidb.set("grouppoints", "Hoster", "0");
+    $.inidb.set("groups", "5", "Hoster");
+}
+
+if ($.usergroups[6] == undefined || $.usergroups[6] == null || $.usergroups[6] != "Regular") {
+    $.usergroups[6] = "Regular";
+    $.inidb.set("grouppoints", "Regular", "0");
+    $.inidb.set("groups", "6", "Regular");
+}
+
+if ($.usergroups[7] == undefined || $.usergroups[7] == null || $.usergroups[7] != "Viewer") {
+    $.usergroups[7] = "Viewer";
+    $.inidb.set("grouppoints", "Viewer", "0");
+    $.inidb.set("groups", "7", "Viewer");
+}
+
+
 $.isBot = function (user) {
     return user.equalsIgnoreCase($.botname);
 };
@@ -126,6 +182,8 @@ $.checkDynamicGroup = function (user) {
         group = 4;
     } else if ($.isHoster(user)) {
         group = 5;
+    } else if ($.inidb.get('group', user.toLowerCase())!=null) {
+        return $.inidb.get('group', user.toLowerCase());
     }
     return group;
 }
@@ -159,62 +217,6 @@ $.setUserGroupById = function (user, id) {
 $.setUserGroupByName = function (user, name) {
     $.setUserGroupById(user, $.getGroupIdByName(name));
 };
-
-$.usergroups = [];
-var keys = $.inidb.GetKeyList("groups", "");
-
-for (var i = 0; i < keys.length; i++) {
-    $.usergroups[i] = $.inidb.get("groups", keys[i]);
-}
-
-if ($.usergroups[0] == undefined || $.usergroups[0] == null || $.usergroups[0] != "Caster") {
-    $.usergroups[0] = "Caster";
-    $.inidb.set("grouppoints", "Caster", "0");
-    $.inidb.set("groups", "0", "Caster");
-}
-
-if ($.usergroups[1] == undefined || $.usergroups[1] == null || $.usergroups[1] != "Administrator") {
-    $.usergroups[1] = "Administrator";
-    $.inidb.set("grouppoints", "Administrator", "0");
-    $.inidb.set("groups", "1", "Administrator");
-}
-
-if ($.usergroups[2] == undefined || $.usergroups[2] == null || $.usergroups[2] != "Moderator") {
-    $.usergroups[2] = "Moderator";
-    $.inidb.set("grouppoints", "Moderator", "0");
-    $.inidb.set("groups", "2", "Moderator");
-}
-
-if ($.usergroups[3] == undefined || $.usergroups[3] == null || $.usergroups[3] != "Subscriber") {
-    $.usergroups[3] = "Subscriber";
-    $.inidb.set("grouppoints", "Subscriber", "0");
-    $.inidb.set("groups", "3", "Subscriber");
-}
-
-if ($.usergroups[4] == undefined || $.usergroups[4] == null || $.usergroups[4] != "Donator") {
-    $.usergroups[4] = "Donator";
-    $.inidb.set("grouppoints", "Donator", "0");
-    $.inidb.set("groups", "4", "Donator");
-}
-
-if ($.usergroups[5] == undefined || $.usergroups[5] == null || $.usergroups[5] != "Hoster") {
-    $.usergroups[5] = "Hoster";
-    $.inidb.set("grouppoints", "Hoster", "0");
-    $.inidb.set("groups", "5", "Hoster");
-}
-
-if ($.usergroups[6] == undefined || $.usergroups[6] == null || $.usergroups[6] != "Regular") {
-    $.usergroups[6] = "Regular";
-    $.inidb.set("grouppoints", "Regular", "0");
-    $.inidb.set("groups", "6", "Regular");
-}
-
-if ($.usergroups[7] == undefined || $.usergroups[7] == null || $.usergroups[7] != "Viewer") {
-    $.usergroups[7] = "Viewer";
-    $.inidb.set("grouppoints", "Viewer", "0");
-    $.inidb.set("groups", "7", "Viewer");
-}
-
 
 $.getGroupNameById = function (id) {
     id = parseInt(id);
