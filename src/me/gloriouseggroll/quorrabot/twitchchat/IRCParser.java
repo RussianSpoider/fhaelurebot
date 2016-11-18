@@ -273,10 +273,10 @@ public class IRCParser {
             com.gmt2001.Console.debug.println("jtv");
             
             //Check for hosts
-            if (message.indexOf("is now hosting you") != -1) {
-                com.gmt2001.Console.out.println("host");
+            if (message.indexOf("host") != -1) {
+                //com.gmt2001.Console.out.println("host");
                 String hoster = message.split(" ")[0].toString();
-                eventBus.postAsync(new TwitchHostedEvent(hoster, this.channel));
+                eventBus.postAsync(new TwitchHostedEvent(hoster, this.channel, message));
                 com.gmt2001.Console.debug.println("Hoster::" + hoster + "::true");
                 return;
             }
@@ -444,7 +444,7 @@ public class IRCParser {
                 eventBus.postAsync(new CommandEvent(username, command, argsString, tagsMap, this.channel));
             }
         }
-        eventBus.postAsync(new IrcPrivateMessageEvent(this.session, username, message, tagsMap));
+        //eventBus.postAsync(new IrcPrivateMessageEvent(this.session, username, message, tagsMap));
         if(!this.session.getNick().equalsIgnoreCase(this.ownerName)) {
             com.gmt2001.Console.out.println("[WHISPER] " + username + ": " + message);
         }

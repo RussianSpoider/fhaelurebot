@@ -478,7 +478,7 @@ $.lang.data["net.quorrabot.phrasehandler.trigger-not-found"] = "That phrase trig
 
 //hostHandler.js 
 $.lang.data["net.quorrabot.hosthandler.default-host-welcome-message"] = "Thanks for the host (name)!";
-$.lang.data["net.quorrabot.hosthandler.default-host-welcome-message-and-reward"] = "Thanks for the host (name)! $1!";
+$.lang.data["net.quorrabot.hosthandler.default-autohost-welcome-message"] = "Thanks for the auto-host (name)!";
 $.lang.data["net.quorrabot.hosthandler.host-reward-current-and-usage"] = "The current host reward is $1! To change it use '!hostreward <amount>";
 $.lang.data["net.quorrabot.hosthandler.host-reward-error"] = "Please put a valid reward greater than or equal to 0!";
 $.lang.data["net.quorrabot.hosthandler.host-reward-set-success"] = "New hoster reward set!";
@@ -489,6 +489,12 @@ $.lang.data["net.quorrabot.hosthandler.current-host-message"] = "The current new
 $.lang.data["net.quorrabot.hosthandler.host-message-usage"] = "To change it use '!hostmessage (message)'. You can also add the string '(name)' to put the hosters name";		
 $.lang.data["net.quorrabot.hosthandler.host-message-set-success"] = "New host message set!";
 $.lang.data["net.quorrabot.hosthandler.hostannounce"] = "Host announcements have been $1.";
+$.lang.data["net.quorrabot.hosthandler.current-autohost-message"] = "The current new auto-hoster message is: $1";		
+$.lang.data["net.quorrabot.hosthandler.autohost-message-usage"] = "To change it use '!autohostmessage (message)'. You can also add the string '(name)' to put the hosters name";		
+$.lang.data["net.quorrabot.hosthandler.autohost-message-set-success"] = "New auto-host message set!";
+$.lang.data["net.quorrabot.hosthandler.autohostannounce"] = "Auto-host announcements have been $1.";
+
+
 
 //donationHandler.js 
 $.lang.data["net.quorrabot.donationhandler.current-file-path"] = "Current tip alert file path is: $1";

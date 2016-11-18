@@ -1,7 +1,5 @@
 
-$.on('twitchSubscribesInitialized', function (event) {
-    $.subscriberannounce = "loaded";
-});
+
 $.SubscribeHandler = {
     SubMessage: ($.inidb.get('settings', 'subscribemessage') ? $.inidb.get('settings', 'subscribemessage') : $.lang.get("net.quorrabot.subscribeHandler.first-message")),
     ReSubMessage: ($.inidb.get('settings', 'resubscribemessage') ? $.inidb.get('settings', 'resubscribemessage') : $.lang.get("net.quorrabot.subscribeHandler.resub-message")),

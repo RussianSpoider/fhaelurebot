@@ -24,6 +24,7 @@ public abstract class TwitchHostEvent extends TwitchEvent {
     private final String hoster;
     private final Type type;
     private final int users;
+    private final String msg;
 
     public enum Type {
 
@@ -35,12 +36,14 @@ public abstract class TwitchHostEvent extends TwitchEvent {
         this.hoster = hoster;
         this.type = type;
         this.users = 0;
+        this.msg = "";
     }
 
     protected TwitchHostEvent(String hoster, Type type, int users) {
         this.hoster = hoster;
         this.type = type;
         this.users = users;
+        this.msg = "";
     }
 
     protected TwitchHostEvent(String hoster, Type type, Channel channel) {
@@ -48,6 +51,7 @@ public abstract class TwitchHostEvent extends TwitchEvent {
         this.hoster = hoster;
         this.type = type;
         this.users = 0;
+        this.msg = "";
     }
 
     protected TwitchHostEvent(String hoster, Type type, int users, Channel channel) {
@@ -55,7 +59,19 @@ public abstract class TwitchHostEvent extends TwitchEvent {
         this.hoster = hoster;
         this.type = type;
         this.users = users;
+        this.msg = "";
     }
+    
+    protected TwitchHostEvent(String hoster, Type type, int users, Channel channel, String msg) {
+        super(channel);
+        this.hoster = hoster;
+        this.type = type;
+        this.users = users;
+        this.msg = msg;
+    }
+
+    
+
 
     public String getHoster() {
         return hoster;
@@ -68,7 +84,11 @@ public abstract class TwitchHostEvent extends TwitchEvent {
     public int getUsers() {
         return users;
     }
-
+    
+    public String getMsg() {
+        return msg;
+    }
+    
     public String toEventSocket() {
         return this.getHoster() + "|" + this.getType();
     }

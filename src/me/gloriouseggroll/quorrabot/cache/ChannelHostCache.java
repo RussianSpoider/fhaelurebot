@@ -229,9 +229,9 @@ public class ChannelHostCache implements Runnable {
             com.gmt2001.Console.out.println(">>Enabling new hoster announcements");
         }
 
-        for (String hoster : hosted) {
-            EventBus.instance().post(new TwitchHostedEvent(hoster, Quorrabot.getChannel(this.channel)));
-        }
+        //for (String hoster : hosted) {
+            //EventBus.instance().post(new TwitchHostedEvent(hoster, Quorrabot.getChannel(this.channel)));
+        //}
 
         for (String unhoster : unhosted) {
             EventBus.instance().post(new TwitchUnhostedEvent(unhoster, Quorrabot.getChannel(this.channel)));
