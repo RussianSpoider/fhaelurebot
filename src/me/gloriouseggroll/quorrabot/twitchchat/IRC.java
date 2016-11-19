@@ -43,6 +43,8 @@ import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import com.vdurmont.emoji.EmojiParser;
+
 public class IRC extends WebSocketClient {
 
     private static final Map<String, IRC> instances = Maps.newHashMap();
@@ -177,6 +179,7 @@ public class IRC extends WebSocketClient {
      */
     @Override
     public void onMessage(String message) {
+        message = EmojiParser.parseToAliases(message);
         if (message.startsWith("PING")) {
             sendPong();
         }

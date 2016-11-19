@@ -27,7 +27,7 @@ $.on('twitchHosted', function (event) {
         }, 20000);
     }
 
-    if (msg.toLowerCase().indexOf("now auto hosting") != -1) {
+    if (msg.toLowerCase().indexOf("is now auto hosting") != -1) {
         $.println("[AUTOHOST] " + msg);
         s = $.HostHandler.autoHostMessage;
         if ($.HostHandler.announceAutoHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js")) {
@@ -38,7 +38,7 @@ $.on('twitchHosted', function (event) {
             }
             $.say("/me " + s);
         }
-    } else if (msg.toLowerCase().indexOf("now hosting") != -1) {
+    } else if (msg.toLowerCase().indexOf("is now hosting") != -1) {
         $.println("[HOST] " + msg);
         s = $.HostHandler.hostMessage;
         if ($.HostHandler.announceHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js")) {

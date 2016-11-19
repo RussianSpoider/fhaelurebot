@@ -36,6 +36,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.vdurmont.emoji.EmojiParser;
+
 import java.net.URI;
 
 public class Session {
@@ -221,6 +223,7 @@ public class Session {
      * @param message
      */
     public void say(String message) {
+        message = EmojiParser.parseToUnicode(message);
         if (message.startsWith(".timeout ")) { //check if the message starts with a "." for timeouts. ".timeout <user>".
             sendQueue.add(new Message(message));
             return;

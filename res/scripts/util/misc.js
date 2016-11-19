@@ -51,7 +51,6 @@ $.say = function (s) {
             return;
         }
         if (!s.startsWith('.')) {
-
             if (!$.inidb.exists("settings", "response_@all") || $.inidb.get("settings", "response_@all").equalsIgnoreCase("1")
                     || s.equals($.lang.get("net.quorrabot.misc.response-disable")) == true || s.indexOf(".timeout ") != -1 || s.indexOf(".ban ") != -1
                     || s.indexOf(".unban ") != -1 || s.equalsIgnoreCase(".clear") || s.equalsIgnoreCase(".mods")) {
