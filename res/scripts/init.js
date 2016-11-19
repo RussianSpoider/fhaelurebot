@@ -143,7 +143,7 @@ function sayOnline() {
         }
         $.timer.clearTimer("./init.js", "botonline", true);
 
-    }, 10 * 1000);
+    }, 20 * 1000);
 }
 
 $.getModule = function (scriptFile) {

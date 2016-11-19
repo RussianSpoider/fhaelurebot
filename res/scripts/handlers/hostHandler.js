@@ -3,8 +3,8 @@ $.HostHandler = {
     hosttimeout: ($.inidb.get('settings', 'hosttimeout') ? $.inidb.get('settings', 'hosttimeout') : 60 * 60 * 1000),
     hostMessage: ($.inidb.get('settings', 'hostmessage') ? $.inidb.get('settings', 'hostmessage') : $.lang.get("net.quorrabot.hosthandler.default-host-welcome-message")),
     autoHostMessage: ($.inidb.get('settings', 'autohostmessage') ? $.inidb.get('settings', 'autohostmessage') : $.lang.get("net.quorrabot.hosthandler.default-autohost-welcome-message")),
-    announceHosts: (parseInt($.inidb.get('settings', 'announce_hosts')) ? parseInt($.inidb.get('settings', 'announce_hosts')) : "true"),
-    announceAutoHosts: (parseInt($.inidb.get('settings', 'announce_autohosts')) ? parseInt($.inidb.get('settings', 'announce_autohosts')) : "true"),
+    announceHosts: ($.inidb.get('settings', 'announce_hosts') ? $.inidb.get('settings', 'announce_hosts') : "true"),
+    announceAutoHosts: ($.inidb.get('settings', 'announce_autohosts') ? $.inidb.get('settings', 'announce_autohosts') : "true"),
     hostlist: [],
     firstLaunch: true,
 };
@@ -15,9 +15,8 @@ $.isHostUser = function (user) {
 
 $.on('twitchHosted', function (event) {
     var username = $.username.resolve(event.getHoster().toString());
-    var s = $.HostHandler.hostMessage;
+    var s;
     var msg = event.getMsg();
-    $.println(msg);
     
     if ($.HostHandler.firstLaunch == true && $.HostHandler.announceHosts == "true") {
         $.HostHandler.announceHosts = "false";
@@ -28,8 +27,10 @@ $.on('twitchHosted', function (event) {
         }, 20000);
     }
 
-    if (msg.toLowerCase().indexOf("is now auto") != -1) {
-        if ($.HostHandler.announceAutoHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js") && ($.HostHandler.hostlist[username.toLowerCase()] == null || $.HostHandler.hostlist[username.toLowerCase()] == undefined || $.HostHandler.hostlist[username.toLowerCase()] < System.currentTimeMillis())) {
+    if (msg.toLowerCase().indexOf("now auto hosting") != -1) {
+        $.println("[AUTOHOST] " + msg);
+        s = $.HostHandler.autoHostMessage;
+        if ($.HostHandler.announceAutoHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js")) {
             s = $.replaceAll(s, '(name)', username);
             if ($.HostHandler.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
                 $.inidb.incr('points', username.toLowerCase(), $.HostHandler.hostreward);
@@ -37,8 +38,10 @@ $.on('twitchHosted', function (event) {
             }
             $.say("/me " + s);
         }
-    } else if (msg.toLowerCase().indexOf("is now host") != -1) {
-        if ($.HostHandler.announceHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js") && ($.HostHandler.hostlist[username.toLowerCase()] == null || $.HostHandler.hostlist[username.toLowerCase()] == undefined || $.HostHandler.hostlist[username.toLowerCase()] < System.currentTimeMillis())) {
+    } else if (msg.toLowerCase().indexOf("now hosting") != -1) {
+        $.println("[HOST] " + msg);
+        s = $.HostHandler.hostMessage;
+        if ($.HostHandler.announceHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js")) {
             s = $.replaceAll(s, '(name)', username);
             if ($.HostHandler.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
                 $.inidb.incr('points', username.toLowerCase(), $.HostHandler.hostreward);
