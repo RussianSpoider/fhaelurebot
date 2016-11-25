@@ -2,8 +2,8 @@ $.DonationHandler = {
     DonationType: ($.inidb.get('settings', 'donationtype') ? $.inidb.get('settings', 'donationtype') : "text"),
     CheckerStorePath: ($.inidb.get('settings', 'checker_storepath') ? $.inidb.get('settings', 'checker_storepath') : "./addons/donationchecker/latestdonation.txt"),
     DonationToggle: (parseInt($.inidb.get('settings', 'donation_toggle')) ? parseInt($.inidb.get('settings', 'donation_toggle')) : 1),
-    DonationTASayMsg: ($.inidb.get('settings', 'donationtasaymsg') ? $.inidb.get('settings', 'donationtasaymsg') : 0),
-}
+    DonationTASayMsg: ($.inidb.get('settings', 'donationtasaymsg') ? $.inidb.get('settings', 'donationtasaymsg') : 0)
+};
 
 
 $.on('command', function (event) {
@@ -174,7 +174,6 @@ $.on('command', function (event) {
             
             
             if ($.currDonation.toString() != $.inidb.get("settings", "lastdonation") && $.currDonation.toString() != "") {
-
                     $.inidb.set("settings", "lastdonation", $.readFile($.DonationHandler.CheckerStorePath));
                     if ($.DonationHandler.DonationToggle == 1) {
                         if($.DonationHandler.DonationType=="twitchalerts" | $.DonationHandler.DonationType=="streamtip" | $.DonationHandler.DonationType=="tipeeestream") {
