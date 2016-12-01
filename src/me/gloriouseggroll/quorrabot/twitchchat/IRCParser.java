@@ -276,7 +276,7 @@ public class IRCParser {
             if (message.indexOf("host") != -1) {
                 //com.gmt2001.Console.out.println("host");
                 String hoster = message.split(" ")[0].toString();
-                eventBus.postAsync(new TwitchHostedEvent(hoster, this.channel, message));
+                eventBus.post(new TwitchHostedEvent(hoster, this.channel, message));
                 com.gmt2001.Console.debug.println("Hoster::" + hoster + "::true");
                 return;
             }
@@ -286,14 +286,14 @@ public class IRCParser {
                 try {
                     Thread.sleep(2000);
                     Quorrabot.instance().channelUsersCache.updateCache();
-                    eventBus.postAsync(new IrcChannelUserModeEvent(this.session, this.channel, this.ownerName.toLowerCase(), "O", true));
+                    eventBus.post(new IrcChannelUserModeEvent(this.session, this.channel, this.ownerName.toLowerCase(), "O", true));
                     String[] moderators = message.substring(33).split(", ");
                     for (String moderator : moderators) {
                         if (moderator.equalsIgnoreCase(this.session.getNick())) {
                             this.session.setAllowSendMessages(true);
                         }
                         if (Quorrabot.instance().channelUsersCache.getCache().toString().contains(moderator.toLowerCase() + "=mod")) {
-                            eventBus.postAsync(new IrcChannelUserModeEvent(this.session, this.channel, moderator.toLowerCase(), "O", true));
+                            eventBus.post(new IrcChannelUserModeEvent(this.session, this.channel, moderator.toLowerCase(), "O", true));
                         }
                     }
 
@@ -341,13 +341,13 @@ public class IRCParser {
             if (tagsMap.get("user-type").length() > 0) {
                 if (!moderators.contains(username.toLowerCase())) {
                     moderators.add(username.toLowerCase());
-                    eventBus.postAsync(new IrcChannelUserModeEvent(this.session, this.channel, username, "O", true));
+                    eventBus.post(new IrcChannelUserModeEvent(this.session, this.channel, username, "O", true));
                     com.gmt2001.Console.debug.println("Moderator::" + username + "::true");
                 }
             } else if (this.channelName.equalsIgnoreCase(username)) {
                 if (!moderators.contains(username.toLowerCase())) {
                     moderators.add(username.toLowerCase());
-                    eventBus.postAsync(new IrcChannelUserModeEvent(this.session, this.channel, username, "O", true));
+                    eventBus.post(new IrcChannelUserModeEvent(this.session, this.channel, username, "O", true));
                     com.gmt2001.Console.debug.println("Broadcaster::" + username + "::true");
                 }
             }
@@ -419,7 +419,7 @@ public class IRCParser {
             com.gmt2001.Console.debug.println(username + " has been timed out for " + banDuration + " seconds.");
         }
 
-        eventBus.postAsync(new IrcClearchatEvent(this.session, this.channel, username, banReason, banDuration));
+        eventBus.post(new IrcClearchatEvent(this.session, this.channel, username, banReason, banDuration));
     }
 
     /*
@@ -441,7 +441,7 @@ public class IRCParser {
                     command = message.substring(1, message.indexOf(" "));
                     argsString = message.substring(message.indexOf(" ") + 1, message.length());
                 }
-                eventBus.postAsync(new CommandEvent(username, command, argsString, tagsMap, this.channel));
+                eventBus.post(new CommandEvent(username, command, argsString, tagsMap, this.channel));
             }
         }
         //eventBus.postAsync(new IrcPrivateMessageEvent(this.session, username, message, tagsMap));
@@ -473,7 +473,7 @@ public class IRCParser {
      * @param Map<String, String> tagsMap
      */
     private void joinUser(String message, String username, Map<String, String> tagMaps) {
-        eventBus.postAsync(new IrcChannelJoinEvent(this.session, this.channel, username));
+        eventBus.post(new IrcChannelJoinEvent(this.session, this.channel, username));
         com.gmt2001.Console.debug.println("User Joined Channel [" + username + "#" + this.ownerName + "]");
     }
 
@@ -485,7 +485,7 @@ public class IRCParser {
      * @param Map<String, String> tagsMap
      */
     private void partUser(String message, String username, Map<String, String> tagMaps) {
-        eventBus.postAsync(new IrcChannelLeaveEvent(this.session, this.channel, username, message));
+        eventBus.post(new IrcChannelLeaveEvent(this.session, this.channel, username, message));
         com.gmt2001.Console.debug.println("User Left Channel [" + username + "#" + this.ownerName + "]");
     }
 
@@ -498,7 +498,7 @@ public class IRCParser {
      */
     private void userNotice(String message, String username, Map<String, String> tagMaps) {
         if (tagMaps.containsKey("login") && tagMaps.containsKey("msg-param-months")) {
-            eventBus.postAsync(new IrcPrivateMessageEvent(this.session, "twitchnotify", tagMaps.get("login") + " just subscribed for " + tagMaps.get("msg-param-months") + " months in a row!", tagMaps));
+            eventBus.post(new IrcPrivateMessageEvent(this.session, "twitchnotify", tagMaps.get("login") + " just subscribed for " + tagMaps.get("msg-param-months") + " months in a row!", tagMaps));
             com.gmt2001.Console.debug.println(tagMaps.get("login") + " just subscribed for " + tagMaps.get("msg-param-months") + " months in a row!");
         }
     }
@@ -532,7 +532,7 @@ public class IRCParser {
                 if (moderators.contains(this.session.getNick())) {
                     moderators.remove(this.session.getNick());
                     com.gmt2001.Console.debug.println("Bot::" + this.session.getNick() + "::Moderator::false");
-                    eventBus.postAsync(new IrcChannelUserModeEvent(this.session, this.channel, this.session.getNick(), "O", false));
+                    eventBus.post(new IrcChannelUserModeEvent(this.session, this.channel, this.session.getNick(), "O", false));
                 }
             }
         }
