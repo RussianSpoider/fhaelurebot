@@ -18,6 +18,7 @@ package com.simeonf;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.InetAddress;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -35,12 +36,12 @@ public class EventWebSocketSecureServer extends EventWebSocketServer {
         return instance;
     }
 
-    public EventWebSocketSecureServer(int port) {
-        this(port, null, null, null);
+    public EventWebSocketSecureServer(int port, InetAddress ip) {
+        this(port, null, null, null, ip);
     }
 
-    public EventWebSocketSecureServer(int port, String keystorepath, String keystorepassword, String keypassword) {
-        super(port);
+    public EventWebSocketSecureServer(int port, String keystorepath, String keystorepassword, String keypassword, InetAddress ip) {
+        super(port, ip);
 
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");

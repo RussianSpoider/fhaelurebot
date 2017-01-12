@@ -20,33 +20,21 @@ package com.illusionaryone;
 import me.gloriouseggroll.quorrabot.event.EventBus;
 import me.gloriouseggroll.quorrabot.event.discord.DiscordEvent;
 
-import com.gmt2001.UncaughtExceptionHandler;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.JDABuilder;
-import net.dv8tion.jda.MessageBuilder;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.events.Event;
-import net.dv8tion.jda.events.InviteReceivedEvent;
-import net.dv8tion.jda.events.ReadyEvent;
-import net.dv8tion.jda.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.hooks.EventListener;
-import net.dv8tion.jda.utils.SimpleLog;
-import net.dv8tion.jda.utils.SimpleLog.Level;
-import net.dv8tion.jda.exceptions.RateLimitedException;
-import net.dv8tion.jda.exceptions.PermissionException;
-
-import javax.security.auth.login.LoginException;
-import java.io.File;
-import java.io.IOException;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.events.Event;
+import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.hooks.EventListener;
+import net.dv8tion.jda.core.utils.SimpleLog;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.events.ShutdownEvent;
 
 /*
  * Communicates with the Discord API.
@@ -83,13 +71,13 @@ public class DiscordAPI {
      */
     public void connect(String token) {
         try {
-            jdaAPI = new JDABuilder().setBotToken(token).setAudioEnabled(false).addListener(new DiscordListener()).buildAsync();
-        } catch (LoginException ex) {
-            com.gmt2001.Console.err.println("Failed to Login to Discord: " + ex.getMessage());
+            jdaAPI = new JDABuilder(AccountType.BOT).setToken(token).setAudioEnabled(false).addListener(new DiscordListener()).buildAsync();
+        } catch (Exception ex) {
+            com.gmt2001.Console.err.println("Failed to Disconnect from Discord: " + ex.getMessage());
             jdaAPI = null;
         }
     }
-
+    
     /*
      * Puts a text message into the queue to be sent. This queue restricts the sending of messages to once a second
      * to attempt to not reach the Discord rate limit of 10 messages in 10 seconds.
@@ -116,13 +104,8 @@ public class DiscordAPI {
             }
             TextChannel textChannel = channelMap.get(channel);
             if (textChannel != null) {
-                try {
                     textChannel.sendMessage(message);
-                } catch (RateLimitedException ex) {
-                    com.gmt2001.Console.err.println("Discord Rate Limit has been Exceeded");
-                } catch (PermissionException ex) {
-                    com.gmt2001.Console.err.println("ACTION REQUIRED: Discord Bot Account does not have Write Permission to Channel: " + channel);
-                }
+
             }
         }
     }
@@ -149,7 +132,6 @@ public class DiscordAPI {
                 ReadyEvent readyEvent = (ReadyEvent) event;
                 getTextChannels();
                 messageTimer.schedule(new MessageTask(), 1000, 1);
-                jdaAPI.getAccountManager().setGame("QuorraBot Discord Service");
                 com.gmt2001.Console.out.println("Discord API is Ready");
             }
 
@@ -159,13 +141,17 @@ public class DiscordAPI {
 
                 String textChannelName = textChannel.getName();
                 String messageText = messageReceivedEvent.getMessage().getContent();
-                String messageAuthorName = messageReceivedEvent.getAuthorName();
+                String messageAuthorName = messageReceivedEvent.getAuthor().getName();
                 String messageAuthorMention = messageReceivedEvent.getAuthor().getAsMention();
                 String messageAuthorDisc = messageReceivedEvent.getAuthor().getDiscriminator();
 
                 EventBus.instance().post(new DiscordEvent(textChannelName, messageAuthorName, messageAuthorMention, messageAuthorDisc, messageText));
             }
         }
+    }
+    
+    public void disconnect() {
+        jdaAPI.shutdown();
     }
 
     /*

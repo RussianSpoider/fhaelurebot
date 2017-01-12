@@ -18,6 +18,7 @@ package com.simeonf;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.InetAddress;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -37,12 +38,12 @@ public class MusicWebSocketSecureServer extends MusicWebSocketServer {
         return instance;
     }
 
-    public MusicWebSocketSecureServer(int port) {
-        this(port, null, null, null);
+    public MusicWebSocketSecureServer(int port, InetAddress ip) {
+        this(port, null, null, null, ip);
     }
 
-    public MusicWebSocketSecureServer(int port, String keystorepath, String keystorepassword, String keypassword) {
-        super(port);
+    public MusicWebSocketSecureServer(int port, String keystorepath, String keystorepassword, String keypassword, InetAddress ip) {
+        super(port, ip);
 
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");

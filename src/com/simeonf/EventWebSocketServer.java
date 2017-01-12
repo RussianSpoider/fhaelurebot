@@ -16,7 +16,6 @@
  */
 package com.simeonf;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.util.Collection;
@@ -25,6 +24,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import com.google.common.eventbus.Subscribe;
+import java.net.InetAddress;
 
 import me.gloriouseggroll.quorrabot.event.Event;
 import me.gloriouseggroll.quorrabot.event.Listener;
@@ -37,8 +37,8 @@ public class EventWebSocketServer extends WebSocketServer implements Listener {
         return instance;
     }
 
-    public EventWebSocketServer(int port) {
-        super(new InetSocketAddress(port), 1);
+    public EventWebSocketServer(int port, InetAddress ip) {
+        super(new InetSocketAddress(ip, port), 1);
 
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }

@@ -234,11 +234,11 @@ public class GameWispAPI {
         if (jsonObject.has("access_token") && jsonObject.has("refresh_token")) {
             String newAccessToken = jsonObject.getString("access_token");
             String newRefreshToken = jsonObject.getString("refresh_token");
-            String[] returnString = {newAccessToken, newRefreshToken};
             com.gmt2001.Console.out.println("GameWispAPI: Refreshed GameWisp Token");
 
             sAccessToken = newAccessToken;
             sRefreshToken = newRefreshToken;
+            String[] returnString = {sAccessToken, sRefreshToken};
             return returnString;
         } else {
             com.gmt2001.Console.err.println("GameWispAPI: Error Refreshing Tokens! Keeping Current Tokens!");

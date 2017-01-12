@@ -27,6 +27,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.regex.Pattern;
@@ -37,9 +38,8 @@ import org.java_websocket.server.WebSocketServer;
 
 public class MusicWebSocketServer extends WebSocketServer {
 
-    public MusicWebSocketServer(int port) {
-        super(new InetSocketAddress(port), 1);
-
+    public MusicWebSocketServer(int port, InetAddress ip) {
+            super(new InetSocketAddress(ip, port), 1);
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
     }
 

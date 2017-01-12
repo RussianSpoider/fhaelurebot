@@ -40,6 +40,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -62,9 +64,7 @@ import me.gloriouseggroll.quorrabot.console.ConsoleInputListener;
 import me.gloriouseggroll.quorrabot.event.Listener;
 import me.gloriouseggroll.quorrabot.event.command.CommandEvent;
 import me.gloriouseggroll.quorrabot.event.console.ConsoleInputEvent;
-import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelUserModeEvent;
 import me.gloriouseggroll.quorrabot.event.irc.complete.IrcJoinCompleteEvent;
-import me.gloriouseggroll.quorrabot.event.irc.message.IrcChannelMessageEvent;
 import me.gloriouseggroll.quorrabot.event.irc.message.IrcPrivateMessageEvent;
 import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispSubscribeEvent;
 import me.gloriouseggroll.quorrabot.event.gamewisp.GameWispAnniversaryEvent;
@@ -81,7 +81,6 @@ import me.gloriouseggroll.quorrabot.script.ScriptManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import me.gloriouseggroll.quorrabot.event.EventBus;
-import me.gloriouseggroll.quorrabot.event.irc.channel.IrcChannelJoinUpdateEvent;
 
 public class Quorrabot implements Listener {
 
@@ -99,6 +98,7 @@ public class Quorrabot implements Listener {
     private String gamewisprefresh;
     private int port;
     private int baseport;
+    private InetAddress ip;
     private static double msglimit30;
     private String datastore;
 
@@ -143,8 +143,6 @@ public class Quorrabot implements Listener {
     private static final boolean debugD = false;
     public static boolean enableDebugging = false;
     public static boolean interactive;
-    public static boolean webenabled = false;
-    public static boolean musicenabled = false;
     private boolean exiting = false;
     private Thread t;
     private static Quorrabot instance;
@@ -190,7 +188,7 @@ public class Quorrabot implements Listener {
         return discordMainChannel;
     }
 
-    public Quorrabot(String username, String oauth, String apioauth, String clientid, String channelName, String owner, int baseport,
+    public Quorrabot(String username, String oauth, String apioauth, String clientid, String channelName, String owner, int baseport, InetAddress ip,
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh,
             String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken,
             String streamtipid, boolean webenable, boolean musicenable, boolean usehttps, String timeZone, String mySqlHost, String mySqlPort, String mySqlConn,
@@ -213,13 +211,14 @@ public class Quorrabot implements Listener {
         this.ownerName = owner;
         this.channelName = channelName.toLowerCase();
         this.baseport = baseport;
+        this.ip = ip;
         this.datastore = datastore;
         this.datastoreconfig = datastoreconfig;
         this.hostCache = ChannelHostCache.instance(this.ownerName);
         this.subscribersCache = SubscribersCache.instance(this.ownerName);
         this.channelUsersCache = ChannelUsersCache.instance(this.ownerName);
         this.followersCache = FollowersCache.instance(this.ownerName);
-        
+
         this.youtubekey = youtubekey;
         if (!timeZone.isEmpty()) {
             this.timeZone = timeZone;
@@ -480,60 +479,65 @@ public class Quorrabot implements Listener {
         return channels;
     }
 
-    public final void init() {
-        if (webenable) {
-            if (usehttps) {
-                //modify this later for https support
-                com.gmt2001.Console.out.println(channel.getName());
-                httpserver = new HTTPServer(baseport, oauth);
-
-                if (musicenable) {
-                    musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword);
-                }
-                eventsocketserver = new EventWebSocketSecureServer(baseport + 2, keystorepath, keystorepassword, keypassword);
-            } else {
-                httpserver = new HTTPServer(baseport, oauth);
-                if (musicenable) {
-                    musicsocketserver = new MusicWebSocketServer(baseport + 1);
-                }
-                eventsocketserver = new EventWebSocketServer(baseport + 2);
-            }
-            webenabled = true;
-            httpserver.start();
-            com.gmt2001.Console.out.println("HTTPServer accepting connections on port " + baseport);
+    public void startWebServices() {
+        if (usehttps) {
+            //modify this later for https support
+            com.gmt2001.Console.out.println(channel.getName());
+            httpserver = new HTTPServer(baseport, oauth, ip);
 
             if (musicenable) {
-                musicenabled = true;
-                musicsocketserver.start();
-                int musicport = baseport + 1;
-                com.gmt2001.Console.out.println("MusicSockServer accepting connections on port " + musicport);
+                musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword, ip);
             }
-
-            eventsocketserver.start();
-            int eventport = baseport + 2;
-            com.gmt2001.Console.out.println("EventSocketServer accepting connections on port " + eventport);
-            EventBus.instance().register(eventsocketserver);
-
-            /**
-             * Set up the panel socket server
-             */
-            //soundBoard = new SoundBoard((baseport + 4), soundboardauth, soundboardauthread);
-            /**
-             * Start the panel socket server
-             */
-            //soundBoard.start();
-            //com.gmt2001.Console.out.println("SoundBoard accepting connections on port: " + (baseport + 4));
+            eventsocketserver = new EventWebSocketSecureServer(baseport + 2, keystorepath, keystorepassword, keypassword, ip);
+        } else {
+            httpserver = new HTTPServer(baseport, oauth, ip);
+            if (musicenable) {
+                musicsocketserver = new MusicWebSocketServer(baseport + 1, ip);
+            }
+            eventsocketserver = new EventWebSocketServer(baseport + 2, ip);
         }
+        httpserver.start();
+        com.gmt2001.Console.out.println("HTTPServer accepting connections on port " + baseport);
+
+        if (musicenable) {
+            musicsocketserver.start();
+            com.gmt2001.Console.out.println("MusicSockServer accepting connections on port " + (int) (baseport + 1));
+        }
+
+        eventsocketserver.start();
+        com.gmt2001.Console.out.println("EventSocketServer accepting connections on port " + (int) (baseport + 2));
+        EventBus.instance().register(eventsocketserver);
+
+        /**
+         * Set up the panel socket server
+         */
+        //soundBoard = new SoundBoard((baseport + 4), soundboardauth, soundboardauthread);
+        /**
+         * Start the panel socket server
+         */
+        //soundBoard.start();
+        //com.gmt2001.Console.out.println("SoundBoard accepting connections on port: " + (baseport + 4));
+    }
+
+    public void connectDiscord() {
+        DiscordAPI.instance().connect(discordToken);
+    }
+
+    public final void init() {
+        if (webenable) {
+            startWebServices();
+        }
+
+        if (!discordToken.isEmpty()) {
+            connectDiscord();
+        }
+
         if (gamewispauth.length() > 0) {
             GameWispAPI.instance().SetAccessToken(gamewispauth);
             GameWispAPI.instance().SetRefreshToken(gamewisprefresh);
             SingularityAPI.instance().setAccessToken(gamewispauth);
             SingularityAPI.instance().StartService();
             doRefreshGameWispToken();
-        }
-
-        if (!discordToken.isEmpty()) {
-            DiscordAPI.instance().connect(discordToken);
         }
 
         //Give the services above a moment to load before loading scripts and console input listener
@@ -565,6 +569,7 @@ public class Quorrabot implements Listener {
         Script.global.defineProperty("donationhandler", DonationHandlerAPI.instance(), 0);
         Script.global.defineProperty("lastfm", LastFMAPI.instance(), 0);
         Script.global.defineProperty("baseport", baseport, 0);
+        Script.global.defineProperty("ip", ip.getHostAddress(), 0);
         Script.global.defineProperty("twitter", TwitterAPI.instance(), 0);
         Script.global.defineProperty("pollResults", pollResults, 0);
         Script.global.defineProperty("pollVoters", voters, 0);
@@ -607,15 +612,14 @@ public class Quorrabot implements Listener {
         com.gmt2001.Console.out.println("[SHUTDOWN] Stopping event & message dispatching...");
         exiting = true;
 
-        if (webenabled) {
+        if (webenable) {
             com.gmt2001.Console.out.println("[SHUTDOWN] Terminating web server...");
-            httpserver.dispose();
             eventsocketserver.dispose();
-        }
-
-        if (musicenabled) {
-            com.gmt2001.Console.out.println("[SHUTDOWN] Terminating music server...");
-            musicsocketserver.dispose();
+            if (musicenable) {
+                com.gmt2001.Console.out.println("[SHUTDOWN] Terminating music server...");
+                musicsocketserver.dispose();
+            }
+            httpserver.dispose();
         }
 
         com.gmt2001.Console.out.print("[SHUTDOWN] Waiting for running scripts to finish...");
@@ -814,6 +818,18 @@ public class Quorrabot implements Listener {
             changed = true;
         }
 
+        if (message.equals("ip")) {
+            com.gmt2001.Console.out.print("Please enter an IP address to bind to: ");
+            String ipstr = System.console().readLine().trim();
+            try {
+                InetAddress newip = InetAddress.getByName(ipstr);
+                ip = newip;
+                changed = true;
+            } catch (UnknownHostException e) {
+                com.gmt2001.Console.out.print("Error binding to IP address, please double check your IP entry.");
+                return;
+            }
+        }
         if (message.equals("youtubekey")) {
             com.gmt2001.Console.out.print("Please enter a new YouTube API key: ");
             String newyoutubekey = System.console().readLine().trim();
@@ -896,12 +912,12 @@ public class Quorrabot implements Listener {
             doRefreshGameWispToken();
             changed = true;
         }
-        
+
         if (message.equals("discord")) {
             com.gmt2001.Console.out.print("Please enter a new Discord Access Token: ");
             String newdiscordtoken = System.console().readLine().trim();
             discordToken = newdiscordtoken;
-            
+
             com.gmt2001.Console.out.print("Please enter the name of the discord channel for the bot to join: ");
             String newdiscordmainchannel = System.console().readLine().trim();
             discordMainChannel = newdiscordmainchannel;
@@ -966,6 +982,7 @@ public class Quorrabot implements Listener {
                 data += "owner=" + ownerName + "\r\n";
                 data += "channel=" + channelName + "\r\n";
                 data += "baseport=" + baseport + "\r\n";
+                data += "ip=" + ip.getHostAddress() + "\r\n";
                 data += "hostname=" + hostname + "\r\n";
                 data += "port=" + port + "\r\n";
                 data += "msglimit30=" + msglimit30 + "\r\n";
@@ -1000,15 +1017,23 @@ public class Quorrabot implements Listener {
 
                 SingularityAPI.instance().setAccessToken(gamewispauth);
 
-                //Commented out since you need to restart the bot for port changes anyway
-                /*
-                 * if(webenabled) { httpserver.dispose(); httpserver = new
-                 * HTTPServer(baseport); httpserver.start(); } if(musicenabled)
-                 * { if(webenabled) { musicsocketserver.dispose();
-                 * musicsocketserver = new MusicWebSocketServer(baseport + 1); }
-                 * }
-                 */
-                com.gmt2001.Console.out.println("Changes have been saved. For discord, web, and music server settings to take effect you must restart the bot.");
+                if (webenable) {
+                    com.gmt2001.Console.out.println("[SHUTDOWN] Terminating web server...");
+                    eventsocketserver.dispose();
+                    if (musicenable) {
+                        com.gmt2001.Console.out.println("[SHUTDOWN] Terminating music server...");
+                        musicsocketserver.dispose();
+                    }
+                    httpserver.dispose();
+
+                    startWebServices();
+                }
+                if (!discordToken.isEmpty()) {
+                    DiscordAPI.instance().disconnect();
+                    connectDiscord();
+                }
+
+                com.gmt2001.Console.out.println("Changes have been saved! Some changes may only take place after QuorraBot is restarted.");
             } catch (IOException ex) {
                 com.gmt2001.Console.err.printStackTrace(ex);
             }
@@ -1321,6 +1346,7 @@ public class Quorrabot implements Listener {
         String owner = "";
         String hostname = "";
         int baseport = 25300;
+        InetAddress ip = InetAddress.getByName("127.0.0.1");
         int port = 0;
         double msglimit30 = 18.75;
         String datastore = "";
@@ -1390,6 +1416,9 @@ public class Quorrabot implements Listener {
                     }
                     if (line.startsWith("baseport=") && line.length() > 10) {
                         baseport = Integer.parseInt(line.substring(9));
+                    }
+                    if (line.startsWith("ip=") && line.length() > 4) {
+                        ip = InetAddress.getByName(line.substring(3));
                     }
                     if (line.startsWith("hostname=") && line.length() > 10) {
                         hostname = line.substring(9);
@@ -1546,6 +1575,7 @@ public class Quorrabot implements Listener {
                     com.gmt2001.Console.out.println("channel='" + channelName + "'");
                     com.gmt2001.Console.out.println("owner='" + owner + "'");
                     com.gmt2001.Console.out.println("baseport='" + baseport + "'");
+                    com.gmt2001.Console.out.println("ip='" + ip.getHostAddress() + "'");
                     com.gmt2001.Console.out.println("hostname='" + hostname + "'");
                     com.gmt2001.Console.out.println("port='" + port + "'");
                     com.gmt2001.Console.out.println("msglimit30='" + msglimit30 + "'");
@@ -1649,6 +1679,12 @@ public class Quorrabot implements Listener {
                 if (arg.toLowerCase().startsWith("baseport=") && arg.length() > 10) {
                     if (baseport != Integer.parseInt(arg.substring(9))) {
                         baseport = Integer.parseInt(arg.substring(9));
+                        changed = true;
+                    }
+                }
+                if (arg.toLowerCase().startsWith("ip=") && arg.length() > 4) {
+                    if (ip != InetAddress.getByName(arg.substring(3))) {
+                        ip = InetAddress.getByName(arg.substring(3));
                         changed = true;
                     }
                 }
@@ -1778,7 +1814,7 @@ public class Quorrabot implements Listener {
                 if (arg.equalsIgnoreCase("help") || arg.equalsIgnoreCase("--help") || arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("-?")) {
                     com.gmt2001.Console.out.println("Usage: java -Dfile.encoding=UTF-8 -jar QuorraBot.jar [printlogin] [user=<bot username>] "
                             + "[oauth=<bot irc oauth>] [apioauth=<editor oauth>] [clientid=<oauth clientid>] [channel=<channel to join>] "
-                            + "[owner=<bot owner username>] [baseport=<bot webserver port, music server will be +1>] [hostname=<custom irc server>] "
+                            + "[owner=<bot owner username>] [baseport=<bot webserver port, music server will be +1>] [ip=<IP address (optional) to bind to>] [hostname=<custom irc server>] "
                             + "[port=<custom irc port>] [msglimit30=<message limit per 30 seconds>] "
                             + "[datastore=<DataStore type, for a list, run java -jar QuorraBot.jar storetypes>] "
                             + "[datastoreconfig=<Optional DataStore config option, different for each DataStore type>] "
@@ -1815,6 +1851,7 @@ public class Quorrabot implements Listener {
             data += "channel=" + channelName + "\r\n";
             data += "owner=" + owner + "\r\n";
             data += "baseport=" + baseport + "\r\n";
+            data += "ip=" + ip.getHostAddress() + "\r\n";
             data += "hostname=" + hostname + "\r\n";
             data += "port=" + port + "\r\n";
             data += "msglimit30=" + msglimit30 + "\r\n";
@@ -1852,7 +1889,7 @@ public class Quorrabot implements Listener {
         hostCache = ChannelHostCache.instance(owner);
         subscribersCache = SubscribersCache.instance(owner);
 
-        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channelName, owner, baseport, hostname, port,
+        Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channelName, owner, baseport, ip, hostname, port,
                 msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken,
                 lastfmuser, tpetoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid,
                 webenable, musicenable, usehttps, timeZone, mySqlHost, mySqlPort, mySqlConn, mySqlPass, mySqlUser, mySqlName, keystorepath,
@@ -1875,6 +1912,7 @@ public class Quorrabot implements Listener {
         data += "channel=" + channelName + "\r\n";
         data += "owner=" + ownerName + "\r\n";
         data += "baseport=" + baseport + "\r\n";
+        data += "ip=" + ip.getHostAddress() + "\r\n";
         data += "hostname=" + hostname + "\r\n";
         data += "port=" + port + "\r\n";
         data += "msglimit30=" + msglimit30 + "\r\n";
@@ -1928,6 +1966,7 @@ public class Quorrabot implements Listener {
         data += "channel=" + channelName + "\r\n";
         data += "owner=" + ownerName + "\r\n";
         data += "baseport=" + baseport + "\r\n";
+        data += "ip=" + ip.getHostAddress() + "\r\n";
         data += "hostname=" + hostname + "\r\n";
         data += "port=" + port + "\r\n";
         data += "msglimit30=" + msglimit30 + "\r\n";

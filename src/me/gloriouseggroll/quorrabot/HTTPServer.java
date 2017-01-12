@@ -22,7 +22,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.Array;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -32,9 +32,6 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import me.gloriouseggroll.quorrabot.event.EventBus;
 import me.gloriouseggroll.quorrabot.event.command.CommandEvent;
-import me.gloriouseggroll.quorrabot.script.ScriptEventManager;
-import me.gloriouseggroll.quorrabot.twitchchat.Channel;
-import me.gloriouseggroll.quorrabot.twitchchat.Session;
 
 /**
  *
@@ -43,12 +40,16 @@ import me.gloriouseggroll.quorrabot.twitchchat.Session;
 public class HTTPServer extends Thread {
 
     int port;
+    InetAddress ip;
     String pass;
     ServerSocket socket;
     Boolean dorun = true;
 
-    HTTPServer(int p, String oauth) {
+    HTTPServer(int p, String oauth, InetAddress ip) {
         this.port = p;
+        if(ip!=null) {
+            this.ip = ip;
+        }
         this.pass = oauth.replace("oauth:", "");
 
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
@@ -64,7 +65,11 @@ public class HTTPServer extends Thread {
         String webhome = "./web";
 
         try {
-            this.socket = new ServerSocket(this.port);
+            if(this.ip!=null) {
+               this.socket = new ServerSocket(this.port, 50, this.ip); 
+            } else {
+                this.socket = new ServerSocket(this.port);
+            }
         } catch (IOException e) {
             com.gmt2001.Console.err.println("Could not start HTTP server: " + e);
             com.gmt2001.Console.err.logStackTrace(e);
