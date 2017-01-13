@@ -150,8 +150,8 @@ public class DiscordAPI {
         }
     }
     
-    public void disconnect() {
-        jdaAPI.shutdown();
+    public void reconnect() {
+        jdaAPI.setAutoReconnect(true);
     }
 
     /*

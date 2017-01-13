@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.gloriouseggroll.quorrabot;
+package me.gloriouseggroll.quorrabot.httpserver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +30,7 @@ import java.net.URLDecoder;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.TreeMap;
+import me.gloriouseggroll.quorrabot.Quorrabot;
 import me.gloriouseggroll.quorrabot.event.EventBus;
 import me.gloriouseggroll.quorrabot.event.command.CommandEvent;
 
@@ -45,7 +46,7 @@ public class HTTPServer extends Thread {
     ServerSocket socket;
     Boolean dorun = true;
 
-    HTTPServer(int p, String oauth, InetAddress ip) {
+    public HTTPServer(int p, String oauth, InetAddress ip) {
         this.port = p;
         if(ip!=null) {
             this.ip = ip;

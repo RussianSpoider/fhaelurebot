@@ -16,6 +16,7 @@
  */
 package me.gloriouseggroll.quorrabot;
 
+import me.gloriouseggroll.quorrabot.httpserver.HTTPServer;
 import com.gmt2001.DataStore;
 import com.gmt2001.IniStore;
 import com.gmt2001.SqliteStore;
@@ -81,6 +82,7 @@ import me.gloriouseggroll.quorrabot.script.ScriptManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import me.gloriouseggroll.quorrabot.event.EventBus;
+import me.gloriouseggroll.quorrabot.httpserver.HTTPSServer;
 
 public class Quorrabot implements Listener {
 
@@ -136,7 +138,9 @@ public class Quorrabot implements Listener {
     private String discordToken = "";
     private String discordMainChannel = "";
     private MusicWebSocketServer musicsocketserver;
-    private HTTPServer httpserver;
+    public HTTPServer httpserver;
+    public HTTPSServer httpsserver;
+
     private EventWebSocketServer eventsocketserver;
     private SoundBoard soundBoard;
     private ConsoleInputListener cil;
@@ -483,7 +487,9 @@ public class Quorrabot implements Listener {
         if (usehttps) {
             //modify this later for https support
             com.gmt2001.Console.out.println(channel.getName());
-            httpserver = new HTTPServer(baseport, oauth, ip);
+            //httpserver = new HTTPServer(baseport, oauth, ip);
+            httpsserver = new HTTPSServer(baseport, oauth, keystorepath, keystorepassword, keypassword, ip);
+            com.gmt2001.Console.out.println("HTTPSServer accepting connections on port " + baseport + "(SSL)");
 
             if (musicenable) {
                 musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword, ip);
@@ -495,9 +501,9 @@ public class Quorrabot implements Listener {
                 musicsocketserver = new MusicWebSocketServer(baseport + 1, ip);
             }
             eventsocketserver = new EventWebSocketServer(baseport + 2, ip);
+            httpserver.start();
+            com.gmt2001.Console.out.println("HTTPServer accepting connections on port " + baseport);
         }
-        httpserver.start();
-        com.gmt2001.Console.out.println("HTTPServer accepting connections on port " + baseport);
 
         if (musicenable) {
             musicsocketserver.start();
@@ -1029,7 +1035,7 @@ public class Quorrabot implements Listener {
                     startWebServices();
                 }
                 if (!discordToken.isEmpty()) {
-                    DiscordAPI.instance().disconnect();
+                    DiscordAPI.instance().reconnect();
                     connectDiscord();
                 }
 
