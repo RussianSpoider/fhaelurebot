@@ -336,9 +336,6 @@ $.on('command', function (event) {
                 messageCommand = $.replaceAll(messageCommand, '(viewers)', $.getViewers($.channelName));
             }
         }
-        if (messageCommand.contains('(#)')) {
-            messageCommand = $.replaceAll(messageCommand, '(#)', $.randRange(1, 100));
-        }
         if (messageCommand.contains('(count)')) {
             messageCommand = $.replaceAll(messageCommand, '(count)', $.inidb.get('commandcount', command.toLowerCase()));
         }
@@ -374,6 +371,10 @@ $.on('command', function (event) {
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
             }
             messageCommand = $.replaceAll(messageCommand, '(code)', text);
+        }
+
+        if (messageCommand.contains('(#)')) {
+            messageCommand = $.replaceAll(messageCommand, '(#)', $.randRange(1, 100));
         }
 
         $.say(messageCommand);

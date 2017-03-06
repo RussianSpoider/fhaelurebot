@@ -304,7 +304,6 @@ public class DonationHandlerAPI {
     }
 
     public String[] taGetChannelDonations() {
-
         JSONObject j = GetData(DonationHandlerAPI.request_type.GET, ta_base_url + ta_access_token);
         if (j.getBoolean("_success") && !j.toString().contains("Bad Request") && !j.toString().contains("Not Found")) {
 

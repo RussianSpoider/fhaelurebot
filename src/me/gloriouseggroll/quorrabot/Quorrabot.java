@@ -91,8 +91,8 @@ public class Quorrabot implements Listener {
     public String hostedName;
     private final String oauth;
     private String apioauth;
-    private String soundboardauth;
-    private String soundboardauthread;
+    private String webauth;
+    private String webauthro;
     private String clientid;
     private final String ownerName;
     private final String hostname;
@@ -116,9 +116,7 @@ public class Quorrabot implements Listener {
     private boolean webenable;
     private boolean musicenable;
     private boolean usehttps;
-    private String keystorepath;
-    private String keystorepassword;
-    private String keypassword;
+    private String keystorepath = "quorrabot.jks";
     private String channelStatus;
     private static DataStore dataStoreObj;
     private SecureRandom rng;
@@ -195,8 +193,8 @@ public class Quorrabot implements Listener {
     public Quorrabot(String username, String oauth, String apioauth, String clientid, String channelName, String owner, int baseport, InetAddress ip,
             String hostname, int port, double msglimit30, String datastore, String datastoreconfig, String youtubekey, String gamewispauth, String gamewisprefresh,
             String twitchalertstoken, String lastfmuser, String tpetoken, String twittertoken, String twittertokensecret, String streamtiptoken,
-            String streamtipid, boolean webenable, boolean musicenable, boolean usehttps, String timeZone, String mySqlHost, String mySqlPort, String mySqlConn,
-            String mySqlPass, String mySqlUser, String mySqlName, String keystorepath, String keystorepassword, String keypassword, String soundboardauth, String soundboardauthread,
+            String streamtipid, boolean webenable, String webauth, String webauthro, boolean musicenable, boolean usehttps, String timeZone, String mySqlHost, String mySqlPort, String mySqlConn,
+            String mySqlPass, String mySqlUser, String mySqlName, String keystorepath,
             FollowersCache followersCache, ChannelHostCache hostCache, ChannelUsersCache channelUsersCache, SubscribersCache subscribersCache, String discordToken, String discordMainChannel) {
         Thread.setDefaultUncaughtExceptionHandler(com.gmt2001.UncaughtExceptionHandler.instance());
 
@@ -282,10 +280,8 @@ public class Quorrabot implements Listener {
         this.musicenable = musicenable;
         this.usehttps = usehttps;
         this.keystorepath = keystorepath;
-        this.keystorepassword = keystorepassword;
-        this.keypassword = keypassword;
-        this.soundboardauth = soundboardauth;
-        this.soundboardauthread = soundboardauthread;
+        this.webauth = webauth;
+        this.webauthro = webauthro;
 
         if (clientid.length() == 0) {
             this.clientid = "pcaalhorck7ryamyg6ijd5rtnls5pjl";
@@ -485,16 +481,14 @@ public class Quorrabot implements Listener {
 
     public void startWebServices() {
         if (usehttps) {
-            //modify this later for https support
-            com.gmt2001.Console.out.println(channel.getName());
             //httpserver = new HTTPServer(baseport, oauth, ip);
-            httpsserver = new HTTPSServer(baseport, oauth, keystorepath, keystorepassword, keypassword, ip);
+            httpsserver = new HTTPSServer(baseport, oauth, keystorepath, webauth, ip);
             com.gmt2001.Console.out.println("HTTPSServer accepting connections on port " + baseport + "(SSL)");
 
             if (musicenable) {
-                musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, keystorepassword, keypassword, ip);
+                musicsocketserver = new MusicWebSocketSecureServer(baseport + 1, keystorepath, webauth, ip);
             }
-            eventsocketserver = new EventWebSocketSecureServer(baseport + 2, keystorepath, keystorepassword, keypassword, ip);
+            eventsocketserver = new EventWebSocketSecureServer(baseport + 2, keystorepath, webauth, ip);
         } else {
             httpserver = new HTTPServer(baseport, oauth, ip);
             if (musicenable) {
@@ -983,8 +977,8 @@ public class Quorrabot implements Listener {
                 data += "oauth=" + oauth + "\r\n";
                 data += "apioauth=" + apioauth + "\r\n";
                 data += "clientid=" + clientid + "\r\n";
-                data += "webauth=" + soundboardauth + "\r\n";
-                data += "webauthro=" + soundboardauthread + "\r\n";
+                data += "webauth=" + webauth + "\r\n";
+                data += "webauthro=" + webauthro + "\r\n";
                 data += "owner=" + ownerName + "\r\n";
                 data += "channel=" + channelName + "\r\n";
                 data += "baseport=" + baseport + "\r\n";
@@ -1013,8 +1007,6 @@ public class Quorrabot implements Listener {
                 data += "mysqluser=" + mySqlUser + "\r\n";
                 data += "mysqlpass=" + mySqlPass + "\r\n";
                 data += "keystorepath=" + keystorepath + "\r\n";
-                data += "keystorepassword=" + keystorepassword + "\r\n";
-                data += "keypassword=" + keypassword + "\r\n";
                 data += "discordtoken=" + discordToken + "\r\n";
                 data += "discordmainchannel=" + discordMainChannel + "\r\n";
 
@@ -1346,8 +1338,8 @@ public class Quorrabot implements Listener {
         String oauth = "";
         String apioauth = "";
         String channelName = "";
-        String soundboardauth = "";
-        String soundboardauthread = "";
+        String webauth = "";
+        String webauthro = "";
         String clientid = "";
         String owner = "";
         String hostname = "";
@@ -1372,7 +1364,6 @@ public class Quorrabot implements Listener {
         boolean usehttps = false;
         String keystorepath = "";
         String keystorepassword = "";
-        String keypassword = "";
         String timeZone = "";
         String mySqlConn = "";
         String mySqlHost = "";
@@ -1498,14 +1489,11 @@ public class Quorrabot implements Listener {
                     if (line.startsWith("keystorepassword=") && line.length() > 18) {
                         keystorepassword = line.substring(17);
                     }
-                    if (line.startsWith("keypassword=") && line.length() > 13) {
-                        keypassword = line.substring(12);
-                    }
                     if (line.startsWith("webauth=") && line.length() > 9) {
-                        soundboardauth = line.substring(8);
+                        webauth = line.substring(8);
                     }
                     if (line.startsWith("webauthro=") && line.length() > 11) {
-                        soundboardauthread = line.substring(10);
+                        webauthro = line.substring(10);
                     }
                     if (line.startsWith("discordtoken=") && line.length() >= 14) {
                         discordToken = line.substring(13);
@@ -1522,16 +1510,16 @@ public class Quorrabot implements Listener {
         /**
          * Check to see if there's a soundboardauth set
          */
-        if (soundboardauth.isEmpty()) {
-            soundboardauth = generateWebAuth();
+        if (webauth.isEmpty()) {
+            webauth = generateWebAuth();
             com.gmt2001.Console.debug.println("New webauth key has been generated for botlogin.txt");
             changed = true;
         }
         /**
          * Check to see if there's a soundboardauthread set
          */
-        if (soundboardauthread.isEmpty()) {
-            soundboardauthread = generateWebAuth();
+        if (webauthro.isEmpty()) {
+            webauthro = generateWebAuth();
             com.gmt2001.Console.debug.println("New webauth read-only key has been generated for botlogin.txt");
             changed = true;
         }
@@ -1601,7 +1589,6 @@ public class Quorrabot implements Listener {
                     com.gmt2001.Console.out.println("usehttps=" + usehttps);
                     com.gmt2001.Console.out.println("keystorepath='" + keystorepath + "'");
                     com.gmt2001.Console.out.println("keystorepassword='" + keystorepassword + "'");
-                    com.gmt2001.Console.out.println("keypassword='" + keypassword + "'");
                     com.gmt2001.Console.out.println("discordtoken='" + discordToken + "'");
                     com.gmt2001.Console.out.println("discordmainchannel='" + discordMainChannel + "'");
                 }
@@ -1811,12 +1798,7 @@ public class Quorrabot implements Listener {
                         changed = true;
                     }
                 }
-                if (arg.toLowerCase().startsWith("keypassword=") && arg.length() > 13) {
-                    if (!keypassword.equals(arg.substring(12))) {
-                        keypassword = arg.substring(12);
-                        changed = true;
-                    }
-                }
+
                 if (arg.equalsIgnoreCase("help") || arg.equalsIgnoreCase("--help") || arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("-?")) {
                     com.gmt2001.Console.out.println("Usage: java -Dfile.encoding=UTF-8 -jar QuorraBot.jar [printlogin] [user=<bot username>] "
                             + "[oauth=<bot irc oauth>] [apioauth=<editor oauth>] [clientid=<oauth clientid>] [channel=<channel to join>] "
@@ -1852,8 +1834,8 @@ public class Quorrabot implements Listener {
             data += "oauth=" + oauth + "\r\n";
             data += "apioauth=" + apioauth + "\r\n";
             data += "clientid=" + clientid + "\r\n";
-            data += "webauth=" + soundboardauth + "\r\n";
-            data += "webauthro=" + soundboardauthread + "\r\n";
+            data += "webauth=" + webauth + "\r\n";
+            data += "webauthro=" + webauthro + "\r\n";
             data += "channel=" + channelName + "\r\n";
             data += "owner=" + owner + "\r\n";
             data += "baseport=" + baseport + "\r\n";
@@ -1883,7 +1865,6 @@ public class Quorrabot implements Listener {
             data += "mysqlpass=" + mySqlPass + "\r\n";
             data += "keystorepath=" + keystorepath + "\r\n";
             data += "keystorepassword=" + keystorepassword + "\r\n";
-            data += "keypassword=" + keypassword + "\r\n";
             data += "discordtoken=" + discordToken + "\r\n";
             data += "discordmainchannel=" + discordMainChannel;
 
@@ -1898,8 +1879,8 @@ public class Quorrabot implements Listener {
         Quorrabot.instance = new Quorrabot(user, oauth, apioauth, clientid, channelName, owner, baseport, ip, hostname, port,
                 msglimit30, datastore, datastoreconfig, youtubekey, gamewispauth, gamewisprefresh, twitchalertstoken,
                 lastfmuser, tpetoken, twittertoken, twittertokensecret, streamtiptoken, streamtipid,
-                webenable, musicenable, usehttps, timeZone, mySqlHost, mySqlPort, mySqlConn, mySqlPass, mySqlUser, mySqlName, keystorepath,
-                keystorepassword, keypassword, soundboardauth, soundboardauthread, followersCache, hostCache, channelUsersCache, subscribersCache, discordToken,
+                webenable, webauth, webauthro, musicenable, usehttps, timeZone, mySqlHost, mySqlPort, mySqlConn, mySqlPass, mySqlUser, mySqlName, keystorepath,
+                followersCache, hostCache, channelUsersCache, subscribersCache, discordToken,
                 discordMainChannel);
     }
 
@@ -1912,8 +1893,8 @@ public class Quorrabot implements Listener {
         data += "user=" + username + "\r\n";
         data += "oauth=" + oauth + "\r\n";
         data += "apioauth=" + apioauth + "\r\n";
-        data += "webauth=" + soundboardauth + "\r\n";
-        data += "webauthro=" + soundboardauthread + "\r\n";
+        data += "webauth=" + webauth + "\r\n";
+        data += "webauthro=" + webauthro + "\r\n";
         data += "clientid=" + clientid + "\r\n";
         data += "channel=" + channelName + "\r\n";
         data += "owner=" + ownerName + "\r\n";
@@ -1943,8 +1924,6 @@ public class Quorrabot implements Listener {
         data += "mysqluser=" + mySqlUser + "\r\n";
         data += "mysqlpass=" + mySqlPass + "\r\n";
         data += "keystorepath=" + keystorepath + "\r\n";
-        data += "keystorepassword=" + keystorepassword + "\r\n";
-        data += "keypassword=" + keypassword + "\r\n";
         data += "discordtoken=" + discordToken + "\r\n";
         data += "discordmainchannel=" + discordMainChannel;
 
@@ -1966,8 +1945,8 @@ public class Quorrabot implements Listener {
         data += "user=" + username + "\r\n";
         data += "oauth=" + oauth + "\r\n";
         data += "apioauth=" + apioauth + "\r\n";
-        data += "webauth=" + soundboardauth + "\r\n";
-        data += "webauthro=" + soundboardauthread + "\r\n";
+        data += "webauth=" + webauth + "\r\n";
+        data += "webauthro=" + webauthro + "\r\n";
         data += "clientid=" + clientid + "\r\n";
         data += "channel=" + channelName + "\r\n";
         data += "owner=" + ownerName + "\r\n";
@@ -1997,8 +1976,6 @@ public class Quorrabot implements Listener {
         data += "mysqluser=" + mySqlUser + "\r\n";
         data += "mysqlpass=" + mySqlPass + "\r\n";
         data += "keystorepath=" + keystorepath + "\r\n";
-        data += "keystorepassword=" + keystorepassword + "\r\n";
-        data += "keypassword=" + keypassword + "\r\n";
         data += "discordtoken=" + discordToken + "\r\n";
         data += "discordmainchannel=" + discordMainChannel;
 

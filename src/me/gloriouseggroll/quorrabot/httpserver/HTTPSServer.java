@@ -70,7 +70,7 @@ public class HTTPSServer {
     private int serverPort;
     private InetAddress ip;
 
-    public HTTPSServer(int port, String oauth, String keystorepath, String keystorepassword, String keypassword, InetAddress ip) {
+    public HTTPSServer(int port, String oauth, String keystorepath, String keystorepassword, InetAddress ip) {
         this.serverPort = port;
         this.ip = ip;
         this.httpsPassword = keystorepassword;

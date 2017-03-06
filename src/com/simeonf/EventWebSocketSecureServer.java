@@ -37,21 +37,21 @@ public class EventWebSocketSecureServer extends EventWebSocketServer {
     }
 
     public EventWebSocketSecureServer(int port, InetAddress ip) {
-        this(port, null, null, null, ip);
+        this(port, null, null, ip);
     }
 
-    public EventWebSocketSecureServer(int port, String keystorepath, String keystorepassword, String keypassword, InetAddress ip) {
+    public EventWebSocketSecureServer(int port, String keystorepath, String keystorepassword, InetAddress ip) {
         super(port, ip);
 
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");
-
+            char ksPassword[] = keystorepassword.toCharArray();
             if (!keystorepath.equals("")) {
                 KeyStore ks = KeyStore.getInstance("JKS");
-                ks.load(new FileInputStream(new File(keystorepath)), keystorepassword.toCharArray());
+                ks.load(new FileInputStream(new File(keystorepath)), ksPassword);
 
                 KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-                kmf.init(ks, keypassword.toCharArray());
+                kmf.init(ks, ksPassword);
                 TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
                 tmf.init(ks);
 
