@@ -137,15 +137,12 @@ $.on('command', function (event) {
                 //initiate date formatter
                 var df = new java.text.SimpleDateFormat( "yyyy-MM-dd'T'hh:mm:ssz" );
 
-                //parse created_at/date, which is received in GMT                
-                if ($.tacreated.endsWith( "Z" )) {
-                    $.tacreated = $.tacreated.substring( 0, $.tacreated.length() - 1) + "GMT-00:00";  
-                } else {
-                    var inset = 6;
-                    var s0 = $.tacreated.substring( 0, $.tacreated.length() - inset );
-                    var s1 = $.tacreated.substring( $.tacreated.length() - inset );
-                    $.tacreated = s0 + "GMT" + s1;     
+                //parse created_at/date, which is received in GMT 
+                if(!$.tacreated.contains("Z")) {
+                    $.tacreated += "Z";
                 }
+                $.tacreated = $.tacreated.replace('Z', 'GMT-00:00');
+                $.tacreated = $.tacreated.replace(' ', 'T');
 
                 var datefmt = new java.text.SimpleDateFormat("EEEE MMMM d, yyyy @ h:mm a z");
                 var gtf = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss");

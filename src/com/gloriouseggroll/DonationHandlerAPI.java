@@ -316,7 +316,7 @@ public class DonationHandlerAPI {
                     JSONArray donations = j.getJSONArray("donations");
                     //com.gmt2001.Console.out.println(donations.toString());
 
-                    JSONObject lastdonation = donations.getJSONObject(0);
+                    JSONObject lastdonation = donations.getJSONObject(donations.length() - 1);
                     String amount = lastdonation.getString("amount_label");
                     String donatormessage = "";
 
