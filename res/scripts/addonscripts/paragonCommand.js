@@ -180,7 +180,9 @@ $.on('command', function (event) {
             return;
         }
 
-        var playerInfo = new JSONObject($.fetchData($.apiURL + "/players/" + avalue));
+        var playerIdFetch = new JSONObject($.fetchData($.apiURL + "/players/search/" + avalue));
+        var playerId = playerIdFetch.getJSONArray("data").getJSONObject(0).getInt("id");
+        var playerInfo = new JSONObject($.fetchData($.apiURL + "/players/" + playerId));
         if (playerInfo.toString().indexOf("404") != -1) {
             $.say($.getWhisperString(sender) + "The Epic account you specified does not exist.");
             return;
