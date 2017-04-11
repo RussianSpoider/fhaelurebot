@@ -226,7 +226,7 @@ $.on('command', function (event) {
             kda = 0;
         } else {
             kda = (kills + assists) / deaths;
-            kda = kda.toString().split(".")[1].substring(0, 2);
+            kda = kda.toString().split(".")[0] + "." + kda.toString().split(".")[1].substring(0, 2);
         }
         var winloss;
         if (wins == 0 && gamesplayed == 0) {
@@ -299,7 +299,7 @@ $.on('command', function (event) {
                     + " Last Season: [" + lastSeasonElo.toString() + " | " + $.getDivision(lastSeasonElo) + "]"
                     + " Rank: [" + rank + " (" + percentile.toFixed(3) + "%)]"
                     + " Win/Loss Ratio: [" + wins + " - " + (gamesplayed - wins) + " (" + winloss + "%)]"
-                    + " KDA: [" + kills + " / " + deaths + " / " + assists + " (" + kda + "%)]"
+                    + " KDA: [" + kills + " / " + deaths + " / " + assists + " (" + kda + ")]"
                     + " Towers Destroyed: [" + towers + " (" + towerspergame.toFixed(2) + "/game)]"
                     + $.herostring
                     );
@@ -326,7 +326,7 @@ $.on('command', function (event) {
         if (action.equalsIgnoreCase("kda")) {
 
             $.say("/me " + playerData.getString("name")
-                    + " KDA: [" + kills + " / " + deaths + " / " + assists + " (" + kda + "%)]"
+                    + " KDA: [" + kills + " / " + deaths + " / " + assists + " (" + kda + ")]"
                     );
         }
         if (action.equalsIgnoreCase("towers")) {
