@@ -9,7 +9,7 @@ I do however, love the open source community, and I do realize the value of it. 
 
 ## Licensing:
 
-At the time of the split, the source was under GPLv2, however, some code from PhantomBot team member Illusionary0ne, who is also a friend of mine, has been used under GPLv3, this the project itself is now being released under the [**GNU General Public License v3 (GPL-3)**](https://www.gnu.org/copyleft/gpl.html).
+At the time of the split, the source was under GPLv2, however, some code from PhantomBot team member Illusionary0ne, who is also a friend of mine, has been used under GPLv3, thus the project itself is now being released under the [**GNU General Public License v3 (GPL-3)**](https://www.gnu.org/copyleft/gpl.html).
 
 ## Requirements:
 QuorraBot requires the following software to be installed:
