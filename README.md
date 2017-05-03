@@ -3,7 +3,7 @@
 ## About the project:
 QuorraBot is a multi-purpose, cross-platform, user-hosted chat bot for twitch.tv
 
-It was originally named PhantomBot, created by mast3rplan, gmt2001, myself, and phantomindex in August of 2014, and made open source in March of 2015. In January of 2016, a forum member by the name of Juraji forked the code with his own core changes, and with phantomindex, parted ways with a different team under the GPLv3 license. I began working privately on the code, while still releasing compiled versions freely, as I was not happy with my work being forked. 
+It was originally named PhantomBot, created by mast3rplan, gmt2001, myself, and phantomindex in August of 2014, and made open source in March of 2015. In January of 2016, a forum member by the name of Juraji forked the code with his own core changes, and with phantomindex, parted ways with a different team under the GPLv3 license. I began working privately on the code, while still releasing compiled versions freely, as I was not happy with my work being forked or the quality of the commits being added without thorough testing by other team members. That being said, I was not the only person who worked on the project, thus my personal feelings did not tie well with the rest of the team.
 
 I do however, love the open source community, and I do realize the value of it. I also realize that although a LARGE portion of the work done before the split was both mine and gmt2001's, there were many others who contributed in both code and ways beyond such as testing and being an active part in the community. That being said, I am once again making the project open-source.
 
