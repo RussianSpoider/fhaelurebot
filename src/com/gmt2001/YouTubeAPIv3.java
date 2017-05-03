@@ -43,7 +43,7 @@ import org.json.JSONObject;
 public class YouTubeAPIv3 {
 
     private static final YouTubeAPIv3 instance = new YouTubeAPIv3();
-    private String apikey = "AIzaSyD8n1WrvLI5wR2sBZBXg1XGlX0T88lykIk";
+    private String apikey = "";
 
     private enum request_type {
 
