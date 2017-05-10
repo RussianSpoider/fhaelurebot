@@ -34,7 +34,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.events.ShutdownEvent;
 
 /*
  * Communicates with the Discord API.
@@ -71,13 +70,13 @@ public class DiscordAPI {
      */
     public void connect(String token) {
         try {
-            jdaAPI = new JDABuilder(AccountType.BOT).setToken(token).setAudioEnabled(false).addListener(new DiscordListener()).buildAsync();
+            jdaAPI = new JDABuilder(AccountType.BOT).setToken(token).setAudioEnabled(false).addEventListener(new DiscordListener()).buildAsync();
         } catch (Exception ex) {
             com.gmt2001.Console.err.println("Failed to Disconnect from Discord: " + ex.getMessage());
             jdaAPI = null;
         }
     }
-    
+
     /*
      * Puts a text message into the queue to be sent. This queue restricts the sending of messages to once a second
      * to attempt to not reach the Discord rate limit of 10 messages in 10 seconds.
@@ -86,8 +85,11 @@ public class DiscordAPI {
      * @param  message  The text to send to the channel
      */
     public void sendMessage(String channel, String message) {
+        if (channel.startsWith("#")) {
+            channel = channel.substring(1);
+        }
         if (jdaAPI != null) {
-            messageQueue.add(new Message(channel, message)); 
+            messageQueue.add(new Message(channel, message));
         }
     }
 
@@ -104,7 +106,7 @@ public class DiscordAPI {
             }
             TextChannel textChannel = channelMap.get(channel);
             if (textChannel != null) {
-                    textChannel.sendMessage(message);
+                textChannel.sendMessage(message);
 
             }
         }
@@ -126,6 +128,7 @@ public class DiscordAPI {
      * The DiscordListener class which is used by the JDABuilder.addListener() method.
      */
     private class DiscordListener implements EventListener {
+
         @Override
         public void onEvent(Event event) {
             if (event instanceof ReadyEvent) {
@@ -149,7 +152,7 @@ public class DiscordAPI {
             }
         }
     }
-    
+
     public void reconnect() {
         jdaAPI.setAutoReconnect(true);
     }
@@ -158,6 +161,7 @@ public class DiscordAPI {
      * Message Class. Used for storing information about a queued message.
      */
     private class Message {
+
         private String channel;
         private String message;
 
@@ -180,6 +184,7 @@ public class DiscordAPI {
      * 10 messages in 10 seconds, therefore, we just allow one message a second to be sent.
      */
     private class MessageTask extends TimerTask {
+
         private long lastMsgTime = 0;
 
         public MessageTask() {

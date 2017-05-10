@@ -21,7 +21,8 @@
 
     <property environment="env" />
     <property name="project.base.dir" value="." />
-    <property name="version" value="1.14" />
+    <property name="project.organization" value="www.quorrabot.com" />    
+    <property name="version" value="1.15" />
     <property name="java.class.path" value="" />
     <property name="src" value="${project.base.dir}/src" />
     <property name="reference" value="${project.base.dir}/lib" />
