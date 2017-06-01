@@ -554,7 +554,7 @@ $.on('command', function (event) {
         $.say($.getWhisperString(sender) + s);
     }
 
-    if (command.equalsIgnoreCase("mods")) {
+    if (command.equalsIgnoreCase("moderators")) {
         s = $.lang.get("net.quorrabot.permissions.mods");
 
         for (i = 0; i < $.users.length; i++) {
@@ -771,5 +771,5 @@ $.timer.addTimer("./util/permissions.js", "usercheck", true, function () {
 
 $.registerChatCommand("./util/permissions.js", "group");
 $.registerChatCommand("./util/permissions.js", "users");
-$.registerChatCommand("./util/permissions.js", "mods");
+$.registerChatCommand("./util/permissions.js", "moderators");
 $.registerChatCommand("./util/permissions.js", "admins");

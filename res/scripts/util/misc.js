@@ -42,7 +42,6 @@ $.isJSON = function isJSON(data) {
 
 $.say = function (s) {
     if ($.botsession !== null) {
-        
         $.logChat($.botname, s);
         if (s.startsWith('.')) {
             $.botsession.say(s);
@@ -52,10 +51,13 @@ $.say = function (s) {
             return;
         }
         if (!s.startsWith('.')) {
+
             if (!$.inidb.exists("settings", "response_@all") || $.inidb.get("settings", "response_@all").equalsIgnoreCase("1")
                     || s.equals($.lang.get("net.quorrabot.misc.response-disable")) == true || s.indexOf(".timeout ") != -1 || s.indexOf(".ban ") != -1
                     || s.indexOf(".unban ") != -1 || s.equalsIgnoreCase(".clear") || s.equalsIgnoreCase(".mods")) {
-                if (s.startsWith("/w ")) {
+
+                var whispercheck = s.substring(0, 3);
+                if (whispercheck.equalsIgnoreCase("/w ")) {
                     sleep(1000);
                     $.botsession.say(s);
                 } else {
@@ -81,9 +83,9 @@ $.replaceAll = function (string, find, replace) {
         return string;
     }
 
-    if (find.indexOf('(') > -1) {
-        while (string.indexOf(find) > -1) {
-            string = string.replace(find, replace.toString());
+    if (find.indexOf("(") != -1) {
+        while (string.indexOf(find) >= 0) {
+            string = string.replace(find, replace);
         }
         return string;
     } else {
@@ -91,7 +93,7 @@ $.replaceAll = function (string, find, replace) {
         var retstr = "";
 
         for (var i = 0; i < args.length; i++) {
-            if (args[i].indexOf(find) > -1) {
+            if (args[i].indexOf(find) >= 0) {
                 var substr = args[i].substring(args[i].indexOf(find), find.length + 1);
                 var substr2 = substr.substring(find.length, find.length + 1);
 

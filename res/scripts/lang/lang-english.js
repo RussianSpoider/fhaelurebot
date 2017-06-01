@@ -8,11 +8,11 @@ $.lang.data["net.quorrabot.lang.test"] = "$1 $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 $12
 //common
 $.lang.data["net.quorrabot.common.enabled"] = "enabled";
 $.lang.data["net.quorrabot.common.disabled"] = "disabled";
-$.lang.data["net.quorrabot.common.err-user"] = "You must specify a user to target with this command";
-$.lang.data["net.quorrabot.common.user-404"] = "The user \"$1\" has not visited this channel yet.";
-$.lang.data["net.quorrabot.common.whisper-disabled"] = "[Whisper Mode] has been disabled.";
-$.lang.data["net.quorrabot.common.whisper-enabled"] = "[Whisper Mode] has been enabled.";
-$.lang.data["net.quorrabot.common.command-not-exists"] = "The command !$1 does not exist.";
+$.lang.data["net.quorrabot.common.err-user"] = "You must specify a target, fool";
+$.lang.data["net.quorrabot.common.user-404"] = "The user \"$1\" is 404";
+$.lang.data["net.quorrabot.common.whisper-disabled"] = "[Whisper Mode] disabled.";
+$.lang.data["net.quorrabot.common.whisper-enabled"] = "[Whisper Mode] enabled.";
+$.lang.data["net.quorrabot.common.command-not-exists"] = "!$1 does not exist, fool";
 
 // To translate the ordinal number prefixes or suffixes, edit the lines below.
 // Warning: Make sure each line contains 10 items total; 0 through 9.
@@ -27,16 +27,16 @@ $.lang.data["net.quorrabot.common.time-prefixes"] = ["","","",""];
 $.lang.data["net.quorrabot.common.time-suffixes"] = ["w","d","h","m"];
 
 //command perm/price
-$.lang.data["net.quorrabot.cmd.noperm"] = "Your user group, $1, does not have permission to use the command $2.";
-$.lang.data["net.quorrabot.cmd.needpoints"] = "That command costs $1, which you don't have.";
-$.lang.data["net.quorrabot.cmd.paid"] = "[Paid] $1's balance is now: $2";
-$.lang.data["net.quorrabot.cmd.casteronly"] = "Only a Caster has access to that command!";
-$.lang.data["net.quorrabot.cmd.adminonly"] = "Only an Administrator has access to that command!";
-$.lang.data["net.quorrabot.cmd.modonly"] = "Only a Moderator has access to that command!";
+$.lang.data["net.quorrabot.cmd.noperm"] = "$1, does not have permission to use $2.";
+$.lang.data["net.quorrabot.cmd.needpoints"] = "Too pricey for your blood @ $1.";
+$.lang.data["net.quorrabot.cmd.paid"] = "[Paid] $1's is left with $2";
+$.lang.data["net.quorrabot.cmd.casteronly"] = "That is Caster only.";
+$.lang.data["net.quorrabot.cmd.adminonly"] = "That is Administrator only.";
+$.lang.data["net.quorrabot.cmd.modonly"] = "That is Moderator only.";
 
 //init.js
 $.lang.data["net.quorrabot.init.cmsgset"] = "Connected message set!";
-$.lang.data["net.quorrabot.init.coolcom"] = "The global command cooldown is $1 second(s). Type \"!helpcoolcom\" for usage information";
+$.lang.data["net.quorrabot.init.coolcom"] = "The global command cooldown is $1 second(s).";
 $.lang.data["net.quorrabot.init.coolcom-individual"] = "The command cooldown for !$1 is $2 second(s)";
 $.lang.data["net.quorrabot.init.coolcom-individual-notset"] = "The command !$1 is using the global cooldown value, which is $2 second(s)";
 $.lang.data["net.quorrabot.init.coolcom-set"] = "The global command cooldown is now $1 second(s)!";
@@ -73,7 +73,7 @@ $.lang.data["net.quorrabot.permissions.group-not-exists"] = "That group does not
 $.lang.data["net.quorrabot.permissions.group-remove"] = "Group $1 has been successfully removed. All users in that group have been moved to the Viewer group.";
 $.lang.data["net.quorrabot.permissions.group-create"] = "Group $1 created!";
 $.lang.data["net.quorrabot.permissions.group-set"] = "Group for $1 changed to $2!";
-$.lang.data["net.quorrabot.permissions.group-set-err-above"] = "You must be a higher rank than the person you are trying to promote!";
+$.lang.data["net.quorrabot.permissions.group-set-err-above"] = "You must be a higher rank than the person you are trying to promote fool!";
 $.lang.data["net.quorrabot.permissions.group-points-set"] = "$1 point gain set to $2!";
 $.lang.data["net.quorrabot.permissions.group-points-err-less-than-zero"] = "Group point gain must be a number equal to, or greater than zero!";
 $.lang.data["net.quorrabot.permissions.group-current-self"] = "$1, you're in the $2 group.";
@@ -82,7 +82,7 @@ $.lang.data["net.quorrabot.permissions.group-list"] = "Groups: $1";
 $.lang.data["net.quorrabot.permissions.group-usage"] = "Usage: !group, !group <name>, !group set <name> <group>, !group list, !group name <id> <new name>";
 $.lang.data["net.quorrabot.permissions.group-name-err-default"] = "Default group names cannot be changed!";
 $.lang.data["net.quorrabot.permissions.group-name"] = "Changed group '$1' to '$2'!";
-$.lang.data["net.quorrabot.permissions.users"] = "Users in channel: ";
+$.lang.data["net.quorrabot.permissions.users"] = "Peasants in channel: ";
 $.lang.data["net.quorrabot.permissions.mods"] = "Mods in channel: ";
 $.lang.data["net.quorrabot.permissions.admins"] = "Admins in channel: ";
 $.lang.data["net.quorrabot.permissions.group-already-exists"] = "The user group $1 already exists.";
@@ -104,7 +104,7 @@ $.lang.data["net.quorrabot.chatmoderator.banned"] = " [Banned]";
 $.lang.data["net.quorrabot.chatmoderator.timedout"] = " [Timed Out ($1)]";
 $.lang.data["net.quorrabot.chatmoderator.forgive"] = "Reduced $1 to $2 strike(s)!";
 $.lang.data["net.quorrabot.chatmoderator.increase"] = "Increased $1 to $2 strike(s)!";
-$.lang.data["net.quorrabot.chatmoderator.permit"] = "$1 is permitted to post a link during the next $2 seconds!";
+$.lang.data["net.quorrabot.chatmoderator.permit"] = "$1 may post their stuffies within $2 seconds!";
 $.lang.data["net.quorrabot.chatmoderator.ban-err-time"] = "$1 is not a valid amount of time";
 $.lang.data["net.quorrabot.chatmoderator.ban"] = "$1 banned for $2 hour(s)";
 $.lang.data["net.quorrabot.chatmoderator.ban-indef"] = "$1 banned indefinitely";
@@ -152,16 +152,16 @@ $.lang.data["net.quorrabot.pointsystem.gain-success"] = "Set the $1 earnings to 
 $.lang.data["net.quorrabot.pointsystem.gain-usage"] = "Usage: \"!points gain <amount>\"";
 $.lang.data["net.quorrabot.pointsystem.get-other"] = "$1's balance is: $2.";
 $.lang.data["net.quorrabot.pointsystem.get-other-nopoints"] = "$1 has no $2.";
-$.lang.data["net.quorrabot.pointsystem.get-other-time"] = "$1's balance is: $2, and has been in chat for $3.";
+$.lang.data["net.quorrabot.pointsystem.get-other-time"] = "$1's balance is: $2.";
 $.lang.data["net.quorrabot.pointsystem.get-self"] = "Your remaining balance is: $1.";
 $.lang.data["net.quorrabot.pointsystem.get-self-nopoints"] = "You have no $1. Stay in chat to earn $1!";
-$.lang.data["net.quorrabot.pointsystem.get-self-time"] = "Your current balance is: $1, and you have been in chat for $2.";
+$.lang.data["net.quorrabot.pointsystem.get-self-time"] = "Your current balance is: $1";
 $.lang.data["net.quorrabot.pointsystem.gift-error-negative"] = "You can not gift negative $1.";
 $.lang.data["net.quorrabot.pointsystem.gift-error-notenough"] = "You can not afford to transfer $1 to $2.";
 $.lang.data["net.quorrabot.pointsystem.gift-error-notminimum"] = "You have to transfer at least $1.";
-$.lang.data["net.quorrabot.pointsystem.gift-error-toself"] = "Oops! Something went wrong! Maybe you shouldn't try gifting yourself $1... OMGScoots";
-$.lang.data["net.quorrabot.pointsystem.gift-success"] = "Ka-tching! You successfully transfered $1 to $2. $2 now has $3, and you now have $4.";
-$.lang.data["net.quorrabot.pointsystem.gift-received"] = "Ka-tching! You were gifted $1 by $2.";
+$.lang.data["net.quorrabot.pointsystem.gift-error-toself"] = "Maybe you shouldn't try gifting yourself $1... OMGScoots";
+$.lang.data["net.quorrabot.pointsystem.gift-success"] = "Transfered $1 to $2.";
+$.lang.data["net.quorrabot.pointsystem.gift-received"] = "You were gifted $1 by $2.";
 $.lang.data["net.quorrabot.pointsystem.gift-usage"] = "Usage: \"!gift <name> <amount>\"";
 $.lang.data["net.quorrabot.pointsystem.give-all-error-negative"] = "You can not give everyone negative $1.";
 $.lang.data["net.quorrabot.pointsystem.give-all-success"] = "$1 have been sent to everyone in the channel!";
@@ -176,7 +176,7 @@ $.lang.data["net.quorrabot.pointsystem.interval-offline-usage"] = "Usage: \"!poi
 $.lang.data["net.quorrabot.pointsystem.interval-error-negative"] = "You can not set the $1 payout interval to negative minutes.";
 $.lang.data["net.quorrabot.pointsystem.interval-success"] = "Set the $1 payout interval to $2 minute(s) when the stream is online.";
 $.lang.data["net.quorrabot.pointsystem.interval-usage"] = "Usage: \"!points interval <amount>\"";
-$.lang.data["net.quorrabot.pointsystem.makeitrain-error-invalid"] = "There must be at least 5 people in the room, and the amount specified must be greater than the users in the room in order to make it rain.";
+$.lang.data["net.quorrabot.pointsystem.makeitrain-error-invalid"] = "Sorry, but it's not possible to rain $1 at the moment.";
 $.lang.data["net.quorrabot.pointsystem.makeitrain-error-negative"] = "You can not make it rain negative $1.";
 $.lang.data["net.quorrabot.pointsystem.makeitrain-error-notenough"] = "You can not afford to make it rain $1.";
 $.lang.data["net.quorrabot.pointsystem.makeitrain-success"] = "A rain storm's incoming! $1 is throwing $2 in the air, resulting in everyone getting $3!";
@@ -203,10 +203,10 @@ $.lang.data["net.quorrabot.pointsystem.toggle-success"] = "Users in the group $1
 $.lang.data["net.quorrabot.timesystem.autolevel-disabled"] = "Users will no longer be promoted to $1 when they have been in the chat for $2 hour(s).";
 $.lang.data["net.quorrabot.timesystem.autolevel-enabled"] = "Users will now be promoted to $1 when they have been in the chat for $2 hour(s).";
 $.lang.data["net.quorrabot.timesystem.autolevel-promote"] = "$1 has been promoted to $2 by being in the chat for $3 hour(s). Congratulations!";
-$.lang.data["net.quorrabot.timesystem.get-other"] = "$1 currently spent $2 in the chat.";
+$.lang.data["net.quorrabot.timesystem.get-other"] = "$1: $2.";
 $.lang.data["net.quorrabot.timesystem.get-self"] = "You have spent $1 in the chat.";
 $.lang.data["net.quorrabot.timesystem.give-error-negative"] = "You can not give negative time.";
-$.lang.data["net.quorrabot.timesystem.give-success"] = "Sent $1 to $2. New balance is $3.";
+$.lang.data["net.quorrabot.timesystem.give-success"] = "Sent $1 to $2:total of $3.";
 $.lang.data["net.quorrabot.timesystem.give-usage"] = "Usage: \"!time give <name> <amount>\"";
 $.lang.data["net.quorrabot.timesystem.help"] = "Usage: '!time give <name> <amount>' -- '!time take <name> <amount>' -- '!time set <name> <amount>'";
 $.lang.data["net.quorrabot.timesystem.offlinetime-disabled"] = "Offline time will not longer be counted towards the time.";
@@ -222,27 +222,27 @@ $.lang.data["net.quorrabot.timesystem.take-error-toomuch"] = "You can not take m
 $.lang.data["net.quorrabot.timesystem.take-success"] = "Taken $1 from $2. New balance is $3.";
 $.lang.data["net.quorrabot.timesystem.take-usage"] = "Usage: \"!time take <name> <amount>\"";
 $.lang.data["net.quorrabot.timesystem.toggle-success"] = "Users in the group $1 or higher are now able to use time management commands.";
-$.lang.data["net.quorrabot.streamertime"] = "It is currently $1 where $2 is located.";
+$.lang.data["net.quorrabot.streamertime"] = "It is currently $1 near $2.";
 $.lang.data["net.quorrabot.timezone.error-invalid"] = "\"$1\" is not a valid time zone. A list of time zones can be found on \"http://en.wikipedia.org/wiki/List_of_tz_database_time_zones\".";
 $.lang.data["net.quorrabot.timezone.get"] = "The streamer's time zone is currently set to \"$1\".";
 $.lang.data["net.quorrabot.timezone.success"] = "The time zone has been set to \"$1\".";
 $.lang.data["net.quorrabot.timezone.usage"] = "Usage: \"!timezone <name>\"";
-$.lang.data["net.quorrabot.uptime.success-online"] = "/me [Stream Uptime] $1 has been online for $2.";
-$.lang.data["net.quorrabot.uptime.success-offline"] = "$1 is currently not streaming.";
-$.lang.data["net.quorrabot.botuptime.success"] = "/me [Bot Uptime] $1 has been online for $2.";
+$.lang.data["net.quorrabot.uptime.success-online"] = "[Stream Uptime] $2";
+$.lang.data["net.quorrabot.uptime.success-offline"] = "[Offline] You fool.";
+$.lang.data["net.quorrabot.botuptime.success"] = "[Bot Uptime] $2";
 
 // raidSystem.js
 $.lang.data["net.quorrabot.raidsystem.raid-error-toomuch"] = "To prevent a global ban from Twitch, the maximum has been set to $1.";
-$.lang.data["net.quorrabot.raidsystem.raid-success"] = "/me http://www.twitch.tv/$1 $2";
+$.lang.data["net.quorrabot.raidsystem.raid-success"] = "http://www.twitch.tv/$1 $2";
 $.lang.data["net.quorrabot.raidsystem.raid-usage"] = "Usage: \"!raid (name) | !raid (name) (message) | !raid (name) (amount) | !raid (name) (amount) (message)\"";
 $.lang.data["net.quorrabot.raidsystem.raider-success"] = "Thank you for the raid, $1! This is the $2 time $1 has raided! Please give them a follow at http://twitch.tv/$3 !";
 $.lang.data["net.quorrabot.raidsystem.raider-usage"] = "Usage: \"!raider <name>\"";
 
 //addCommand.js
-$.lang.data["net.quorrabot.addcommand.addcom-success"] = "You have successfully created the command: !$1";
-$.lang.data["net.quorrabot.addcommand.addcom-error"] = "That command already exists";
+$.lang.data["net.quorrabot.addcommand.addcom-success"] = "New command PogChamp : !$1";
+$.lang.data["net.quorrabot.addcommand.addcom-error"] = "That command already exists fool";
 $.lang.data["net.quorrabot.addcommand.addcom-error-usage"] = "Usage: \"!addcom (command) (message)\", type !helpcom for more info";
-$.lang.data["net.quorrabot.addcommand.delcom-success"] = "You have successfully removed the command: !$1";
+$.lang.data["net.quorrabot.addcommand.delcom-success"] = "ByeBye FeelsBadMan : !$1";
 $.lang.data["net.quorrabot.addcommand.delcom-error-usage"] = "Usage: \"!delcom (command)\"";
 $.lang.data["net.quorrabot.addcommand.editcom-success"] = "You have modified the command: !$1";
 $.lang.data["net.quorrabot.addcommand.editcom-error"] = "There is no such command";
@@ -260,10 +260,14 @@ $.lang.data["net.quorrabot.addcommand.helpcom-command-tags"] = "When using !addc
 $.lang.data["net.quorrabot.addcommand.helpcom-command-tags2"] = "When using !addcom, you can also put '(1)', '(2)', and so on to allow arguments. ex. '!addcom kill (sender) just killed (1) with a (2)!'";
 $.lang.data["net.quorrabot.addcommand.helpcom-command-tags3"] = "Additional special tags: '(count)' will add the number of times the command was used (including the current usage)";
 $.lang.data["net.quorrabot.addcommand.aliascom-success"] = "the command !$1 was successfully aliased to !$2";
-$.lang.data["net.quorrabot.addcommand.aliascom-error-no-command"] = "The target command does not exist!";
+$.lang.data["net.quorrabot.addcommand.aliascom-error-no-command"] = "That command does not exist fool!";
 $.lang.data["net.quorrabot.addcommand.aliascom-failed"] = "You can only overwrite an alias!";
 $.lang.data["net.quorrabot.addcommand.aliascom-error-usage"] = "Usage: \"!aliascom (existing command) (alias name)\"";
-$.lang.data["net.quorrabot.addcommand.permcom-success"] = "Permissions for command: $1 set for group: $2 and higher.";
+$.lang.data["net.quorrabot.addcommand.delalias-success"] = "the command !$1 was successfully delaliased from !$2";
+$.lang.data["net.quorrabot.addcommand.delalias-error-no-command"] = "The target command does not exist!";
+$.lang.data["net.quorrabot.addcommand.delalias-failed"] = "You can only overwrite an alias!";
+$.lang.data["net.quorrabot.addcommand.delalias-error-usage"] = "Usage: \"!delalias (existing command) (alias name)\"";
+$.lang.data["net.quorrabot.addcommand.permcom-success"] = "Permissions for !$1 set for $2 and higher.";
 $.lang.data["net.quorrabot.addcommand.permcom-removed-success"] = "All recursive permissions for the command: $1 and any of its aliases have been removed.";
 $.lang.data["net.quorrabot.addcommand.permcom-syntax-error"] = "You must specify a permission mode of 1 or 2! 1 specifies only a single group, multiple single groups can be added for the same command. 2 specifies recursive (all groups higher than the group specified).";
 $.lang.data["net.quorrabot.addcommand.permcom-error-no-command"] = "The command !$1 does not exist!";
@@ -381,9 +385,8 @@ $.lang.data["net.quorrabot.betsystem.close.refund"] = "Bet is now closed! And al
 $.lang.data["net.quorrabot.betsystem.toggle.on"] = "Bet enter messages have been enabled.";
 $.lang.data["net.quorrabot.betsystem.toggle.off"] = "Bet enter messages have been disabled.";
 
-
 // top10Command.js
-$.lang.data["net.quorrabot.top10.points-disabled"] = "You can not use this command while the points module is disabled.";
+$.lang.data["net.quorrabot.top10.points-disabled"] = "Points are disabled fool.";
 $.lang.data["net.quorrabot.top10.points-error-noresults"] = "Could not find any users with $1.";
 $.lang.data["net.quorrabot.top10.points-success"] = "/me [Top 10 $1] $2";
 $.lang.data["net.quorrabot.top10.points-success-whisper"] = "[Top 10 $1] $2";
@@ -417,13 +420,13 @@ $.lang.data["net.quorrabot.greetingsystem.toggle-enabled-other"] = "A greeting m
 $.lang.data["net.quorrabot.greetingsystem.usage"] = "Usage: \"!greet max <amount>\", \"!greet set [global OR user <name>] <message>\", \"!greet toggle [global OR user <name>]\"";
 
 //followHandler.js
-$.lang.data["net.quorrabot.followHandler.shoutout-not-exist"] = "The user $1 does not exist.";
-$.lang.data["net.quorrabot.followHandler.shoutout-offline"] = "Hey go give $1 a follow over at twitch.tv/$1! They were last seen playing: $2!";
-$.lang.data["net.quorrabot.followHandler.shoutout-online"] = "Hey go give $1 a follow over at twitch.tv/$1! They are currently playing: $2!";
-$.lang.data["net.quorrabot.followHandler.shoutout-usage"] = "Usage: !follow (caster)";
+$.lang.data["net.quorrabot.followHandler.streamer-not-exist"] = "The user $1 does not exist. Fool.";
+$.lang.data["net.quorrabot.followHandler.streamer-offline"] = "$1 is another fantabulous streamer! They were last seen playing: $2! twitch.tv/$1  ";
+$.lang.data["net.quorrabot.followHandler.streamer-online"] = "$1 is another fantabulous streamer! They are currently playing $2! twitch.tv/$1";
+$.lang.data["net.quorrabot.followHandler.streamer-usage"] = "Usage: !streamer (caster)";
 $.lang.data["net.quorrabot.followHandler.follow-reward-set"] = "New follower reward set!";
 $.lang.data["net.quorrabot.followHandler.follow-message-set"] = "New follower message set!";
-$.lang.data["net.quorrabot.followHandler.followage-is-following"] = "$1 has been following channel $2 for $3";
+$.lang.data["net.quorrabot.followHandler.followage-is-following"] = "$1 has been following $2 for $3";
 $.lang.data["net.quorrabot.followHandler.follows-message"] = "(name) just followed the channel!";
 $.lang.data["net.quorrabot.followHandler.followage-is-not-following"] = "$1 is not following channel $2";
 $.lang.data["net.quorrabot.followHandler.followed-usage"] = "Usage: !followed (user) [(channel) optional]";
@@ -446,6 +449,7 @@ $.lang.data["net.quorrabot.followHandler.followtrain-wrong-count"] = "Follow tra
 $.lang.data["net.quorrabot.followHandler.followtrain-message-set"] = "Follow train ($1) message successfully set.";
 $.lang.data["net.quorrabot.followHandler.followtrain-currentmsg"] = "The current follow train $1 message is: $2";
 $.lang.data["net.quorrabot.followHandler.followtrain-usage"] = "To set a follow train message use this format with message number being from 3 (3 follows) to 8 (8 or more follows): !followtrain (number) (message)";
+
 // noticeHandler.js
 $.lang.data["net.quorrabot.noticehandler.notice-config"] = "[Notice Settings] - [Notices: $1] - [Interval: $2 minutes] - [Msg Trigger: $3 messages] - [Amount: $4 notices]";
 $.lang.data["net.quorrabot.noticehandler.notice-usage"] = "Usage: !notice get/ add / remove / edit / config / interval / trigger / toggle";
@@ -478,22 +482,25 @@ $.lang.data["net.quorrabot.phrasehandler.trigger-not-found"] = "That phrase trig
 
 //hostHandler.js 
 $.lang.data["net.quorrabot.hosthandler.default-host-welcome-message"] = "Thanks for the host (name)!";
-$.lang.data["net.quorrabot.hosthandler.default-autohost-welcome-message"] = "Thanks for the auto-host (name)!";
+$.lang.data["net.quorrabot.hosthandler.default-host-welcome-message-and-reward"] = "Thanks for the host (name)! $1!";
 $.lang.data["net.quorrabot.hosthandler.host-reward-current-and-usage"] = "The current host reward is $1! To change it use '!hostreward <amount>";
 $.lang.data["net.quorrabot.hosthandler.host-reward-error"] = "Please put a valid reward greater than or equal to 0!";
 $.lang.data["net.quorrabot.hosthandler.host-reward-set-success"] = "New hoster reward set!";
 $.lang.data["net.quorrabot.hosthandler.host-count"] = "This channel is currently being hosted by $1 channels!";
+$.lang.data["net.quorrabot.hosthandler.host-timeout-time"] = "Host timeout duration is currently set to: $1 minutes!";
+$.lang.data["net.quorrabot.hosthandler.host-timeout-time-error"] = "Host timeout duration can't be less than 30 minutes!";
+$.lang.data["net.quorrabot.hosthandler.host-timeout-time-set"] = "Host timeout duration is now set to: $1 minutes!";
 $.lang.data["net.quorrabot.hosthandler.host-list"] = "This channel is currently being hosted by the hosting $1 channels: $2";
 $.lang.data["net.quorrabot.hosthandler.host-list-error"] = "No one is currently hosting this channel.";
 $.lang.data["net.quorrabot.hosthandler.current-host-message"] = "The current new hoster message is: $1";		
 $.lang.data["net.quorrabot.hosthandler.host-message-usage"] = "To change it use '!hostmessage (message)'. You can also add the string '(name)' to put the hosters name";		
 $.lang.data["net.quorrabot.hosthandler.host-message-set-success"] = "New host message set!";
-$.lang.data["net.quorrabot.hosthandler.hostannounce"] = "Host announcements have been $1.";
-$.lang.data["net.quorrabot.hosthandler.current-autohost-message"] = "The current new auto-hoster message is: $1";		
-$.lang.data["net.quorrabot.hosthandler.autohost-message-usage"] = "To change it use '!autohostmessage (message)'. You can also add the string '(name)' to put the hosters name";		
-$.lang.data["net.quorrabot.hosthandler.autohost-message-set-success"] = "New auto-host message set!";
-$.lang.data["net.quorrabot.hosthandler.autohostannounce"] = "Auto-host announcements have been $1.";
-
+$.lang.data["net.quorrabot.hosthandler.autohost.not-exist"] = "Channel $1 doesn't exist.";
+$.lang.data["net.quorrabot.hosthandler.autohost.already-exists"] = "Channel $1 is already in the auto-host list.";
+$.lang.data["net.quorrabot.hosthandler.autohost.add-success"] = "Channel $1 has been added to the auto-host list. Total users on the list: $2.";
+$.lang.data["net.quorrabot.hosthandler.autohost.remove-success"] = "Channel $1 has been removed from the auto-host list. Total users on the list: $2.";
+$.lang.data["net.quorrabot.hosthandler.autohost.enabled"] = "Autohost has now been enabled";
+$.lang.data["net.quorrabot.hosthandler.autohost.disabled"] = "Autohost has now been disabled";
 
 
 //donationHandler.js 
@@ -505,22 +512,11 @@ $.lang.data["net.quorrabot.donationhandler.donation-toggle-on"] = "Tip alerts ha
 $.lang.data["net.quorrabot.donationhandler.donation-toggle-off"] = "Tip alerts have been disabled.";
 $.lang.data["net.quorrabot.donationhandler.donation-saymsg-off"] = "Tip messages will no longer be shown.";
 $.lang.data["net.quorrabot.donationhandler.donation-saymsg-on"] = "Tip messages will now be shown in chat.";
-$.lang.data["net.quorrabot.donationhandler.new-donation"] = "/me $1 has tipped $2!";
-$.lang.data["net.quorrabot.donationhandler.new-donation-with-message"] = "/me $1 has tipped $2! Message: $3";
-$.lang.data["net.quorrabot.donationhandler.new-donation-text"] = "/me has received a tip: $1!";
+$.lang.data["net.quorrabot.donationhandler.new-donation"] = "$1 has donated $2!";
+$.lang.data["net.quorrabot.donationhandler.new-donation-with-message"] = "$1 has donated $2! Message: $3";
+$.lang.data["net.quorrabot.donationhandler.new-donation-text"] = " /me has received a tip: $1!";
+
 $.lang.data["net.quorrabot.donationhandler.donationalert-usage"] = "!donationalert filepath | filepath (/path/to/file.txt) | toggle | type (twitchalerts|streamtip|text)";
-
-//discordHandler.js
-$.lang.data["net.quorrabot.discord.streamonline"] = "@everyone (streamer) is live! (title) | (game) (twitchchannel)";
-$.lang.data["net.quorrabot.discord.nomessage"] = "You did not specify a message. Usage: !discordchat say (message)";
-$.lang.data["net.quorrabot.discord.messagesent"] = "Discord message sent successfully.";
-$.lang.data["net.quorrabot.discord.usage"] = "No action specified. Usage: !discordchat say (message)";
-$.lang.data["net.quorrabot.discord.announce.nooption"] = "No option specified. Usage: !discordchat announce true/false";
-$.lang.data["net.quorrabot.discord.announce.enabled"] = "Bot will now announce in discord when the stream goes live!";
-$.lang.data["net.quorrabot.discord.announce.disabled"] = "Bot will no longer announce in discord when the stream goes live.";
-$.lang.data["net.quorrabot.discord.custommessage.set"] = "Custom discord announcement message has been set!";
-$.lang.data["net.quorrabot.discord.custommessage.err.nomsg"] = "You did not specify a message. Usage: !discordchat announcemsg (message). Tags available: (streamer)/(caster),(twitchchannel),(game),(title)";
-
 
 //subscribeHandler.js
 $.lang.data["net.quorrabot.subscribeHandler.sub-toggle-off"] = "Subscribers will no longer be thanked upon subscribing.";
@@ -537,7 +533,18 @@ $.lang.data["net.quorrabot.subscribeHandler.auto-submode-timer-off"] = "Automate
 $.lang.data["net.quorrabot.subscribeHandler.auto-submode-timer-404"] = "The minimum auto submode interval allowed is 30 minutes.";
 $.lang.data["net.quorrabot.subscribeHandler.auto-sub-mode-interval-set"] = "Auto submode interval set! This will only work while the stream is online.";
 $.lang.data["net.quorrabot.subscribeHandler.first-message"] = "(name) just subscribed!";
-$.lang.data["net.quorrabot.subscribeHandler.resub-message"] = "(name) just resubscribed! Their all time sub count is (months) months!";
+$.lang.data["net.quorrabot.subscribeHandler.resub-message"] = "(name) just resubscribed for (months) months in a row! fhaeBae fhaeBae fhaeBaeShag";
+
+//discordHandler.js
+$.lang.data["net.quorrabot.discord.streamonline"] = "@everyone (streamer) is live! (title) | (game) (twitchchannel)";
+$.lang.data["net.quorrabot.discord.nomessage"] = "You did not specify a message. Usage: !discordchat say (message)";
+$.lang.data["net.quorrabot.discord.messagesent"] = "Discord message sent successfully.";
+$.lang.data["net.quorrabot.discord.usage"] = "No action specified. Usage: !discordchat say (message)";
+$.lang.data["net.quorrabot.discord.announce.nooption"] = "No option specified. Usage: !discordchat announce true/false";
+$.lang.data["net.quorrabot.discord.announce.enabled"] = "Bot will now announce in discord when the stream goes live!";
+$.lang.data["net.quorrabot.discord.announce.disabled"] = "Bot will no longer announce in discord when the stream goes live.";
+$.lang.data["net.quorrabot.discord.custommessage.set"] = "Custom discord announcement message has been set!";
+$.lang.data["net.quorrabot.discord.custommessage.err.nomsg"] = "You did not specify a message. Usage: !discordchat announcemsg (message). Tags available: (streamer)/(caster),(twitchchannel),(game),(title)";
 
 //8ballCommand.js
 $.lang.data["net.quorrabot.8ballCommand.proper-usage"] = "ask the magic-8ball a question with !8ball";
@@ -573,7 +580,10 @@ $.lang.data["net.quorrabot.8ballCommand.answer-29"] = "Most likely.";
 $.lang.data["net.quorrabot.8ballCommand.answer-30"] = "Outlook good.";
 $.lang.data["net.quorrabot.8ballCommand.answer-31"] = "Yes.";
 $.lang.data["net.quorrabot.8ballCommand.answer-32"] = "Signs point to yes.";
-$.lang.data["net.quorrabot.8ballCommand.answer-33"] = "This is not the Bot you're looking for ༼ﾉ۞⌂۞༽ﾉ";
+$.lang.data["net.quorrabot.8ballCommand.answer-34"] = "This is not the Bot you're looking for ༼ﾉ۞⌂۞༽ﾉ";
+$.lang.data["net.quorrabot.8ballCommand.answer-35"] = "Penis";
+$.lang.data["net.quorrabot.8ballCommand.answer-36"] = "Forget it, just go for a spaff";
+$.lang.data["net.quorrabot.8ballCommand.answer-37"] = "Spaff too strong. Try something else.";
 
 //quoteCommand.js
 $.lang.data["net.quorrabot.quotecommand.error-no-quotes"] = "There are no quotes at this time, or the specified quote does not exist.";
@@ -603,7 +613,7 @@ $.lang.data["net.quorrabot.highlightcommand.error-stream-offline"] = "Stream is 
 $.lang.data["net.quorrabot.highlightcommand.highlight-saved"] = "Highlight saved! '$1' @ $2";
 $.lang.data["net.quorrabot.highlightcommand.highlight-cleared"] = "All Highlights have been erased!";
 $.lang.data["net.quorrabot.highlightcommand.highlight-recent-5"] = "Here are your 5 most recent highlights:";
-$.lang.data["net.quorrabot.highlightcommand.highlight-see-list"] = "To view the full list, please see highlights.txt in the bot's \"web\" folder.";
+$.lang.data["net.quorrabot.highlightcommand.highlight-see-list"] = "There could be more. Bother Spoider.";
 
 //lastseenCommand.js 
 $.lang.data["net.quorrabot.lastseencommand.usage"] = "Usage: !lastseen (username)";
@@ -758,7 +768,7 @@ $.lang.data["net.quorrabot.bankheistsystem.new-value-for-user-error-404"] = "Act
 $.lang.data["net.quorrabot.bankheistsystem.min-to-join"] = " minute(s) remaining to join!";
 
 //streamCommand.js 
-$.lang.data["net.quorrabot.streamcommand.stream-offline"] = "Stream is offline.";
+$.lang.data["net.quorrabot.streamcommand.stream-offline"] = "Stream is offline. Fool.";
 $.lang.data["net.quorrabot.streamcommand.stream-online"] = "Stream is online!";
 $.lang.data["net.quorrabot.streamcommand.total-viewers"] = "There are currently $1 viewers!";
 $.lang.data["net.quorrabot.streamcommand.current-game"] = "Current game: $1";
@@ -784,22 +794,22 @@ $.lang.data["net.quorrabot.streamcommand.unhost-set-success"] = "You are no long
 
 
 //rouletteCommand.js 
-$.lang.data["net.quorrabot.roulettecommand-Win1"] = "The trigger is pulled, and the revolver clicks. $1 has lived to survive roulette!";
-$.lang.data["net.quorrabot.roulettecommand-Win2"] = "The trigger is pulled, but the revolver malfunctions! $1 is lucky, and live's another day!";
-$.lang.data["net.quorrabot.roulettecommand-Win3"] = "The trigger is pulled, and the revolver clicks. $1 has lived to survive roulette!";
-$.lang.data["net.quorrabot.roulettecommand-Win4"] = "The trigger is pulled, but the revolver malfunctions! $1 is lucky, and live's another day!";
-$.lang.data["net.quorrabot.roulettecommand-Win5"] = "The trigger is pulled, and the revolver clicks. $1 has lived to survive roulette!";
-$.lang.data["net.quorrabot.roulettecommand-lost1"] = "The trigger is pulled, and the revolver fires! $1 lies dead in the chat.";
-$.lang.data["net.quorrabot.roulettecommand-lost2"] = "The trigger is pulled, and $1 loses their head!";
-$.lang.data["net.quorrabot.roulettecommand-lost3"] = "$1's finger slides over the trigger, $1 crashes to the floor like a sack of flour!";
-$.lang.data["net.quorrabot.roulettecommand-lost4"] = "The trigger is pulled, and the hand-cannon goes off with a roar! $1 lies dead in the chat.";
-$.lang.data["net.quorrabot.roulettecommand-lost5"] = "The hammer drops, and the .44 fires! $1 is now dead in the chat.";
-$.lang.data["net.quorrabot.roulettecommand-lost6"] = "The trigger is pulled, and the revolver fires! $1 is now just a blood splatter on the wall.";
-$.lang.data["net.quorrabot.roulettecommand-lost7"] = "The trigger is pulled, and the revolver fires! $1 ended their miserable life.";
-$.lang.data["net.quorrabot.roulettecommand-lostmod1"] = "The trigger is pulled, but $1 has been saved by magic!";
-$.lang.data["net.quorrabot.roulettecommand-lostmod2"] = "The trigger is pulled, but $1 has lived due to not having anything in his skull to begin with.";
-$.lang.data["net.quorrabot.roulettecommand-lostmod3"] = "The trigger is pulled, but $1's skull was so thick the bullet could not penetrate it.";
-$.lang.data["net.quorrabot.roulettecommand-lostmod4"] = "The trigger is pulled, but $1 stopped space and time and dodged the bullet!";
+$.lang.data["net.quorrabot.roulettecommand-Win1"] = "The trigger is pulled, and the revolver clicks.";
+$.lang.data["net.quorrabot.roulettecommand-Win2"] = "The trigger is pulled, but the revolver clicks.";
+$.lang.data["net.quorrabot.roulettecommand-Win3"] = "The trigger is pulled, and the revolver clicks.";
+$.lang.data["net.quorrabot.roulettecommand-Win4"] = "The trigger is pulled, but the revolver clicks.";
+$.lang.data["net.quorrabot.roulettecommand-Win5"] = "The trigger is pulled, and the revolver clicks. Damn.";
+$.lang.data["net.quorrabot.roulettecommand-lost1"] = "The trigger is pulled, and the revolver fires! RIP.";
+$.lang.data["net.quorrabot.roulettecommand-lost2"] = "The trigger is pulled, and $1 loses their spaff!";
+$.lang.data["net.quorrabot.roulettecommand-lost3"] = "Spaff is deadly you know.";
+$.lang.data["net.quorrabot.roulettecommand-lost4"] = "The trigger is pulled, and the .500 nitro goes off with a roar!";
+$.lang.data["net.quorrabot.roulettecommand-lost5"] = "The hammer drops, and the .500 nitro fires!";
+$.lang.data["net.quorrabot.roulettecommand-lost6"] = "The trigger is pulled, and the revolver fires!";
+$.lang.data["net.quorrabot.roulettecommand-lost7"] = "The trigger is pulled, and the revolver fires!";
+$.lang.data["net.quorrabot.roulettecommand-lostmod1"] = "The trigger is pulled, but blackmagic witchery saved the target!";
+$.lang.data["net.quorrabot.roulettecommand-lostmod2"] = "The trigger is pulled, but has lived due to not having anything in his skull to begin with.";
+$.lang.data["net.quorrabot.roulettecommand-lostmod3"] = "The trigger is pulled, but the bullet was stopped by spaff.";
+$.lang.data["net.quorrabot.roulettecommand-lostmod4"] = "The trigger is pulled, but space and time stopped the bullet was dodged!";
 $.lang.data["net.quorrabot.roulettecommand-lostmod5"] = "The trigger is pulled, but $1 did not die from the bullet, the bullet died from him.";
 $.lang.data["net.quorrabot.roulettecommand-timeout-time"] = "the !roulette timeout has been set to $1 seconds!";
 
@@ -885,7 +895,7 @@ $.lang.data["net.quorrabot.musicplayer.error-poll-opened"] = "A poll to skip a s
 $.lang.data["net.quorrabot.ticketrafflesystem.usage"] = "Ticket Raffle Commands: !traffle [open / close / repick / subscriberluck]";
 $.lang.data["net.quorrabot.ticketrafflesystem.no-raffle-opened"] = "There is no ticket raffle opened.";
 $.lang.data["net.quorrabot.ticketrafflesystem.winner"] = "/me Ticket Raffle ended, winner is $1!";
-$.lang.data["net.quorrabot.ticketrafflesystem.no-winner"] = "/me Ticket Raffle ended, no one entered.";
+$.lang.data["net.quorrabot.ticketrafflesystem.no-winner"] = "/me Ticket Raffle ended, no one entered you fool.";
 $.lang.data["net.quorrabot.ticketrafflesystem.winner-repick"] = "/me [Ticket Raffle] there is no winner.";
 $.lang.data["net.quorrabot.ticketrafflesystem.no-winner-repick"] = "/me Ticket Raffle winner is, $1!";
 $.lang.data["net.quorrabot.ticketrafflesystem.raffle-already-opened"] = "A ticket raffle is already opened.";
@@ -904,13 +914,13 @@ $.lang.data["net.quorrabot.ticketrafflesystem.auto-close2"] = "/me There is $1 m
 
 // ticketsystem.js
 $.lang.data["net.quorrabot.ticketsystem.usage"] = "usage: !tickets (amount) - Tickets currently cost $1 points.";
-$.lang.data["net.quorrabot.ticketsystem.need-more-points"] = "you don't have enough points to buy that many tickets.";
-$.lang.data["net.quorrabot.ticketsystem.max-tickets-allowed"] = "you can only buy up to $1 ticket(s) in this ticket raffle.";
-$.lang.data["net.quorrabot.ticketsystem.error-already-in-raffle"] = "you already entered this ticket raffle.";
-$.lang.data["net.quorrabot.ticketsystem.buy-success"] = "you bought $1 ticket(s)";
+$.lang.data["net.quorrabot.ticketsystem.need-more-points"] = "you don't have enough Fhaems.";
+$.lang.data["net.quorrabot.ticketsystem.max-tickets-allowed"] = "Max entries - $1.";
+$.lang.data["net.quorrabot.ticketsystem.error-already-in-raffle"] = "you already entered, Fool.";
+$.lang.data["net.quorrabot.ticketsystem.buy-success"] = "You entered";
 $.lang.data["net.quorrabot.ticketsystem.cost-usage"] = "!ticket cost (amount)";
-$.lang.data["net.quorrabot.ticketsystem.new-cost"] = "Tickets now will cost $1 $2";
-$.lang.data["net.quorrabot.ticketsystem.total-entries"] = "There are currently $1 total entrie(s).";
+$.lang.data["net.quorrabot.ticketsystem.new-cost"] = "Entries now will cost $1 $2";
+$.lang.data["net.quorrabot.ticketsystem.total-entries"] = "$1 total entries.";
 
 //slotMachineCommand.js
 $.lang.data["net.quorrabot.slotmachine-win"] = "$1 \u2726 $2 \u2726 $3 $4 won $5 $6! $7";
@@ -1009,9 +1019,9 @@ $.lang.data["net.quorrabot.twitterhandler.auto-stream-tweet-disabled"] = "Stream
 $.lang.data["net.quorrabot.twitterhandler.tweet-successful"] = "Tweet sent successfully.";
 
 //gamewispHandler.js
-$.lang.data["net.quorrabot.gamewisphandler.benefits"] = "/me $1 has just subscribed to $2 via GameWisp2!";
-$.lang.data["net.quorrabot.gamewisphandler.subscribe"] = "/me $1 has just subscribed to Tier $2 via GameWisp! Their all time sub count is $3 months!";
-$.lang.data["net.quorrabot.gamewisphandler.anniversary"] = "/me $1 has just resubscribed to Tier $2 via GameWisp! Their all time sub count is $3 months!";
+$.lang.data["net.quorrabot.gamewisphandler.benefits"] = "/me Thanks for subscribbling to our GameWisp, $1!";
+$.lang.data["net.quorrabot.gamewisphandler.subscribe"] = "/me Thanks for subscribbling to our GameWisp, $1!";
+$.lang.data["net.quorrabot.gamewisphandler.anniversary"] = "/me Thanks for resubscribbling to our GameWisp, $1! Happy $3 month anniversary!";
 
 //soundBoardSystem.js
 $.lang.data["net.quorrabot.soundboard.usage"] = "usage: !soundboard [play / list / customcommand / togglemessages]";
@@ -1031,9 +1041,25 @@ $.lang.data["net.quorrabot.soundboard.customcommand.remove.usage"] = "Usage: !so
 $.lang.data["net.quorrabot.soundboard.customcommand.remove.error.404"] = "that command does not exists.";
 $.lang.data["net.quorrabot.soundboard.customcommand.remove.success"] = "command !$1 has been removed.";
 
-//consoleCommand.js
-$.lang.data["net.quorrabot.consolecommand.consolemessage"] = "(caster) is currently playing on (console).";
-$.lang.data["net.quorrabot.consolecommand.consolemsg-set"] = "The current console message has been set to $1.";
-$.lang.data["net.quorrabot.consolecommand.console-set"] = "The current console being used has been set to $1";
-$.lang.data["net.quorrabot.consolecommand.console-others-set"] = "The streamer's additional consoles have been set to: $1";
-$.lang.data["net.quorrabot.consolecommand.console-others-clear"] = "The streamer's additional consoles list has been cleared.";
+//seppukuCommand.js 
+$.lang.data["net.quorrabot.seppukucommand-Win1"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-Win2"] = "Honor is still lost.";
+$.lang.data["net.quorrabot.seppukucommand-Win3"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-Win4"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-Win5"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-lost1"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-lost2"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-lost3"] = "Honor is still lost.";
+$.lang.data["net.quorrabot.seppukucommand-lost4"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-lost5"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-lost6"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-lost7"] = "You have returned honor to the family.";
+$.lang.data["net.quorrabot.seppukucommand-lostmod1"] = "You are not allowed this honor.";
+$.lang.data["net.quorrabot.seppukucommand-lostmod2"] = "This won't change a thing.";
+$.lang.data["net.quorrabot.seppukucommand-lostmod3"] = "Immortal scum.";
+$.lang.data["net.quorrabot.seppukucommand-lostmod4"] = "Go have a spaff instead and get on with your life";
+$.lang.data["net.quorrabot.seppukucommand-lostmod5"] = "You for real?";
+$.lang.data["net.quorrabot.seppukucommand-timeout-time"] = "the !seppuku timeout has been set to $1 seconds!";
+
+//saveCommand.js
+$.lang.data["net.quorrabot.lang.sayusage"] = "Lrn to command fool.";

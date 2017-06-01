@@ -54,7 +54,7 @@ $.on('command', function(event) {
     var argsString = event.getArguments().trim();
     var args = event.getArgs();
     
-    if (command.equalsIgnoreCase("top10")) {
+    if (command.equalsIgnoreCase("top5")) {
         if (!$.moduleEnabled("./systems/pointSystem.js")) {
             $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.top10.points-disabled"));
             return;
@@ -74,7 +74,7 @@ $.on('command', function(event) {
 
         topComplete.sort($.sortNumber);
 
-        for (var i = topComplete.length - 1; i >= topComplete.length - 10; i--) {
+        for (var i = topComplete.length - 1; i >= topComplete.length - 5; i--) {
             if (topComplete[i] != undefined) {
                 topTen.push([topComplete[i][0], topComplete[i][1]]);
             }

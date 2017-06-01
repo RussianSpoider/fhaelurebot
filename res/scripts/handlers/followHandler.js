@@ -2,7 +2,7 @@ $.FollowHandler = {
     FollowMessage: ($.inidb.get('settings', 'followmessage') ? $.inidb.get('settings', 'followmessage') : $.lang.get("net.quorrabot.followHandler.follows-message")),
     FollowToggle: ($.inidb.get('settings', 'followannounce') ? $.inidb.get('settings', 'followannounce') : "true"),
     FollowTrainToggle: ($.inidb.get('settings', 'followtraintoggle') ? $.inidb.get('settings', 'followtraintoggle') : "true"),
-    FollowReward: (parseInt($.inidb.get('settings', 'followreward')) ? parseInt($.inidb.get('settings', 'followreward')) : 100),
+    FollowReward: (parseInt($.inidb.get('settings', 'followreward')) ? parseInt($.inidb.get('settings', 'followreward')) : 0),
     FollowTrain: 0,
     LastFollow: 0,
 }
@@ -22,9 +22,9 @@ $.getFollowAge = function (user, channel) {
             year: 31536000,
             month: 2592000,
             day: 86400,
-            hour: 3600,
-            minute: 60,
-            second: 1
+//            hour: 3600,
+//            minute: 60,
+//            second: 1
         };
 
         Object.keys(s).forEach(function(key){
@@ -52,6 +52,9 @@ $.getUserFollowed = function (user, channel) {
     }
 };
 
+$.on('twitchFollowsInitialized', function (event) {
+    $.followannounce = "loaded";
+});
 
 $.on('twitchFollow', function (event) {
     var follower = event.getFollower().toString();
@@ -167,26 +170,26 @@ $.on('command', function (event) {
         }
         $.getUserFollowed($.username.resolve(args[0]), channel);
         return;
-    } else if (command.equalsIgnoreCase('follow')) {
+    } else if (command.equalsIgnoreCase('streamer')) {
         if (!$.isModv3(sender, event.getTags())) {
             $.say($.getWhisperString(sender) + $.modmsg);
             return;
         } else if (args.length == 0) {
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.shoutout-usage"));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.streamer-usage"));
             return;
         }
         var caster = $.username.resolve(args[0]);
         
         if($.getUserExists(caster)==true) {
             if ($.isOnline(caster)) {
-                $.say($.lang.get("net.quorrabot.followHandler.shoutout-online", caster, $.getGame(caster)));
+                $.say($.lang.get("net.quorrabot.followHandler.streamer-online", caster, $.getGame(caster)));
                 return;
             } else {
-                $.say($.lang.get("net.quorrabot.followHandler.shoutout-offline", caster, $.getGame(caster)));
+                $.say($.lang.get("net.quorrabot.followHandler.streamer-offline", caster, $.getGame(caster)));
                 return;
             }
         } else {
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.shoutout-not-exist", caster));
+            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.followHandler.streamer-not-exist", caster));
             return;
         }
         

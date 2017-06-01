@@ -1275,15 +1275,13 @@ $.on('ircChannelMessage', function(event) {
         if (message.contains($.inidb.get("autobanphrases", keys[i]).toLowerCase()) && !$.isModv3(sender, event.getTags())) {
             $.logEvent("chatModerator.js", 1123, "Autoban triggered by " + username + ". Message: " + omessage);
             banUser(sender); 
-            $.say($.getWhisperString(sender) + " -> " + autobanmessage + i); 
         }
     }
 
     for (var i = 0; i < keyss.length; i++) {
         if (message.contains($.inidb.get("autopurgephrases", keyss[i]).toLowerCase()) && !$.isModv3(sender, event.getTags())) {
             $.logEvent("chatModerator.js", 1123, "Autopurge triggered by " + username + ". Message: " + omessage);
-            timeoutUser(sender, 1);
-            $.say($.getWhisperString(sender) + " -> " + autopurgemessage + i); 
+            setTimeout(timeoutUser(sender, 1200),250);
         }
     }
     
