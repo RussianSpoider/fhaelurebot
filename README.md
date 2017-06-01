@@ -1,4 +1,4 @@
-#Fhaelurebot
+# Fhaelurebot
 Command list found here
 https://docs.google.com/document/d/1_-1vBZvJ7Ic9XbSz8SQrvqNc37E_kErPQsiTuNiRZPY/pub
 
