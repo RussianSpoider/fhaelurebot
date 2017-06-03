@@ -52,6 +52,10 @@ $.on('command', function (event) {
         ball.push($.lang.get("net.quorrabot.8ballCommand.answer-31"));
         ball.push($.lang.get("net.quorrabot.8ballCommand.answer-32"));
         ball.push($.lang.get("net.quorrabot.8ballCommand.answer-33"));
+        ball.push($.lang.get("net.quorrabot.8ballCommand.answer-34"));
+        ball.push($.lang.get("net.quorrabot.8ballCommand.answer-35"));
+        ball.push($.lang.get("net.quorrabot.8ballCommand.answer-36"));
+        ball.push($.lang.get("net.quorrabot.8ballCommand.answer-37"));
 
         do {
             b = $.randElement(ball);

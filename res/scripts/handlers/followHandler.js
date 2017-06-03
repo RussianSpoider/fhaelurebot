@@ -170,7 +170,7 @@ $.on('command', function (event) {
         }
         $.getUserFollowed($.username.resolve(args[0]), channel);
         return;
-    } else if (command.equalsIgnoreCase('streamer')) {
+    } else if (command.equalsIgnoreCase('follow')) {
         if (!$.isModv3(sender, event.getTags())) {
             $.say($.getWhisperString(sender) + $.modmsg);
             return;

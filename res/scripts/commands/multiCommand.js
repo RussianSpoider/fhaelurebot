@@ -11,7 +11,7 @@ $.on('command', function(event) {
         }
 
         if (args.length == 0 && $.inidb.get('multicommand', 'lastmulti')) {
-            $.say("http://kadgar.net/live/" + $.channelName.toLowerCase() + "/" + $.inidb.get('multicommand', 'lastmulti'));
+            $.say("Check out the multi-stream here: https://multistre.am/" + $.channelName.toLowerCase() + "/" + $.inidb.get('multicommand', 'lastmulti'));
             return;
         } else if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             $.say($.getWhisperString(sender) + "Usage: !multi set (Other Twitch Channel) - set one default channel to be used for normal users when using the command !multi, and the auto timer. '!multi del' to remove it.");
@@ -61,18 +61,14 @@ $.on('command', function(event) {
         } else {
             
             if(args[0]!=null) {
-                $.say($.getWhisperString(sender) + "Usage: !multi set (Other Twitch Channel) - set one default channel to be used for normal users when using the command !multi, and the auto timer. '!multi del' to remove it.");
-                $.say($.getWhisperString(sender) + "Usage: !multi timer true/false - enable the auto timer to repeat the default multi channel. Only works if the channel is online."); 
-                setTimeout(function() {
-                $.say($.getWhisperString(sender) + "Usage: !multi interval (time) - set the interval for the auto timer. minimum is 5 minutes. default is 5 minutes.");
-                }, 1000);
+                $.say($.getWhisperString(sender) + "Lrn 2 Command Fool.");
                 return;
             }
             
             var multi = $.inidb.get('multicommand', 'lastmulti');
             
             if( multi!=null) {
-                $.say("http://kadgar.net/live/" + $.channelName.toLowerCase() + "/" + multi);
+                $.say("Check out the multi-stream here: https://multistre.am/" + $.channelName.toLowerCase() + "/" + multi);
             } else {
                 $.say("No current multi-stream link set.");
             }
@@ -94,7 +90,7 @@ $.timer.addTimer("./commands/multiCommand.js", "sellouttimer", true, function() 
     $.mctimer = $.inidb.get('multicommand', 'timer');
     if ($.mctimer!=null && $.mctimer.equalsIgnoreCase("true")) {
         if ($.inidb.get('multicommand', 'lastmulti')) {
-            $.say("http://kadgar.net/live/" + $.channelName.toLowerCase() + "/" + $.inidb.get('multicommand', 'lastmulti'));
+            $.say("Check out the multi-stream here: https://multistre.am/" + $.channelName.toLowerCase() + "/" + $.inidb.get('multicommand', 'lastmulti'));
             return;
         }
     }

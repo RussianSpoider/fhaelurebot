@@ -580,6 +580,7 @@ $.lang.data["net.quorrabot.8ballCommand.answer-29"] = "Most likely.";
 $.lang.data["net.quorrabot.8ballCommand.answer-30"] = "Outlook good.";
 $.lang.data["net.quorrabot.8ballCommand.answer-31"] = "Yes.";
 $.lang.data["net.quorrabot.8ballCommand.answer-32"] = "Signs point to yes.";
+$.lang.data["net.quorrabot.8ballCommand.answer-33"] = "Fool.";
 $.lang.data["net.quorrabot.8ballCommand.answer-34"] = "This is not the Bot you're looking for ༼ﾉ۞⌂۞༽ﾉ";
 $.lang.data["net.quorrabot.8ballCommand.answer-35"] = "Penis";
 $.lang.data["net.quorrabot.8ballCommand.answer-36"] = "Forget it, just go for a spaff";
@@ -1061,5 +1062,9 @@ $.lang.data["net.quorrabot.seppukucommand-lostmod4"] = "Go have a spaff instead 
 $.lang.data["net.quorrabot.seppukucommand-lostmod5"] = "You for real?";
 $.lang.data["net.quorrabot.seppukucommand-timeout-time"] = "the !seppuku timeout has been set to $1 seconds!";
 
-//saveCommand.js
-$.lang.data["net.quorrabot.lang.sayusage"] = "Lrn to command fool.";
+//consoleCommand.js
+$.lang.data["net.quorrabot.consolecommand.consolemessage"] = "(caster) is currently playing on (console).";
+$.lang.data["net.quorrabot.consolecommand.consolemsg-set"] = "The current console message has been set to $1.";
+$.lang.data["net.quorrabot.consolecommand.console-set"] = "The current console being used has been set to $1";
+$.lang.data["net.quorrabot.consolecommand.console-others-set"] = "The streamer's additional consoles have been set to: $1";
+$.lang.data["net.quorrabot.consolecommand.console-others-clear"] = "The streamer's additional consoles list has been cleared.";
