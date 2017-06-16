@@ -187,7 +187,9 @@ public class HTTPSServer {
             }
 
             if (requestMethod.equals("GET")) {
-                if (uriPath.startsWith("/inistore")) {
+                if (uriPath.contains("..")) {
+                    sendHTMLError(403, "Invalid URL", exchange);
+                } else if (uriPath.startsWith("/inistore")) {
                     handleIniStore(uriPath, exchange, hasPassword);
                 } else if (uriPath.startsWith("/dbquery")) {
                     handleDBQuery(uriPath, uriQueryList, exchange, hasPassword);
