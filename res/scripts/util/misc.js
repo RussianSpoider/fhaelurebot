@@ -77,7 +77,7 @@ function sleep(milliseconds) {
 
 
 $.replaceAll = function (string, find, replace) {
-    if (find.equals(replace)) {
+    if (replace.indexOf(find) >= 0) {
         return string;
     }
 
