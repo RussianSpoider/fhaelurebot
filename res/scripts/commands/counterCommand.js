@@ -13,7 +13,7 @@ $.on('command', function(event) {
 	}
 	
 	if(counter.equalsIgnoreCase("addcounter") ) {
-		if (!$.isMod(sender)) {
+		if (!$.isMod(sender)) { (!$.isModv3(sender, event.getTags()))
 			$.say($.modmsg);
 			return;
 		}

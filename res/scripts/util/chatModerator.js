@@ -49,10 +49,6 @@ for (i = 0; i < lines.length; i++) {
 
 function issueCommand(command) {
     $.say(command);
-    setTimeout(function() {
-        $.say(command);
-        $.say(command);
-    }, 1800);
 }
 
 function banUser (user) {
@@ -491,7 +487,7 @@ $.on('command', function(event) {
             
             unbanUser (args[0]);
             
-            $.say ($.lang.get("net.quorrabot.chatmoderator.unban", $.username.resolve(args[0])));
+//            $.say ($.lang.get("net.quorrabot.chatmoderator.unban", $.username.resolve(args[0])));
         } else {
             $.say ($.getWhisperString(sender) + $.modmsg);
         }
@@ -1275,15 +1271,13 @@ $.on('ircChannelMessage', function(event) {
         if (message.contains($.inidb.get("autobanphrases", keys[i]).toLowerCase()) && !$.isModv3(sender, event.getTags())) {
             $.logEvent("chatModerator.js", 1123, "Autoban triggered by " + username + ". Message: " + omessage);
             banUser(sender); 
-            $.say($.getWhisperString(sender) + " -> " + autobanmessage + i); 
         }
     }
 
     for (var i = 0; i < keyss.length; i++) {
         if (message.contains($.inidb.get("autopurgephrases", keyss[i]).toLowerCase()) && !$.isModv3(sender, event.getTags())) {
             $.logEvent("chatModerator.js", 1123, "Autopurge triggered by " + username + ". Message: " + omessage);
-            timeoutUser(sender, 1);
-            $.say($.getWhisperString(sender) + " -> " + autopurgemessage + i); 
+            setTimeout(timeoutUser(sender, 1200),250);
         }
     }
     

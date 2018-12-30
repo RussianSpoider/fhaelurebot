@@ -180,9 +180,7 @@ $.on('command', function (event) {
             return;
         }
 
-        var playerIdFetch = new JSONObject($.fetchData($.apiURL + "/players/search/" + avalue));
-        var playerId = playerIdFetch.getJSONArray("data").getJSONObject(0).getInt("id");
-        var playerInfo = new JSONObject($.fetchData($.apiURL + "/players/" + playerId));
+        var playerInfo = new JSONObject($.fetchData($.apiURL + "/players/" + avalue));
         if (playerInfo.toString().indexOf("404") != -1) {
             $.say($.getWhisperString(sender) + "The Epic account you specified does not exist.");
             return;
@@ -226,7 +224,7 @@ $.on('command', function (event) {
             kda = 0;
         } else {
             kda = (kills + assists) / deaths;
-            kda = kda.toString().split(".")[0] + "." + kda.toString().split(".")[1].substring(0, 2);
+            kda = kda.toString().split(".")[1].substring(0, 2);
         }
         var winloss;
         if (wins == 0 && gamesplayed == 0) {
@@ -299,7 +297,7 @@ $.on('command', function (event) {
                     + " Last Season: [" + lastSeasonElo.toString() + " | " + $.getDivision(lastSeasonElo) + "]"
                     + " Rank: [" + rank + " (" + percentile.toFixed(3) + "%)]"
                     + " Win/Loss Ratio: [" + wins + " - " + (gamesplayed - wins) + " (" + winloss + "%)]"
-                    + " KDA: [" + kills + " / " + deaths + " / " + assists + " (" + kda + ")]"
+                    + " KDA: [" + kills + " / " + deaths + " / " + assists + " (" + kda + "%)]"
                     + " Towers Destroyed: [" + towers + " (" + towerspergame.toFixed(2) + "/game)]"
                     + $.herostring
                     );
@@ -326,7 +324,7 @@ $.on('command', function (event) {
         if (action.equalsIgnoreCase("kda")) {
 
             $.say("/me " + playerData.getString("name")
-                    + " KDA: [" + kills + " / " + deaths + " / " + assists + " (" + kda + ")]"
+                    + " KDA: [" + kills + " / " + deaths + " / " + assists + " (" + kda + "%)]"
                     );
         }
         if (action.equalsIgnoreCase("towers")) {

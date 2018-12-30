@@ -2,9 +2,7 @@ $.HostHandler = {
     hostreward: ($.inidb.get('settings', 'hostreward') ? $.inidb.get('settings', 'hostreward') : 20),
     hosttimeout: ($.inidb.get('settings', 'hosttimeout') ? $.inidb.get('settings', 'hosttimeout') : 60 * 60 * 1000),
     hostMessage: ($.inidb.get('settings', 'hostmessage') ? $.inidb.get('settings', 'hostmessage') : $.lang.get("net.quorrabot.hosthandler.default-host-welcome-message")),
-    autoHostMessage: ($.inidb.get('settings', 'autohostmessage') ? $.inidb.get('settings', 'autohostmessage') : $.lang.get("net.quorrabot.hosthandler.default-autohost-welcome-message")),
-    announceHosts: ($.inidb.get('settings', 'announce_hosts') ? $.inidb.get('settings', 'announce_hosts') : "true"),
-    announceAutoHosts: ($.inidb.get('settings', 'announce_autohosts') ? $.inidb.get('settings', 'announce_autohosts') : "true"),
+    announceHosts: (parseInt($.inidb.get('settings', 'announce_hosts')) ? parseInt($.inidb.get('settings', 'announce_hosts')) : "true"),
     hostlist: [],
     firstLaunch: true,
 };
@@ -15,9 +13,7 @@ $.isHostUser = function (user) {
 
 $.on('twitchHosted', function (event) {
     var username = $.username.resolve(event.getHoster().toString());
-    var s;
-    var msg = event.getMsg();
-    
+    var s = $.HostHandler.hostMessage;
     if ($.HostHandler.firstLaunch == true && $.HostHandler.announceHosts == "true") {
         $.HostHandler.announceHosts = "false";
         $.HostHandler.firstLaunch = false;
@@ -26,32 +22,14 @@ $.on('twitchHosted', function (event) {
             $.HostHandler.announceHosts = "true";
         }, 20000);
     }
-
-    if (msg.toLowerCase().indexOf("is now auto hosting") != -1) {
-        $.println("[AUTOHOST] " + msg);
-        s = $.HostHandler.autoHostMessage;
-        if ($.HostHandler.announceAutoHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js")) {
-            s = $.replaceAll(s, '(name)', username);
-            if ($.HostHandler.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
-                $.inidb.incr('points', username.toLowerCase(), $.HostHandler.hostreward);
-                s += " +" + $.getPointsString($.HostHandler.hostreward);
-            }
-            $.say("/me " + s);
+    if ($.HostHandler.announceHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js") && ($.HostHandler.hostlist[username.toLowerCase()] == null || $.HostHandler.hostlist[username.toLowerCase()] == undefined || $.HostHandler.hostlist[username.toLowerCase()] < System.currentTimeMillis())) {
+        s = $.replaceAll(s, '(name)', username);
+        if ($.HostHandler.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
+            $.inidb.incr('points', username.toLowerCase(), $.HostHandler.hostreward);
+            s += " +" + $.getPointsString($.HostHandler.hostreward);
         }
-    } else if (msg.toLowerCase().indexOf("is now hosting") != -1) {
-        $.println("[HOST] " + msg);
-        s = $.HostHandler.hostMessage;
-        if ($.HostHandler.announceHosts == "true" && $.moduleEnabled("./handlers/hostHandler.js")) {
-            s = $.replaceAll(s, '(name)', username);
-            if ($.HostHandler.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
-                $.inidb.incr('points', username.toLowerCase(), $.HostHandler.hostreward);
-                s += " +" + $.getPointsString($.HostHandler.hostreward);
-            }
-            $.say("/me " + s);
-        }
+        $.say("/me " + s);
     }
-
-
 
     $.HostHandler.hostlist[username.toLowerCase()] = System.currentTimeMillis() + $.HostHandler.hosttimeout;
 
@@ -76,6 +54,10 @@ $.on('twitchUnhosted', function (event) {
             break;
         }
     }
+});
+
+$.on('twitchHostsInitialized', function (event) {
+    $.hostannounce = "loaded";
 });
 
 $.on('command', function (event) {
@@ -142,34 +124,6 @@ $.on('command', function (event) {
             return;
         }
     }
-    if (command.equalsIgnoreCase("autohostmessage")) {
-        if (!$.isAdmin(sender)) {
-            $.say($.getWhisperString(sender) + $.adminmsg);
-            return;
-        }
-
-        if ($.strlen(argsString) == 0) {
-            var msg = $.HostHandler.autoHostMessage;
-            if ($.HostHandler.hostreward > 0 && $.moduleEnabled("./systems/pointSystem.js")) {
-                msg += " +" + $.getPointsString($.HostHandler.hostreward);
-            }
-            $.say($.getWhisperString(sender) + msg);
-
-            var s = $.lang.get("net.quorrabot.hosthandler.autohost-message-usage");
-
-            $.say($.getWhisperString(sender) + s);
-            return;
-
-        } else {
-            $.logEvent("hostHandler.js", 73, username + " changed the new auto-hoster message to: " + argsString);
-
-            $.inidb.set('settings', 'autohostmessage', argsString);
-            $.HostHandler.autoHostMessage = $.inidb.get('settings', 'autohostmessage');
-
-            $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohost-message-set-success"));
-            return;
-        }
-    }
 
     if (command.equalsIgnoreCase("hostcount")) {
         $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.host-count", $.HostHandler.hostlist.length));
@@ -194,32 +148,18 @@ $.on('command', function (event) {
         $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.hostannounce", status));
         return;
     }
-    if (command.equalsIgnoreCase("autohostannounce")) {
-        if (!$.isAdmin(sender)) {
-            $.say($.getWhisperString(sender) + $.adminmsg);
-            return;
-        }
-        var status;
-        if (args[0].toString().equalsIgnoreCase("true")) {
-            $.HostHandler.announceAutoHosts = "true";
-            $.inidb.set("settings", "announce_autohosts", "true");
-            status = "enabled";
-        } else {
-            $.HostHandler.announceAutoHosts = "false";
-            $.inidb.set("settings", "announce_autohosts", "false");
-            status = "disabled";
-        }
-        $.say($.getWhisperString(sender) + $.lang.get("net.quorrabot.hosthandler.autohostannounce", status));
-        return;
-    }
 
 });
 if ($.moduleEnabled('./handlers/hostHandler.js')) {
-    $.registerChatCommand("./handlers/hostHandler.js", "hostmessage", "mod");
-    $.registerChatCommand("./handlers/hostHandler.js", "hostreward", "mod");
-    $.registerChatCommand("./handlers/hostHandler.js", "hosttime", "mod");
-    $.registerChatCommand("./handlers/hostHandler.js", "hostannounce", "mod");
-    $.registerChatCommand("./handlers/hostHandler.js", "autohostannounce", "mod");
+    $.registerChatCommand('./handlers/hostHandler.js', 'addhost', 'admin');
+    $.registerChatCommand('./handlers/hostHandler.js', 'delhost', 'admin');
+    $.registerChatCommand('./handlers/hostHandler.js', 'listautohosts', 'admin');
+    $.registerChatCommand('./handlers/hostHandler.js', 'autohosttoggle', 'admin');
+    $.registerChatCommand('./handlers/hostHandler.js', 'autohosttime', 'admin');
+    $.registerChatCommand("./handlers/hostHandler.js", "hostmessage", "admin");
+    $.registerChatCommand("./handlers/hostHandler.js", "hostreward", "admin");
+    $.registerChatCommand("./handlers/hostHandler.js", "hosttime", "admin");
+    $.registerChatCommand("./handlers/hostHandler.js", "hostannounce", "admin");
     $.registerChatCommand("./handlers/hostHandler.js", "hostcount");
     $.registerChatCommand("./handlers/hostHandler.js", "hostlist");
 }

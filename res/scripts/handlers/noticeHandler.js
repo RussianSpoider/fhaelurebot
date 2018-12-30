@@ -51,7 +51,7 @@ $.on('command', function (event) {
     var action = args[0];
 
     if (command.equalsIgnoreCase('notice')) {
-        if (!$.isAdmin(sender)) {
+        if (!$.isModv3(sender)) {
             $.say($.getWhisperString(sender) + $.adminmsg);
             return;
         }

@@ -2,8 +2,8 @@ $.DonationHandler = {
     DonationType: ($.inidb.get('settings', 'donationtype') ? $.inidb.get('settings', 'donationtype') : "text"),
     CheckerStorePath: ($.inidb.get('settings', 'checker_storepath') ? $.inidb.get('settings', 'checker_storepath') : "./addons/donationchecker/latestdonation.txt"),
     DonationToggle: (parseInt($.inidb.get('settings', 'donation_toggle')) ? parseInt($.inidb.get('settings', 'donation_toggle')) : 1),
-    DonationTASayMsg: ($.inidb.get('settings', 'donationtasaymsg') ? $.inidb.get('settings', 'donationtasaymsg') : 0)
-};
+    DonationTASayMsg: ($.inidb.get('settings', 'donationtasaymsg') ? $.inidb.get('settings', 'donationtasaymsg') : 0),
+}
 
 
 $.on('command', function (event) {
@@ -137,12 +137,15 @@ $.on('command', function (event) {
                 //initiate date formatter
                 var df = new java.text.SimpleDateFormat( "yyyy-MM-dd'T'hh:mm:ssz" );
 
-                //parse created_at/date, which is received in GMT 
-                if(!$.tacreated.contains("Z")) {
-                    $.tacreated += "Z";
+                //parse created_at/date, which is received in GMT                
+                if ($.tacreated.endsWith( "Z" )) {
+                    $.tacreated = $.tacreated.substring( 0, $.tacreated.length() - 1) + "GMT-00:00";  
+                } else {
+                    var inset = 6;
+                    var s0 = $.tacreated.substring( 0, $.tacreated.length() - inset );
+                    var s1 = $.tacreated.substring( $.tacreated.length() - inset );
+                    $.tacreated = s0 + "GMT" + s1;     
                 }
-                $.tacreated = $.tacreated.replace('Z', 'GMT-00:00');
-                $.tacreated = $.tacreated.replace(' ', 'T');
 
                 var datefmt = new java.text.SimpleDateFormat("EEEE MMMM d, yyyy @ h:mm a z");
                 var gtf = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -171,6 +174,7 @@ $.on('command', function (event) {
             
             
             if ($.currDonation.toString() != $.inidb.get("settings", "lastdonation") && $.currDonation.toString() != "") {
+
                     $.inidb.set("settings", "lastdonation", $.readFile($.DonationHandler.CheckerStorePath));
                     if ($.DonationHandler.DonationToggle == 1) {
                         if($.DonationHandler.DonationType=="twitchalerts" | $.DonationHandler.DonationType=="streamtip" | $.DonationHandler.DonationType=="tipeeestream") {

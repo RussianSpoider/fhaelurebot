@@ -74,7 +74,7 @@ $.twitterAnnounce = function () {
 };
 
 if ($.moduleEnabled('./addonscripts/twitterHandler.js')) {
-    $.registerChatCommand("./addonscripts/twitterHandler.js", "tweet", "admin");
+    $.registerChatCommand("./addonscripts/twitterHandler.js", "twit", "admin");
     if ($.TwitterHandler.TweetStreamToggle == "1") {
         $.timer.addTimer("./addonscripts/twitterHandler.js", "twitterannounce", true, function () {
             $.twitterAnnounce();

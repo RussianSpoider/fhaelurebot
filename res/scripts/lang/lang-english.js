@@ -277,8 +277,8 @@ $.lang.data["net.quorrabot.addcommand.customapijson.err"] = "An error occurred p
 $.lang.data["net.quorrabot.addcommand.customapi.404"] = "Invalid parameters were specified for notice or command: $1";
 
 //raffleSystem.js
-$.lang.data["net.quorrabot.rafflesystem.start-success-followers-price"] = "/me [Raffle Started] Enter now for a chance to win [$1]! You need to be following to enter, and the fee to enter is $2. Enter the raffle by typing \"$3\".";
-$.lang.data["net.quorrabot.rafflesystem.start-success-followers"] = "/me [Raffle Started] Enter now for a chance to win [$1]! You need to be following to enter. Enter the raffle by typing \"$2\".";
+$.lang.data["net.quorrabot.rafflesystem.start-success-followers-price"] = "/me [Raffle Started] Enter now for a chance to win *something*! You need to be following to enter, and the fee to enter is $2. Enter the raffle by typing \"$3\".";
+$.lang.data["net.quorrabot.rafflesystem.start-success-followers"] = "/me [Raffle Started] Enter now for a chance to win *something*! You need to be following to enter. Enter the raffle by typing \"$2\".";
 $.lang.data["net.quorrabot.rafflesystem.start-success-price"] = "/me [Raffle Started] Enter now for a chance to win [$1]! The fee to enter is $2. Enter the raffle by typing \"$3\".";
 $.lang.data["net.quorrabot.rafflesystem.start-success-default"] = "/me [Raffle Started] Enter now for a chance to win [$1]! Enter the raffle by typing \"$2\".";
 $.lang.data["net.quorrabot.rafflesystem.start-usage-points"] = "Invalid format. Usage: \"!raffle start [-followers] <reward> [<price>] [<keyword>]\".";
@@ -289,8 +289,8 @@ $.lang.data["net.quorrabot.rafflesystem.start-error-running"] = "You can not sta
 $.lang.data["net.quorrabot.rafflesystem.close-error-notrunning"] = "You can not close a raffle while no raffle is active.";
 $.lang.data["net.quorrabot.rafflesystem.close-success-noentries"] = "/me [Raffle Ended] The raffle is now closed. Nobody entered, thus there is no winner.";
 $.lang.data["net.quorrabot.rafflesystem.close-success-nofollow"] = "/me [Raffle Ended] The raffle is now closed. Everybody that entered isn't following, thus there is no winner.";
-$.lang.data["net.quorrabot.rafflesystem.close-success-points"] = "/me [Raffle Ended] The raffle is now closed. The winner is $1, congratulations! Added $2 to your balance!";
-$.lang.data["net.quorrabot.rafflesystem.close-success-default"] = "/me [Raffle Ended] The raffle is now closed. The winner is $1, congratulations! You won $2, contact the broadcaster for your prize!";
+$.lang.data["net.quorrabot.rafflesystem.close-success-points"] = "/me [Raffle Ended] The raffle is now closed. The winner is $1, congratulations!";
+$.lang.data["net.quorrabot.rafflesystem.close-success-default"] = "/me [Raffle Ended] The raffle is now closed. The winner is $1, congratulations!";
 $.lang.data["net.quorrabot.rafflesystem.enter-notcommand-followers-price"] = "A raffle is active for a chance to win [$1]! You need to be following to enter, and the fee to enter is $2. Enter the raffle by typing \"$3\".";
 $.lang.data["net.quorrabot.rafflesystem.enter-notcommand-followers"] = "A raffle is active for a chance to win [$1]! You need to be following to enter. Enter the raffle by typing \"$2\".";
 $.lang.data["net.quorrabot.rafflesystem.enter-notcommand-price"] = "A raffle is active for a chance to win [$1]! The fee to enter is $2. Enter the raffle by typing \"$3\".";
@@ -305,7 +305,7 @@ $.lang.data["net.quorrabot.rafflesystem.resume-error-running"] = "You cannot res
 $.lang.data["net.quorrabot.rafflesystem.resume-error-notstoredrunning"] = "There is no raffle stored in progress"
 $.lang.data["net.quorrabot.rafflesystem.resume-success"] = "Existing raffle has been restored"
 $.lang.data["net.quorrabot.rafflesystem.redraw-success-nofollow"] = "/me [Raffle Redraw] Everyone that entered isn't following, thus there is no winner.";
-$.lang.data["net.quorrabot.rafflesystem.redraw-success-default"] = "/me [Raffle Redraw] The winner is $1, congratulations! You won $2, contact the broadcaster for your prize!";
+$.lang.data["net.quorrabot.rafflesystem.redraw-success-default"] = "/me [Raffle Redraw] The winner is $1, congratulations!";
 $.lang.data["net.quorrabot.rafflesystem.redraw-error-running"] = "You can not pick another winner of a raffle that is still running.";
 $.lang.data["net.quorrabot.rafflesystem.redraw-error-noentries"] = "You can not pick another winner of a raffle that has no entries.";
 $.lang.data["net.quorrabot.rafflesystem.redraw-error-pointraffle"] = "You can not pick another winner of a raffle that rewards $1 to users.";
@@ -545,6 +545,8 @@ $.lang.data["net.quorrabot.discord.announce.enabled"] = "Bot will now announce i
 $.lang.data["net.quorrabot.discord.announce.disabled"] = "Bot will no longer announce in discord when the stream goes live.";
 $.lang.data["net.quorrabot.discord.custommessage.set"] = "Custom discord announcement message has been set!";
 $.lang.data["net.quorrabot.discord.custommessage.err.nomsg"] = "You did not specify a message. Usage: !discordchat announcemsg (message). Tags available: (streamer)/(caster),(twitchchannel),(game),(title)";
+$.lang.data["net.quorrabot.redeem.usage"] = "What you redeemin' fool? '!redeem <enter prize name here>'";
+$.lang.data["net.quorrabot.redeem.messagesent"] = "Redeem successfull, A mod will contact you for details.";
 
 //8ballCommand.js
 $.lang.data["net.quorrabot.8ballCommand.proper-usage"] = "ask the magic-8ball a question with !8ball";
@@ -580,7 +582,6 @@ $.lang.data["net.quorrabot.8ballCommand.answer-29"] = "Most likely.";
 $.lang.data["net.quorrabot.8ballCommand.answer-30"] = "Outlook good.";
 $.lang.data["net.quorrabot.8ballCommand.answer-31"] = "Yes.";
 $.lang.data["net.quorrabot.8ballCommand.answer-32"] = "Signs point to yes.";
-$.lang.data["net.quorrabot.8ballCommand.answer-33"] = "Fool.";
 $.lang.data["net.quorrabot.8ballCommand.answer-34"] = "This is not the Bot you're looking for ༼ﾉ۞⌂۞༽ﾉ";
 $.lang.data["net.quorrabot.8ballCommand.answer-35"] = "Penis";
 $.lang.data["net.quorrabot.8ballCommand.answer-36"] = "Forget it, just go for a spaff";

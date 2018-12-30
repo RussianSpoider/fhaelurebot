@@ -58,9 +58,8 @@ $.on('command', function(event) {
     	 		} while (s.equalsIgnoreCase($.lastRandomlost) && lost.length > 1);
                 if (!$.isModv3(sender, event.getTags())) {
                     $.say(s);
-                    setTimeout(function() {$.say(".timeout "+ username +" "+ roulettetimeout);},2000);
-                    setTimeout(function() {$.say(".timeout "+ username +" "+ roulettetimeout);},2000);
-                    return;
+                    setTimeout(function() {$.say(".timeout "+ username +" "+ roulettetimeout);},1);
+		return;
                 }
                 var m = $.randElement(lostmod);
                 while (m.equalsIgnoreCase($.lastRandomlostmod) && lostmod.length > 1);

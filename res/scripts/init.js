@@ -87,8 +87,10 @@ $api.on($script, 'ircChannelUserMode', function (event) {
                 event.getSession().setAllowSendMessages(event.getAdd());
 
                 if (event.getAdd() == true) {
+                    if (!$.modeo) {
+                        sayOnline();
+                    }
                     $.modeo = true;
-                    sayOnline();
                 } else {
                     $.modeo = false;
                 }
@@ -128,22 +130,51 @@ $.moduleEnabled = function (scriptFile) {
     return true;
 };
 
+$.cacheonline = 0;
+$.cachecount = 0;
+$.counter = 0;
+if ($.moduleEnabled('./handlers/followHandler.js')) {
+    $.cachecount++;
+}
+if ($.moduleEnabled('./handlers/hostHandler.js')) {
+    $.cachecount++;
+}
+if ($.twitch.isPartnered($.channelName, 1, 0, false) == -1) {
+    if ($.moduleEnabled('./handlers/subscribeHandler.js')) {
+        $.cachecount++;
+    }
+};
 
 function sayOnline() {
     $.timer.addTimer("./init.js", "botonline", true, function () {
-        var connectedMessage = $.inidb.get('settings', 'connectedMessage');
-        if ($.joinmsg == false) {
-            if (connectedMessage != null && !connectedMessage.isEmpty()) {
-                $.say(connectedMessage);
-                $.joinmsg = true;
-            } else {
-                $.println($.username.resolve($.botname) + " is now online!");
-                $.joinmsg = true;
-            }
-        }
-        $.timer.clearTimer("./init.js", "botonline", true);
 
-    }, 20 * 1000);
+        if ($.followannounce == "loaded" && $.counter == 0) {
+            $.cacheonline++;
+            $.counter = 1;
+        }
+        if ($.hostannounce == "loaded" && $.counter == 1) {
+            $.cacheonline++;
+            $.counter = 2;
+        }
+        if ($.subscriberannounce == "loaded" && $.counter == 2) {
+            $.cacheonline++;
+        }
+
+        if ($.cacheonline == $.cachecount) {
+            var connectedMessage = $.inidb.get('settings', 'connectedMessage');
+            if ($.joinmsg == false) {
+                if (connectedMessage != null && !connectedMessage.isEmpty()) {
+                    $.say(connectedMessage);
+                    $.joinmsg = true;
+                } else {
+                    $.println($.username.resolve($.botname) + " is now online!");
+                    $.joinmsg = true;
+                }
+            }
+            $.timer.clearTimer("./init.js", "botonline", true);
+        }
+
+    }, 10 * 1000);
 }
 
 $.getModule = function (scriptFile) {
@@ -464,7 +495,7 @@ $api.on($script, 'command', function (event) {
             for (var i = 0; i < coolcom.length; i++) {
                 if (coolcom[i][0].equalsIgnoreCase(sender)) {
                     idx = i;
-                    if (coolcom[i][1] >= System.currentTimeMillis() && !$.isModv3(sender, event.getTags())) {
+                    if (coolcom[i][1] >= System.currentTimeMillis()) {
                         $.println($.lang.get("net.quorrabot.init.coolcom-cooldown", origcommand, sender));
                         return;
                     }
@@ -478,7 +509,7 @@ $api.on($script, 'command', function (event) {
             for (var i = 0; i < coolcom.length; i++) {
                 if (coolcom[i][0].equalsIgnoreCase(command)) {
                     idx = i;
-                    if (coolcom[i][1] >= System.currentTimeMillis() && !$.isModv3(sender, event.getTags())) {
+                    if (coolcom[i][1] >= System.currentTimeMillis()) {
                         $.println($.lang.get("net.quorrabot.init.coolcom-cooldown", origcommand, sender));
                         return;
                     }

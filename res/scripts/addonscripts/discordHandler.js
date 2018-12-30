@@ -41,6 +41,17 @@ $.on('discord', function (event) {
 $.discordSay = function (message) {
     $.discord.sendMessage($.discordMainChannel, message);
 };
+	function setGame(game) {
+		$.discordAPI.setGame(game);
+	}
+
+	function setStream(game, url) {
+		$.discordAPI.setStream(game, url);
+	}
+
+	function removeGame() {
+		$.discordAPI.removeGame();
+	}
 
 //Send message to discord channel if streamer is online
 $.discordAnnounce = function () {
@@ -150,10 +161,37 @@ $.on('command', function (event) {
                 return;
             }
         }
+		if (command.equalsIgnoreCase('setdgame')) {
+			if (args[0] == null) {
+				say(channel, userPrefix(mention) + $.lang.get('discord.misc.game.set.usage'));
+				return;
+			}
+
+			setGame(args.join(' '));
+			say(channel, userPrefix(mention) + $.lang.get('discord.misc.game.set', args.join(' ')));
+		}
+
+		if (command.equalsIgnoreCase('setdstream')) {
+			if (args[0] == null) {
+				say(channel, userPrefix(mention) + $.lang.get('discord.misc.game.stream.set.usage'));
+				return;
+			}
+
+			setStream(action, args.slice(1).join(' '));
+			say(channel, userPrefix(mention) + $.lang.get('discord.misc.game.stream.set', action, args.slice(1).join(' ')));
+		}
+
+		if (command.equalsIgnoreCase('removedgame')) {
+			removeGame();
+			say(channel, userPrefix(mention) + $.lang.get('discord.misc.game.removed'));
+		}
 });
 
 if ($.moduleEnabled('./addonscripts/discordHandler.js')) {
     $.registerChatCommand("./addonscripts/discordHandler.js", "discordchat");
+    $.registerChatCommand("./addonscripts/discordHandler.js", "setdgame");
+    $.registerChatCommand("./addonscripts/discordHandler.js", "setdstream");
+    $.registerChatCommand("./addonscripts/discordHandler.js", "removedgame");
     $.registerChatCommand("./addonscripts/discordHandler.js", "redeem");
     if ($.DiscordHandler.discordToggleAnnounce == "true") {
         $.timer.addTimer("./addonscripts/discordHandler.js", "discordannounce", true, function () {
