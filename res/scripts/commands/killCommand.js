@@ -31,37 +31,12 @@ $.on('command', function (event) {
         var self = new Array(0)
         sender = $.username.resolve(sender, event.getTags());
 
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-1", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-2", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-3", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-4", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-5", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-6", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-7", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-8", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-9", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-10", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-11", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-12", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-13", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-14", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-15", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-16", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-17", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-18", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-19", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-20", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-21", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-22", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-23", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-24", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-25", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-26", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-27", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-28", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-29", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-30", sender));
-        self.push($.lang.get("net.quorrabot.killcommand.self-kill-30", sender));
+	var commandPrefix = "net.quorrabot.killcommand.self-kill-";
+        for (var i = 1; i <= 30; i++) {
+	    self.push($.lang.get(commandPrefix.concat(i), sender));
+        }
+        
+	self.push($.lang.get("net.quorrabot.killcommand.self-kill-30", sender));
 
         do {
             s = $.randElement(self);
@@ -190,34 +165,11 @@ $.on('command', function (event) {
 });
 
 var ar = new Array(0);
-ar.push($.lang.get("net.quorrabot.killcommand.kill-1"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-2"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-3"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-4"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-5"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-6"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-7"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-8"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-9"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-10"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-11"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-12"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-13"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-14"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-15"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-16"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-17"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-18"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-19"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-20"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-21"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-22"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-23"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-24"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-25"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-26"));
-ar.push($.lang.get("net.quorrabot.killcommand.kill-27"));
+var killCommandPrefix = "net.quorrabot.killcommand.kill-";
 
+for (var i = 1; i <= 27; i++) {
+    ar.push($.lang.get(killCommandPrefix.concat(i)));
+}
 
 if ($.inidb.get("kills", "num_kills") == null || $.inidb.get("kills", "num_kills") == 0) {
 
